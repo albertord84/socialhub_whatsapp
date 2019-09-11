@@ -1,4 +1,5 @@
-const menu_items = [{
+const menu_items = [
+    {
         name: 'Dashboard',
         link: '/',
         icon: ' fa fa-home'
@@ -7,9 +8,9 @@ const menu_items = [{
         link: '/index2',
         icon: 'fa fa-desktop'
     },{
-    name: 'Contacts',
-    link: '/contacts',
-    icon: ' fa fa-address-book-o'
+        name: 'Contacts',
+        link: '/contacts',
+        icon: ' fa fa-address-book-o'
     },
     {
         name: 'Tasks',

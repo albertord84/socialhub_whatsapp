@@ -8,15 +8,14 @@
                     <profile></profile>
                 </div>
                 <vmenu>
-                    <template v-for="item in menuitems">
+                    <template v-for="item in menuitems" >
                         <li class="divider mt-3 " v-if="item.title">
                             <span>{{item.name}}</span>
                         </li>
-                        <vsub-menu v-if="item.child" :title="item.name" :icon="item.icon">
+                        <vsub-menu v-if="item.child" title="item.name" :icon="item.icon" >
                             <vmenu-item v-for="child in item.child" :link="child.link" :icon="child.icon" :key="child.name">{{child.name}}</vmenu-item>
                         </vsub-menu>
-                        <vmenu-item v-if="item.link" :link="item.link" :icon="item.icon">{{ item.name}}
-                        </vmenu-item>
+                        <vmenu-item v-if="item.link" :title="item.name" :link="item.link" :icon="item.icon">{{ item.name}}</vmenu-item>
                     </template>
                 </vmenu>
                 <!-- / .navigation -->
@@ -33,7 +32,8 @@ import {
     vsubMenu
 } from './menu';
 import profile from "../left-profile/user_profile2.vue"
-import menu_items from "../../../../menu.js";
+import menu_items from "../../../../menu_attendant.js";
+// import menu_items from "../../../../menu_customer.js";
 export default {
     name: "left-side",
     components: {

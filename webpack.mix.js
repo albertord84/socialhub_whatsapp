@@ -62,6 +62,7 @@ mix.options({
 
 // ===compile our main.js file
 mix.js('resources/main.js', 'public/')
+    .js('resources/main_attendant.js', 'public/')
     // Add any additional vendor modules that need to be cached
     // remove any unused libraries in the array as they will be included in the vendor bundle
     .extract(['vue', 'bootstrap-vue', 'animejs', 'axios', 'vue-echarts-v3/src/full.js','vue2-dropzone'])

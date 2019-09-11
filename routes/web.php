@@ -12,13 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('customer');
+    return view('attendant');
+    //     return view('welcome');
 });
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
 
 Route::get('admin', array('as' => 'admin', function()
 {

@@ -1,7 +1,8 @@
 import layout_routes from './layout'
 
-const routes = [{
-    path: '/',
+const routes = [
+{
+    path: '/', //pata todo o que precisar de customer
     component: resolve => require(['src/layout'], resolve),
     children: layout_routes
 }, {

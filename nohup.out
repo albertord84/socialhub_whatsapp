@@ -1,0 +1,2 @@
+Laravel development server started: <http://127.0.0.1:8000>
+[Mon Sep  9 15:55:24 2019] Failed to listen on 127.0.0.1:8000 (reason: Address already in use)
