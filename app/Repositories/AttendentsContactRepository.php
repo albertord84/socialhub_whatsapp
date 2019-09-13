@@ -2,25 +2,26 @@
 
 namespace App\Repositories;
 
-use App\Models\AttendentsContact;
+use App\Models\AttendantsContact;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
- * Class AttendentsContactRepository
+ * Class AttendantsContactRepository
  * @package App\Repositories
- * @version September 13, 2019, 3:04 pm UTC
+ * @version September 13, 2019, 9:11 pm UTC
  *
- * @method AttendentsContact findWithoutFail($id, $columns = ['*'])
- * @method AttendentsContact find($id, $columns = ['*'])
- * @method AttendentsContact first($columns = ['*'])
+ * @method AttendantsContact findWithoutFail($id, $columns = ['*'])
+ * @method AttendantsContact find($id, $columns = ['*'])
+ * @method AttendantsContact first($columns = ['*'])
 */
-class AttendentsContactRepository extends BaseRepository
+class AttendantsContactRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        
+        'attendant_id',
+        'contact_id'
     ];
 
     /**
@@ -28,6 +29,6 @@ class AttendentsContactRepository extends BaseRepository
      **/
     public function model()
     {
-        return AttendentsContact::class;
+        return AttendantsContact::class;
     }
 }

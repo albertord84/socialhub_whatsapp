@@ -2,70 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateAttendentsContactRequest;
-use App\Http\Requests\UpdateAttendentsContactRequest;
-use App\Repositories\AttendentsContactRepository;
+use App\Http\Requests\CreateAttendantsContactRequest;
+use App\Http\Requests\UpdateAttendantsContactRequest;
+use App\Repositories\AttendantsContactRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
-class AttendentsContactController extends AppBaseController
+class AttendantsContactController extends AppBaseController
 {
-    /** @var  AttendentsContactRepository */
-    private $attendentsContactRepository;
+    /** @var  AttendantsContactRepository */
+    private $attendantsContactRepository;
 
-    public function __construct(AttendentsContactRepository $attendentsContactRepo)
+    public function __construct(AttendantsContactRepository $attendantsContactRepo)
     {
-        $this->attendentsContactRepository = $attendentsContactRepo;
+        $this->attendantsContactRepository = $attendantsContactRepo;
     }
 
     /**
-     * Display a listing of the AttendentsContact.
+     * Display a listing of the AttendantsContact.
      *
      * @param Request $request
      * @return Response
      */
     public function index(Request $request)
     {
-        $this->attendentsContactRepository->pushCriteria(new RequestCriteria($request));
-        $attendentsContacts = $this->attendentsContactRepository->all();
+        $this->attendantsContactRepository->pushCriteria(new RequestCriteria($request));
+        $attendantsContacts = $this->attendantsContactRepository->all();
 
-        return view('attendents_contacts.index')
-            ->with('attendentsContacts', $attendentsContacts);
+        return view('attendants_contacts.index')
+            ->with('attendantsContacts', $attendantsContacts);
     }
 
     /**
-     * Show the form for creating a new AttendentsContact.
+     * Show the form for creating a new AttendantsContact.
      *
      * @return Response
      */
     public function create()
     {
-        return view('attendents_contacts.create');
+        return view('attendants_contacts.create');
     }
 
     /**
-     * Store a newly created AttendentsContact in storage.
+     * Store a newly created AttendantsContact in storage.
      *
-     * @param CreateAttendentsContactRequest $request
+     * @param CreateAttendantsContactRequest $request
      *
      * @return Response
      */
-    public function store(CreateAttendentsContactRequest $request)
+    public function store(CreateAttendantsContactRequest $request)
     {
         $input = $request->all();
 
-        $attendentsContact = $this->attendentsContactRepository->create($input);
+        $attendantsContact = $this->attendantsContactRepository->create($input);
 
-        Flash::success('Attendents Contact saved successfully.');
+        Flash::success('Attendants Contact saved successfully.');
 
-        return redirect(route('attendentsContacts.index'));
+        return redirect(route('attendantsContacts.index'));
     }
 
     /**
-     * Display the specified AttendentsContact.
+     * Display the specified AttendantsContact.
      *
      * @param  int $id
      *
@@ -73,19 +73,19 @@ class AttendentsContactController extends AppBaseController
      */
     public function show($id)
     {
-        $attendentsContact = $this->attendentsContactRepository->findWithoutFail($id);
+        $attendantsContact = $this->attendantsContactRepository->findWithoutFail($id);
 
-        if (empty($attendentsContact)) {
-            Flash::error('Attendents Contact not found');
+        if (empty($attendantsContact)) {
+            Flash::error('Attendants Contact not found');
 
-            return redirect(route('attendentsContacts.index'));
+            return redirect(route('attendantsContacts.index'));
         }
 
-        return view('attendents_contacts.show')->with('attendentsContact', $attendentsContact);
+        return view('attendants_contacts.show')->with('attendantsContact', $attendantsContact);
     }
 
     /**
-     * Show the form for editing the specified AttendentsContact.
+     * Show the form for editing the specified AttendantsContact.
      *
      * @param  int $id
      *
@@ -93,44 +93,44 @@ class AttendentsContactController extends AppBaseController
      */
     public function edit($id)
     {
-        $attendentsContact = $this->attendentsContactRepository->findWithoutFail($id);
+        $attendantsContact = $this->attendantsContactRepository->findWithoutFail($id);
 
-        if (empty($attendentsContact)) {
-            Flash::error('Attendents Contact not found');
+        if (empty($attendantsContact)) {
+            Flash::error('Attendants Contact not found');
 
-            return redirect(route('attendentsContacts.index'));
+            return redirect(route('attendantsContacts.index'));
         }
 
-        return view('attendents_contacts.edit')->with('attendentsContact', $attendentsContact);
+        return view('attendants_contacts.edit')->with('attendantsContact', $attendantsContact);
     }
 
     /**
-     * Update the specified AttendentsContact in storage.
+     * Update the specified AttendantsContact in storage.
      *
      * @param  int              $id
-     * @param UpdateAttendentsContactRequest $request
+     * @param UpdateAttendantsContactRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateAttendentsContactRequest $request)
+    public function update($id, UpdateAttendantsContactRequest $request)
     {
-        $attendentsContact = $this->attendentsContactRepository->findWithoutFail($id);
+        $attendantsContact = $this->attendantsContactRepository->findWithoutFail($id);
 
-        if (empty($attendentsContact)) {
-            Flash::error('Attendents Contact not found');
+        if (empty($attendantsContact)) {
+            Flash::error('Attendants Contact not found');
 
-            return redirect(route('attendentsContacts.index'));
+            return redirect(route('attendantsContacts.index'));
         }
 
-        $attendentsContact = $this->attendentsContactRepository->update($request->all(), $id);
+        $attendantsContact = $this->attendantsContactRepository->update($request->all(), $id);
 
-        Flash::success('Attendents Contact updated successfully.');
+        Flash::success('Attendants Contact updated successfully.');
 
-        return redirect(route('attendentsContacts.index'));
+        return redirect(route('attendantsContacts.index'));
     }
 
     /**
-     * Remove the specified AttendentsContact from storage.
+     * Remove the specified AttendantsContact from storage.
      *
      * @param  int $id
      *
@@ -138,18 +138,18 @@ class AttendentsContactController extends AppBaseController
      */
     public function destroy($id)
     {
-        $attendentsContact = $this->attendentsContactRepository->findWithoutFail($id);
+        $attendantsContact = $this->attendantsContactRepository->findWithoutFail($id);
 
-        if (empty($attendentsContact)) {
-            Flash::error('Attendents Contact not found');
+        if (empty($attendantsContact)) {
+            Flash::error('Attendants Contact not found');
 
-            return redirect(route('attendentsContacts.index'));
+            return redirect(route('attendantsContacts.index'));
         }
 
-        $this->attendentsContactRepository->delete($id);
+        $this->attendantsContactRepository->delete($id);
 
-        Flash::success('Attendents Contact deleted successfully.');
+        Flash::success('Attendants Contact deleted successfully.');
 
-        return redirect(route('attendentsContacts.index'));
+        return redirect(route('attendantsContacts.index'));
     }
 }

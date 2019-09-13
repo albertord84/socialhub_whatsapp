@@ -20,7 +20,7 @@ create .env file from .env.example file
 	go to node_modules/vue2-dropzone/dist, duplicate vue2Dropzone.min.css, and rename the copy as vue2Dropzone.css
 	npm run dev
 	npm run watch
-	http://localhost:8000/#/attendent
+	http://localhost:8000/#/attendant
 
 cd /var/www/html/socialhub
 	sudo /opt/lampp/lampp startmysql
@@ -36,5 +36,5 @@ cd /var/www/html/socialhub
 	php artisan infyom:scaffold User
 	php artisan infyom:scaffold Role
 	php artisan infyom:scaffold Status
-	php artisan infyom:scaffold AttendentsContact
+	php artisan infyom:scaffold AttendantsContact
 

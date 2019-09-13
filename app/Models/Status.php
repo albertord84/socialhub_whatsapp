@@ -7,18 +7,25 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class Status
  * @package App\Models
- * @version September 13, 2019, 3:04 pm UTC
+ * @version September 13, 2019, 9:09 pm UTC
  *
+ * @property \Illuminate\Database\Eloquent\Collection 
+ * @property string name
+ * @property string description
  */
 class Status extends Model
 {
 
     public $table = 'status';
     
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
 
 
     public $fillable = [
-        
+        'name',
+        'description'
     ];
 
     /**
@@ -27,7 +34,9 @@ class Status extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer'
+        'id' => 'integer',
+        'name' => 'string',
+        'description' => 'string'
     ];
 
     /**
@@ -36,7 +45,7 @@ class Status extends Model
      * @var array
      */
     public static $rules = [
-        
+        'id' => 'required'
     ];
 
     

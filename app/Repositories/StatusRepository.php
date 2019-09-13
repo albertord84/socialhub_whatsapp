@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class StatusRepository
  * @package App\Repositories
- * @version September 13, 2019, 3:04 pm UTC
+ * @version September 13, 2019, 9:09 pm UTC
  *
  * @method Status findWithoutFail($id, $columns = ['*'])
  * @method Status find($id, $columns = ['*'])
@@ -20,7 +20,8 @@ class StatusRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        
+        'name',
+        'description'
     ];
 
     /**

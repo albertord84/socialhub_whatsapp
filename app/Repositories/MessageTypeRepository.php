@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class MessageTypeRepository
  * @package App\Repositories
- * @version September 13, 2019, 2:53 pm UTC
+ * @version September 13, 2019, 9:10 pm UTC
  *
  * @method MessageType findWithoutFail($id, $columns = ['*'])
  * @method MessageType find($id, $columns = ['*'])
@@ -20,7 +20,8 @@ class MessageTypeRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        
+        'name',
+        'description'
     ];
 
     /**

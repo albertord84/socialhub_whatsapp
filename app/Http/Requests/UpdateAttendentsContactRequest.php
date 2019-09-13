@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AttendentsContact;
+use App\Models\AttendantsContact;
 
-class UpdateAttendentsContactRequest extends FormRequest
+class UpdateAttendantsContactRequest extends FormRequest
 {
 
     /**
@@ -25,6 +25,6 @@ class UpdateAttendentsContactRequest extends FormRequest
      */
     public function rules()
     {
-        return AttendentsContact::$rules;
+        return AttendantsContact::$rules;
     }
 }

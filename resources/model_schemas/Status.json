@@ -1,9 +1,9 @@
 [
     {
         "name": "id",
-        "dbType": "increments",
+        "dbType": "integer,true",
         "htmlType": null,
-        "validations": null,
+        "validations": "required",
         "searchable": false,
         "fillable": false,
         "primary": true,
@@ -11,25 +11,29 @@
         "inIndex": false
     },
     {
-        "name": "created_at",
-        "dbType": "timestamp",
-        "htmlType": null,
+        "name": "name",
+        "dbType": "string",
+        "htmlType": "text",
         "validations": null,
-        "searchable": false,
-        "fillable": false,
+        "searchable": true,
+        "fillable": true,
         "primary": false,
-        "inForm": false,
-        "inIndex": false
+        "inForm": true,
+        "inIndex": true
     },
     {
-        "name": "updated_at",
-        "dbType": "timestamp",
-        "htmlType": null,
+        "name": "description",
+        "dbType": "string",
+        "htmlType": "text",
         "validations": null,
-        "searchable": false,
-        "fillable": false,
+        "searchable": true,
+        "fillable": true,
         "primary": false,
-        "inForm": false,
-        "inIndex": false
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,attendants_contacts"
     }
 ]

@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class UserRepository
  * @package App\Repositories
- * @version September 13, 2019, 2:56 pm UTC
+ * @version September 13, 2019, 9:09 pm UTC
  *
  * @method User findWithoutFail($id, $columns = ['*'])
  * @method User find($id, $columns = ['*'])
@@ -20,7 +20,16 @@ class UserRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        
+        'name',
+        'email',
+        'email_verified_at',
+        'password',
+        'remember_token',
+        'login',
+        'CPF',
+        'phone',
+        'image_path',
+        'role_id'
     ];
 
     /**

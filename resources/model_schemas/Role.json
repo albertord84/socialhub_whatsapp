@@ -1,9 +1,9 @@
 [
     {
         "name": "id",
-        "dbType": "increments",
+        "dbType": "integer,true",
         "htmlType": null,
-        "validations": null,
+        "validations": "required",
         "searchable": false,
         "fillable": false,
         "primary": true,
@@ -11,9 +11,31 @@
         "inIndex": false
     },
     {
+        "name": "name",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": "required",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "description",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
         "name": "created_at",
-        "dbType": "timestamp",
-        "htmlType": null,
+        "dbType": "datetime",
+        "htmlType": "date",
         "validations": null,
         "searchable": false,
         "fillable": false,
@@ -23,13 +45,21 @@
     },
     {
         "name": "updated_at",
-        "dbType": "timestamp",
-        "htmlType": null,
+        "dbType": "datetime",
+        "htmlType": "date",
         "validations": null,
         "searchable": false,
         "fillable": false,
         "primary": false,
         "inForm": false,
         "inIndex": false
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,attendants_contacts"
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,User,role_id"
     }
 ]

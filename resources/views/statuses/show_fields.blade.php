@@ -4,15 +4,15 @@
     <p>{!! $status->id !!}</p>
 </div>
 
-<!-- Created At Field -->
+<!-- Name Field -->
 <div class="form-group">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{!! $status->created_at !!}</p>
+    {!! Form::label('name', 'Name:') !!}
+    <p>{!! $status->name !!}</p>
 </div>
 
-<!-- Updated At Field -->
+<!-- Description Field -->
 <div class="form-group">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{!! $status->updated_at !!}</p>
+    {!! Form::label('description', 'Description:') !!}
+    <p>{!! $status->description !!}</p>
 </div>
 

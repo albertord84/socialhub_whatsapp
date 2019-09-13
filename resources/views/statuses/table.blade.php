@@ -2,14 +2,16 @@
     <table class="table" id="statuses-table">
         <thead>
             <tr>
-                
+                <th>Name</th>
+        <th>Description</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
         @foreach($statuses as $status)
             <tr>
-                
+                <td>{!! $status->name !!}</td>
+            <td>{!! $status->description !!}</td>
                 <td>
                     {!! Form::open(['route' => ['statuses.destroy', $status->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
