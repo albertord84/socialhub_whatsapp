@@ -16,7 +16,7 @@ const store = new Vuex.Store({
         left_open: true,
         right_open: false,
         preloader: true,
-        site_name: "Vuejs-Admin",
+        site_name: "SocialHUB",
         page_title: null,
         user: {
             name: "Ayesha",
