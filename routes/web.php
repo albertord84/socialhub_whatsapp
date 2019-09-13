@@ -20,3 +20,16 @@ Route::get('admin', array('as' => 'admin', function()
 {
     return View::make('welcome');
 }));
+
+
+Route::resource('messageTypes', 'MessageTypeController');
+
+Route::resource('users', 'UserController');
+
+Route::resource('roles', 'RoleController');
+
+Route::resource('statuses', 'StatusController');
+
+Route::resource('attendentsContacts', 'AttendentsContactController');
+
+Route::resource('roles', 'RoleController');

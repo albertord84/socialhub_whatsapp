@@ -44,11 +44,11 @@
     padding: 10px 0;
 }
 
-.user-profile .table.account-details > tbody > tr > td {
+.user-profile .table.user-details > tbody > tr > td {
     padding: 17px 16px;
 }
 
-.account-details tbody tr:hover {
+.user-details tbody tr:hover {
     background-color: #EEE;
 }
 

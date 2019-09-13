@@ -138,7 +138,7 @@
                             </b-tabs>
                         </b-dropdown-item>
                     </b-dropdown>
-                    <!-- User Account: style can be found in dropdown-->
+                    <!-- User user: style can be found in dropdown-->
                     <b-dropdown class="user user-menu bell_bg user_btn" right link>
                         <span slot="text">
                             <img :src="this.$store.state.user.picture" class="rounded-circle" alt="User Image">
