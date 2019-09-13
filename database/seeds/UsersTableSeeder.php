@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use App\Models\UsersManeger;
+use App\Models\UsersManager;
 use App\Models\UsersAttendant;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
@@ -35,7 +35,7 @@ class UsersTableSeeder extends Seeder
         ]);
         $this->command->info('Admin created: [user: admin@socialhub.pro, pass: admin]');
 
-        $this->createMannagers();
+        $this->createManagers();
 
         $this->createAttendants();
 
@@ -51,11 +51,11 @@ class UsersTableSeeder extends Seeder
         $this->command->info('Visitor created: [user: visitor@socialhub.pro, pass: visitor]');
     }
 
-    public function createMannagers()
+    public function createManagers()
     {
         User::create([
             'id' => 2,
-            'name' => 'Maneger',
+            'name' => 'Manager',
             'email' => 'manager@socialhub.pro',
             'login' => 'manager',
             'CPF' => '00000000001',
@@ -64,10 +64,10 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('manager'), // password
             'remember_token' => Str::random(10),
         ]);
-        UsersManeger::create([
+        UsersManager::create([
             'user_id' => 2,
         ]);
-        $this->command->info('Maneger 1 created: [user: manager, pass: manager]');
+        $this->command->info('Manager 1 created: [user: manager, pass: manager]');
     }
 
     public function createAttendants()

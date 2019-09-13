@@ -20,6 +20,8 @@ class CreateUsersManagersTable extends Migration {
 			$table->string('facebook_id', 45)->nullable();
 			$table->string('instagram_id', 45)->nullable();
 			$table->string('linkedin_id', 45)->nullable();
+			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

@@ -34,3 +34,9 @@
     <p>{!! $usersManager->linkedin_id !!}</p>
 </div>
 
+<!-- Deleted At Field -->
+<div class="form-group">
+    {!! Form::label('deleted_at', 'Deleted At:') !!}
+    <p>{!! $usersManager->deleted_at !!}</p>
+</div>
+

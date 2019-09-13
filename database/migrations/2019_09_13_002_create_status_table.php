@@ -17,6 +17,7 @@ class CreateStatusTable extends Migration {
 			$table->integer('id', true);
 			$table->string('name', 45)->nullable();
 			$table->string('description', 300)->nullable();
+			$table->timestamps();
 		});
 	}
 

@@ -53,3 +53,5 @@ Route::resource('systemConfigs', 'SystemConfigController');
 Route::resource('usersManagers', 'UsersManagerController');
 
 Route::resource('usersAttendants', 'UsersAttendantController');
+
+Route::resource('usersManagers', 'UsersManagerController');

@@ -14,7 +14,7 @@ class StatusTableSeeder extends Seeder
     {
         $this->command->info('Truncate Status Table...');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('roles')->truncate();
+        DB::table('status')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->command->info('Create Users Status:');
