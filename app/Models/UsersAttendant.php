@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class UsersAttendant
  * @package App\Models
- * @version September 13, 2019, 9:43 pm UTC
+ * @version September 13, 2019, 10:17 pm UTC
  *
  * @property \App\Models\User user
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
@@ -43,8 +43,7 @@ class UsersAttendant extends Model
      * @var array
      */
     public static $rules = [
-        'user_id' => 'required',
-        'code' => 'required'
+        'user_id' => 'required'
     ];
 
     /**

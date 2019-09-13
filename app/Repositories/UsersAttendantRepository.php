@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class UsersAttendantRepository
  * @package App\Repositories
- * @version September 13, 2019, 9:43 pm UTC
+ * @version September 13, 2019, 10:17 pm UTC
  *
  * @method UsersAttendant findWithoutFail($id, $columns = ['*'])
  * @method UsersAttendant find($id, $columns = ['*'])
