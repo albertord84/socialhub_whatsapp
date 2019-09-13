@@ -9,7 +9,6 @@
             <slot></slot>
             <!--rightside bar -->
             <right-side-bar></right-side-bar>
-
         </section>
         <!-- /.content -->
     </aside>
@@ -31,7 +30,7 @@ export default {
         width: 100%;
         max-width: 100%;
         min-height: 100vh;
-        
+
         .content-header > h1 {
             margin: 2px;
             padding-left: 13px;

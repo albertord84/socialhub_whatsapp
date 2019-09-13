@@ -3,10 +3,10 @@
         <preloader v-show="this.$store.state.preloader"></preloader>
         <vueadmin_header></vueadmin_header>
         <div class="wrapper row-offcanvas">
-            <left_side v-show="this.$store.state.left_open"></left_side>
-            <right_side>
+            <!-- <left_side v-show="this.$store.state.left_open"></left_side> -->
+            <center_side class="">
                 <router-view></router-view>
-            </right_side>
+            </center_side>
         </div>
 
         <div class="background-overlay" @click="right_close"></div>
@@ -27,7 +27,8 @@
     /**
      * The right side content
      */
-    import right_side from 'components/layouts/right-side'
+    // import right_side from 'components/layouts/right-side'
+    import center_side from 'components/layouts/center-side'
 
     /**
      * import left-side from default or horizontal-menu or mini-menu
@@ -40,7 +41,7 @@
     /**
      * import from header or fixed-header or no-header
      */
-    import vueadmin_header from 'components/layouts/header/fixed-header'
+    import vueadmin_header from 'components/layouts/header/fixed-header-attendant'
 
     /**
      * Styles
@@ -87,8 +88,9 @@
         components: {
             preloader,
             vueadmin_header,
-            left_side,
-            right_side
+            center_side
+            // left_side,
+            // right_side
         },
         data() {
             return {
