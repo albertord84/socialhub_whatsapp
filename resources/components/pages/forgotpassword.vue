@@ -111,7 +111,8 @@
     }
 
     .img_backgrond {
-        background-image: url("../../img/pages/Login-03-01.png");
+        /* background-image: url("../../img/pages/Login-03-01.png"); */
+        background-image: url("../../img/socialhub/background2.jpg");
         background-size: cover;
         height: 100vh;
         width: 100%;

@@ -3,84 +3,22 @@
         <preloader v-show="this.$store.state.preloader"></preloader>
         <vueadmin_header></vueadmin_header>
         <div class="wrapper row-offcanvas">
-            <!-- <left_side v-show="this.$store.state.left_open"></left_side> -->
             <center_side class="">
                 <router-view></router-view>
             </center_side>
         </div>
-
-        <div class="background-overlay" @click="right_close"></div>
+        <!-- <div class="background-overlay" @click="right_close"></div>
+        <div class="background-overlay2" @click="left_close"></div> -->
 
     </div>
 </template>
 <script>
-    /**
-     * These are the files that enable you to change layouts and other options
-     */
-
-    /**
-     * import preloader
-     * choose from preloader and bounce
-     */
     import preloader from 'components/layouts/preloader/preloader'
-
-    /**
-     * The right side content
-     */
-    // import right_side from 'components/layouts/right-side'
     import center_side from 'components/layouts/center-side'
-
-    /**
-     * import left-side from default or horizontal-menu or mini-menu
-     * eg: import left_side from 'components/layouts/left-side/horizontal-menu/left-side'
-     */
-    // import left_side from 'components/layouts/left-side/horizontal-menu/left-side'
-    // import left_side from 'components/layouts/left-side/mini-menu/left-side'
     import left_side from 'components/layouts/left-side/default/left-side'
-
-    /**
-     * import from header or fixed-header or no-header
-     */
     import vueadmin_header from 'components/layouts/header/fixed-header-attendant'
-
-    /**
-     * Styles
-     */
-
-    /**
-     * Main stylesheet for the layout
-     */
     import 'resources/sass/custom.scss'
-
-    /**
-     * Style required for a boxed layout
-     */
-    // import 'components/layouts/css/boxed.scss'
-
-    /**
-     * Style required for a fixed-menu layout
-     */
     import 'components/layouts/css/fixed-menu.scss'
-
-    /**
-     * Style required for a compact-menu layout
-     */
-//     import 'components/layouts/css/compact-menu.scss'
-
-    /**
-     * Style required for a centered-logo layout
-     */
-    // import 'components/layouts/css/centered-logo.scss'
-
-    /**
-     * Style required for a content-menu layout
-     */
-    // import 'components/layouts/css/content_menu.scss'
-
-
-    /**
-     * import animejs for the menu transition effects
-     */
     import anime from 'animejs'
 
     export default {
@@ -89,8 +27,6 @@
             preloader,
             vueadmin_header,
             center_side
-            // left_side,
-            // right_side
         },
         data() {
             return {
@@ -100,9 +36,15 @@
         methods: {
             right_close() {
                 this.$store.commit('rightside_bar', "close");
+            },
+            left_close() {
+                this.$store.commit('leftside_bar', "close");
             }
         },
-
+        beforeMount(){
+            this.$store.commit('rightside_bar', "close");
+            this.$store.commit('leftside_bar', "close");
+        },
         mounted() {
             if (window.innerWidth <= 992) {
                 this.$store.commit('left_menu', 'close')

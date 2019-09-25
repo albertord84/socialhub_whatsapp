@@ -1,27 +1,27 @@
 /* right side bar css start */
 
-                  #right {
-                    transition: all .3s ease-in-out;
-                    width: 270px;
-                    z-index: 999;
-                    position: fixed;
-                    top: 0;
-                    bottom: 0;
-                    overflow-y: auto;
-                    right: -270px;
-                    box-shadow: 0 0 15px #CCC;
-                    background: #FAFAFA;
-                    &.open{
-                      right: 0;
-                    }
-                    .nav-tabs > li > a:hover {
-                      border: 1px solid transparent;
-                    }
-                    .card-body{
-                      padding:0;
-                    }
+#right {
+  transition: all .3s ease-in-out;
+  width: 25%;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  right: -25%;
+  box-shadow: 0 0 15px #CCC;
+  background: #FAFAFA;
+  &.open{
+    right: 0;
+  }
+  .nav-tabs > li > a:hover {
+    border: 1px solid transparent;
+  }
+  .card-body{
+    padding:0;
+  }
 
-                  }
+}
 
 .rightsidebar-right {
   padding-top:50px;
@@ -102,7 +102,7 @@
   right: 0
 }
 
-.sidebar-right-opened .background-overlay {
+.sidebar-right-opened .background-overlay1 {
   position: fixed;
   display: block;
   top: 0;

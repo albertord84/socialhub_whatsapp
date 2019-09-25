@@ -1,148 +1,36 @@
 <template>
     <header class="header fixed-top">
         <nav>
-            <router-link to="/" class="logo">
-                <!-- <img src="~img/logo_black.png" alt="logo"/> -->
+            <!--SocualHUB logo-->
+            <router-link to="../attendant/" class="logo">
                 <img src="~img/socialhub/logo-social-hub.png" alt="logo"/>
             </router-link>
-            <!-- Sidebar toggle button-->
-            <!-- <div class="float-left">
-                <a href="javascript:void(0)" class="sidebar-toggle" @click="toggle_menu">
-                    <i class="fa fa-bars"></i>
-                </a>
-            </div> -->
-            <div class="navbar-right">
 
-                <!--drop downs-->
+            <!--drop downs-->
+            <div class="navbar-right">
                 <div>
+                    
+                    <!--fullscreen button-->
                     <div class="dropdown hidden-xs-down btn-group fullscreen" v-if="fullscreen">
-                        <a href="javascript:void(0)" @click="fullscreen">
-                            <i class="fa fa-arrows-alt"></i>
+                        <a href="javascript:void(0)" @click="fullscreen" title="Tela Cheia">
+                            <i class="fa fa-arrows-alt text-white"></i>
                         </a>
                     </div>
-                    <b-dropdown class="notifications-menu bell_bg" right link>
-                        <span slot="text">
-                            <i class="fa fa-bell-o noti-icon"></i>
-                            <div class="notifications_badge_top">
-                                <span class="badge badge-danger text-white">4
-                                </span>
-                            </div>
-                        </span>
-                        <b-dropdown-item class="dropdownheader socio-tabs1" exact>
-                            <b-tabs>
-                                <b-tab title="Notifications" class="tabs_cont" active>
-                                    <b-dropdown-item exact>
-                                        <div class="row">
-                                            <div class="col-2 mt-2 ml-2">
-                                                <img class="rounded-circle" src="~img/authors/avatar1.jpg">
-                                            </div>
-                                            <div class="col-9 mt-2">
-                                                <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                    <br>
-                                                    <small class="ml-1 text-info">Today</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact>
-                                        <div class="row">
-                                            <div class="col-2 mt-2 ml-2">
-                                                <img class="rounded-circle" src="~img/authors/avatar5.jpg">
-                                            </div>
-                                            <div class="col-9 mt-2">
-                                                <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                    <br>
-                                                    <small class="ml-1 text-muted">week ago</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact>
-                                        <div class="row">
-                                            <div class="col-2 mt-2 ml-2">
-                                                <img class="rounded-circle" src="~img/authors/avatar3.jpg">
-                                            </div>
-                                            <div class="col-9 mt-2">
-                                                <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                    <br>
-                                                    <small class="ml-1 text-muted">month ago</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="mt-2 notifications_data">
-                                        <div class="row">
-                                            <div class="col-2 mt-2 ml-2">
-                                                <img class="rounded-circle" src="~img/authors/avatar3.jpg">
-                                            </div>
-                                            <div class="col-9 mt-2">
-                                                <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                    <br>
-                                                    <small class="ml-1 text-muted">2 months ago</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item class="dropdown-footer " exact>
-                                        <div>
-                                            <strong>View all</strong>
-                                        </div>
-                                    </b-dropdown-item>
-                                </b-tab>
-                                <b-tab title="Events" class="event_date">
-                                    <b-dropdown-item exact class="notifications_data">
-                                        <div class="noti_item">
-                                            <div class="row">
-                                                <div class="col-2   ml-3">
-                                                    <i class="fa fa-calendar text-info noti_msg"></i>
-                                                </div>
-                                                <div class="col-9 mt-1">
-                                                    <span>New Lorem Event from john.</span>
-                                                    <br>
-                                                    <span class="text-muted">Apr 29th 2017</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="notifications_data">
-                                        <div class="row">
-                                            <div class="col-2 ml-3">
-                                                <i class="fa fa-calendar text-info noti_msg"></i>
-                                            </div>
-                                            <div class="col-9 mt-1">
-                                                <span>New Lorem Event from john.</span>
-                                                <br>
-                                                <span class="text-muted">Apr 29th 2017</span>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="notifications_data">
-                                        <div class="row">
-                                            <div class="col-2 ml-3 mb-2">
-                                                <i class="fa fa-calendar text-info noti_msg"></i>
-                                            </div>
-                                            <div class="col-9 mt-1">
-                                                <span>New Lorem Event from john.</span>
-                                                <br>
-                                                <span class="text-muted">Apr 29th 2017</span>
-                                            </div>
-                                        </div>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item class="dropdown-footer">
-                                        <div>
-                                            <strong>View all</strong>
-                                        </div>
-                                    </b-dropdown-item>
-                                </b-tab>
-                                <b-tab title="Updates" disabled>
-                                </b-tab>
-                            </b-tabs>
-                        </b-dropdown-item>
-                    </b-dropdown>
+
+                    <!--Chat acess toggle-->
+                    <div class="dropdown hidden-xs-down btn-group">
+                        <router-link to="../attendant/" title="Dashboard">
+                            <i class="fa fa-tachometer text-white" aria-hidden="true"></i>                            
+                        </router-link>
+                    </div>
+                    <div class="dropdown hidden-xs-down btn-group">
+                        <router-link to="/attendant/chat" title="Chat">
+                            <i class="fa fa-weixin text-white" aria-hidden="true"></i>                            
+                        </router-link>
+                    </div>
 
                     <!--rightside toggle-->
-
-                    <div class="dropdown hidden-xs-down btn-group " id="right-side" @click="toggle_right">
+                    <!-- <div class="dropdown hidden-xs-down btn-group " id="right-side" @click="toggle_right">
                         <a href="javascript:void(0)">
                             <i class="fa fa-envelope noti-icon"></i>
                             <div class="notifications_badge_top">
@@ -150,41 +38,43 @@
                                 </span>
                             </div>
                         </a>
-                    </div>
-
-
-                    <!--rightside toggle-->
+                    </div> -->
 
                     <!-- User Account: style can be found in dropdown-->
-                    <b-dropdown class="user user-menu bell_bg user_btn" right link>
-                        <span slot="text">
-                            <img :src="this.$store.state.user.picture" class="rounded-circle" alt="User Image">
-                            <!-- User name-->
-                            <p class="user_name_max">{{name}}</p>
-                        </span>
+                    <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none" >
+                        <template v-slot:button-content>
+                            <img src="/images/prf4.jpg" class="my-rounded-circle" alt="User Image">
+                        </template>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/user_profile" exact class="drpodowtext">
-                                <i class="fa fa-user-o"></i> Profile
+                            <router-link to="/attendant/user_profile" exact class="drpodowtext">
+                                <i class="fa fa-user-o"></i> Perfil
                             </router-link>
                         </b-dropdown-item>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/edit_user" exact class="drpodowtext">
-                                <i class="fa fa-cog"></i> Settings
+                            <router-link to="/attendant/edit_user" exact class="drpodowtext">
+                                <i class="fa fa-cog"></i> Configuração
                             </router-link>
                         </b-dropdown-item>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/lockscreen" exact class="drpodowtext">
-                                <i class="fa fa-lock"></i> Lock
+                            <router-link to="/attendant/lockscreen" exact class="drpodowtext">
+                                <i class="fa fa-lock"></i> Bloquear
                             </router-link>
                         </b-dropdown-item>
                         <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/" class="drpodowtext">
-                                <div v-on:click="logout"><i class="fa fa-sign-out"></i> Logout</div>
+                                <div v-on:click="logout">
+                                    <i class="fa fa-sign-out"></i> Sair
+                                </div>
                             </router-link>
                         </b-dropdown-item>
                     </b-dropdown>
+
+
                 </div>
             </div>
+
+
+
         </nav>
     </header>
 </template>
@@ -210,16 +100,19 @@
             },
             toggle_right() {
                 this.$store.commit('rightside_bar', "toggle");
-
             },
             logout() {
                 window.localStorage.removeItem('token')
                 window.localStorage.removeItem('user')
                 delete axios.defaults.headers.common['Authorization']
                 this.$router.push({name: "login"})
-            }
+            },
+            urlIMG: function(){            
+                // return require('../../../img/');
+                // /var/www/html/socialhub/resources/img/pages/User-01.png
+                // return require('../../../img/pages/default-matter-photo.jpg');
+            },
         },
-
         beforeMount: function () {
             this.user = window.localStorage.getItem('user');
             if (this.user != null) {
@@ -228,6 +121,8 @@
         },
     }
 </script>
+
+
 <style lang="scss" scoped>
     @import "../css/customvariables";
 
@@ -384,8 +279,21 @@
 
     .dropdown-footer {
         padding: 10px !important;
-    }
+    }    
+
+.my-rounded-circle{
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+.dropdown{
+    outline: none
+}
+
 </style>
+
 <style type="text/css" lang="scss">
     @import "../css/customvariables";
 

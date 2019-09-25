@@ -1,15 +1,17 @@
 window.axios = require('axios')
 import Vue from 'vue'
 import App from './App'
-import router from './router'
+
+import router from './router'   /** **************  */
+
 import store from './store/store.js'
 import VueAnalytics from 'vue-analytics'
 import ApiService from "./common/api.service";
 import _ from 'lodash';
 
-// window.axios.defaults.headers.common = {
-//     'X-Requested-With': 'XMLHttpRequest'
-// }
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest'
+} 
 
 // Google Analytics
 const google_analytics_key = store.state.google_analytics_key

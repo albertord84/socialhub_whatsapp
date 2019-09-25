@@ -7,34 +7,25 @@
     import chat_data from "../../../js/chat_data";
 
     export default {
-        // ===Component name
         name: "chat_page",
-        // ===Props passed to component
-        props: {},
-        // ===Components used by this component
+        props: {
+        },
         components: {
             chat,
         },
-        // ===component Data properties
         data() {
             return {
                 chat: chat_data,
             }
         },
-        // ===Code to be executed when Component is mounted
         mounted() {
-
         },
-        // ===Computed properties for the component
-        computed: {},
-        // ===Component methods
+        computed: {
+        },
         methods: {
-
         }
     }
 </script>
-<!-- styles -->
-<!-- adding scoped attribute will apply the css to this component only -->
 <style lang="scss" scoped>
     .chat {
         min-height: calc(100vh - 50px);

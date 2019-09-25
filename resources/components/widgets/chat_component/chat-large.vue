@@ -1,34 +1,83 @@
 <template>
     <div class="row">
 
+        <right-side-bar :right_layout ="right_layout"></right-side-bar>
+        <left-side-bar  :left_layout ="left_layout"></left-side-bar>
+
         <!-- Left side of chat-->
-        <!-- <div class="col-sm-4 col-md-4 mt-3"> -->
         <div class="col-lg-3 p-0">
             <div class="chatalign">
-                <div style="background-color:#eaf5ff;height:50px; padding-top:5px; border: 1px solid #e9e9e9;">
-                    <!-- <span class="pl-4">
-                        <img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img ">
-                    </span>
-                    <span class="pl-3 person_name text_dark">{{ list[selected_user_index].user }} </span>                     -->
-                    <ul class='button'>
-                        <li><a href='#'>Inicio</a></li>
-                        <li><a href='#'>Sobre nosotros</a></li>
-                        <li><a href='#'>Servicios</a></li>
-                    </ul>
-                    
-                    <!-- <ul >
-                        <li>
-                                <div class="top_border1 bg_color1">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </div>
-                        </li>
-                        <li>
-                                <div class="top_border1 bg_color1">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </div>
-                        </li>
-                    </ul> -->
-                    
+                <div class="sect_header">
+                    <ul class='menu'>
+                        <li><p>Contatos</p></li>                    
+                        <ul class='menu' style="float:right">
+                            <li><a href='javascript:void(0)' title="Novo contato" class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus" ></i></a></li>
+                            <li><a href='javascript:void(0)' title="Filtar contatos" class="round_btn" @click="toggle_left('toggle-filter-contact')"><i class="fa fa-filter" ></i></a></li>
+                            <!-- <li><a href='javascript:void(0)' title="Filtar mensages" @click.prevent="" >
+                                    <i class="fa fa-envelope-open-o "></i>
+                                    <ul class="menu" style="float:right;">
+                                        <li><a href="javascript:void(0)"><i class="fa fa-database"></i> Arquivadas</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-star-o"></i> Favoritas</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-bell-o"></i> Lembretes</a></li>                    
+                                        <li><a href="javascript:void(0)"><i class="fa fa-address-card-o"></i> Resumos</a></li>
+                                    </ul> 
+                            </a></li>  -->
+                            <li>
+                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
+                                    <template v-slot:button-content>
+                                        <i class="fa fa-envelope-open-o mt-3" title="Ver mensagens" style="color:gray"></i>
+                                    </template>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivadas</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-star-o"></i> Favoritas</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembretes</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-address-card-o"></i> Resumos</a>
+                                    </b-dropdown-item>
+                                </b-dropdown>
+                            </li> 
+                            <!-- 
+                            <li><a href='javascript:void(0)' title="Status" @click.prevent="">
+                                    <i class="fa fa-calendar"></i>
+                                    <ul class="menu" style="float:right;">
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-desc" style="color:black"></i> Ativos</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-asc" style="color:black" ></i> Inativos</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Transferidos</a></li>                    
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Encerrados</a></li>
+                                    </ul>
+                            </a></li>
+                            <li><a href='javascript:void(0)' title="Data" @click.prevent="">
+                                    <i class="fa fa-calendar"></i>
+                                    <ul class="menu" style="float:right;">
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-desc" style="color:black" ></i> Adhesões recentes</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-asc" style="color:black" ></i> Adhesões antigas</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Conversas recentes</a></li>                    
+                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Conversas antigas</a></li>
+                                    </ul>
+                            </a></li>
+                            <li><a href='javascript:void(0)' title="Rede Social" @click.prevent="" >
+                                    <i class="fa fa-yelp"></i>
+                                    <ul class="menu" style="float:right;">
+                                        <li><a href="javascript:void(0)"><i class="fa fa-whatsapp" style="color:green" ></i> Whatsapp</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-facebook" style="color:#3b5998" ></i> Messenger</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fa fa-instagram" style="color:#c13584" ></i> Direct</a></li>                    
+                                        <li><a href="javascript:void(0)"><i class="fa fa-linkedin" style="color:#0077B5" ></i> LinkedIn</a></li>
+                                    </ul> 
+                            </a></li> 
+                            -->
+                        </ul>
+                    </ul>                    
+                </div>
+                <div class="sect_header">
+                    <div style="width:100%; padding:15px 9px 3px 5px" class="form-group has-search">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="text" class="form-control" placeholder="Buscar contato">
+                    </div>
                 </div>
                 <v-scroll :height="Height(0)"  color="#ccc" bar-width="8px">
                     <ul>
@@ -38,68 +87,15 @@
                                     <a class="float-left desc-img mt-3">
                                         <img :src="user.image" class="img-fluid rounded-circle">
                                     </a>
-                                    <span class="status-online  m-t-10"></span>
+                                    <span class="status-online"></span>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                        <a class="c-head text-success " href="javascript:void(0)">{{user.user}}</a>
-                                        <p class="text-muted">
-                                            <span>{{ user.status }}</span>
-                                        </p>
+                                        <a class="text-success " href="javascript:void(0)">{{user.user}}</a><br>
+                                        <a class="text-muted"><span>{{ text_truncate(user.status,20) }}</span></a>
                                     </div>
                                     <span class="mt-4 text-muted">12.54</span>
                                 </article>
                             </a>
-                        </li>                        
-                        <li v-for="(user,index) in list" class="chat_block" :key="index">
-                            <a :href="user.user" @click.prevent="show_chat(user,index)">
-                                <article class="media">
-                                    <a class="float-left desc-img mt-3">
-                                        <img :src="user.image" class="img-fluid rounded-circle">
-                                    </a>
-                                    <span class="status-online  m-t-10"></span>
-                                    <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                        <a class="c-head text-success " href="javascript:void(0)">{{user.user}}</a>
-                                        <p class="text-muted">
-                                            <span>{{ user.status }}</span>
-                                        </p>
-                                    </div>
-                                    <span class="mt-4 text-muted">12.54</span>
-                                </article>
-                            </a>
-                        </li>                        
-                        <li v-for="(user,index) in list" class="chat_block" :key="index">
-                            <a :href="user.user" @click.prevent="show_chat(user,index)">
-                                <article class="media">
-                                    <a class="float-left desc-img mt-3">
-                                        <img :src="user.image" class="img-fluid rounded-circle">
-                                    </a>
-                                    <span class="status-online  m-t-10"></span>
-                                    <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                        <a class="c-head text-success " href="javascript:void(0)">{{user.user}}</a>
-                                        <p class="text-muted">
-                                            <span>{{ user.status }}</span>
-                                        </p>
-                                    </div>
-                                    <span class="mt-4 text-muted">12.54</span>
-                                </article>
-                            </a>
-                        </li>                        
-                        <li v-for="(user,index) in list" class="chat_block" :key="index">
-                            <a :href="user.user" @click.prevent="show_chat(user,index)">
-                                <article class="media">
-                                    <a class="float-left desc-img mt-3">
-                                        <img :src="user.image" class="img-fluid rounded-circle">
-                                    </a>
-                                    <span class="status-online  m-t-10"></span>
-                                    <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                        <a class="c-head text-success " href="javascript:void(0)">{{user.user}}</a>
-                                        <p class="text-muted">
-                                            <span>{{ user.status }}</span>
-                                        </p>
-                                    </div>
-                                    <span class="mt-4 text-muted">12.54</span>
-                                </article>
-                            </a>
-                        </li>                        
+                        </li>
                     </ul>
                 </v-scroll>
             </div>
@@ -109,13 +105,39 @@
         <!-- <div class="col-sm-4 col-md-5 mt-3"> -->
         <div class="col-lg-6 p-0">
             <div class="converstion_back">
-                <div class="chat_header" :class="bgColor">
-                    <span class="pl-4">
-                        <img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img ">
-                    </span>
-                    <span class="pl-3 person_name text_dark">{{ list[selected_user_index].user }} </span>                    
+                <div class="sect_header">
+                    <ul class='menu'>
+                        <li><span class="pl-4">
+                            <img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img ">
+                        </span></li>
+                        <li><span class="pl-3 person_name person_name_style"></span></li>
+                        <li><p class="pl-0 ml-0">{{ list[selected_user_index].user }} </p></li>                        
+                        <ul class='menu' style="float:right">
+                            <li><a href="javascript:void()" title="Buscar..." @click="toggle_right('toggle-find-messages')"><i class="fa fa-search"></i></a></li>
+                            <li><a href="javascript:void()" title="Anexar"><i class="fa fa-paperclip"></i></a></li>
+                            <li>
+                                <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
+                                    <template v-slot:button-content>
+                                        <i class="fa fa-ellipsis-v mt-3" title="Opcões"  style="color:gray"></i>
+                                    </template>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivadas</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-star-o"></i> Favoritas</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembretes</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-address-card-o"></i> Resumos</a>
+                                    </b-dropdown-item>
+                                </b-dropdown>
+                            </li> 
+                        </ul>
+                    </ul> 
                 </div>
-                <v-scroll :height="Height(129)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
+                <v-scroll :height="Height(131)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
                     <ul>
                         <li v-for='(item,index) in list[selected_user_index].messages' :key="index" :class="[{ sent: item.from=='me' },{ received: item.from!=='me' }]">
                             <div>
@@ -136,42 +158,68 @@
 
         <!-- Right side of chat-->
         <!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div class="col-lg-3  p-0">
-            <div style="background-color:red;height:50px; padding-top:5px">
-                <!-- <span class="pl-4">
-                    <img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img ">
-                </span>
-                <span class="pl-3 person_name text_dark">{{ list[selected_user_index].user }} </span>                     -->
+        <div class="col-lg-3 bg-white p-0">
+            <div class="sect_header">
+                <ul class='menu'>
+                    <li><p>Detalhes</p></li>
+                        <ul class='menu' style="float:right">                            
+                            <li>
+                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
+                                    <template v-slot:button-content>
+                                        <i class="fa fa-ellipsis-v mt-3" title="Ações sobre contato" style="color:gray"></i>
+                                    </template>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-exchange"></i> Transferir</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-bell-slash-o"></i> Silenciar</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-ban"></i> Bloquear</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-trash-o"></i> Eliminar</a>
+                                    </b-dropdown-item>
+                                </b-dropdown>
+                            </li>                            
+                        </ul>
+                </ul> 
             </div>
-            <div class="profile text-center pt-3">
-                <img :src="list[selected_user_index].image" alt="User Image" class="rounded-circle img-fluid profile-thumb mb-3">
-                <h4 class="text-gray">{{list[selected_user_index].user}}</h4>
-                <p>{{list[selected_user_index].status}}</p>
-                <p>Mobile Number: <span><b>{{list[selected_user_index].mbl_num}}</b></span></p>
-                <p>Organisation: <span><b>{{list[selected_user_index].work}}</b></span></p>
-                <div class="attachments text-left p-4">
-                    <h5>Attachments</h5>
-                    <div class="row">
-                        <div class="col-4 mt-2">
-                            <img src="~img/pages/14.jpg" alt="" class="img-fluid">
-                        </div>
-                        <div class="col-4 mt-2">
-                            <img src="~img/pages/15.jpg" alt="" class="img-fluid">
-                        </div>
-                        <div class="col-4 mt-2">
-                            <img src="~img/pages/16.jpg" alt="" class="img-fluid">
-                        </div>
-                        <div class="col-4 mt-2">
-                            <img src="~img/pages/17.jpg" alt="" class="img-fluid">
-                        </div>
-                        <div class="col-4 mt-2">
-                            <img src="~img/pages/18.jpg" alt="" class="img-fluid">
-                        </div>
-                        <div class="col-4 mt-2">
-                            <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+            <label></label>
+            <div class="profile sec_decription bg-white text-center">
+                    <img :src="list[selected_user_index].image"  class="rounded-circle  mb-3 mt-3" alt="User Image">
+                    <h4 class="text-gray">{{list[selected_user_index].user}}</h4>
+                    <p>{{list[selected_user_index].status}}</p>
+                    <p>Mobile Number: <b>{{list[selected_user_index].mbl_num}}</b></p>
+                    <p>Organisation: <b>{{list[selected_user_index].work}}</b></p>
+                    <div class="attachments  p-4">
+                        <h5>Attachments</h5>
+                        <div class="row">
+                            <div class="col-4 mt-2">
+                                <img src="~img/pages/14.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="col-4 mt-2">
+                                <img src="~img/pages/15.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="col-4 mt-2">
+                                <img src="~img/pages/16.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="col-4 mt-2">
+                                <img src="~img/pages/17.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="col-4 mt-2">
+                                <img src="~img/pages/18.jpg" alt="" class="img-fluid">
+                            </div>
+                            <div class="col-4 mt-2">
+                                <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+                            </div>
                         </div>
                     </div>
-                </div>
+
+
             </div>
         </div>
         
@@ -179,6 +227,10 @@
 </template>
 <script>
     import vScroll from "../../plugins/scroll/vScroll.vue";
+
+    import rightSideBar from '../../layouts/right-side-bar'
+    import leftSideBar  from '../../layouts/left-side-bar'
+
     export default {
         props: {
             list: {
@@ -186,19 +238,33 @@
             }
         },
         components: {
-            vScroll
+            vScroll,
+            rightSideBar,
+            leftSideBar
         },
         mounted() {
 
         },
+        created() {
+            window.addEventListener('resize', this.handleResize)
+            this.handleResize();
+        },
+        destroyed() {
+            window.removeEventListener('resize', this.handleResize)
+        },
         data() {
             return {
                 images: [ '~img/pages/chat_background.png', '~img/pages/chat_background2.png', '~img/pages/chat_background3.png'],
-                // bgColor:'~img/pages/chat_background.png',
                 bgColor:require('img/pages/chat_background.png'),
                 className:'',
                 newmessage: '',
                 selected_user_index: 0,
+                right_layout:'toggle-edit-contact',
+                left_layout:'toggle-add-contact',
+                window: {
+                    width: 0,
+                    height: 0
+                }
             }
         },
         methods: {
@@ -219,9 +285,34 @@
                 }, 20)
             },
             Height(val){
-                return (window.innerHeight-val)+'px';
+                return (this.window.height-val)+'px';
+            },
+            toggle_right(val) {
+                this.right_layout = val;
+                this.$store.commit('rightside_bar', "toggle");
+            },
+            toggle_left(val) {
+                this.left_layout = val;
+                this.$store.commit('leftside_bar', "toggle");
+            },
+            text_truncate (str, length, ending) {
+                if (length == null) {
+                    length = 100;
+                }
+                if (ending == null) {
+                    ending = '...';
+                }
+                if (str.length > length) {
+                    return str.substring(0, length - ending.length) + ending;
+                } else {
+                    return str;
+                }
+            },
+            handleResize() {
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
             }
-        }
+        },
     }
 </script>
 <style scoped lang="scss">
@@ -394,11 +485,16 @@
         color: #63c17f;
     }
 
+    .person_name {
+        font-size: 12px;
+        color: gray;
+    }
+
     .profile {
         padding-bottom: 15px;
-        border: none;
+        // border: none;
         height: calc(100% - 50px);
-        overflow-y: auto;
+        // overflow-y: auto;
         background-color: #FFFFFF;
     }
     .wrapper .converstion_back .ss-container{
@@ -421,60 +517,79 @@
     }
 
     //added here
-    .top_border1{
-        width:40px;
-        height:40px;
-        // border-radius: 50%;
-        // line-height: 2.7;
-        font-size: 17px;
-        color: gray;
-        // background-color: #4b9ce4;
-        // padding: 0px;
-        text-align: center
-        // box-shadow:1px 1px 20px rgba(75, 156, 228, 0.88);
+    //-----------------------------------------------
+    .has-search .form-control {
+        padding-left: 2.375rem;
     }
-    .bg_color1{
-        
-    }
-
-    #button {
-        // padding: 0;
-    }
-    #button li {
-        // display: inline;
-    }
-    #button li a {
-        // font-family: Arial;
-        // font-size: 11px;
-        // text-decoration: none;
-        // float: left;
-        // padding: 10px;
-        // background-color: #2175bc;
-        // color: #fff;
-    }
-
-    .button {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #333333;
-    }
-
-    .button li {
-        float: left;
-    }
-
-    .button li a {
+    .has-search .form-control-feedback {
+        position: absolute;
+        z-index: 2;
         display: block;
-        color: white;
+        width: 2.375rem;
+        height: 2.375rem;
+        line-height: 2.375rem;
         text-align: center;
+        pointer-events: none;
+        color: #aaa;
+    }  
+    
+    //--------------------------------------------------
+    .menu{
+        z-index: 100;
+        list-style:none; 
+        margin: 0;
+        padding: 0;        
+    }
+    .menu li{
+        position:relative; 
+        float:left; 
+    }
+    .menu li a,p{
+        font-size: 14px;
+        display: block;
+        color: gray;
+        text-align: left;
         padding: 16px;
         text-decoration: none;
+    }    
+    .menu li ul{
+        position:absolute; 
+        top:50px; 
+        left:-150px;
+        background-color:rgb(250, 248, 248); 
+        display:none;
+        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
+    }   
+    .menu li:hover ul, 
+    .menu li.over ul{
+        display:block;
     }
-
-    .button li a:hover {
-        background-color: #111111;
+    .menu li ul li{
+        display:block; 
+        width:100%;
     }
-
+    .menu li ul li:hover{
+        background-color: rgb(240, 238, 238)
+    }
+    .round_btn{
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+    }
+    .menu, li, a, a:active, a:focus {
+        outline: none;
+    }
+    //---------------------------------------------------
+    .sect_header{
+        background-color:#eaf5ff;
+        height:50px;  
+        border: 1px solid #e9e9e9;
+    }
+    .sec_decription p, h4{
+        text-align: center !important;
+        // margin: 0px !important;
+        padding: 5px !important;
+    }
+    
+    
 </style>

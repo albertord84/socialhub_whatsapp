@@ -2,30 +2,24 @@
     <aside class="right-aside">        
         <section class="content">
             <slot></slot>
-            <!--rightside bar -->
-            <right-side-bar></right-side-bar>
         </section>
-        <!-- /.content -->
     </aside>
 </template>
 
 <script>
-    import rightSideBar from './right-side-bar'
     export default {
-        name: "right-side",
+        name: "center-side",
         components: {
-            rightSideBar,
         }
     }
 </script>
 
 <style lang="scss" scoped>
     .right-aside {
-        padding: 0 20px 10px 20px;
+        padding: 0 20px 0px 20px;
         width: 100%;
         max-width: 100%;
-        // min-height: calc(100% - 50px);
-        height: 100vh;
+        height: calc(100vh-100px);
         margin-left: 0px;
         
         .content-header > h1 {

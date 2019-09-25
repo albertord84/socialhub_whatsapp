@@ -5,25 +5,27 @@
                 <div class="row">
                     <div class="col-sm-12 mt-3">
                         <h2 class="text-center">
-                            <img src="~img/logo_black.png" alt="Logo">
+                            <!-- <img src="~img/logo_black.png" alt="Logo"> -->
+                            <img width="200px" src="~img/socialhub/logo-social-hub.png" alt="Logo">
                         </h2>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-sm-12">
                         <div class="text-center">
-                            <img src="~img/pages/login_user-01.png" class="rounded-circle">
+                            <!-- <img src="~img/pages/login_user-01.png" class="rounded-circle"> -->
+                            <img width="120px" src="~img/socialhub/login.png" class="rounded-circle">
                         </div>
                     </div>
                 </div>
                 <vue-form :state="formstate" @submit.prevent="onSubmit">
                     <div class="row mx-1 mb-3">
                         <div class="col-sm-12 mt-3 ">
-                            <p v-show="show_error" class="text-danger">Email or password is not valid</p>
+                            <p v-show="show_error" class="text-danger">Email ou senha inválido</p>
 
                             <div class="form-group">
                                 <validate tag="div">
-                                    <label for="email">E-mail</label>
+                                    <label for="email">Email</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
@@ -32,8 +34,8 @@
                                                autofocus placeholder="E-mail" class="form-control"/>
                                     </div>
                                     <field-messages name="email" show="$invalid && $submitted" class="text-danger">
-                                        <div slot="required">Email is a required field</div>
-                                        <div slot="email">Email is not valid</div>
+                                        <div slot="required">Email é obrigatório</div>
+                                        <div slot="email">Email inválido</div>
                                     </field-messages>
                                 </validate>
                             </div>
@@ -47,19 +49,19 @@
 
                             <div class="form-group">
                                 <validate tag="div">
-                                    <label for="password"> Password</label>
+                                    <label for="password"> Senha</label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                         </div>
                                         <input v-model="model.password" name="password" id="password" type="password"
-                                               required placeholder="Password" class="form-control" minlength="4"
+                                               required placeholder="Senha" class="form-control" minlength="4"
                                                maxlength="10"/>
                                     </div>
                                         <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                                            <div slot="required">Password is required</div>
-                                            <div slot="minlength">Password should be atleast 4 characters long</div>
-                                            <div slot="maxlength">Password should be atmost 10 characters long</div>
+                                            <div slot="required">A senha é obrigatória</div>
+                                            <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
+                                            <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
                                         </field-messages>
 
                                 </validate>
@@ -68,36 +70,36 @@
 
 
                         </div>
-                        <div class="col-lg-6 col-md-6">
+                        <!-- <div class="col-lg-6 col-md-6">
                             <validate tag="label">
                                 <b-form-checkbox id="remember" v-model="model.remember">Remember Me</b-form-checkbox>
                                 <field-messages name="remember" show="$invalid && $submitted" class="text-danger">
                                     <div slot="check-box">Terms must be accepted</div>
                                 </field-messages>
                             </validate>
-                        </div>
+                        </div> -->
 
                         <div class="col-lg-6 text-right">
                             <div class="form-group">
                                 <div class="login-text">
-                                <router-link tag="a" to="/forgotpassword" class="">Forgot Your Password ?</router-link></div>
+                                <router-link tag="a" to="/forgotpassword" class="">Esqueceu sua senha?</router-link></div>
                             </div>
                         </div>
 
                         <div class="col-lg-12 text-right">
                             <div class="form-group">
-                                <input type="submit" value="Sign In" class="btn btn-success btn-block"/>
+                                <input type="submit" value="Entrar" class="btn btn-primary btn-block"/>
                             </div>
                         </div>
                         <br>
 
-                        <div class="col-lg-12 text-left">
+                        <!-- <div class="col-lg-12 text-left">
                             <div class="form-group">
                                 <div class="login-text">
                                 New User?
                                 <router-link tag="a" to="/register" class="">Sign Up</router-link></div>
                             </div>
-                        </div>
+                        </div> -->
 
 
                     </div>
@@ -124,7 +126,6 @@
                 model: {
                     email: "",
                     password: ""
-
                 }
             }
         },
@@ -137,8 +138,18 @@
                         .then(data => {
                             this.$store.dispatch('login', data);
                             this.show_error = false;
+                            
+                            //TODO-JR devolver el role del usuario que hizo login y usar
+                            data.data.user.role ='admin';
+                            if(data.data.user.role =='admin')
+                                this.$router.push({name: "admin"});
+                            else
+                            if(data.data.user.role =='attendant')
+                                this.$router.push({name: "attendant"});
+                            else
+                                this.$router.push({name: "login"});
                         })
-                        .then(() => this.$router.push({name: "dashboard"}))
+                        // .then(() => this.$router.push({name: "dashboard"}))
                         .catch(error => {
                             this.show_error = true;
                         })
@@ -169,7 +180,8 @@
 
 
     .img_backgrond {
-        background-image: url("../../img/pages/Login-03-01.png");
+        /* background-image: url("../../img/pages/Login-03-01.png"); */
+        background-image: url("../../img/socialhub/background2.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         width: 100%;

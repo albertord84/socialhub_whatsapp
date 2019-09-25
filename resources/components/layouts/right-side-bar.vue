@@ -1,19 +1,19 @@
 <template>
     <div id="right" :class="{ open: this.$store.state.right_open }">
-        <div id="right-slim">
-            <div class="rightsidebar-right">
+        <div id="right-slim" >
+            <edit_contact v-if="right_layout=='toggle-edit-contact'"></edit_contact>
+            <find_messages v-if="right_layout=='toggle-find-messages'"></find_messages>
 
+            <!-- <div class="rightsidebar-right">
                 <b-tabs ref="tabs" card>
                     <b-tab active>
                         <template slot="title">
                             <i class='fa fa-user-o text-success'></i>
                         </template>
-
                         <div id="slim_t1">
                             <div>
                                 <h5 class="rightsidebar-right-heading text-uppercase text-xs bg-success text-white">
-                                    <!--<i class="menu-icon  fa fa-comment"></i>-->
-                                    Recent Chats
+                                    {{right_layout}}
                                 </h5>
                                 <ul class="list-unstyled margin-none">
                                     <li class="rightsidebar-contact-wrapper">
@@ -90,17 +90,25 @@
 
                     </b-tab>
                 </b-tabs>
-
-
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
 <script>
     import "../../sass/_right_side_bar.scss"
 
+    import edit_contact from "../pages/edit_contact.vue";
+    import find_messages from "../pages/find_messages.vue";
+
     export default {
     name: "right_side_bar",
+    props:{
+            right_layout:''
+        },
+    components:{
+        edit_contact,
+        find_messages
+    },
     mounted: function() {
 
     },

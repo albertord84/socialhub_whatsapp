@@ -1,10 +1,22 @@
-import layout_routes from './layout'
+import routes_attendant from './routes_attendant.js'
+import routes_admin from './routes_admin.js'
 
 const routes = [
 {
-    path: '/', //pata todo o que precisar de customer
+    path: '/admin', //para todo o que precisar de customer
     component: resolve => require(['src/layout'], resolve),
-    children: layout_routes
+    children: routes_admin
+},  {
+    path: '/attendant', //para todo o que precisar de customer
+    component: resolve => require(['src/layout_attendant'], resolve),
+    children: routes_attendant
+},  {
+    path: '/',
+    name: 'login',
+    component: resolve => require(['pages/login'], resolve),
+    meta: {
+        title: "Login",
+    }
 }, {
     path: '/login',
     name: 'login',

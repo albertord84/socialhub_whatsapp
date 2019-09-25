@@ -14,13 +14,10 @@ let mutations = {
         }
     },
     rightside_bar(state, option) {
-
         if (option == "open") {
             state.right_open = true;
-
         } else if (option == "close") {
             state.right_open = false;
-
         } else if (option == "toggle") {
             state.right_open = !state.right_open;
         }
@@ -28,8 +25,28 @@ let mutations = {
             document.getElementsByTagName("body")[0].classList.add("sidebar-right-opened");
             document.getElementById("right-side").classList.add("right-active");
         } else {
-            document.getElementsByTagName("body")[0].classList.remove("sidebar-right-opened");
-            document.getElementById("right-side").classList.remove("right-active");
+            if(document.getElementsByTagName("body")[0] && document.getElementById("right-side")){
+                document.getElementsByTagName("body")[0].classList.remove("sidebar-right-opened");
+                document.getElementById("right-side").classList.remove("right-active");
+            }
+        }
+    },
+    leftside_bar(state, option) {
+        if (option == "open") {
+            state.left_open = true;
+        } else if (option == "close") {
+            state.left_open = false;
+        } else if (option == "toggle") {
+            state.left_open = !state.left_open;
+        }
+        if (state.left_open) {
+            document.getElementsByTagName("body")[0].classList.add("sidebar-left-opened");
+            document.getElementById("left-side").classList.add("left-active");
+        } else {
+            if(document.getElementsByTagName("body")[0] && document.getElementById("left-side")){
+                document.getElementsByTagName("body")[0].classList.remove("sidebar-left-opened");
+                document.getElementById("left-side").classList.remove("left-active");
+            }
         }
     },
     routeChange(state, loader) {
