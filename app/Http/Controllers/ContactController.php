@@ -29,11 +29,19 @@ class ContactController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->contactRepository->pushCriteria(new RequestCriteria($request));
-        $contacts = $this->contactRepository->all();
-
-        return view('contacts.index')
-            ->with('contacts', $contacts);
+        try {
+            // $User = Auth::check()? Auth::user():session('logged_user');
+            // if ($User && $User->role_id == 1/*Administrator - Account_bussine */) {
+                $this->contactRepository->pushCriteria(new RequestCriteria($request));
+                $contacts = $this->contactRepository->all();
+                return $contacts->toJson();
+                // return view('contacts.index')->with('contacts', $contacts);                
+            // } else {
+            //     abort(401, "Logged user data not found or it's not a admin");
+            // }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
@@ -58,6 +66,9 @@ class ContactController extends AppBaseController
         $input = $request->all();
 
         $contact = $this->contactRepository->create($input);
+
+        // TODO: Create Contact Chat Table
+        //
 
         Flash::success('Contact saved successfully.');
 

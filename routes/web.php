@@ -15,45 +15,41 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('admin', array('as' => 'admin', function()
-{
-    return View::make('welcome');
-}));
-
-
-Route::resource('messageTypes', 'MessageTypeController');
+// Route::get('admin', array('as' => 'admin', function(){
+//     return View::make('welcome');
+// }));
 
 Route::resource('users', 'UserController');
-
-Route::resource('roles', 'RoleController');
-
-Route::resource('statuses', 'StatusController');
-
-Route::resource('attendantsContacts', 'AttendantsContactController');
-
-Route::resource('roles', 'RoleController');
-
-Route::resource('roles', 'RoleController');
-
-Route::resource('statuses', 'StatusController');
-
 Route::resource('users', 'UserController');
 
-Route::resource('messageTypes', 'MessageTypeController');
+Route::resource('usersManagers', 'UsersManagerController');
+Route::resource('usersManagers', 'UsersManagerController');
 
-Route::resource('attendantsContacts', 'AttendantsContactController');
+Route::resource('usersAttendants', 'UsersAttendantController');
+Route::resource('usersAttendants', 'UsersAttendantController');
+
 
 Route::resource('contacts', 'ContactController');
+// Route::post('contacts/{id}', 'CourseController@update');
+// Route::delete('contacts/{id}', 'CourseController@delete');
+//Route::post('contacts/{id}/update_image', 'CourseController@update_image');
+
+Route::resource('messageTypes', 'MessageTypeController');
+Route::resource('messageTypes', 'MessageTypeController');
+
+Route::resource('statuses', 'StatusController');
+Route::resource('statuses', 'StatusController');
+
+Route::resource('attendantsContacts', 'AttendantsContactController');
+Route::resource('attendantsContacts', 'AttendantsContactController');
+
+Route::resource('roles', 'RoleController');
+Route::resource('roles', 'RoleController');
+Route::resource('roles', 'RoleController');
 
 Route::resource('passwordResets', 'PasswordResetController');
 
 Route::resource('systemConfigs', 'SystemConfigController');
 
-Route::resource('usersManagers', 'UsersManagerController');
 
-Route::resource('usersAttendants', 'UsersAttendantController');
 
-Route::resource('usersManagers', 'UsersManagerController');
-
-Route::resource('usersAttendants', 'UsersAttendantController');

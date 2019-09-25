@@ -1,0 +1,46 @@
+<?php
+
+use App\Models\Contact;
+use Illuminate\Database\Seeder;
+
+class ContactsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->command->info('Truncate Contacts Table...');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('contacts')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->command->info('Contact Alberto Reyes');
+        Contact::create([
+            'id' => '1',
+            'first_name' => 'Alberto',
+            'last_name' => 'Reyes',
+            'email' => 'albertord84@gmail.com',
+            'whatsapp_id' => '5521965536174',
+        ]);
+        $this->command->info('Contact Alberto Reyes');
+        Contact::create([
+            'id' => '2',
+            'first_name' => 'Jose',
+            'last_name' => 'Ramon',
+            'email' => 'josergm86@gmail.com',
+            'whatsapp_id' => '5521965913089',
+        ]);
+        $this->command->info('Contact Jose Ramon');
+        Contact::create([
+            'id' => '3',
+            'first_name' => 'Marcos',
+            'last_name' => 'Medina',
+            'email' => 'marcosmedina@azuregroup.com',
+            'whatsapp_id' => '5511970111071',
+        ]);
+        $this->command->info('Contact Marcos Medina');
+    }
+}

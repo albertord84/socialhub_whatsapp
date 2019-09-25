@@ -38,7 +38,8 @@ import {
 import datatable from "components/plugins/DataTable/DataTable.vue";
 Vue.use(ClientTable, {}, false);
 function getData() {
-    return [{
+    return 
+    [{
         code: "ZW",
         name: "Zimbabwe",
         created_at: "2015-04-24T01:46:50.459583",
@@ -398,7 +399,8 @@ export default {
     },
     data() {
         return {
-            rowdata: [{
+            rowdata: [
+            {
                 "fname": "Gale",
                 "lname": "Mcmyne",
                 "age": 16,
@@ -518,7 +520,8 @@ export default {
                 "age": 50,
                 "state": "DC",
                 "button": "<i class='fa fa-pencil text-info mr-3'></i><i class='fa fa-trash text-danger'></i>"
-            }],
+            }
+            ],
 
             columndata: [ // Array of objects
                 {
@@ -550,28 +553,33 @@ export default {
                 }
             ],
             columns: ['id', 'name', 'age'],
-            tableData: [{
-                id: 1,
-                name: "John",
-                age: "20"
-            }, {
-                id: 2,
-                name: "Jane",
-                age: "24"
-            }, {
-                id: 3,
-                name: "Susan",
-                age: "16"
-            }, {
-                id: 4,
-                name: "Chris",
-                age: "55"
-            }, {
-                id: 5,
-                name: "Dan",
-                age: "40"
-            }],
+
+            tableData: [
+                {
+                    id: 1,
+                    name: "John",
+                    age: "20"
+                }, {
+                    id: 2,
+                    name: "Jane",
+                    age: "24"
+                }, {
+                    id: 3,
+                    name: "Susan",
+                    age: "16"
+                }, {
+                    id: 4,
+                    name: "Chris",
+                    age: "55"
+                }, {
+                    id: 5,
+                    name: "Dan",
+                    age: "40"
+                }
+            ],
+            
             tableData2: [],
+
             options: {
                 sortIcon: {
                     base: 'fa',
@@ -589,8 +597,11 @@ export default {
                     dropdown: false
                 }
             },
+
             columnsnew: ['name', 'code', 'uri'],
+
             datanew: getData(),
+
             optionsnew: {
                 sortIcon: {
                     base: 'fa',

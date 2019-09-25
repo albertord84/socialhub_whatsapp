@@ -4,7 +4,7 @@ import routes_admin from './routes_admin.js'
 const routes = [
 {
     path: '/admin', //para todo o que precisar de customer
-    component: resolve => require(['src/layout'], resolve),
+    component: resolve => require(['src/layout_admin'], resolve),
     children: routes_admin
 },  {
     path: '/attendant', //para todo o que precisar de customer
