@@ -26060,3 +26060,6 @@ Laravel development server started: <http://127.0.0.1:8000>
 [Wed Sep 25 00:25:17 2019] 127.0.0.1:38994 [200]: /images/weathernew.jpg?7cedd06e2ef1a571bd81cdea0be3fb57
 [Wed Sep 25 00:25:17 2019] 127.0.0.1:38996 [200]: /images/headsset.jpg?de2882cf13cf950c6b7157d9dd8debea
 [Wed Sep 25 00:25:17 2019] 127.0.0.1:38998 [200]: /images/gal10.jpg?d5777c59690a2f2913d54a7b7b422750
+[Wed Sep 25 01:08:18 2019] 127.0.0.1:39914 [200]: /images/logo-social-hub.png?c69764408bd2af21c29270fd081a7155
+[Wed Sep 25 01:08:18 2019] 127.0.0.1:39916 [200]: /images/login.png?e639d73382016ce6d50862e345db6270
+[Wed Sep 25 01:11:13 2019] 127.0.0.1:39934 [200]: /favicon.ico
