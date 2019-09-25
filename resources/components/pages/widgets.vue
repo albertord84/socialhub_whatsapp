@@ -13,7 +13,7 @@
                                 <p class="ml-3">Project Architect</p>
                             </div>
                         </div>
-                        <table class="table account-details">
+                        <table class="table user-details">
                             <tbody>
                                 <tr>
                                     <td>

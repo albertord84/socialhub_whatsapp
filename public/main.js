@@ -14253,10 +14253,82 @@ module.exports = "/images/prf4.jpg?3646660aa7d4cdde9b5072baaf6ea80e";
           array = arguments[0],
           index = length;
 
+<<<<<<< HEAD
       while (index--) {
         args[index - 1] = arguments[index];
       }
       return arrayPush(isArray(array) ? copyArray(array) : [array], baseFlatten(args, 1));
+=======
+var routes = [{
+    path: '/customer', //pata todo o que precisar de customer
+    component: function component(resolve) {
+<<<<<<< HEAD
+        return __webpack_require__.e/* require */(5).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(511)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+=======
+        return __webpack_require__.e/* require */(5).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(512)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+>>>>>>> 529677f8b7b89a25a2b170dd6487d5ccfc0041dc
+    },
+    children: __WEBPACK_IMPORTED_MODULE_0__layout_attendant__["a" /* default */]
+}, {
+    path: '/login',
+    name: 'login',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(29).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(513)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "Login"
+    }
+}, {
+    path: '/register',
+    name: 'register',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(34).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(514)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "register"
+    }
+}, {
+    path: '/forgotpassword',
+    name: 'forgotpassword',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(35).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(515)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "Forgot Password"
+    }
+}, {
+    path: '/reset_password/:token',
+    name: 'reset_password_token',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(33).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(516)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "Reset Password"
+    }
+}, {
+    path: '/lockscreen',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(30).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(517)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "Lockscreen"
+    }
+}, {
+    path: '/500',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(53).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(518)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "500"
+    }
+}, {
+    path: '*',
+    component: function component(resolve) {
+        return __webpack_require__.e/* require */(54).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(519)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+    },
+    meta: {
+        title: "404"
+>>>>>>> 934db55dc9d45b411344772675906995f7d5d359
     }
 
     /**

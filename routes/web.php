@@ -20,3 +20,40 @@ Route::get('admin', array('as' => 'admin', function()
 {
     return View::make('welcome');
 }));
+
+
+Route::resource('messageTypes', 'MessageTypeController');
+
+Route::resource('users', 'UserController');
+
+Route::resource('roles', 'RoleController');
+
+Route::resource('statuses', 'StatusController');
+
+Route::resource('attendantsContacts', 'AttendantsContactController');
+
+Route::resource('roles', 'RoleController');
+
+Route::resource('roles', 'RoleController');
+
+Route::resource('statuses', 'StatusController');
+
+Route::resource('users', 'UserController');
+
+Route::resource('messageTypes', 'MessageTypeController');
+
+Route::resource('attendantsContacts', 'AttendantsContactController');
+
+Route::resource('contacts', 'ContactController');
+
+Route::resource('passwordResets', 'PasswordResetController');
+
+Route::resource('systemConfigs', 'SystemConfigController');
+
+Route::resource('usersManagers', 'UsersManagerController');
+
+Route::resource('usersAttendants', 'UsersAttendantController');
+
+Route::resource('usersManagers', 'UsersManagerController');
+
+Route::resource('usersAttendants', 'UsersAttendantController');
