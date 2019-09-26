@@ -24,6 +24,8 @@ class ContactsTableSeeder extends Seeder
             'last_name' => 'Reyes',
             'email' => 'albertord84@gmail.com',
             'whatsapp_id' => '5521965536174',
+            'status_id' => 1,
+            'status_id' => 1,
         ]);
         $this->command->info('Contact Alberto Reyes');
         Contact::create([
@@ -32,6 +34,7 @@ class ContactsTableSeeder extends Seeder
             'last_name' => 'Ramon',
             'email' => 'josergm86@gmail.com',
             'whatsapp_id' => '5521965913089',
+            'status_id' => 1,
         ]);
         $this->command->info('Contact Jose Ramon');
         Contact::create([
@@ -40,6 +43,7 @@ class ContactsTableSeeder extends Seeder
             'last_name' => 'Medina',
             'email' => 'marcosmedina@azuregroup.com',
             'whatsapp_id' => '5511970111071',
+            'status_id' => 1,
         ]);
         $this->command->info('Contact Marcos Medina');
     }
