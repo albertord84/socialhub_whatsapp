@@ -20,7 +20,7 @@
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="modalAddContact=!modalAddContact" title="Novo contato">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
@@ -87,145 +87,142 @@
         </div>
 
         <!-- Add Contact Modal -->
-        <b-modal v-model="modalAddContact" id="modalAddContact" :hide-footer="true" title="Novo contato">
-            <b-container fluid>
-                <!-- <div class="col-lg-12 sect_header">
-                    <ul class="menu">
-                        <li><a href="javascript:void(0)" @click.prevent="toggle_left"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
-                        <li><p>Novo contato</p> </li>
-                        <ul class="menu float-right">
-                            <li ><a href="javascript:void(0)" @click.prevent="toggle_left()"><i class="fa fa-close"></i></a></li>
-                        </ul>
-                    </ul>
-                </div>
-                <form>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style="padding: 29px 0px 5px" class="form-group has-search">
-                                    <span class="fa fa-user form-control-feedback"></span>
-                                    <input v-model="new_first_name" id="name" name="username" type="text" autofocus placeholder="Nome ou Apelido" class="form-control"/>
-                                </div>
-                                <field-messages name="username" show="$invalid && $submitted" class="text-danger"></field-messages>
-                            </validate>
+        <b-modal v-model="modalAddContact" size="lg" :hide-footer="true" title="Novo contato">
+            <b-container fluid>                
+                <form>                    
+                    <div class="row">
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-user form-control-feedback"></span>
+                            <input v-model="new_first_name" id="name" name="username" type="text" autofocus placeholder="Nome ou Apelido" class="form-control"/>
                         </div>
-                    </div>                
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style="" class="form-group has-search">
-                                    <span class="fa fa-envelope form-control-feedback"></span>
-                                    <input v-model="new_email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
-                                </div>
-                                <field-messages name="email" show="$invalid && $submitted" class="text-danger"><div slot="email">Email inválido</div></field-messages>
-                            </validate>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-headphones form-control-feedback"></span>
+                            <select v-model="new_contact_atendant_id" class="form-control has-search-color" size="1">
+                                <option value="0">Asignar um Atendente agora?</option>
+                                <option value="1">Bootstrap</option>
+                                <option value="2">CSS</option>
+                                <option value="3">JavaScript</option>
+                                <option value="4">HTML</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style="" class="form-group has-search">
-                                    <span class="fa fa-phone form-control-feedback"></span>
-                                    <input v-model="new_phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
-                                </div>
-                                <field-messages name="fix_phone" show="$invalid && $submitted" class="text-danger"></field-messages>
-                            </validate>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-envelope form-control-feedback"></span>
+                            <input v-model="new_email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-phone form-control-feedback"></span>
+                            <input v-model="new_phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                        </div>                                
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-whatsapp form-control-feedback"></span>
+                            <input v-model="new_whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-facebook form-control-feedback"></span>
+                            <input v-model="new_facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style="" class="form-group has-search">
-                                    <span class="fa fa-whatsapp form-control-feedback"></span>
-                                    <input v-model="new_whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
-                                </div>
-                                <field-messages name="whatsapp" show="$invali   d && $submitted" class="text-danger"><div slot="required">Whatssap é obrigatório</div></field-messages>
-                            </validate>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style="" class="form-group has-search">
-                                    <span class="fa fa-facebook form-control-feedback"></span>
-                                    <input v-model="new_facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
-                                </div>
-                                <field-messages name="facebook" show="$invalid && $submitted" class="text-danger"></field-messages>
-                            </validate>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style=" " class="form-group has-search">
-                                    <span class="fa fa-instagram form-control-feedback"></span>
-                                    <input v-model="new_instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
-                                </div>
-                                <field-messages name="instagram" show="$invalid && $submitted" class="text-danger">
-                                </field-messages>
-                            </validate>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <div style="" class="form-group has-search">
-                                    <span class="fa fa-linkedin form-control-feedback"></span>
-                                    <input v-model="new_linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
-                                </div>
-                                <field-messages name="linkedin" show="$invalid && $submitted" class="text-danger">
-                                </field-messages>
-                            </validate>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <validate tag="div">
-                                <textarea v-model="model.decription" name="decription" id="decription" placeholder="Adicione descrição ..." class="form-control" cols="30" rows="5"></textarea>
-                                <field-messages show="$invalid && $submitted" class="text-danger">
-                                </field-messages>
-                            </validate>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                                <span class="fa fa-instagram form-control-feedback"></span>
+                                <input v-model="new_instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
+                            </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-linkedin form-control-feedback"></span>
+                            <input v-model="new_linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
                         </div>
                     </div>
 
-                    <div class="col-sm-12" v-show="show_error">
-                        <ul>
-                            <li v-for="error in validationErrors" class="text-danger">{{error[0]}}</li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-12" v-show="show_success">
-                        <ul>
-                            <li class="text-success">Your user record has been inserted successfully</li>
-                        </ul>
+                    <div class="row">
+                        <div class="col-lg-6 form-group">
+                            <textarea v-model="new_summary" @keyup="count_length_sumary" name="decription" id="decription" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
+                            <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <textarea v-model="new_remember" @keyup="count_length_remember" name="decription" id="decription" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
+                            <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
+                        </div>
                     </div>
                     <div class="col-lg-12 m-t-25 text-center">
-                        <button type="submit" class="btn btn-primary btn_width">Adicionar</button>
-                        <button type="reset" class="btn btn-effect-ripple btn-secondary btn_width reset_btn1" @click.prevent="form_reset();toggle_left()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContact">Adicionar</button>
+                        <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="form_reset">Cancelar</button>
                     </div>
-                </form> -->
-                <!-- <form>
-                    new_first_name: "",
-                    new_last_name: "",
-                    new_phone: "",
-                    new_whatsapp_id: "",
-                    new_facebook_id: "",
-                    new_instagram_id: "",
-                    new_linkedin_id: "",
-
-                    <label for="matter_name" class="mt-2">Nome:</label>
-                    <input type="text" id="matter_name_in" class="form-control" v-model="newmattername">
-
-                    
-                    <label for="matter_desc" class="mt-2">Descrição</label>
-                    <textarea name="matter_desc_in" maxlength="500" class="form-control" rows="5" v-model="newmatterdesc"></textarea>
-                    
-                    <b-btn class="float-right mt-2" variant="primary" @click.prevent="addMatter">Adicionar</b-btn>
-                    <span v-for="(error,key) in errors" v-bind:key="key" class="test-danger">{{error}}</span>
-                </form> -->
+                </form> 
             </b-container>
         </b-modal>
 
         <!-- Edit Contact Modal -->
+        <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar contato">
+            <b-container fluid>                
+                <form>                    
+                    <div class="row">
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-user form-control-feedback"></span>
+                            <input v-model="edit_first_name" id="name" name="username" type="text" autofocus placeholder="Nome ou Apelido" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-headphones form-control-feedback"></span>
+                            <select v-model="edit_contact_atendant_id" class="form-control has-search-color" size="1">
+                                <option value="0">Asignar um Atendente agora?</option>
+                                <option value="1">Bootstrap</option>
+                                <option value="2">CSS</option>
+                                <option value="3">JavaScript</option>
+                                <option value="4">HTML</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-envelope form-control-feedback"></span>
+                            <input v-model="edit_email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-phone form-control-feedback"></span>
+                            <input v-model="edit_phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                        </div>                                
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-whatsapp form-control-feedback"></span>
+                            <input v-model="edit_whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-facebook form-control-feedback"></span>
+                            <input v-model="edit_facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                                <span class="fa fa-instagram form-control-feedback"></span>
+                                <input v-model="edit_instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
+                            </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-linkedin form-control-feedback"></span>
+                            <input v-model="edit_linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group">
+                            <textarea v-model="edit_summary" @keyup="count_length_sumary" name="decription" id="decription" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
+                            <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <textarea v-model="edit_remember" @keyup="count_length_remember" name="decription" id="decription" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
+                            <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 m-t-25 text-center">
+                        <button type="submit" class="btn btn-primary btn_width" @click.prevent="updateContact">Atualizar</button>
+                        <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="form_reset">Cancelar</button>
+                    </div>
+                </form> 
+            </b-container>
+        </b-modal>
 
         <!-- Delete Contact Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="false" title="Verificação de exclusão">
@@ -238,6 +235,7 @@
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
+    // import add_contact from "./popups/add_contact";
 
     export default {
         props: {
@@ -270,28 +268,43 @@
             }
         },
 
+        components:{
+            // add_contact,
+        },
+
         data() {
             return {
                 new_first_name: "",
                 new_last_name: "",
                 new_phone: "",
                 new_email: "",
+                new_description: "",
+                new_remember: "",
+                new_summary: "",
                 new_whatsapp_id: "",
                 new_facebook_id: "",
                 new_instagram_id: "",
                 new_linkedin_id: "",
+                new_contact_atendant_id:"0",
+                new_summary_length:0,
+                new_remember_length:0,
 
                 contact_id: "",
                 edit_first_name: "",
                 edit_last_name: "",
                 edit_phone: "",
-                edit_email: "",
+                edit_email: "",                
+                edit_description: "",
+                edit_remember: "",
+                edit_summary: "",
+                edit_contact_atendant_id: "",                
                 edit_whatsapp_id: "",
                 edit_facebook_id: "",
                 edit_instagram_id: "",
                 edit_linkedin_id: "",
 
                 modalAddContact: false,
+                modalEditContact: false,
                 modalDeleteContact: false,
 
                 currentPage: 1,
@@ -308,22 +321,20 @@
                 ApiService.post(url,{
                     'first_name': this.new_first_name,
                     'last_name': this.new_last_name,
-                    'phone': this.new_phone,
                     'email': this.new_email,
+                    'remember': this.new_remember,
+                    'summary': this.new_summary,
+                    'phone': this.new_phone,
+                    'description': this.new_description,
                     'whatsapp_id': this.new_whatsapp_id,
                     'facebook_id': this.new_facebook_id,
                     'instagram_id': this.new_instagram_id,
-                    'linkedin_id': this.new_linkedin_id,
+                    'linkedin_id': this.new_linkedin_id,                    
+                    'contact_atendant_id': this.new_contact_atendant_id,
                 })
                 .then(response => {
                     miniToastr.success("Contato adicionado com sucesso","Sucesso");
-                    this.new_first_name = "";
-                    this.new_last_name = "";
-                    this.new_email = "";
-                    this.new_whatsapp_id = "";
-                    this.new_facebook_id = "";
-                    this.new_instagram_id = "";
-                    this.new_linkedin_id = "";
+                    this.form_reset();
                     this.reloadContacts();
                 })
                 .catch(function(error) {
@@ -342,10 +353,15 @@
                 this.edit_last_name = contact.last_name;
                 this.edit_phone = contact.phone;
                 this.edit_email = contact.email;
+                this.edit_description = contact.description;
+                this.edit_remember = contact.remember;
+                this.edit_summary = contact.summary;
                 this.edit_whatsapp_id = contact.whatsapp_id;                
                 this.edit_facebook_id = contact.facebook_id;
                 this.edit_instagram_id = contact.instagram_id;
                 this.edit_linkedin_id = contact.linkedin_id;
+                this.edit_contact_atendant_id = contact.contact_atendant_id;
+                this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U                
@@ -388,6 +404,30 @@
                             ApiService.process_request_error(error);  
                             miniToastr.error(error, "Erro eliminando o contato"); 
                     });                
+            },
+
+            count_length_sumary: function(){
+                this.new_summary_length = this.new_summary.length;
+            },
+
+            count_length_remember: function(){
+                this.new_remember_length = this.new_remember.length;
+            },
+
+            form_reset:function(){
+                this.new_first_name = "";
+                this.new_last_name = "";
+                this.new_email = "";
+                this.new_description = "";
+                this.new_remember = "";
+                this.new_summary = "";
+                this.new_phone = "";
+                this.new_whatsapp_id = "";
+                this.new_facebook_id = "";
+                this.new_instagram_id = "";
+                this.new_linkedin_id = "";
+                this.new_contact_atendant_id = 0;
+                this.modalAddContact=!this.modalAddContact;
             },
 
             //-------------------------------------------------------
@@ -566,5 +606,26 @@
 
     .sortable {
         cursor: pointer;
+    }
+
+    .has-search .form-control {
+        padding-left: 2.375rem;
+    }
+    .has-search .form-control-feedback {
+        position: absolute;
+        z-index: 2;
+        display: block;
+        width: 2.375rem;
+        height: 2.375rem;
+        line-height: 2.375rem;
+        text-align: center;
+        pointer-events: none;
+        color: #aaa;
+    }  
+    .has-search-color{
+        color: #aaa;
+    }
+    .btn_width{
+        width: 100px
     }
 </style>

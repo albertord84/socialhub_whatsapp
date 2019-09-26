@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration {
 			$table->string('phone', 30)->nullable();
 			$table->string('image_path', 300)->default('images/user.jpg');
 			$table->integer('role_id')->index('fk_users_role');
+			$table->integer('status_id')->nullable()->index('fk_users_status');
 			$table->timestamps();
 			$table->softDeletes();
 		});

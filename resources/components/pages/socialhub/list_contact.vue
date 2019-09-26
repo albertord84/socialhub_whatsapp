@@ -24,6 +24,8 @@
         },        
         data() {
             return {
+                contacts_status:[],
+
                 rowdata: [
                     {
                         "status_id": "Ativo",
@@ -51,11 +53,11 @@
 
                 columndata: [
                     {
-                        label: 'Status', // Column name
-                        field: 'status_id', // Field name from row
-                        numeric: true, // Affects sorting
-                        width: "90px", //width of the column
-                        html: false, // Escapes output if false.
+                        label: 'Status',
+                        field: 'status_id',
+                        numeric: true, 
+                        width: "90px",
+                        html: false,
                     },{
                         label: 'Whatsapp',
                         field: 'whatsapp_id',
@@ -85,38 +87,56 @@
                 ],
             }
         },
-        methods: {            
+        methods: {
             getContacts: function() { //R
                 var url = "contacts";
                 this.rowdata =[];
                 ApiService.get(url)
-                // axios.get(url)
                     .then(response => {
                         this.rowdata = response.data;
-                        // this.contents=[];
-                        // var This=this;
-                        // response.data.forEach(function(item, i){
-                        //     item.checked ='false';
-                        //     item.nameType = This.getNameByType(This.contentsTypes, item.type_id);
-                        //     This.contents.push(response.data[i]);
-                        // });
+                        var This=this;
+                        console.log(this.contacts_status);
+                        response.data.forEach(function(item, i){
+                            // adicionar o nome do status a cada registro
+                            
+                            // adicionar o nome do repectivo atendente a cada registro
+
+                            //adicionar as ações de ver conversas, editar e eliminar contato a cada registro
+
+                            // item.checked ='false';
+                            //item.nameType = This.getNameByType(This.contentsTypes, item.type_id);
+                            //This.contents.push(response.data[i]);
+                        });
                         // this.getClassrooms(); 
                     })
                     .catch(function(error) {
-                        //ApiService.process_request_error(error);
-                        console.log(error);
                         miniToastr.error(error, "Error carregando os contatos");   
                     });
             },  
+
+            getContactStatus: function() { //R
+                var url = "contacts_status";
+                this.rowdata =[];
+                ApiService.get(url)
+                    .then(response => {
+                        this.contacts_status = response.data;                        
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os status dos contatos");   
+                    });
+            },
         },
+
         beforeMount(){
-            this.getContacts();
+            this.getContactStatus();
         },
+
         created() {
             miniToastr.setIcon("error", "i", {class: "fa fa-times"});
             miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
             miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
             miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
+            this.getContacts();
         },
     }
 </script>

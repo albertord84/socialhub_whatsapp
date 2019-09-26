@@ -15,13 +15,13 @@ class CreateChatsTable extends Migration {
 		Schema::connection('socialhub_mvp.chats')->create('chats', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('contact_id')->index('fk_chats_contact_idx');
-			$table->integer('attendant_id')->index('fk_chats_attendant_idx');
+			$table->integer('contact_id')->index('fk_chats_contact');
+			$table->integer('attendant_id')->index('fk_chats_attendant');
 			$table->text('message', 65535)->nullable();
-			$table->integer('type')->nullable()->index('fk_chats_type_idx');
+			$table->integer('type_id')->nullable()->index('fk_chats_type');
 			$table->string('data', 45)->nullable();
-			$table->integer('status_id')->nullable()->index('fk_chats_status_idx');
-			$table->integer('socialnetwork_id')->nullable()->index('fk_chats_socialnetwork_idx');
+			$table->integer('status_id')->nullable()->index('fk_chats_status');
+			$table->integer('socialnetwork_id')->nullable()->index('fk_chats_socialnetwork');
 			$table->timestamps();
 			$table->softDeletes();
 		});

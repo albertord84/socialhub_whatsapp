@@ -28,12 +28,12 @@ class ContactsStatusController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
+    {   
         $this->contactsStatusRepository->pushCriteria(new RequestCriteria($request));
         $contactsStatuses = $this->contactsStatusRepository->all();
-
-        return view('contacts_statuses.index')
-            ->with('contactsStatuses', $contactsStatuses);
+        return $contactsStatuses->toJson();
+        // return view('contacts_statuses.index')
+        //     ->with('contactsStatuses', $contactsStatuses);
     }
 
     /**

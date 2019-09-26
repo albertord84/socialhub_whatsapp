@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use Auth;
 
 class ContactController extends AppBaseController
 {
@@ -34,8 +35,7 @@ class ContactController extends AppBaseController
             // if ($User && $User->role_id == 1/*Administrator - Account_bussine */) {
                 $this->contactRepository->pushCriteria(new RequestCriteria($request));
                 $contacts = $this->contactRepository->all();
-                return $contacts->toJson();
-                // return view('contacts.index')->with('contacts', $contacts);                
+                return $contacts->toJson();     
             // } else {
             //     abort(401, "Logged user data not found or it's not a admin");
             // }

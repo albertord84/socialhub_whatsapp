@@ -15,41 +15,46 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('admin', array('as' => 'admin', function(){
-//     return View::make('welcome');
-// }));
+Route::group(['prefix' => 'auth'], function ($router) {
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login')->name('login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+    Route::post('password_reset', 'AuthController@passwordReset');
+    Route::get('user_list', 'AuthController@user_list');
+    Route::post('password_save', 'AuthController@passwordSave');
+    Route::post('add_user', 'AuthController@addUser');
+    Route::get('get_user/{user_id}', 'AuthController@getUser');
+    Route::post('edit_user', 'AuthController@editUser');
+    Route::get('delete_user/{user_id}', 'AuthController@deleteUser');
+});
 
-Route::resource('users', 'UserController');
+Route::get('admin', array('as' => 'admin', function(){
+    return View::make('welcome');
+}));
+
 Route::resource('users', 'UserController');
 
 Route::resource('usersManagers', 'UsersManagerController');
-Route::resource('usersManagers', 'UsersManagerController');
 
-Route::resource('usersAttendants', 'UsersAttendantController');
 Route::resource('usersAttendants', 'UsersAttendantController');
 
 
 Route::resource('contacts', 'ContactController');
 // Route::get('contacts', 'ContactController');
-// Route::get('contacts', function () {
-//     dd("ok");
-// });
-
 // Route::post('contacts/{id}', 'CourseController@update');
 // Route::delete('contacts/{id}', 'CourseController@delete');
-//Route::post('contacts/{id}/update_image', 'CourseController@update_image');
+// Route::post('contacts/{id}/update_image', 'CourseController@update_image');
 
-Route::resource('messageTypes', 'MessageTypeController');
+Route::resource('contacts_status', 'ContactsStatusController');
+    
 Route::resource('messageTypes', 'MessageTypeController');
 
 Route::resource('statuses', 'StatusController');
-Route::resource('statuses', 'StatusController');
 
 Route::resource('attendantsContacts', 'AttendantsContactController');
-Route::resource('attendantsContacts', 'AttendantsContactController');
 
-Route::resource('roles', 'RoleController');
-Route::resource('roles', 'RoleController');
 Route::resource('roles', 'RoleController');
 
 Route::resource('passwordResets', 'PasswordResetController');

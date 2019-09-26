@@ -17,8 +17,8 @@ class AddForeignKeysToChatsTable extends Migration {
 			$table->foreign('attendant_id', 'fk_chats_attendant')->references('user_id')->on('socialhub_mvp.users_attendants')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 			$table->foreign('contact_id', 'fk_chats_contact')->references('id')->on('socialhub_mvp.contacts')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 			$table->foreign('socialnetwork_id', 'fk_chats_socialnetwork')->references('id')->on('socialhub_mvp.socialnetworks')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-			$table->foreign('status_id', 'fk_chats_status')->references('id')->on('socialhub_mvp.status')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-			$table->foreign('type', 'fk_chats_type')->references('id')->on('socialhub_mvp.message_types')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('status_id', 'fk_messages_status')->references('id')->on('socialhub_mvp.messages_status')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+			$table->foreign('type_id', 'fk_messages_type')->references('id')->on('socialhub_mvp.messages_types')->onUpdate('NO ACTION')->onDelete('NO ACTION');
 		});
 	}
 
@@ -35,8 +35,8 @@ class AddForeignKeysToChatsTable extends Migration {
 			$table->dropForeign('fk_chats_attendant');
 			$table->dropForeign('fk_chats_contact');
 			$table->dropForeign('fk_chats_socialnetwork');
-			$table->dropForeign('fk_chats_status');
-			$table->dropForeign('fk_chats_type');
+			$table->dropForeign('fk_messages_status');
+			$table->dropForeign('fk_messages_type');
 		});
 	}
 

@@ -12,7 +12,7 @@ class CreateMessageTypesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('message_types', function(Blueprint $table)
+		Schema::create('messages_types', function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('name', 45)->nullable();
@@ -28,7 +28,7 @@ class CreateMessageTypesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('message_types');
+		Schema::drop('messages_types');
 	}
 
 }
