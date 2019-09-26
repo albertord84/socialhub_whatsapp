@@ -89,10 +89,10 @@
             getContacts: function() { //R
                 var url = "contacts";
                 this.rowdata =[];
-                // ApiService.get(url)
-                axios.get(url)
+                ApiService.get(url)
+                // axios.get(url)
                     .then(response => {
-                        this.rowdata = response;
+                        this.rowdata = response.data;
                         // this.contents=[];
                         // var This=this;
                         // response.data.forEach(function(item, i){

@@ -17,7 +17,7 @@ class ContactsTableSeeder extends Seeder
         DB::table('contacts')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->command->info('Contact Alberto Reyes');
+        $this->command->info('Creating Contacts:');
         Contact::create([
             'id' => '1',
             'first_name' => 'Alberto',

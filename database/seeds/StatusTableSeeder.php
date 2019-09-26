@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\Status;
+use App\Models\UsersStatus;
+use App\Models\ContactsStatus;
+use App\Models\MessagesStatus;
 use Illuminate\Database\Seeder;
-
 class StatusTableSeeder extends Seeder
 {
     /**
@@ -12,59 +13,87 @@ class StatusTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->info('Truncate Status Table...');
+        $this->command->info('Truncate Status Tables (users, contacts, messages)...');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('status')->truncate();
+        DB::table('users_status')->truncate();
+        DB::table('contacts_status')->truncate();
+        DB::table('messages_status')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->command->info('Create Users Status:');
-        Status::create([
+        $this->CreateUsersStatus();
+        $this->CreateContactsStatus();
+        $this->CreateMessagesStatus();
+    }
+
+    function CreateMessagesStatus() {
+        $this->command->info('Create Users MessagesStatus:');
+        MessagesStatus::create([
             'id' => '1',
             'name' => 'ACTIVE',
-            'description' => 'Status ACTIVE',
+            'description' => 'MessagesStatus ACTIVE',
         ]);
-        $this->command->info('Status ACTIVE');
+        $this->command->info('MessagesStatus ACTIVE');
+    }
 
-        Status::create([
+    function CreateContactsStatus() {
+        $this->command->info('Create Users ContactsStatus:');
+        ContactsStatus::create([
+            'id' => '1',
+            'name' => 'ACTIVE',
+            'description' => 'ContactsStatus ACTIVE',
+        ]);
+        $this->command->info('ContactsStatus ACTIVE');
+    }
+
+    function CreateUsersStatus() {
+        $this->command->info('Create Users UsersStatus:');
+        UsersStatus::create([
+            'id' => '1',
+            'name' => 'ACTIVE',
+            'description' => 'UsersStatus ACTIVE',
+        ]);
+        $this->command->info('UsersStatus ACTIVE');
+
+        UsersStatus::create([
             'id' => '2',
             'name' => 'DELETED',
-            'description' => 'Status DELETED',
+            'description' => 'UsersStatus DELETED',
         ]);
-        $this->command->info('Status DELETED');
+        $this->command->info('UsersStatus DELETED');
 
-        Status::create([
+        UsersStatus::create([
             'id' => '3',
             'name' => 'INACTIVE',
-            'description' => 'Status INACTIVE',
+            'description' => 'UsersStatus INACTIVE',
         ]);
-        $this->command->info('Status INACTIVE');
+        $this->command->info('UsersStatus INACTIVE');
 
-        Status::create([
+        UsersStatus::create([
             'id' => '4',
             'name' => 'PENDING',
-            'description' => 'Status PENDING',
+            'description' => 'UsersStatus PENDING',
         ]);
-        $this->command->info('Status PENDING');
+        $this->command->info('UsersStatus PENDING');
 
-        Status::create([
+        UsersStatus::create([
             'id' => '5',
             'name' => 'BEGINNER',
-            'description' => 'Status BEGINNER',
+            'description' => 'UsersStatus BEGINNER',
         ]);
-        $this->command->info('Status BEGINNER');
+        $this->command->info('UsersStatus BEGINNER');
         
-        Status::create([
+        UsersStatus::create([
             'id' => '6',
             'name' => 'VERIFY_ACCOUNT',
-            'description' => 'Status VERIFY_ACCOUNT',
+            'description' => 'UsersStatus VERIFY_ACCOUNT',
         ]);
-        $this->command->info('Status VERIFY_ACCOUNT');
+        $this->command->info('UsersStatus VERIFY_ACCOUNT');
 
-        Status::create([
+        UsersStatus::create([
             'id' => '7',
             'name' => 'PAUSED',
-            'description' => 'Status PAUSED',
+            'description' => 'UsersStatus PAUSED',
         ]);
-        $this->command->info('Status PAUSED');
+        $this->command->info('UsersStatus PAUSED');    
     }
 }

@@ -546,7 +546,8 @@ module.exports = function normalizeComponent (
 var ApiService = {
     init: function init() {
         __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_axios___default.a, __WEBPACK_IMPORTED_MODULE_1_axios___default.a);
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.defaults.baseURL = 'api/';
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.defaults.baseURL = '';
+        // Vue.axios.defaults.baseURL = 'api/';
         __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     },
     setHeader: function setHeader() {

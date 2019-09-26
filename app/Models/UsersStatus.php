@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model as Model;
 
 /**
- * Class Status
+ * Class UsersStatus
  * @package App\Models
- * @version September 13, 2019, 9:09 pm UTC
+ * @version September 26, 2019, 1:31 am UTC
  *
  * @property \Illuminate\Database\Eloquent\Collection 
  * @property string name
  * @property string description
  */
-class Status extends Model
+class UsersStatus extends Model
 {
 
-    public $table = 'status';
+    public $table = 'users_status';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

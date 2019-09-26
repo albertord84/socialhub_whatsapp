@@ -30,6 +30,11 @@ Route::resource('usersAttendants', 'UsersAttendantController');
 
 
 Route::resource('contacts', 'ContactController');
+// Route::get('contacts', 'ContactController');
+// Route::get('contacts', function () {
+//     dd("ok");
+// });
+
 // Route::post('contacts/{id}', 'CourseController@update');
 // Route::delete('contacts/{id}', 'CourseController@delete');
 //Route::post('contacts/{id}/update_image', 'CourseController@update_image');
@@ -53,3 +58,10 @@ Route::resource('systemConfigs', 'SystemConfigController');
 
 
 
+
+
+Route::resource('usersStatuses', 'UsersStatusController');
+
+Route::resource('contactsStatuses', 'ContactsStatusController');
+
+Route::resource('messagesStatuses', 'MessagesStatusController');
