@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class UsersManager
  * @package App\Models
- * @version September 27, 2019, 5:07 pm UTC
+ * @version September 27, 2019, 5:26 pm UTC
  *
  * @property \App\Models\User user
  * @property \Illuminate\Database\Eloquent\Collection 
  * @property \Illuminate\Database\Eloquent\Collection 1s
+ * @property \Illuminate\Database\Eloquent\Collection 2s
  */
 class UsersManager extends Model
 {

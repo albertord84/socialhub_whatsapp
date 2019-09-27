@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class Company
  * @package App\Models
- * @version September 27, 2019, 5:03 pm UTC
+ * @version September 27, 2019, 5:24 pm UTC
  *
  * @property \Illuminate\Database\Eloquent\Collection 
+ * @property \Illuminate\Database\Eloquent\Collection contacts
  * @property \Illuminate\Database\Eloquent\Collection users
  * @property \Illuminate\Database\Eloquent\Collection 1s
  * @property string CNPJ
@@ -58,6 +59,14 @@ class Company extends Model
     public static $rules = [
         'id' => 'required'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function contacts()
+    {
+        return $this->hasMany(\App\Models\Contact::class, 'company_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

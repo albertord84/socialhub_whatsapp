@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class User
  * @package App\Models
- * @version September 27, 2019, 5:06 pm UTC
+ * @version September 27, 2019, 5:25 pm UTC
  *
  * @property \App\Models\Company company
  * @property \App\Models\Role role
  * @property \App\Models\UsersStatus status
  * @property \Illuminate\Database\Eloquent\Collection 
  * @property \Illuminate\Database\Eloquent\Collection 1s
+ * @property \Illuminate\Database\Eloquent\Collection 2s
  * @property \App\Models\UsersManager usersManager
  * @property integer company_id
  * @property string name

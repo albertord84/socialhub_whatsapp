@@ -76,5 +76,9 @@
     {
         "type": "relation",
         "relation": "1tm,AttendantsContact,attendant_id"
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,contacts"
     }
 ]

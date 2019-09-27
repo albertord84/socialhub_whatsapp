@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class Contact
  * @package App\Models
- * @version September 27, 2019, 5:04 pm UTC
+ * @version September 27, 2019, 5:25 pm UTC
  *
+ * @property \App\Models\Company company
  * @property \App\Models\ContactsStatus status
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
  * @property \Illuminate\Database\Eloquent\Collection 
@@ -82,6 +83,14 @@ class Contact extends Model
     public static $rules = [
         'id' => 'required'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function company()
+    {
+        return $this->belongsTo(\App\Models\Company::class, 'company_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

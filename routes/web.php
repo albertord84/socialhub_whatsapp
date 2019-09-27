@@ -88,3 +88,17 @@ Route::resource('users', 'UserController');
 Route::resource('usersAttendants', 'UsersAttendantController');
 
 Route::resource('usersManagers', 'UsersManagerController');
+
+Route::resource('contacts', 'ContactController');
+
+Route::resource('companies', 'CompanyController');
+
+Route::resource('companies', 'CompanyController');
+
+Route::resource('contacts', 'ContactController');
+
+Route::resource('users', 'UserController');
+
+Route::resource('usersAttendants', 'UsersAttendantController');
+
+Route::resource('usersManagers', 'UsersManagerController');

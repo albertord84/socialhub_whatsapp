@@ -104,6 +104,10 @@
     },
     {
         "type": "relation",
+        "relation": "1tm,Contact,company_id"
+    },
+    {
+        "type": "relation",
         "relation": "1tm,User,company_id"
     },
     {

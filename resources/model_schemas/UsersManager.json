@@ -53,6 +53,10 @@
     },
     {
         "type": "relation",
+        "relation": "mtm,,contacts"
+    },
+    {
+        "type": "relation",
         "relation": "mtm,,users_attendants"
     }
 ]

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
+use App\Repositories\CompanyRepository;
+use Illuminate\Container\Container;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -31,15 +33,12 @@ class ContactController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            // $User = Auth::check()? Auth::user():session('logged_user');
-            // if ($User && $User->role_id == 1/*Administrator - Account_bussine */) {
-                $this->contactRepository->pushCriteria(new RequestCriteria($request));
-                // $contacts = $this->contactRepository->all();
-                $contacts = $this->contactRepository->fullContacts();
-                return $contacts->toJson();     
-            // } else {
-            //     abort(401, "Logged user data not found or it's not a admin");
-            // }
+            $company_id = 1; // $request['$company_id'];
+            $CompanyRepository = new CompanyRepository(new Container);
+            $Company = $CompanyRepository->find($company_id);
+            $Contacts = $Company->contacts()->get();
+
+            return $Contacts->toJson();
         } catch (\Throwable $th) {
             throw $th;
         }

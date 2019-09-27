@@ -2,8 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Models\Company;
 use App\Models\Contact;
 use InfyOm\Generator\Common\BaseRepository;
+use App\Repositories\CompanyRepository;
+use Illuminate\Container\Container;
 
 /**
  * Class ContactRepository
@@ -32,7 +35,7 @@ class ContactRepository extends BaseRepository
         'facebook_id',
         'instagram_id',
         'linkedin_id',
-        'status_id',
+        'status_id'
     ];
 
     /**
@@ -43,15 +46,23 @@ class ContactRepository extends BaseRepository
         return Contact::class;
     }
 
-    public function fullContacts()
+    public function fullContacts(int $company_id)// : array
     {
-        $Contacts = DB::table('contacts')->get();
-        $Contacts->each(function (Contact $Contact) {
-            $Contact->Status = $Contact->status();
-            $Contact->lastAttendant = $Contact->attendantsContacts()->latest();
-        });
+        // $CompanyRepository = new CompanyRepository(new Container);
+        // $Company = $CompanyRepository->find($company_id);
+        // $Contacts = $Company->contacts()->get();
+        // // $Company = CompanyRepository::find($company_id);
+        
+        // dd($Contacts);
 
-        return $Contacts;
+        // // $Contacts = Company::get
+        // $Contacts = DB::table('contacts')->get();
+        // $Contacts->each(function (Contact $Contact) {
+        //     $Contact->Status = $Contact->status();
+        //     $Contact->lastAttendant = $Contact->attendantsContacts()->latest();
+        // });
+
+        // return $Contacts;
 
         // try {
         //     $played_contents = DB::table('users_play_contents')

@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class UsersAttendant
  * @package App\Models
- * @version September 27, 2019, 5:06 pm UTC
+ * @version September 27, 2019, 5:25 pm UTC
  *
  * @property \App\Models\User user
  * @property \App\Models\User userManager
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
+ * @property \Illuminate\Database\Eloquent\Collection 
  * @property integer user_manager_id
  * @property integer code
  */
