@@ -4,11 +4,16 @@
             <tr>
                 <th>First Name</th>
         <th>Last Name</th>
+        <th>Email</th>
+        <th>Description</th>
+        <th>Remember</th>
+        <th>Summary</th>
         <th>Phone</th>
         <th>Whatsapp Id</th>
         <th>Facebook Id</th>
         <th>Instagram Id</th>
         <th>Linkedin Id</th>
+        <th>Status Id</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -17,11 +22,16 @@
             <tr>
                 <td>{!! $contact->first_name !!}</td>
             <td>{!! $contact->last_name !!}</td>
+            <td>{!! $contact->email !!}</td>
+            <td>{!! $contact->description !!}</td>
+            <td>{!! $contact->remember !!}</td>
+            <td>{!! $contact->summary !!}</td>
             <td>{!! $contact->phone !!}</td>
             <td>{!! $contact->whatsapp_id !!}</td>
             <td>{!! $contact->facebook_id !!}</td>
             <td>{!! $contact->instagram_id !!}</td>
             <td>{!! $contact->linkedin_id !!}</td>
+            <td>{!! $contact->status_id !!}</td>
                 <td>
                     {!! Form::open(['route' => ['contacts.destroy', $contact->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

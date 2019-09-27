@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class User
  * @package App\Models
- * @version September 13, 2019, 9:09 pm UTC
+ * @version September 27, 2019, 3:40 pm UTC
  *
  * @property \App\Models\Role role
+ * @property \App\Models\UsersStatus status
  * @property \Illuminate\Database\Eloquent\Collection 
  * @property \App\Models\UsersAttendant usersAttendant
  * @property \App\Models\UsersManager usersManager
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string phone
  * @property string image_path
  * @property integer role_id
+ * @property integer status_id
  */
 class User extends Model
 {
@@ -44,7 +46,8 @@ class User extends Model
         'CPF',
         'phone',
         'image_path',
-        'role_id'
+        'role_id',
+        'status_id'
     ];
 
     /**
@@ -63,7 +66,8 @@ class User extends Model
         'CPF' => 'string',
         'phone' => 'string',
         'image_path' => 'string',
-        'role_id' => 'integer'
+        'role_id' => 'integer',
+        'status_id' => 'integer'
     ];
 
     /**
@@ -83,6 +87,14 @@ class User extends Model
     public function role()
     {
         return $this->belongsTo(\App\Models\Role::class, 'role_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function status()
+    {
+        return $this->belongsTo(\App\Models\UsersStatus::class, 'status_id');
     }
 
     /**

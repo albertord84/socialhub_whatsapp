@@ -12,6 +12,7 @@
         <th>Phone</th>
         <th>Image Path</th>
         <th>Role Id</th>
+        <th>Status Id</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
             <td>{!! $user->phone !!}</td>
             <td>{!! $user->image_path !!}</td>
             <td>{!! $user->role_id !!}</td>
+            <td>{!! $user->status_id !!}</td>
                 <td>
                     {!! Form::open(['route' => ['users.destroy', $user->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

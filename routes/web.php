@@ -70,3 +70,9 @@ Route::resource('usersStatuses', 'UsersStatusController');
 Route::resource('contactsStatuses', 'ContactsStatusController');
 
 Route::resource('messagesStatuses', 'MessagesStatusController');
+
+Route::resource('attendantsContacts', 'AttendantsContactController');
+
+Route::resource('users', 'UserController');
+
+Route::resource('contacts', 'ContactController');

@@ -7,16 +7,23 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class Contact
  * @package App\Models
- * @version September 13, 2019, 9:12 pm UTC
+ * @version September 27, 2019, 3:41 pm UTC
  *
+ * @property \App\Models\ContactsStatus status
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
+ * @property \Illuminate\Database\Eloquent\Collection 
  * @property string first_name
  * @property string last_name
+ * @property string email
+ * @property string description
+ * @property string remember
+ * @property string summary
  * @property string phone
  * @property string whatsapp_id
  * @property string facebook_id
  * @property string instagram_id
  * @property string linkedin_id
+ * @property integer status_id
  */
 class Contact extends Model
 {
@@ -31,11 +38,16 @@ class Contact extends Model
     public $fillable = [
         'first_name',
         'last_name',
+        'email',
+        'description',
+        'remember',
+        'summary',
         'phone',
         'whatsapp_id',
         'facebook_id',
         'instagram_id',
-        'linkedin_id'
+        'linkedin_id',
+        'status_id'
     ];
 
     /**
@@ -47,11 +59,16 @@ class Contact extends Model
         'id' => 'integer',
         'first_name' => 'string',
         'last_name' => 'string',
+        'email' => 'string',
+        'description' => 'string',
+        'remember' => 'string',
+        'summary' => 'string',
         'phone' => 'string',
         'whatsapp_id' => 'string',
         'facebook_id' => 'string',
         'instagram_id' => 'string',
-        'linkedin_id' => 'string'
+        'linkedin_id' => 'string',
+        'status_id' => 'integer'
     ];
 
     /**
@@ -62,6 +79,14 @@ class Contact extends Model
     public static $rules = [
         'id' => 'required'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function status()
+    {
+        return $this->belongsTo(\App\Models\ContactsStatus::class, 'status_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

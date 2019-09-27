@@ -33,6 +33,50 @@
         "inIndex": true
     },
     {
+        "name": "email",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "description",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "remember",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "summary",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
         "name": "phone",
         "dbType": "string",
         "htmlType": "text",
@@ -88,6 +132,17 @@
         "inIndex": true
     },
     {
+        "name": "status_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
         "name": "created_at",
         "dbType": "datetime",
         "htmlType": "date",
@@ -122,6 +177,14 @@
     },
     {
         "type": "relation",
+        "relation": "mt1,ContactsStatus,status_id"
+    },
+    {
+        "type": "relation",
         "relation": "1tm,AttendantsContact,contact_id"
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,users"
     }
 ]

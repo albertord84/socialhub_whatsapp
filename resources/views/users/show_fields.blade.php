@@ -64,6 +64,12 @@
     <p>{!! $user->role_id !!}</p>
 </div>
 
+<!-- Status Id Field -->
+<div class="form-group">
+    {!! Form::label('status_id', 'Status Id:') !!}
+    <p>{!! $user->status_id !!}</p>
+</div>
+
 <!-- Created At Field -->
 <div class="form-group">
     {!! Form::label('created_at', 'Created At:') !!}

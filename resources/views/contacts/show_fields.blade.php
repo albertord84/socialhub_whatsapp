@@ -16,6 +16,30 @@
     <p>{!! $contact->last_name !!}</p>
 </div>
 
+<!-- Email Field -->
+<div class="form-group">
+    {!! Form::label('email', 'Email:') !!}
+    <p>{!! $contact->email !!}</p>
+</div>
+
+<!-- Description Field -->
+<div class="form-group">
+    {!! Form::label('description', 'Description:') !!}
+    <p>{!! $contact->description !!}</p>
+</div>
+
+<!-- Remember Field -->
+<div class="form-group">
+    {!! Form::label('remember', 'Remember:') !!}
+    <p>{!! $contact->remember !!}</p>
+</div>
+
+<!-- Summary Field -->
+<div class="form-group">
+    {!! Form::label('summary', 'Summary:') !!}
+    <p>{!! $contact->summary !!}</p>
+</div>
+
 <!-- Phone Field -->
 <div class="form-group">
     {!! Form::label('phone', 'Phone:') !!}
@@ -44,6 +68,12 @@
 <div class="form-group">
     {!! Form::label('linkedin_id', 'Linkedin Id:') !!}
     <p>{!! $contact->linkedin_id !!}</p>
+</div>
+
+<!-- Status Id Field -->
+<div class="form-group">
+    {!! Form::label('status_id', 'Status Id:') !!}
+    <p>{!! $contact->status_id !!}</p>
 </div>
 
 <!-- Created At Field -->
