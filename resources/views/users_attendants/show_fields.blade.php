@@ -4,6 +4,12 @@
     <p>{!! $usersAttendant->user_id !!}</p>
 </div>
 
+<!-- User Manager Id Field -->
+<div class="form-group">
+    {!! Form::label('user_manager_id', 'User Manager Id:') !!}
+    <p>{!! $usersAttendant->user_manager_id !!}</p>
+</div>
+
 <!-- Code Field -->
 <div class="form-group">
     {!! Form::label('code', 'Code:') !!}

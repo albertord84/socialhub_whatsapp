@@ -7,15 +7,11 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class UsersManager
  * @package App\Models
- * @version September 13, 2019, 10:14 pm UTC
+ * @version September 27, 2019, 5:07 pm UTC
  *
  * @property \App\Models\User user
  * @property \Illuminate\Database\Eloquent\Collection 
- * @property string CNPJ
- * @property string whatsapp_id
- * @property string facebook_id
- * @property string instagram_id
- * @property string linkedin_id
+ * @property \Illuminate\Database\Eloquent\Collection 1s
  */
 class UsersManager extends Model
 {
@@ -28,11 +24,7 @@ class UsersManager extends Model
 
 
     public $fillable = [
-        'CNPJ',
-        'whatsapp_id',
-        'facebook_id',
-        'instagram_id',
-        'linkedin_id'
+        
     ];
 
     /**
@@ -41,12 +33,7 @@ class UsersManager extends Model
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer',
-        'CNPJ' => 'string',
-        'whatsapp_id' => 'string',
-        'facebook_id' => 'string',
-        'instagram_id' => 'string',
-        'linkedin_id' => 'string'
+        'user_id' => 'integer'
     ];
 
     /**

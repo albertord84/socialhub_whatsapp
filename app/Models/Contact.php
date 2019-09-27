@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class Contact
  * @package App\Models
- * @version September 27, 2019, 3:41 pm UTC
+ * @version September 27, 2019, 5:04 pm UTC
  *
  * @property \App\Models\ContactsStatus status
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
  * @property \Illuminate\Database\Eloquent\Collection 
+ * @property integer company_id
  * @property string first_name
  * @property string last_name
  * @property string email
@@ -36,6 +37,7 @@ class Contact extends Model
 
 
     public $fillable = [
+        'company_id',
         'first_name',
         'last_name',
         'email',
@@ -57,6 +59,7 @@ class Contact extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'company_id' => 'integer',
         'first_name' => 'string',
         'last_name' => 'string',
         'email' => 'string',

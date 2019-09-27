@@ -2,14 +2,16 @@
     <table class="table" id="usersAttendants-table">
         <thead>
             <tr>
-                <th>Code</th>
+                <th>User Manager Id</th>
+        <th>Code</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
         @foreach($usersAttendants as $usersAttendant)
             <tr>
-                <td>{!! $usersAttendant->code !!}</td>
+                <td>{!! $usersAttendant->user_manager_id !!}</td>
+            <td>{!! $usersAttendant->code !!}</td>
                 <td>
                     {!! Form::open(['route' => ['usersAttendants.destroy', $usersAttendant->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

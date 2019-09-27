@@ -15,11 +15,6 @@ class CreateUsersManagersTable extends Migration {
 		Schema::create('users_managers', function(Blueprint $table)
 		{
 			$table->integer('user_id')->primary();
-			$table->string('CNPJ', 45)->nullable();
-			$table->string('whatsapp_id', 45)->nullable();
-			$table->string('facebook_id', 45)->nullable();
-			$table->string('instagram_id', 45)->nullable();
-			$table->string('linkedin_id', 45)->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 		});

@@ -19,7 +19,8 @@ class ContactsTableSeeder extends Seeder
 
         $this->command->info('Creating Contacts:');
         Contact::create([
-            'id' => '1',
+            'id' => 1,
+            'company_id' => 1,
             'first_name' => 'Alberto',
             'last_name' => 'Reyes',
             'email' => 'albertord84@gmail.com',
@@ -29,7 +30,8 @@ class ContactsTableSeeder extends Seeder
         ]);
         $this->command->info('Contact Alberto Reyes');
         Contact::create([
-            'id' => '2',
+            'id' => 2,
+            'company_id' => 1,
             'first_name' => 'Jose',
             'last_name' => 'Ramon',
             'email' => 'josergm86@gmail.com',
@@ -38,7 +40,8 @@ class ContactsTableSeeder extends Seeder
         ]);
         $this->command->info('Contact Jose Ramon');
         Contact::create([
-            'id' => '3',
+            'id' => 3,
+            'company_id' => 1,
             'first_name' => 'Marcos',
             'last_name' => 'Medina',
             'email' => 'marcosmedina@azuregroup.com',

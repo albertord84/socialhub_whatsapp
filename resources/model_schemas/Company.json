@@ -1,7 +1,7 @@
 [
     {
-        "name": "user_id",
-        "dbType": "integer,false",
+        "name": "id",
+        "dbType": "integer,true",
         "htmlType": null,
         "validations": "required",
         "searchable": false,
@@ -11,9 +11,9 @@
         "inIndex": false
     },
     {
-        "name": "user_manager_id",
-        "dbType": "integer,false",
-        "htmlType": null,
+        "name": "CNPJ",
+        "dbType": "string",
+        "htmlType": "text",
         "validations": null,
         "searchable": true,
         "fillable": true,
@@ -22,9 +22,42 @@
         "inIndex": true
     },
     {
-        "name": "code",
-        "dbType": "integer,false",
-        "htmlType": null,
+        "name": "name",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "phone",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "email",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "description",
+        "dbType": "string",
+        "htmlType": "text",
         "validations": null,
         "searchable": true,
         "fillable": true,
@@ -67,14 +100,14 @@
     },
     {
         "type": "relation",
-        "relation": "mt1,User,user_id"
+        "relation": "mtm,,attendants_contacts"
     },
     {
         "type": "relation",
-        "relation": "mt1,User,user_manager_id"
+        "relation": "1tm,User,company_id"
     },
     {
         "type": "relation",
-        "relation": "1tm,AttendantsContact,attendant_id"
+        "relation": "mtm,,users_attendants"
     }
 ]

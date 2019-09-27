@@ -2,22 +2,14 @@
     <table class="table" id="usersManagers-table">
         <thead>
             <tr>
-                <th>Cnpj</th>
-        <th>Whatsapp Id</th>
-        <th>Facebook Id</th>
-        <th>Instagram Id</th>
-        <th>Linkedin Id</th>
+                
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
         @foreach($usersManagers as $usersManager)
             <tr>
-                <td>{!! $usersManager->CNPJ !!}</td>
-            <td>{!! $usersManager->whatsapp_id !!}</td>
-            <td>{!! $usersManager->facebook_id !!}</td>
-            <td>{!! $usersManager->instagram_id !!}</td>
-            <td>{!! $usersManager->linkedin_id !!}</td>
+                
                 <td>
                     {!! Form::open(['route' => ['usersManagers.destroy', $usersManager->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

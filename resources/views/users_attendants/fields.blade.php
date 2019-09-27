@@ -1,3 +1,9 @@
+<!-- User Manager Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('user_manager_id', 'User Manager Id:') !!}
+    {!! Form::number('user_manager_id', null, ['class' => 'form-control']) !!}
+</div>
+
 <!-- Code Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('code', 'Code:') !!}

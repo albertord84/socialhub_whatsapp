@@ -2,7 +2,8 @@
     <table class="table" id="contacts-table">
         <thead>
             <tr>
-                <th>First Name</th>
+                <th>Company Id</th>
+        <th>First Name</th>
         <th>Last Name</th>
         <th>Email</th>
         <th>Description</th>
@@ -20,7 +21,8 @@
         <tbody>
         @foreach($contacts as $contact)
             <tr>
-                <td>{!! $contact->first_name !!}</td>
+                <td>{!! $contact->company_id !!}</td>
+            <td>{!! $contact->first_name !!}</td>
             <td>{!! $contact->last_name !!}</td>
             <td>{!! $contact->email !!}</td>
             <td>{!! $contact->description !!}</td>

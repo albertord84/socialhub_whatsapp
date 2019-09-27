@@ -27,6 +27,7 @@ class UsersTableSeeder extends Seeder
 
         $faker = new Faker();
         User::create([
+            'company_id' => 1,
             'name' => 'Admin',
             'email' => 'admin@socialhub.pro',
             'login' => 'admin',
@@ -40,6 +41,7 @@ class UsersTableSeeder extends Seeder
         $this->createAttendants();
 
         User::create([
+            'company_id' => 1,
             'name' => 'Visitor',
             'email' => 'visitor@socialhub.pro', // $faker->safeEmail,
             'login' => 'visitor',
@@ -55,6 +57,7 @@ class UsersTableSeeder extends Seeder
     {
         User::create([
             'id' => 2,
+            'company_id' => 1,
             'name' => 'Manager',
             'email' => 'manager@socialhub.pro',
             'login' => 'manager',
@@ -74,6 +77,7 @@ class UsersTableSeeder extends Seeder
     {
         User::create([
             'id' => 3,
+            'company_id' => 1,
             'name' => 'Attendant 1',
             'email' => 'attendant1@socialhub.pro',
             'login' => 'attendant1',
@@ -89,6 +93,7 @@ class UsersTableSeeder extends Seeder
         $this->command->info('Attendant 1 created: [user: attendant1, pass: attendant1]');
         User::create([
             'id' => 4,
+            'company_id' => 1,
             'name' => 'Attendant 2',
             'email' => 'attendant2@socialhub.pro',
             'login' => 'attendant2',

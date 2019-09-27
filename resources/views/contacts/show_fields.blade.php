@@ -4,6 +4,12 @@
     <p>{!! $contact->id !!}</p>
 </div>
 
+<!-- Company Id Field -->
+<div class="form-group">
+    {!! Form::label('company_id', 'Company Id:') !!}
+    <p>{!! $contact->company_id !!}</p>
+</div>
+
 <!-- First Name Field -->
 <div class="form-group">
     {!! Form::label('first_name', 'First Name:') !!}

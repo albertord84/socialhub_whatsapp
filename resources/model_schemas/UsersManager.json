@@ -11,59 +11,37 @@
         "inIndex": false
     },
     {
-        "name": "CNPJ",
-        "dbType": "string",
-        "htmlType": "text",
+        "name": "created_at",
+        "dbType": "datetime",
+        "htmlType": "date",
         "validations": null,
-        "searchable": true,
-        "fillable": true,
+        "searchable": false,
+        "fillable": false,
         "primary": false,
-        "inForm": true,
-        "inIndex": true
+        "inForm": false,
+        "inIndex": false
     },
     {
-        "name": "whatsapp_id",
-        "dbType": "string",
-        "htmlType": "text",
+        "name": "updated_at",
+        "dbType": "datetime",
+        "htmlType": "date",
         "validations": null,
-        "searchable": true,
-        "fillable": true,
+        "searchable": false,
+        "fillable": false,
         "primary": false,
-        "inForm": true,
-        "inIndex": true
+        "inForm": false,
+        "inIndex": false
     },
     {
-        "name": "facebook_id",
-        "dbType": "string",
-        "htmlType": "text",
+        "name": "deleted_at",
+        "dbType": "datetime",
+        "htmlType": "date",
         "validations": null,
-        "searchable": true,
-        "fillable": true,
+        "searchable": false,
+        "fillable": false,
         "primary": false,
-        "inForm": true,
-        "inIndex": true
-    },
-    {
-        "name": "instagram_id",
-        "dbType": "string",
-        "htmlType": "text",
-        "validations": null,
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true
-    },
-    {
-        "name": "linkedin_id",
-        "dbType": "string",
-        "htmlType": "text",
-        "validations": null,
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true
+        "inForm": false,
+        "inIndex": false
     },
     {
         "type": "relation",
@@ -72,5 +50,9 @@
     {
         "type": "relation",
         "relation": "mtm,,attendants_contacts"
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,users_attendants"
     }
 ]

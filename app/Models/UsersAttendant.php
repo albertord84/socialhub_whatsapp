@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class UsersAttendant
  * @package App\Models
- * @version September 13, 2019, 10:17 pm UTC
+ * @version September 27, 2019, 5:06 pm UTC
  *
  * @property \App\Models\User user
+ * @property \App\Models\User userManager
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
+ * @property integer user_manager_id
  * @property integer code
  */
 class UsersAttendant extends Model
@@ -24,6 +26,7 @@ class UsersAttendant extends Model
 
 
     public $fillable = [
+        'user_manager_id',
         'code'
     ];
 
@@ -34,6 +37,7 @@ class UsersAttendant extends Model
      */
     protected $casts = [
         'user_id' => 'integer',
+        'user_manager_id' => 'integer',
         'code' => 'integer'
     ];
 
@@ -52,6 +56,14 @@ class UsersAttendant extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function userManager()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_manager_id');
     }
 
     /**

@@ -11,6 +11,17 @@
         "inIndex": false
     },
     {
+        "name": "company_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
         "name": "first_name",
         "dbType": "string",
         "htmlType": "text",
@@ -185,6 +196,6 @@
     },
     {
         "type": "relation",
-        "relation": "mtm,,users"
+        "relation": "mtm,,users_attendants"
     }
 ]

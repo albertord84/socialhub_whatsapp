@@ -34,7 +34,8 @@ class ContactController extends AppBaseController
             // $User = Auth::check()? Auth::user():session('logged_user');
             // if ($User && $User->role_id == 1/*Administrator - Account_bussine */) {
                 $this->contactRepository->pushCriteria(new RequestCriteria($request));
-                $contacts = $this->contactRepository->all();
+                // $contacts = $this->contactRepository->all();
+                $contacts = $this->contactRepository->fullContacts();
                 return $contacts->toJson();     
             // } else {
             //     abort(401, "Logged user data not found or it's not a admin");

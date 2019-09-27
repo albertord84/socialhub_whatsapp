@@ -23,6 +23,7 @@ class RolesTableSeeder extends Seeder
             'name' => 'ADMIN',
             'description' => 'Role Admin',
         ]);
+        $this->command->info('Role ADMIN');
         Role::create([
             'id' => '2',
             'name' => 'MANAGER',

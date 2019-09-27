@@ -7,15 +7,21 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class User
  * @package App\Models
- * @version September 27, 2019, 3:40 pm UTC
+ * @version September 27, 2019, 5:06 pm UTC
  *
+ * @property \App\Models\Company company
  * @property \App\Models\Role role
  * @property \App\Models\UsersStatus status
  * @property \Illuminate\Database\Eloquent\Collection 
- * @property \App\Models\UsersAttendant usersAttendant
+ * @property \Illuminate\Database\Eloquent\Collection 1s
  * @property \App\Models\UsersManager usersManager
+ * @property integer company_id
  * @property string name
  * @property string email
+ * @property string whatsapp_id
+ * @property string facebook_id
+ * @property string instagram_id
+ * @property string linkedin_id
  * @property string|\Carbon\Carbon email_verified_at
  * @property string password
  * @property string remember_token
@@ -37,8 +43,13 @@ class User extends Model
 
 
     public $fillable = [
+        'company_id',
         'name',
         'email',
+        'whatsapp_id',
+        'facebook_id',
+        'instagram_id',
+        'linkedin_id',
         'email_verified_at',
         'password',
         'remember_token',
@@ -57,8 +68,13 @@ class User extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'company_id' => 'integer',
         'name' => 'string',
         'email' => 'string',
+        'whatsapp_id' => 'string',
+        'facebook_id' => 'string',
+        'instagram_id' => 'string',
+        'linkedin_id' => 'string',
         'email_verified_at' => 'datetime',
         'password' => 'string',
         'remember_token' => 'string',
@@ -77,9 +93,16 @@ class User extends Model
      */
     public static $rules = [
         'id' => 'required',
-        'image_path' => 'required',
-        'role_id' => 'required'
+        'image_path' => 'required'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function company()
+    {
+        return $this->belongsTo(\App\Models\Company::class, 'company_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -95,14 +118,6 @@ class User extends Model
     public function status()
     {
         return $this->belongsTo(\App\Models\UsersStatus::class, 'status_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     **/
-    public function usersAttendant()
-    {
-        return $this->hasOne(\App\Models\UsersAttendant::class);
     }
 
     /**
