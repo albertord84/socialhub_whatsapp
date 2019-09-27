@@ -12,25 +12,12 @@ const menu_items = [
         link: '/admin/attendant',
         icon: ' fa fa-headphones'
      }, {
-         name: 'Gerenciar',
-         link: '/admin/manage',
-         icon: ' fa fa-cog'
+         name: 'Empresa',
+         link: '/admin/company',
+         icon: ' fa fa-building-o'
      },
 
-     //{
-    //     name: 'Contacts',
-    //     link: '/admin/contacts',
-    //     icon: ' fa fa-address-book-o'
-    // },{
-    //     name: 'Contacts',
-    //     link: '/admin/contacts',
-    //     icon: ' fa fa-address-book-o'
-    // },{
-    //     name: 'Contacts',
-    //     link: '/admin/contacts',
-    //     icon: ' fa fa-address-book-o'
-    // },
-    
+   
     
 ];
 export default menu_items;

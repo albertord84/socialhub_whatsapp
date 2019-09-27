@@ -7,7 +7,10 @@
         <div class="text-left">
             <div id="search-input-container">
                 <label>
-                    <input style="font-size: 1rem" type="search" id="search-input" class="form-control mb-2" placeholder="Buscar contato ..." v-model="searchInput">
+                    <div style="" class="form-group has-search">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input type="search" id="search-input" class="form-control" placeholder="Buscar contato" v-model="searchInput">
+                    </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">

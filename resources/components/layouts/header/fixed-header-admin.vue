@@ -53,17 +53,17 @@
                             <img src="/images/prf4.jpg" class="my-rounded-circle" alt="User Image">
                         </template>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/admin/user_profile" exact class="drpodowtext">
+                            <router-link to="/user_profile" exact class="drpodowtext">
                                 <i class="fa fa-user-o"></i> Perfil
                             </router-link>
                         </b-dropdown-item>
-                        <b-dropdown-item exact class="dropdown_content">
+                        <!-- <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/admin/edit_user" exact class="drpodowtext">
                                 <i class="fa fa-cog"></i> Configuração
                             </router-link>
-                        </b-dropdown-item>
+                        </b-dropdown-item> -->
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/admin/lockscreen" exact class="drpodowtext">
+                            <router-link to="/lockscreen" exact class="drpodowtext">
                                 <i class="fa fa-lock"></i> Bloquear
                             </router-link>
                         </b-dropdown-item>
@@ -114,7 +114,7 @@
                 delete axios.defaults.headers.common['Authorization']
                 this.$router.push({name: "login"})
             },
-            urlIMG: function(){            
+            urlIMG: function(){
                 // return require('../../../img/');
                 // /var/www/html/socialhub/resources/img/pages/User-01.png
                 // return require('../../../img/pages/default-matter-photo.jpg');

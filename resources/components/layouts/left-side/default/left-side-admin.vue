@@ -31,9 +31,8 @@ import {
     vmenuItem,
     vsubMenu
 } from './menu';
-import profile from "../left-profile/user_profile2.vue"
+import profile from "../left-profile/left-user-profile2.vue"
 import menu_items from "../../../../menu_admin.js";
-// import menu_items from "../../../../menu_customer.js";
 export default {
     name: "left-side",
     components: {

@@ -17,7 +17,7 @@ const routes = [
     meta: {
         title: "Login",
     }
-}, {
+}, /*{
     path: '/login',
     name: 'login',
     component: resolve => require(['pages/login'], resolve),
@@ -31,7 +31,7 @@ const routes = [
     meta: {
         title: "register",
     }
-}, {
+}*/, {
     path: '/forgotpassword',
     name: 'forgotpassword',
     component: resolve => require(['pages/forgotpassword'], resolve),

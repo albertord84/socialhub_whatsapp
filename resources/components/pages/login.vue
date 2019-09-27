@@ -5,7 +5,6 @@
                 <div class="row">
                     <div class="col-sm-12 mt-3">
                         <h2 class="text-center">
-                            <!-- <img src="~img/logo_black.png" alt="Logo"> -->
                             <img width="200px" src="~img/socialhub/logo-social-hub.png" alt="Logo">
                         </h2>
                     </div>
@@ -13,7 +12,6 @@
                 <div class="row mt-2">
                     <div class="col-sm-12">
                         <div class="text-center">
-                            <!-- <img src="~img/pages/login_user-01.png" class="rounded-circle"> -->
                             <img width="120px" src="~img/socialhub/login.png" class="rounded-circle">
                         </div>
                     </div>
@@ -140,11 +138,11 @@
                             this.show_error = false;
                             
                             //TODO-JR devolver el role del usuario que hizo login y usar
-                            data.data.user.role ='admin';
-                            if(data.data.user.role =='admin')
+                            this.$store.state.user.role ='admin';
+                            if(this.$store.state.user.role =='admin')
                                 this.$router.push({name: "admin"});
                             else
-                            if(data.data.user.role =='attendant')
+                            if(this.$store.state.user.role =='attendant')
                                 this.$router.push({name: "attendant"});
                             else
                                 this.$router.push({name: "login"});
