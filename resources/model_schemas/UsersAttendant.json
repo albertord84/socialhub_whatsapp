@@ -11,10 +11,10 @@
         "inIndex": false
     },
     {
-        "name": "code",
+        "name": "user_manager_id",
         "dbType": "integer,false",
         "htmlType": null,
-        "validations": "required",
+        "validations": null,
         "searchable": true,
         "fillable": true,
         "primary": false,
@@ -22,11 +22,63 @@
         "inIndex": true
     },
     {
+        "name": "code",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "created_at",
+        "dbType": "datetime",
+        "htmlType": "date",
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": false,
+        "inForm": false,
+        "inIndex": false
+    },
+    {
+        "name": "updated_at",
+        "dbType": "datetime",
+        "htmlType": "date",
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": false,
+        "inForm": false,
+        "inIndex": false
+    },
+    {
+        "name": "deleted_at",
+        "dbType": "datetime",
+        "htmlType": "date",
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": false,
+        "inForm": false,
+        "inIndex": false
+    },
+    {
         "type": "relation",
         "relation": "mt1,User,user_id"
     },
     {
         "type": "relation",
+        "relation": "mt1,User,user_manager_id"
+    },
+    {
+        "type": "relation",
         "relation": "1tm,AttendantsContact,attendant_id"
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,contacts"
     }
 ]

@@ -8,9 +8,7 @@ use App\Repositories\ContactRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use Auth;
 
 class ContactController extends AppBaseController
 {
@@ -31,14 +29,10 @@ class ContactController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            // $User = Auth::check()? Auth::user():session('logged_user');
-            // if ($User && $User->role_id == 1/*Administrator - Account_bussine */) {
-                $this->contactRepository->pushCriteria(new RequestCriteria($request));
-                $contacts = $this->contactRepository->all();
-                return $contacts->toJson();     
-            // } else {
-            //     abort(401, "Logged user data not found or it's not a admin");
-            // }
+            $company_id = 1; // $request['$company_id'];
+            $Contacts = $this->contactRepository->fullContacts($company_id);
+
+            return $Contacts->toJson();
         } catch (\Throwable $th) {
             throw $th;
         }

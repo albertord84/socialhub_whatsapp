@@ -15,8 +15,13 @@ class CreateUsersTable extends Migration {
 		Schema::create('users', function(Blueprint $table)
 		{
 			$table->integer('id', true);
+			$table->integer('company_id')->nullable()->index('fk_users_company');
 			$table->string('name', 100)->nullable();
 			$table->string('email', 100)->nullable()->unique('users_email_unique');
+			$table->string('whatsapp_id', 45)->nullable();
+			$table->string('facebook_id', 45)->nullable();
+			$table->string('instagram_id', 45)->nullable();
+			$table->string('linkedin_id', 45)->nullable();
 			$table->dateTime('email_verified_at')->nullable();
 			$table->string('password', 300)->nullable();
 			$table->string('remember_token', 100)->nullable();
@@ -24,7 +29,7 @@ class CreateUsersTable extends Migration {
 			$table->string('CPF', 15)->nullable();
 			$table->string('phone', 30)->nullable();
 			$table->string('image_path', 300)->default('images/user.jpg');
-			$table->integer('role_id')->index('fk_users_role');
+			$table->integer('role_id')->nullable()->index('fk_users_role');
 			$table->integer('status_id')->nullable()->index('fk_users_status');
 			$table->timestamps();
 			$table->softDeletes();

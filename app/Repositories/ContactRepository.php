@@ -8,25 +8,31 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class ContactRepository
  * @package App\Repositories
- * @version September 13, 2019, 9:12 pm UTC
+ * @version September 27, 2019, 5:04 pm UTC
  *
  * @method Contact findWithoutFail($id, $columns = ['*'])
  * @method Contact find($id, $columns = ['*'])
  * @method Contact first($columns = ['*'])
-*/
+ */
 class ContactRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
+        'company_id',
         'first_name',
         'last_name',
+        'email',
+        'description',
+        'remember',
+        'summary',
         'phone',
         'whatsapp_id',
         'facebook_id',
         'instagram_id',
-        'linkedin_id'
+        'linkedin_id',
+        'status_id'
     ];
 
     /**
@@ -35,5 +41,12 @@ class ContactRepository extends BaseRepository
     public function model()
     {
         return Contact::class;
+    }
+
+    public function fullContacts(int $company_id)// : array
+    {
+        $Contacts = $this->with('status')->findWhere(['company_id' => $company_id]);
+
+        return $Contacts;
     }
 }

@@ -15,8 +15,8 @@ class CreateAttendantsContactsTable extends Migration {
 		Schema::create('attendants_contacts', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('attendant_id')->nullable()->index('fk_attendants_contacts_attendant_idx');
-			$table->integer('contact_id')->nullable()->index('fk_attendants_contacts_contact_idx');
+			$table->integer('attendant_id')->nullable()->index('fk_attendants_contacts_attendant');
+			$table->integer('contact_id')->nullable()->index('fk_attendants_contacts_contact');
 			$table->timestamps();
 			$table->softDeletes();
 		});

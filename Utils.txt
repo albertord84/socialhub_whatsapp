@@ -38,3 +38,12 @@ cd /var/www/html/socialhub
 	php artisan infyom:scaffold Status
 	php artisan infyom:scaffold AttendantsContact
 
+
+
+        $Contacts = DB::table('contacts')->get();
+        $Contacts->each(function(Contact $Contact) {
+            $Contact->Status = $Contact->status();
+            $Contact->lastAttendant = $Contact->attendantsContacts()->latest();
+        });
+
+        return $Contacts;

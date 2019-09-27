@@ -4,6 +4,12 @@
     <p>{!! $user->id !!}</p>
 </div>
 
+<!-- Company Id Field -->
+<div class="form-group">
+    {!! Form::label('company_id', 'Company Id:') !!}
+    <p>{!! $user->company_id !!}</p>
+</div>
+
 <!-- Name Field -->
 <div class="form-group">
     {!! Form::label('name', 'Name:') !!}
@@ -14,6 +20,30 @@
 <div class="form-group">
     {!! Form::label('email', 'Email:') !!}
     <p>{!! $user->email !!}</p>
+</div>
+
+<!-- Whatsapp Id Field -->
+<div class="form-group">
+    {!! Form::label('whatsapp_id', 'Whatsapp Id:') !!}
+    <p>{!! $user->whatsapp_id !!}</p>
+</div>
+
+<!-- Facebook Id Field -->
+<div class="form-group">
+    {!! Form::label('facebook_id', 'Facebook Id:') !!}
+    <p>{!! $user->facebook_id !!}</p>
+</div>
+
+<!-- Instagram Id Field -->
+<div class="form-group">
+    {!! Form::label('instagram_id', 'Instagram Id:') !!}
+    <p>{!! $user->instagram_id !!}</p>
+</div>
+
+<!-- Linkedin Id Field -->
+<div class="form-group">
+    {!! Form::label('linkedin_id', 'Linkedin Id:') !!}
+    <p>{!! $user->linkedin_id !!}</p>
 </div>
 
 <!-- Email Verified At Field -->
@@ -62,6 +92,12 @@
 <div class="form-group">
     {!! Form::label('role_id', 'Role Id:') !!}
     <p>{!! $user->role_id !!}</p>
+</div>
+
+<!-- Status Id Field -->
+<div class="form-group">
+    {!! Form::label('status_id', 'Status Id:') !!}
+    <p>{!! $user->status_id !!}</p>
 </div>
 
 <!-- Created At Field -->

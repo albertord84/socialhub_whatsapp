@@ -14,6 +14,7 @@ class AddForeignKeysToContactsTable extends Migration {
 	{
 		Schema::table('contacts', function(Blueprint $table)
 		{
+			$table->foreign('company_id', 'fk_contacts_company')->references('id')->on('companies')->onUpdate('CASCADE')->onDelete('CASCADE');
 			$table->foreign('status_id', 'fk_contacts_status')->references('id')->on('contacts_status')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
@@ -28,6 +29,7 @@ class AddForeignKeysToContactsTable extends Migration {
 	{
 		Schema::table('contacts', function(Blueprint $table)
 		{
+			$table->dropForeign('fk_contacts_company');
 			$table->dropForeign('fk_contacts_status');
 		});
 	}

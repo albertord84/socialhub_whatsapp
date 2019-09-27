@@ -29,16 +29,11 @@ class UsersAttendantController extends AppBaseController
      */
     public function index(Request $request)
     {
-        // $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
-        // $usersAttendants = $this->usersAttendantRepository->all();
-        // return $usersAttendants->toJson(); 
-        
-        $usersAttendants = DB::table('users_attendants')
-            ->join('users', 'users_attendants.user_id', '=', 'users.id');
-        return response()->json(['students' => $usersAttendants->get()]);
+        $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
+        $usersAttendants = $this->usersAttendantRepository->all();
 
-        // return view('users_attendants.index')
-        //     ->with('usersAttendants', $usersAttendants);
+        return view('users_attendants.index')
+            ->with('usersAttendants', $usersAttendants);
     }
 
     /**

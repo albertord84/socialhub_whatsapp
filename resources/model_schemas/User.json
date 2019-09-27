@@ -11,6 +11,17 @@
         "inIndex": false
     },
     {
+        "name": "company_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
         "name": "name",
         "dbType": "string",
         "htmlType": "text",
@@ -23,6 +34,50 @@
     },
     {
         "name": "email",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "whatsapp_id",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "facebook_id",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "instagram_id",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "linkedin_id",
         "dbType": "string",
         "htmlType": "text",
         "validations": null,
@@ -113,7 +168,18 @@
         "name": "role_id",
         "dbType": "integer,false",
         "htmlType": null,
-        "validations": "required",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "status_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": null,
         "searchable": true,
         "fillable": true,
         "primary": false,
@@ -155,7 +221,15 @@
     },
     {
         "type": "relation",
+        "relation": "mt1,Company,company_id"
+    },
+    {
+        "type": "relation",
         "relation": "mt1,Role,role_id"
+    },
+    {
+        "type": "relation",
+        "relation": "mt1,UsersStatus,status_id"
     },
     {
         "type": "relation",
@@ -163,7 +237,11 @@
     },
     {
         "type": "relation",
-        "relation": "1t1,UsersAttendant"
+        "relation": "mtm,,contacts"
+    },
+    {
+        "type": "relation",
+        "relation": "mtm,,users_attendants"
     },
     {
         "type": "relation",

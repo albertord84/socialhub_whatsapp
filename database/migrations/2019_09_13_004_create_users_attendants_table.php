@@ -15,6 +15,7 @@ class CreateUsersAttendantsTable extends Migration {
 		Schema::create('users_attendants', function(Blueprint $table)
 		{
 			$table->integer('user_id')->primary();
+			$table->integer('user_manager_id')->nullable()->index('fk_users_attendants_users_manager');
 			$table->integer('code')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
