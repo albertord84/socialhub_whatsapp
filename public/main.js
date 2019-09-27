@@ -595,6 +595,9 @@ var ApiService = {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.delete(resource).catch(function (error) {
             throw new Error("[RWV] ApiService " + error);
         });
+    },
+    process_request_error: function process_request_error(error) {
+        alert('An error exception occurred in PHP-Laravel, please open developer console and try again');
     }
 };
 
@@ -4932,7 +4935,7 @@ var layout = [{
 }, {
     path: '/admin/contacts',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(15).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1047)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(15).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1256)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Contatos"
@@ -4940,7 +4943,7 @@ var layout = [{
 }, {
     path: '/admin/attendant',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(14).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1261)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(14).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1266)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Chat"

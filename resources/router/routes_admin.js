@@ -7,13 +7,13 @@ const layout = [
     }
 }, {
     path: '/admin/contacts',
-    component: resolve => require(['pages/socialhub/list_contact'], resolve),
+    component: resolve => require(['pages/socialhub/DataTableContacts'], resolve),
     meta: {
         title: "Contatos",
     }
 }, {
     path: '/admin/attendant',
-    component: resolve => require(['pages/socialhub/list_attendants'], resolve),
+    component: resolve => require(['pages/socialhub/DataTableAttendants'], resolve),
     meta: {
         title: "Chat",
     }

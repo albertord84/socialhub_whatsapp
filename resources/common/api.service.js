@@ -58,6 +58,10 @@ const ApiService = {
         return Vue.axios.delete(resource).catch(error => {
             throw new Error(`[RWV] ApiService ${error}`);
         });
+    },
+
+    process_request_error(error) {
+        alert('An error exception occurred in PHP-Laravel, please open developer console and try again');
     }
 };
 
