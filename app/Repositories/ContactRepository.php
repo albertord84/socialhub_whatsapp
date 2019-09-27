@@ -2,11 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Company;
 use App\Models\Contact;
 use InfyOm\Generator\Common\BaseRepository;
-use App\Repositories\CompanyRepository;
-use Illuminate\Container\Container;
 
 /**
  * Class ContactRepository
@@ -48,67 +45,8 @@ class ContactRepository extends BaseRepository
 
     public function fullContacts(int $company_id)// : array
     {
-        // $CompanyRepository = new CompanyRepository(new Container);
-        // $Company = $CompanyRepository->find($company_id);
-        // $Contacts = $Company->contacts()->get();
-        // // $Company = CompanyRepository::find($company_id);
-        
-        // dd($Contacts);
+        $Contacts = $this->with('status')->findWhere(['company_id' => $company_id]);
 
-        // // $Contacts = Company::get
-        // $Contacts = DB::table('contacts')->get();
-        // $Contacts->each(function (Contact $Contact) {
-        //     $Contact->Status = $Contact->status();
-        //     $Contact->lastAttendant = $Contact->attendantsContacts()->latest();
-        // });
-
-        // return $Contacts;
-
-        // try {
-        //     $played_contents = DB::table('users_play_contents')
-        //         ->join('users', 'users_play_contents.user_id', '=', 'users.id')
-        //         ->join('users_students', 'users.id', '=', 'users_students.user_id')
-        //         ->join('contents', 'users_play_contents.content_id', '=', 'contents.id')
-        //         ->join('courses', 'contents.course_id', '=', 'courses.id');
-
-        //     if ($request->course_id > 0) {
-        //         $played_contents = $played_contents->where('course_id', $request->course_id);
-        //     }
-
-        //     if ($request->classroom_id > 0) {
-        //         $played_contents = $played_contents->where('classroom_id', $request->classroom_id);
-        //     }
-
-        //     if ($request->content_id > 0) {
-        //         $played_contents = $played_contents->where('content_id', $request->content_id);
-        //     }
-
-        //     $played_contents
-        //         ->select($columns = [
-        //             'CPF', 'email', 'score',
-        //             'users.name as student_name',
-        //             'users.id as user_id',
-        //             'contents.id as content_id',
-        //             'contents.url as quiz_id',
-        //             'contents.type_id as content_type',
-        //             'contents.name as content_name',
-        //             'courses.id as course_id',
-        //         ])
-        //         ->distinct('users_play_contents.user_id');
-
-        //     $played_contents = $played_contents->get();
-        //     $played_contents->each(function ($item) {
-        //         if ($item->content_type == 4/*Quiz*/) {
-        //             $item->score = App(QuizController::class)->get_quiz_user_score($item->user_id, $item->quiz_id);
-        //         }
-
-        //     });
-
-        //     $json = $played_contents->toJson();
-
-        //     return $json;
-        // } catch (\Throwable $th) {
-        //     throw $th;
-        // }
+        return $Contacts;
     }
 }

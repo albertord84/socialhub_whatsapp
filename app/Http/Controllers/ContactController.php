@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
-use App\Repositories\CompanyRepository;
-use Illuminate\Container\Container;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use Auth;
 
 class ContactController extends AppBaseController
 {
@@ -34,9 +30,7 @@ class ContactController extends AppBaseController
     {
         try {
             $company_id = 1; // $request['$company_id'];
-            $CompanyRepository = new CompanyRepository(new Container);
-            $Company = $CompanyRepository->find($company_id);
-            $Contacts = $Company->contacts()->get();
+            $Contacts = $this->contactRepository->fullContacts($company_id);
 
             return $Contacts->toJson();
         } catch (\Throwable $th) {
