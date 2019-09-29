@@ -138,7 +138,7 @@
                             this.show_error = false;
                             
                             //TODO-JR devolver el role del usuario que hizo login y usar
-                            this.$store.state.user.role ='admin';
+                            this.$store.state.user.role ='attendant';
                             if(this.$store.state.user.role =='admin')
                                 this.$router.push({name: "admin"});
                             else

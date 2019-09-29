@@ -25,7 +25,7 @@ let mutations = {
             document.getElementsByTagName("body")[0].classList.add("sidebar-right-opened");
             document.getElementById("right-side").classList.add("right-active");
         } else {
-            if(document.getElementsByTagName("body")[0] && document.getElementById("right-side")){
+            if(document.getElementsByTagName("body")[0] /*&& document.getElementById("right-side")*/){
                 document.getElementsByTagName("body")[0].classList.remove("sidebar-right-opened");
                 document.getElementById("right-side").classList.remove("right-active");
             }
@@ -43,7 +43,7 @@ let mutations = {
             document.getElementsByTagName("body")[0].classList.add("sidebar-left-opened");
             document.getElementById("left-side").classList.add("left-active");
         } else {
-            if(document.getElementsByTagName("body")[0] && document.getElementById("left-side")){
+            if(document.getElementsByTagName("body")[0] /*&& document.getElementById("left-side")*/){
                 document.getElementsByTagName("body")[0].classList.remove("sidebar-left-opened");
                 document.getElementById("left-side").classList.remove("left-active");
             }

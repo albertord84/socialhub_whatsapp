@@ -42,8 +42,8 @@
             }
         },
         beforeMount(){
-            this.$store.commit('rightside_bar', "close");
-            this.$store.commit('leftside_bar', "close");
+            // this.$store.commit('rightside_bar', "close");
+            // this.$store.commit('leftside_bar', "close");
         },
         mounted() {
             if (window.innerWidth <= 992) {

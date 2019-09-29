@@ -97,8 +97,8 @@
 <script>
     import "../../sass/_right_side_bar.scss"
 
-    import edit_contact from "../pages/edit_contact.vue";
-    import find_messages from "../pages/find_messages.vue";
+    import edit_contact from "../pages/socialhub/edit_contact.vue";
+    import find_messages from "../pages/socialhub/find_messages.vue";
 
     export default {
     name: "right_side_bar",

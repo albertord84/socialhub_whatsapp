@@ -52,9 +52,9 @@
                 <b-card>
                     <h5 class="ml-3 head_color">Annual Stats</h5>
                     <div style="height: 305px;">
-                        <IEcharts :option="ajaxbar_chart" :loading="ajaxloading" @ready="onReady"
+                        <IEcharts :option="ajaxbar_chart"  @ready="onReady"
                                   ref="ajaxbar_chart"></IEcharts>
-                    </div>
+                    </div><!--:loading="ajaxloading"-->
                 </b-card>
                 <b-card class="article_widget">
                     <div class="row">

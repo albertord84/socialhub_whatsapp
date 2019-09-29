@@ -11,8 +11,8 @@
 <script>
     import "../../sass/_left_side_bar.scss"
 
-    import add_contact from "../pages/add_contact.vue";
-    import filter_contact from "../pages/filter_contact.vue";
+    import add_contact from "../pages/socialhub/add_contact.vue";
+    import filter_contact from "../pages/socialhub/filter_contact.vue";
 
     export default {
         name: "left_side_bar",
@@ -30,6 +30,7 @@
             }
         },
         mounted: function() {
+            
         },
         destroyed: function() {
 

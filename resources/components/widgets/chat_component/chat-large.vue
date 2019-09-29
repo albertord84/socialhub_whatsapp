@@ -1,7 +1,7 @@
 <template>
     <div class="row">
 
-        <right-side-bar :right_layout ="right_layout"></right-side-bar>
+        <right-side-bar  :right_layout ="right_layout"></right-side-bar>
         <left-side-bar  :left_layout ="left_layout"></left-side-bar>
 
         <!-- Left side of chat-->
@@ -11,21 +11,12 @@
                     <ul class='menu'>
                         <li><p>Contatos</p></li>                    
                         <ul class='menu' style="float:right">
-                            <li><a href='javascript:void(0)' title="Novo contato" class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus" ></i></a></li>
-                            <li><a href='javascript:void(0)' title="Filtar contatos" class="round_btn" @click="toggle_left('toggle-filter-contact')"><i class="fa fa-filter" ></i></a></li>
-                            <!-- <li><a href='javascript:void(0)' title="Filtar mensages" @click.prevent="" >
-                                    <i class="fa fa-envelope-open-o "></i>
-                                    <ul class="menu" style="float:right;">
-                                        <li><a href="javascript:void(0)"><i class="fa fa-database"></i> Arquivadas</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-star-o"></i> Favoritas</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-bell-o"></i> Lembretes</a></li>                    
-                                        <li><a href="javascript:void(0)"><i class="fa fa-address-card-o"></i> Resumos</a></li>
-                                    </ul> 
-                            </a></li>  -->
+                            <li><a href='javascript:void(0)' title="Novo contato" class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs" ></i></a></li>
+                            <!-- <li><a href='javascript:void(0)' title="Filtar contatos" class="round_btn" @click="toggle_left('toggle-filter-contact')"><i class="fa fa-filter" ></i></a></li> -->
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
-                                        <i class="fa fa-envelope-open-o mt-3" title="Ver mensagens" style="color:gray"></i>
+                                        <i class="fa fa-paper-plane mt-3" title="Mensagens" style="color:gray"></i>
                                     </template>
                                     <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivadas</a>
@@ -39,44 +30,69 @@
                                     <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-address-card-o"></i> Resumos</a>
                                     </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-envelope-open-o"></i> Lidas</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-envelope-o"></i> Não lidas</a>
+                                    </b-dropdown-item>
+                                </b-dropdown>
+                            </li>                             
+                            <li>
+                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
+                                    <template v-slot:button-content>
+                                        <i class="fa fa-filter mt-3" title="Status"  style="color:gray"></i>
+                                    </template>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-users"></i> Todos</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-ambulance"></i> Prioridade</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-eye"></i> Seguimento</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-check"></i> Encerrados</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-asc"></i> Transferidos</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-asc"></i> Recentes</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-asc"></i> Antigos</a>
+                                    </b-dropdown-item>
                                 </b-dropdown>
                             </li> 
-                            <!-- 
-                            <li><a href='javascript:void(0)' title="Status" @click.prevent="">
-                                    <i class="fa fa-calendar"></i>
-                                    <ul class="menu" style="float:right;">
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-desc" style="color:black"></i> Ativos</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-asc" style="color:black" ></i> Inativos</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Transferidos</a></li>                    
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Encerrados</a></li>
-                                    </ul>
-                            </a></li>
-                            <li><a href='javascript:void(0)' title="Data" @click.prevent="">
-                                    <i class="fa fa-calendar"></i>
-                                    <ul class="menu" style="float:right;">
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-desc" style="color:black" ></i> Adhesões recentes</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-numeric-asc" style="color:black" ></i> Adhesões antigas</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Conversas recentes</a></li>                    
-                                        <li><a href="javascript:void(0)"><i class="fa fa-sort-amount-asc " style="color:black" ></i> Conversas antigas</a></li>
-                                    </ul>
-                            </a></li>
-                            <li><a href='javascript:void(0)' title="Rede Social" @click.prevent="" >
-                                    <i class="fa fa-yelp"></i>
-                                    <ul class="menu" style="float:right;">
-                                        <li><a href="javascript:void(0)"><i class="fa fa-whatsapp" style="color:green" ></i> Whatsapp</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-facebook" style="color:#3b5998" ></i> Messenger</a></li>
-                                        <li><a href="javascript:void(0)"><i class="fa fa-instagram" style="color:#c13584" ></i> Direct</a></li>                    
-                                        <li><a href="javascript:void(0)"><i class="fa fa-linkedin" style="color:#0077B5" ></i> LinkedIn</a></li>
-                                    </ul> 
-                            </a></li> 
-                            -->
+                            <li>
+                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
+                                    <template v-slot:button-content>
+                                        <i class="fa fa-globe fa-lg mt-3" title="Rede Social" style="color:gray"></i>
+                                    </template>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-facebook-official"></i> Facebook</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-instagram"></i> Instagram</a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-linkedin"></i> LinkedIn</a>
+                                    </b-dropdown-item>
+                                </b-dropdown>
+                            </li> 
+                           
                         </ul>
                     </ul>                    
                 </div>
                 <div class="sect_header">
-                    <div style="width:100%; padding:15px 9px 3px 5px" class="form-group has-search">
-                        <span class="fa fa-search form-control-feedback"></span>
-                        <input type="text" class="form-control" placeholder="Buscar contato">
+                    <div style="width:100%; padding:15px 9px 8px 5px" class="form-group has-search">
+                        <span class="fa fa-search form-control-feedback transp"></span>
+                        <input type="text" class="form-control transp" placeholder="Buscar contato">
                     </div>
                 </div>
                 <v-scroll :height="Height(0)"  color="#ccc" bar-width="8px">
@@ -102,8 +118,7 @@
         </div>
 
         <!-- Center side of chat-->
-        <!-- <div class="col-sm-4 col-md-5 mt-3"> -->
-        <div class="col-lg-6 p-0">
+        <div class="col-lg-6 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
             <div class="converstion_back">
                 <div class="sect_header">
                     <ul class='menu'>
@@ -114,7 +129,7 @@
                         <li><p class="pl-0 ml-0">{{ list[selected_user_index].user }} </p></li>                        
                         <ul class='menu' style="float:right">
                             <li><a href="javascript:void()" title="Buscar..." @click="toggle_right('toggle-find-messages')"><i class="fa fa-search"></i></a></li>
-                            <li><a href="javascript:void()" title="Anexar"><i class="fa fa-paperclip"></i></a></li>
+                            <li><a href="javascript:void()" title="Anexar"><i class="fa fa-picture-o"></i><!-- <i class="fa fa-paperclip"></i>--></a></li>
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -157,8 +172,7 @@
         </div>
 
         <!-- Right side of chat-->
-        <!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div class="col-lg-3 bg-white p-0">
+        <div class="col-lg-3 bg-white p-0"><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
             <div class="sect_header">
                 <ul class='menu'>
                     <li><p>Detalhes</p></li>
@@ -188,6 +202,7 @@
                         </ul>
                 </ul> 
             </div>
+
             <label></label>
             <div class="profile sec_decription bg-white text-center">
                     <img :src="list[selected_user_index].image"  class="rounded-circle  mb-3 mt-3" alt="User Image">
@@ -242,8 +257,9 @@
             rightSideBar,
             leftSideBar
         },
-        mounted() {
-
+        beforeMount() {
+            this.$store.commit('leftside_bar', "close");
+            this.$store.commit('rightside_bar', "close");
         },
         created() {
             window.addEventListener('resize', this.handleResize)
@@ -268,6 +284,7 @@
             }
         },
         methods: {
+
             send_message() {
                 if (this.newmessage.trim() != "") {
                     this.list[this.selected_user_index].messages.push({
@@ -278,23 +295,28 @@
                     this.$refs.message_scroller.scrolltobottom();
                 }
             },
+
             show_chat(user, index) {
                 this.selected_user_index = index;
                 setTimeout(() => {
                     this.$refs.input.focus();
                 }, 20)
             },
+
             Height(val){
                 return (this.window.height-val)+'px';
             },
+
             toggle_right(val) {
                 this.right_layout = val;
                 this.$store.commit('rightside_bar', "toggle");
             },
+
             toggle_left(val) {
                 this.left_layout = val;
                 this.$store.commit('leftside_bar', "toggle");
             },
+
             text_truncate (str, length, ending) {
                 if (length == null) {
                     length = 100;
@@ -308,6 +330,7 @@
                     return str;
                 }
             },
+
             handleResize() {
                 this.window.width = window.innerWidth;
                 this.window.height = window.innerHeight;
@@ -315,6 +338,8 @@
         },
     }
 </script>
+
+
 <style scoped lang="scss">
     .desc-img {
         height: 40px;
@@ -589,6 +614,21 @@
         text-align: center !important;
         // margin: 0px !important;
         padding: 5px !important;
+    }
+
+    .transp {
+        background-color:rgba(0, 0, 0, 0);
+        color:gray;
+        border: none !important;
+        outline:none !important;
+        height:28px;
+        transition:height 1s;
+        -webkit-transition:height 1s;
+    }
+    .transp:focus {
+        outline: none !important;
+        border: none !important;
+        outline-width: 0 !important;
     }
     
     
