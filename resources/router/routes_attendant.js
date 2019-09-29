@@ -16,7 +16,7 @@ const layout = [
         path: '/attendant/user_profile',
         component: resolve => require(['pages/socialhub/user_profile'], resolve),
         meta: {
-            title: "Chat",
+            title: "Perfil",
         }
     }, 
 ]

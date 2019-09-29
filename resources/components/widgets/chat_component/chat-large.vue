@@ -5,7 +5,7 @@
         <left-side-bar  :left_layout ="left_layout"></left-side-bar>
 
         <!-- Left side of chat-->
-        <div class="col-lg-3 p-0">
+        <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
                 <div class="sect_header">
                     <ul class='menu'>
@@ -53,16 +53,13 @@
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-eye"></i> Seguimento</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-check"></i> Encerrados</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-hand-peace-o"></i> Encerrados</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-asc"></i> Transferidos</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-exchange"></i> Transferidos</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-asc"></i> Recentes</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-asc"></i> Antigos</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-desc"></i> Adhesão</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
                             </li> 
@@ -118,18 +115,16 @@
         </div>
 
         <!-- Center side of chat-->
-        <div class="col-lg-6 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
+        <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
             <div class="converstion_back">
                 <div class="sect_header">
                     <ul class='menu'>
-                        <li><span class="pl-4">
-                            <img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img ">
-                        </span></li>
-                        <li><span class="pl-3 person_name person_name_style"></span></li>
-                        <li><p class="pl-0 ml-0">{{ list[selected_user_index].user }} </p></li>                        
+                        <li><span class="pl-4"><img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
+                        <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
+                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ list[selected_user_index].user }} </p></li>                        
                         <ul class='menu' style="float:right">
-                            <li><a href="javascript:void()" title="Buscar..." @click="toggle_right('toggle-find-messages')"><i class="fa fa-search"></i></a></li>
-                            <li><a href="javascript:void()" title="Anexar"><i class="fa fa-picture-o"></i><!-- <i class="fa fa-paperclip"></i>--></a></li>
+                            <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()/*toggle_right('toggle-find-messages')*/"><i class="fa fa-search"></i></a></li>
+                            <li><a href="javascript:void()" title="Anexar imagem"><i class="fa fa-picture-o"></i><!-- <i class="fa fa-paperclip"></i>--></a></li>
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -172,7 +167,7 @@
         </div>
 
         <!-- Right side of chat-->
-        <div class="col-lg-3 bg-white p-0"><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <div id="chat-right-side" v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0"><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
             <div class="sect_header">
                 <ul class='menu'>
                     <li><p>Detalhes</p></li>
@@ -237,6 +232,52 @@
 
             </div>
         </div>
+
+        <!-- Find-Right side of chat-->
+        <div id="chat-find-right-side" v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0"><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+            <div class="" style="margin-top:0px; width:100%">
+                <div class="col-lg-12 sect_header">
+                    <ul class="menu">
+                        <!-- <li><p>Mensagens anteriores</p> </li> -->
+                        <li>
+                            <div style="width:100%; padding:15px 9px 8px 5px" class="form-group has-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <input type="text" class="form-control transp" v-model="ftext" @change="fchange()" placeholder="Procurar mensagens">
+                            </div>
+                        </li>
+                        <ul class="menu float-right">
+                            <li ><a href="javascript:void(0)" @click.prevent="ftext='';fn_show_chat_find_right_side()/*toggle_right()*/"><i class="fa fa-close"></i></a></li>
+                        </ul>
+                    </ul>
+                </div>
+                <!-- <div class="col-lg-12 p-0">
+                    <div class="converstion_back">                    
+                        <v-scroll :height="Height(131)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
+                            <ul>
+                                <li v-for='(item,index) in list[selected_user_index].messages' :key="index" :class="[{ sent: item.from=='me' },{ received: item.from!=='me' }]">
+                                    <div>
+                                        <div class="msg_time">{{item.time}}</div>
+                                        <p>{{ item.msg }}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </v-scroll>                    
+                    </div>
+                </div> -->
+                <!-- <div class="col-lg-12 sect_header mb-0">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a href="javascript:void(0)" class="box"><i class="fa fa-angle-double-down"></i> Resumo</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="javascript:void(0)" class="box"><i class="fa fa-angle-double-up"></i> Resumo</a>
+                        </li>
+                        
+                    </ul>
+                </div> -->
+                
+            </div>
+        </div>
         
     </div>
 </template>
@@ -245,6 +286,7 @@
 
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
+    import find_messages  from 'resources/components/pages/socialhub/find_messages'
 
     export default {
         props: {
@@ -255,7 +297,8 @@
         components: {
             vScroll,
             rightSideBar,
-            leftSideBar
+            leftSideBar,
+            find_messages
         },
         beforeMount() {
             this.$store.commit('leftside_bar', "close");
@@ -270,6 +313,10 @@
         },
         data() {
             return {
+                ftext:'',
+
+                show_chat_right_side:false,
+                show_chat_find_right_side:false,
                 images: [ '~img/pages/chat_background.png', '~img/pages/chat_background2.png', '~img/pages/chat_background3.png'],
                 bgColor:require('img/pages/chat_background.png'),
                 className:'',
@@ -301,6 +348,34 @@
                 setTimeout(() => {
                     this.$refs.input.focus();
                 }, 20)
+            },
+
+            fn_show_chat_right_side(){
+                if(this.show_chat_right_side==false){
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    this.show_chat_find_right_side = false;
+                    this.show_chat_right_side = true;
+                }else{
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    this.show_chat_find_right_side = false;
+                    this.show_chat_right_side = false;
+                }
+            },
+
+            fn_show_chat_find_right_side(){
+                if(this.show_chat_find_right_side==false){
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    this.show_chat_right_side = false;
+                    this.show_chat_find_right_side = true;
+                }else{
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    this.show_chat_right_side = false;
+                    this.show_chat_find_right_side = false;
+                }
             },
 
             Height(val){
@@ -630,6 +705,8 @@
         border: none !important;
         outline-width: 0 !important;
     }
-    
-    
+    .pointer-hover:hover{
+        cursor: pointer;
+    }   
+
 </style>

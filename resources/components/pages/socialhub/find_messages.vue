@@ -10,7 +10,7 @@
                 </ul>
             </div>
             <div class="col-lg-12 sect_header">
-                <div style="width:100%; padding:15px 9px 8px 5px" class="form-group has-search">
+                <div style="padding:15px 9px 8px 5px" class="form-group has-search">
                     <span class="fa fa-search form-control-feedback"></span>
                     <input type="text" class="form-control transp" v-model="ftext" @change="fchange()" placeholder="Digitar texto">
                 </div>

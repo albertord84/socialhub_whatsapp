@@ -3,7 +3,7 @@ const menu_items = [
         name: 'Dashboard',
         link: '/admin',
         icon: ' fa fa-home'
-    },{
+    },/*{
         name: 'Contatos',
         link: '/admin/contacts',
         icon: 'fa fa-address-book-o'
@@ -15,7 +15,7 @@ const menu_items = [
          name: 'Empresa',
          link: '/admin/company',
          icon: ' fa fa-building-o'
-     },
+     },*/
 
    
     

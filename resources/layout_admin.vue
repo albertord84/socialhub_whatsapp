@@ -4,7 +4,7 @@
         <vueadmin_header_admin></vueadmin_header_admin>
         <div class="wrapper row-offcanvas">
             <left_side_admin v-show="this.$store.state.left_open"></left_side_admin>
-            <right_side>
+            <right_side class="pl-4">
                 <router-view></router-view>
             </right_side>
         </div>

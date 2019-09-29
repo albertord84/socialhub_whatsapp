@@ -64,9 +64,6 @@
 
                                 </validate>
                             </div>
-
-
-
                         </div>
                         <!-- <div class="col-lg-6 col-md-6">
                             <validate tag="label">
@@ -136,18 +133,26 @@
                         .then(data => {
                             this.$store.dispatch('login', data);
                             this.show_error = false;
-                            
-                            //TODO-JR devolver el role del usuario que hizo login y usar
-                            this.$store.state.user.role ='attendant';
-                            if(this.$store.state.user.role =='admin')
-                                this.$router.push({name: "admin"});
-                            else
-                            if(this.$store.state.user.role =='attendant')
-                                this.$router.push({name: "attendant"});
-                            else
-                                this.$router.push({name: "login"});
+                            var logged_user = JSON.parse(localStorage.user);
+                            var link;
+                            switch(logged_user.role_id) {
+                                case 1: /*ADMIN*/ 
+                                    link = "admin";
+                                    break;
+                                case 2: /*MANAGER*/ 
+                                    link = "manager";
+                                    break;
+                                case 3: /*ATTENDANT*/ 
+                                    link = "attendant";
+                                    break;
+                                case 4: /*VISITOR*/ 
+                                    link = "visitor";
+                                    break;
+                                default:
+                                    link = "login";
+                            } 
+                            this.$router.push({name: link});
                         })
-                        // .then(() => this.$router.push({name: "dashboard"}))
                         .catch(error => {
                             this.show_error = true;
                         })
