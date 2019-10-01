@@ -35,7 +35,7 @@ class ContactController extends AppBaseController
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
             $User = new User();
-            $User->id = 4;
+            $User->id = 3;
             $company_id = 1; // $request['$company_id'];
             $user_role_id = ContactsStatusController::MANAGER;
             $user_role_id = ContactsStatusController::ATTENDANT;
