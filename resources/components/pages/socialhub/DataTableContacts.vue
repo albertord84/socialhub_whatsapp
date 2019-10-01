@@ -7,7 +7,10 @@
         <div class="text-left">
             <div id="search-input-container">
                 <label>
-                    <input style="font-size: 1rem" type="search" id="search-input" class="form-control mb-2" placeholder="Buscar contato ..." v-model="searchInput">
+                    <div style="" class="form-group has-search">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="search" id="search-input" class="form-control" placeholder="Buscar contato" v-model="searchInput">
+                    </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
@@ -97,41 +100,40 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="new_email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
+                            <input v-model="new_email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="new_phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="new_phone" id="new_phone" name="new_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                         </div>                                
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="new_whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                            <input v-model="new_whatsapp_id" id="new_whatsapp_id" name="new_whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="new_facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
+                            <input v-model="new_facebook_id" id="new_facebook_id" name="new_facebook_id" type="text" placeholder="Facebook" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                                 <span class="fa fa-instagram form-control-feedback"></span>
-                                <input v-model="new_instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
+                                <input v-model="new_instagram_id" id="new_instagram_id" name="new_instagram_id" type="text" placeholder="Instagram" class="form-control"/>
                             </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-linkedin form-control-feedback"></span>
-                            <input v-model="new_linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
+                            <input v-model="new_linkedin_id" id="new_linkedin_id" name="new_linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-lg-6 form-group">
-                            <textarea v-model="new_summary" @keyup="countLengthSumary" name="decription" id="decription" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
+                            <textarea v-model="new_summary" @keyup="countLengthSumary" name="new_summary" id="new_summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
                             <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
                         </div>
                         <div class="col-lg-6 form-group">
-                            <textarea v-model="new_remember" @keyup="countLengthRemember" name="decription" id="decription" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
+                            <textarea v-model="new_remember" @keyup="countLengthRemember" name="new_remember" id="new_remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
                             <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
                         </div>
                     </div>

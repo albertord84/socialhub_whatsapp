@@ -16,13 +16,13 @@
                             <i class="fa fa-arrows-alt text-white"></i>
                         </a>
                     </div>
-
-                    <!--Chat acess toggle-->
+                    <!--Dashboard acess toggle-->
                     <div class="dropdown hidden-xs-down btn-group">
                         <router-link to="../attendant/" title="Dashboard">
                             <i class="fa fa-tachometer text-white" aria-hidden="true"></i>                            
                         </router-link>
                     </div>
+                    <!--Chat acess toggle-->
                     <div class="dropdown hidden-xs-down btn-group">
                         <router-link to="/attendant/chat" title="Chat">
                             <i class="fa fa-weixin text-white" aria-hidden="true"></i>                            
@@ -50,13 +50,13 @@
                                 <i class="fa fa-user-o"></i> Perfil
                             </router-link>
                         </b-dropdown-item>
-                        <b-dropdown-item exact class="dropdown_content">
+                        <!-- <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/attendant/edit_user" exact class="drpodowtext">
                                 <i class="fa fa-cog"></i> Configuração
                             </router-link>
-                        </b-dropdown-item>
+                        </b-dropdown-item> -->
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/attendant/lockscreen" exact class="drpodowtext">
+                            <router-link to="/lockscreen" exact class="drpodowtext">
                                 <i class="fa fa-lock"></i> Bloquear
                             </router-link>
                         </b-dropdown-item>

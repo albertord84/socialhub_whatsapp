@@ -7,18 +7,21 @@
         <div class="text-left">
             <div id="search-input-container">
                 <label>
-                    <input style="font-size: 1rem" type="search" id="search-input" class="form-control mb-2" placeholder="Buscar atendente ..." v-model="searchInput">
+                    <div style="" class="form-group has-search">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
+                    </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
                         <i class="fa fa-download"></i>
                     </a>
                 </div>
-                <div class="actions float-right pr-4 mb-3">
+                <!-- <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Importar atendentes">
                         <i class="fa fa-id-card-o"></i>
                     </a>
-                </div>
+                </div> -->
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddAttendant = !modalAddAttendant" title="Novo atendente">
                         <i class="fa fa-user-plus"></i>
@@ -38,7 +41,7 @@
                                 {{ collect(row,column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeAttendant(row)"><i class='fa fa-comments-o text-info mr-3'></i></a>
+                                <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeAttendant(row)"><i class='fa fa-headphones text-dark mr-3'></i></a>
                                 <a class="text-18" href="javascript:void(0)" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
                                 <a class="text-18" href="javascript:void(0)" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
@@ -259,7 +262,8 @@
         data() {
             return {
                 //---------General properties-----------------------------
-                url:'usersAttendants',  //route to controller
+                url:'contacts',  //route to controller
+                // url:'usersAttendants',  //route to controller
                 
                 //---------Specific properties-----------------------------
                 attendant_id: "",
@@ -298,23 +302,28 @@
                         width: "90px",
                         html: false,
                     },{
-                        label: 'Whatsapp',
-                        field: 'whatsapp_id',
-                        numeric: false,
-                        html: false,
-                    },{
-                        label: 'Nome', 
-                        field: 'name', 
+                        label: 'Login', 
+                        field: 'login', 
                         numeric: false, 
                         html: false, 
+                    },{
+                        label: 'Nome completo', 
+                        field: 'name', 
+                        numeric: false, 
+                        html: false,                     
                     }, {
                         label: 'Email',
                         field: 'email',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Atendente',
-                        field: 'attendant_id',
+                        label: 'Telefone',
+                        field: 'phone',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'CPF',
+                        field: 'CPD',
                         numeric: false,
                         html: false,
                     }, {

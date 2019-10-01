@@ -5,12 +5,12 @@
                 <div class="row">
                     <div class="col-lg-12 col-12 mt-4">
                         <h2 class="text-center">
-                            <img src="~img/logo_black.png" alt="Logo">
+                            <img width="200px" src="~img/socialhub/logo-social-hub.png" alt="Logo">
                         </h2>
                     </div>
                     <div class="col-lg-12 col-12 mt-4">
                         <h3 class="page-name text-center">
-                            <img src="~img/pages/User-01.png" alt="user" class="rounded-circle img-thumbnail user-img">
+                            <img width="120px" src="~img/socialhub/login.png" class="rounded-circle">
                         </h3>
                     </div>
                 </div>
@@ -22,21 +22,20 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                 </div>
-                                <input v-model="model.password" name="password" type="password" required placeholder="Password" class="form-control" minlength="4"
-                                       maxlength="10" />
+                                <input v-model="model.password" name="password" type="password" required placeholder="Senha" class="form-control" minlength="4" maxlength="10" />
                             </div>
 
 
                             <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                                <div slot="required">Password is required</div>
-                                <div slot="minlength">Password should be atleast 4 characters long</div>
-                                <div slot="maxlength">Password should be atmost 10 characters long</div>
+                                <div slot="required">A senha é obrigatória</div>
+                                <div slot="minlength">A senha deve ter pelo menos 4 carateres</div>
+                                <div slot="maxlength">A senha deve ter máximo 10 carateres</div>
                             </field-messages>
                         </validate>
                     </div>
                     <div class="col-12 mt-4 mb-5">
                         <div class="form-group">
-                            <input type="submit" value="Unlock" class="btn btn-primary btn-block" />
+                            <input type="submit" value="Desbloquear" class="btn btn-primary btn-block" />
                         </div>
                     </div>
                 </vue-form>
@@ -64,12 +63,29 @@
                 if (this.formstate.$invalid) {
                     return;
                 } else {
-                    this.$router.push("/");
+                    var logged_user = JSON.parse(localStorage.user);
+                    var link;
+                    switch(logged_user.role_id) {
+                        case 1: /*ADMIN*/ 
+                            link = "admin";
+                            break;
+                        case 2: /*MANAGER*/ 
+                            link = "manager";
+                            break;
+                        case 3: /*ATTENDANT*/ 
+                            link = "attendant";
+                            break;
+                        case 4: /*VISITOR*/ 
+                            link = "visitor";
+                            break;
+                        default:
+                            link = "login";
+                    } 
+                    this.$router.push({name: link});
                 }
-            }
+            },
         },
         mounted: function () {
-
         },
         destroyed: function () {
 

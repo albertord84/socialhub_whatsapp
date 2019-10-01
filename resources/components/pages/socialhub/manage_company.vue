@@ -8,16 +8,6 @@
                 <weather id="5128638"></weather>
             </b-card>
         </div>
-        <div class="col-lg-12">
-            <b-card header="Basic Client Table" header-tag="h4" class="bg-primary-card">
-
-                <div class="table-responsive">
-                    <datatable title="Registered Users" :rows="tableData" :columns="columndata">
-                    </datatable>
-                </div>
-
-            </b-card>
-        </div>
     </div>
 </template>
 <script>

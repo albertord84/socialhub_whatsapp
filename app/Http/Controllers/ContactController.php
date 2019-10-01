@@ -6,8 +6,11 @@ use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\User;
+use ArrayObject;
 use Illuminate\Http\Request;
 use Flash;
+use Nexmo\Call\Collection;
 use Response;
 
 class ContactController extends AppBaseController
@@ -29,8 +32,18 @@ class ContactController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            //TODO-JR-ALBERTO 
+            //get contacts by company_id or by attendant_id
+            $User = new User();
             $company_id = 1; // $request['$company_id'];
-            $Contacts = $this->contactRepository->fullContacts($company_id);
+            $user_role_id = ContactsStatusController::MANAGER; // $request['$company_id'];  //manager or attendant
+            $Contacts = $this->contactRepository->all();;
+            if ($user_role_id == ContactsStatusController::MANAGER) {
+                $Contacts = $this->contactRepository->fullContacts($company_id, null);
+            } 
+            else if ($user_role_id == ContactsStatusController::ATTENDANT) {
+                $Contacts = $this->contactRepository->fullContacts($company_id, $User->id);
+            }
 
             return $Contacts->toJson();
         } catch (\Throwable $th) {
@@ -58,6 +71,11 @@ class ContactController extends AppBaseController
     public function store(CreateContactRequest $request)
     {
         $input = $request->all();
+
+        //um contato pode ser criado por:
+        //um robot, 
+        //um atendente, 
+        //um admin (manualmente ou desde CVS)
 
         $contact = $this->contactRepository->create($input);
 
