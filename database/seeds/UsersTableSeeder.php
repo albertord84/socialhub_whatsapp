@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use App\Models\UsersManager;
 use App\Models\UsersAttendant;
+use App\Models\UsersManager;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -89,6 +89,7 @@ class UsersTableSeeder extends Seeder
         ]);
         UsersAttendant::create([
             'user_id' => 3,
+            'user_manager_id' => 2,
         ]);
         $this->command->info('Attendant 1 created: [user: attendant1, pass: attendant1]');
         User::create([
@@ -105,6 +106,7 @@ class UsersTableSeeder extends Seeder
         ]);
         UsersAttendant::create([
             'user_id' => 4,
+            'user_manager_id' => 2,
         ]);
         $this->command->info('Attendant 2 created: [user: attendant2, pass: attendant2]');
     }

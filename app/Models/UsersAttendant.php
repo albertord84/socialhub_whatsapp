@@ -20,6 +20,8 @@ class UsersAttendant extends Model
 {
 
     public $table = 'users_attendants';
+
+    protected $primaryKey = 'user_id';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

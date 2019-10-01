@@ -47,3 +47,7 @@ cd /var/www/html/socialhub
         });
 
         return $Contacts;
+
+
+# Atualizar cache e ficheiros
+composer dump-autoload 

@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Contact;
-use ArrayIterator;
+use App\Models\UsersAttendant;
+use Illuminate\Database\Eloquent\Collection;
 use InfyOm\Generator\Common\BaseRepository;
-use phpDocumentor\Reflection\Types\Collection;
 
 /**
  * Class ContactRepository
@@ -34,7 +34,7 @@ class ContactRepository extends BaseRepository
         'facebook_id',
         'instagram_id',
         'linkedin_id',
-        'status_id'
+        'status_id',
     ];
 
     /**
@@ -45,14 +45,19 @@ class ContactRepository extends BaseRepository
         return Contact::class;
     }
 
-    public function fullContacts(int $company_id, ?int $attendant_id)// : ArrayIterator
+    public function fullContacts(int $company_id, ?int $attendant_id): Collection
     {
         $Contacts = $this->with('status')->findWhere(['company_id' => $company_id]);
         
         if ($attendant_id) {
-            $Contacts->join('users_attendants');
-            $Contacts->findWhere(['attendant_id' => $attendant_id]);
-            $Contacts->with('users_attendants');
+            $Attentand = UsersAttendant::with('AttendantsContacts')->find($attendant_id);
+
+            $Contacts = new Collection();
+            foreach ($Attentand['AttendantsContacts'] as $key => $AttendantsContact) {
+                $AttendantsContactContact = $AttendantsContact->with('contact')->find($AttendantsContact->id);
+                $AttendantsContactContactStatus = $AttendantsContactContact['Contact']->with('Status')->find($AttendantsContactContact->contact_id);
+                $Contacts[$key] = $AttendantsContactContactStatus;
+            }
         }
 
         return $Contacts;
