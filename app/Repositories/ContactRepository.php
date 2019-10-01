@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Contact;
+use ArrayIterator;
 use InfyOm\Generator\Common\BaseRepository;
+use phpDocumentor\Reflection\Types\Collection;
 
 /**
  * Class ContactRepository
@@ -43,9 +45,15 @@ class ContactRepository extends BaseRepository
         return Contact::class;
     }
 
-    public function fullContacts(int $company_id)// : array
+    public function fullContacts(int $company_id, ?int $attendant_id)// : ArrayIterator
     {
         $Contacts = $this->with('status')->findWhere(['company_id' => $company_id]);
+        
+        if ($attendant_id) {
+            $Contacts->join('users_attendants');
+            $Contacts->findWhere(['attendant_id' => $attendant_id]);
+            $Contacts->with('users_attendants');
+        }
 
         return $Contacts;
     }

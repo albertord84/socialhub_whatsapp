@@ -13,6 +13,12 @@ use Response;
 
 class ContactsStatusController extends AppBaseController
 {
+    
+    const ADMIN = 1; 
+    const MANAGER = 2; 
+    const ATTENDANT = 3; 
+    const VISITOR = 4; 
+    
     /** @var  ContactsStatusRepository */
     private $contactsStatusRepository;
 

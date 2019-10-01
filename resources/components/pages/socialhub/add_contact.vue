@@ -159,7 +159,6 @@
                         'facebook_id': this.new_facebook_id,
                         'instagram_id': this.new_instagram_id,
                         'linkedin_id': this.new_linkedin_id,                    
-                        'contact_atendant_id': this.$store.state.user.id,
                     })
                     .then(data => {
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");

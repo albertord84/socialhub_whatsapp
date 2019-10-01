@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property \Illuminate\Database\Eloquent\Collection 1s
  * @property \Illuminate\Database\Eloquent\Collection 2s
  * @property \App\Models\UsersManager usersManager
+ * @property integer id
  * @property integer company_id
  * @property string name
  * @property string email
