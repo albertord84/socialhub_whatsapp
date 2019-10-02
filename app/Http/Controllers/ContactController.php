@@ -35,14 +35,17 @@ class ContactController extends AppBaseController
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
             $User = new User();
+            $User->id = 3;
             $company_id = 1; // $request['$company_id'];
-            $user_role_id = ContactsStatusController::MANAGER; // $request['$company_id'];  //manager or attendant
+            $user_role_id = ContactsStatusController::MANAGER;
+            $user_role_id = ContactsStatusController::ATTENDANT;
             $Contacts = $this->contactRepository->all();;
             if ($user_role_id == ContactsStatusController::MANAGER) {
                 $Contacts = $this->contactRepository->fullContacts($company_id, null);
             } 
             else if ($user_role_id == ContactsStatusController::ATTENDANT) {
                 $Contacts = $this->contactRepository->fullContacts($company_id, $User->id);
+                dd($Contacts);
             }
 
             return $Contacts->toJson();
