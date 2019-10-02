@@ -1,8 +1,8 @@
 <template>
     <div id="right" :class="{ open: this.$store.state.right_open }">
         <div id="right-slim" >
-            <edit_contact v-if="right_layout=='toggle-edit-contact'"></edit_contact>
-            <find_messages v-if="right_layout=='toggle-find-messages'"></find_messages>
+            <attendantEditContact v-if="right_layout=='toggle-edit-contact'"></attendantEditContact>
+            <attendantFindMessages v-if="right_layout=='toggle-find-messages'"></attendantFindMessages>
 
             <!-- <div class="rightsidebar-right">
                 <b-tabs ref="tabs" card>
@@ -97,8 +97,8 @@
 <script>
     import "../../sass/_right_side_bar.scss"
 
-    import edit_contact from "../pages/socialhub/edit_contact.vue";
-    import find_messages from "../pages/socialhub/find_messages.vue";
+    import attendantEditContact from "../pages/socialhub/attendantEditContact.vue";
+    import attendantFindMessages from "../pages/socialhub/attendantFindMessages.vue";
 
     export default {
     name: "right_side_bar",
@@ -106,8 +106,8 @@
             right_layout:''
         },
     components:{
-        edit_contact,
-        find_messages
+        attendantEditContact,
+        attendantFindMessages
     },
     mounted: function() {
 

@@ -2,13 +2,13 @@ const layout = [
 {
     path: '/admin',
     name: 'admin',
-    component: resolve => require(['pages/socialhub/admin_dashboard'], resolve),
+    component: resolve => require(['pages/socialhub/adminDashboard'], resolve),
     meta: {
         title: "Dashboard",
     }
 }, {
     path: '/admin/companies',
-    component: resolve => require(['pages/socialhub/DataTableContacts'], resolve),
+    component: resolve => require(['pages/socialhub/managerContacts'], resolve),
     meta: {
         title: "Empresas",
     }

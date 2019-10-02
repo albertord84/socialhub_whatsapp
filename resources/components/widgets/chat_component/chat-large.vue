@@ -286,7 +286,7 @@
 
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
-    import find_messages  from 'resources/components/pages/socialhub/find_messages'
+    import attendantFindMessages  from 'resources/components/pages/socialhub/attendantFindMessages'
 
     export default {
         props: {
@@ -298,7 +298,7 @@
             vScroll,
             rightSideBar,
             leftSideBar,
-            find_messages
+            attendantFindMessages
         },
         beforeMount() {
             this.$store.commit('leftside_bar', "close");
