@@ -14,7 +14,7 @@ class CreateContactsStatusTable extends Migration {
 	{
 		Schema::create('contacts_status', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id', true);			
 			$table->string('name', 45)->nullable();
 			$table->string('description', 300)->nullable();
 			$table->timestamps();

@@ -91,7 +91,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-headphones form-control-feedback"></span>
-                            <select v-model="model.contact_atendant_id" class="form-control has-search-color" size="1">
+                            <select v-model="contact_atendant_id" class="form-control has-search-color" size="1">
                                 <option value="0">Asignar um Atendente agora?</option>
                                 <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
                             </select>
@@ -156,7 +156,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-headphones form-control-feedback"></span>
-                            <select v-model="model.contact_atendant_id" class="form-control has-search-color" size="1">
+                            <select v-model="contact_atendant_id" class="form-control has-search-color" size="1">
                                 <option value="0">Asignar um Atendente agora?</option>
                                 <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
                             </select>
@@ -265,6 +265,7 @@
                 
                 //---------Specific properties-----------------------------
                 contact_id: "",
+                contact_atendant_id:"",
 
                 model:{
                     firt_name: "",
@@ -301,7 +302,7 @@
                 columns: [
                     {
                         label: 'Status',
-                        field: 'status_id',
+                        field: 'status_name',
                         numeric: true, 
                         width: "90px",
                         html: false,
@@ -342,7 +343,8 @@
 
         methods: {  
             //------ CRUD Contacts methods------------------------
-            addContact: function() { //C                
+            addContact: function() { //C
+                //TODO-JR: onde enviar o possivel contact_atendant_id, na url ou nos parametros?
                 ApiService.post(this.url,this.model)
                 .then(response => {
                     miniToastr.success("Contato adicionado com sucesso","Sucesso");
@@ -359,19 +361,12 @@
                 ApiService.get(this.url)
                     .then(response => {
                         this.rows = response.data;
+                        console.log(this.rows);
                         var This=this;
                         response.data.forEach(function(item, i){
-                            // adicionar o nome do status a cada registro
-                            
-                            // adicionar o nome do repectivo atendente a cada registro
-
-                            //adicionar as ações de ver conversas, editar e eliminar contato a cada registro
-
-                            // item.checked ='false';
-                            //item.nameType = This.getNameByType(This.contentsTypes, item.type_id);
-                            //This.contents.push(response.data[i]);
+                            item.status_name = item.status.name;
+                            //TODO-JR: adicionar o nome do atendente atual a cada contato
                         });
-                        // this.getClassrooms(); 
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
@@ -380,24 +375,14 @@
 
             editContact: function(contact) { //U
                 this.contact_id = contact.id;
-                this.model.first_name = contact.first_name;
-                this.model.last_name = contact.last_name;
-                this.model.phone = contact.phone;
-                this.model.email = contact.email;
-                this.model.description = contact.description;
-                this.model.remember = contact.remember;
-                this.model.summary = contact.summary;
-                this.model.whatsapp_id = contact.whatsapp_id;                
-                this.model.facebook_id = contact.facebook_id;
-                this.model.instagram_id = contact.instagram_id;
-                this.model.linkedin_id = contact.linkedin_id;
-                this.edit_contact_atendant_id =  contact.contact_atendant_id !="" ? contact.contact_atendant_id : "0";
+                this.model = contact;
+                this.contact_atendant_id =  this.contact_atendant_id !="" ? this.contact_atendant_id : "0";
                 this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U
-                this.model.
-                ApiService.post(this.url+'/'+this.contact_id+'/'+this.edit_contact_atendant_id,this.model)
+            //TODO-JR: onde enviar o possivel contact_atendant_id, na url ou nos parametros?
+                ApiService.post(this.url+'/'+this.contact_id+'/'+this.contact_atendant_id,this.model)
                 .then(response => {                
                     miniToastr.success("Contato atualizado com sucesso","Sucesso");
                     this.formReset();
@@ -580,7 +565,7 @@
 
         beforeMount(){
             this.getContacts();
-            this.getAttendantList();
+            // this.getAttendantList();
         },
 
         mounted() {
@@ -624,6 +609,7 @@
                 }
                 return computedRows;
             },
+
             paginated: function () {
                 var paginatedRows = this.processedRows;
                 if (this.paginate && this.currentPerPage != -1) {
@@ -639,6 +625,7 @@
                 this.currentPage = 1;
                 this.paginated;
             },
+
             searchInput() {
                 this.currentPage = 1;
                 this.paginated;
