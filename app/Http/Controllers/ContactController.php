@@ -34,18 +34,12 @@ class ContactController extends AppBaseController
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
             $User = Auth::check()? Auth::user():session('logged_user');
-            dd($User);
-            $company_id = 1; // $request['$company_id'];
-            $User->id = 3;             
-            $User->role_id = ContactsStatusController::ATTENDANT;
-            $User->id = 2;
-            $User->role_id = ContactsStatusController::MANAGER;
             $Contacts = $this->contactRepository->all();;
             if ($User->role_id == ContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts($company_id, null);
+                $Contacts = $this->contactRepository->fullContacts($User->company_id, null);
             } 
             else if ($User->role_id == ContactsStatusController::ATTENDANT) {
-                $Contacts = $this->contactRepository->fullContacts($company_id, $User->id);
+                $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
             }
             dd($Contacts);
 
