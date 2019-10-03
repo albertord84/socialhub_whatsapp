@@ -6,13 +6,10 @@ use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
 use App\Http\Controllers\AppBaseController;
-use App\Models\User;
-use App\Models\UsersAttendant;
-use ArrayObject;
 use Illuminate\Http\Request;
 use Flash;
-use Nexmo\Call\Collection;
 use Response;
+use Auth;
 
 class ContactController extends AppBaseController
 {
@@ -36,7 +33,8 @@ class ContactController extends AppBaseController
             // dd(UsersAttendant::with('User')->find(3));
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
-            $User = new User();
+            $User = Auth::check()? Auth::user():session('logged_user');
+            dd($User);
             $company_id = 1; // $request['$company_id'];
             $User->id = 3; 
             $User->role_id = ContactsStatusController::ATTENDANT;
