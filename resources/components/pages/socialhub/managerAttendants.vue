@@ -33,7 +33,7 @@
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
                         <template v-for="(column,index) in columns">
                             <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row,column.field) }}
+                                {{ collect(row, column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
                                 <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeAttendant(row)"><i class='fa fa-headphones text-dark mr-3'></i></a>
@@ -209,7 +209,7 @@
                         this.rows = response.data;
                         console.log(this.rows);
                         var This=this;
-                        response.data.forEach(function(item, i){
+                        response.data.forEach.bind(function(item, i){
                             // adicionar o nome do status a cada registro
                             
                             // adicionar o nome do repectivo atendente a cada registro

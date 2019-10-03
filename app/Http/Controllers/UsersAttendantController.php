@@ -30,10 +30,11 @@ class UsersAttendantController extends AppBaseController
     public function index(Request $request)
     {
         $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
-        $usersAttendants = $this->usersAttendantRepository->all();
+        //TODO: get manager_id form session
+        $manager_id = 2;
+        $usersAttendants = $this->usersAttendantRepository->Attendants_User($manager_id);
+        
         return $usersAttendants->toJson();
-        // return view('users_attendants.index')
-        //     ->with('usersAttendants', $usersAttendants);
     }
 
     /**

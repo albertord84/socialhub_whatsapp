@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\UsersAttendant;
 use InfyOm\Generator\Common\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class UsersAttendantRepository
@@ -13,7 +14,7 @@ use InfyOm\Generator\Common\BaseRepository;
  * @method UsersAttendant findWithoutFail($id, $columns = ['*'])
  * @method UsersAttendant find($id, $columns = ['*'])
  * @method UsersAttendant first($columns = ['*'])
-*/
+ */
 class UsersAttendantRepository extends BaseRepository
 {
     /**
@@ -21,7 +22,7 @@ class UsersAttendantRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'user_manager_id',
-        'code'
+        'code',
     ];
 
     /**
@@ -30,5 +31,12 @@ class UsersAttendantRepository extends BaseRepository
     public function model()
     {
         return UsersAttendant::class;
+    }
+
+    public function Attendants_User(int $manager_id): Collection
+    {
+        $Attentands = $this->with('User')->findWhere(['user_manager_id' => $manager_id]);
+
+        return $Attentands;
     }
 }
