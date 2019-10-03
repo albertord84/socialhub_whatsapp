@@ -53,4 +53,13 @@ class UsersManager extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function Attendants()
+    {
+        return $this->hasMany(\App\Models\UsersAttendant::class, 'user_manager_id', 'user_id');
+    }
 }
