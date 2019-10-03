@@ -31,9 +31,9 @@ class UsersAttendantController extends AppBaseController
     {
         $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
         $usersAttendants = $this->usersAttendantRepository->all();
-
-        return view('users_attendants.index')
-            ->with('usersAttendants', $usersAttendants);
+        return $usersAttendants->toJson();
+        // return view('users_attendants.index')
+        //     ->with('usersAttendants', $usersAttendants);
     }
 
     /**

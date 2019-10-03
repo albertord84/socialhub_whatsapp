@@ -38,14 +38,15 @@ class ContactController extends AppBaseController
             $User->id = 3;
             $company_id = 1; // $request['$company_id'];
             $user_role_id = ContactsStatusController::MANAGER;
-            $user_role_id = ContactsStatusController::ATTENDANT;
+            //$user_role_id = ContactsStatusController::ATTENDANT;
+            
             $Contacts = $this->contactRepository->all();;
             if ($user_role_id == ContactsStatusController::MANAGER) {
                 $Contacts = $this->contactRepository->fullContacts($company_id, null);
             } 
             else if ($user_role_id == ContactsStatusController::ATTENDANT) {
                 $Contacts = $this->contactRepository->fullContacts($company_id, $User->id);
-                dd($Contacts);
+                // dd($Contacts);
             }
 
             return $Contacts->toJson();
@@ -75,11 +76,12 @@ class ContactController extends AppBaseController
     {
         $input = $request->all();
 
-        //um contato pode ser criado por:
-        //um robot, 
-        //um atendente, 
-        //um admin (manualmente ou desde CVS)
-
+        //TODO-JR-ALBERTO: um contato pode ser criado por:
+            //um robot: manda para sacola
+            //um admin desde CVS: vai para sacola
+            //um atendente: deve ser inserido com o Id do atendente que esta na sessão
+            //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente: 
+            // onde devo enviar o contact_atendant_id, por url ou nos dados? 
         $contact = $this->contactRepository->create($input);
 
         // TODO: Create Contact Chat Table
@@ -142,9 +144,12 @@ class ContactController extends AppBaseController
     {
         $contact = $this->contactRepository->findWithoutFail($id);
 
+        //TODO-JR-ALBERTO: um contato pode ser atualizado por:
+            //um atendente: atualiza dados do contato, status, atendente
+            //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados? 
+
         if (empty($contact)) {
             Flash::error('Contact not found');
-
             return redirect(route('contacts.index'));
         }
 
