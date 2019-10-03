@@ -87,11 +87,11 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="new_first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
+                            <input v-model="model.first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-headphones form-control-feedback"></span>
-                            <select v-model="new_contact_atendant_id" class="form-control has-search-color" size="1">
+                            <select v-model="model.contact_atendant_id" class="form-control has-search-color" size="1">
                                 <option value="0">Asignar um Atendente agora?</option>
                                 <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
                             </select>
@@ -100,40 +100,40 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="new_email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                            <input v-model="model.email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="new_phone" id="new_phone" name="new_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="model.phone" id="phone" name="hone" type="text" placeholder="Telefone fixo" class="form-control"/>
                         </div>                                
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="new_whatsapp_id" id="new_whatsapp_id" name="new_whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                            <input v-model="model.whatsapp_id" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="new_facebook_id" id="new_facebook_id" name="new_facebook_id" type="text" placeholder="Facebook" class="form-control"/>
+                            <input v-model="model.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                                 <span class="fa fa-instagram form-control-feedback"></span>
-                                <input v-model="new_instagram_id" id="new_instagram_id" name="new_instagram_id" type="text" placeholder="Instagram" class="form-control"/>
+                                <input v-model="model.instagram_id" id="instagram_id" name="instagram_id" type="text" placeholder="Instagram" class="form-control"/>
                             </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-linkedin form-control-feedback"></span>
-                            <input v-model="new_linkedin_id" id="new_linkedin_id" name="new_linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
+                            <input v-model="model.linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group">
-                            <textarea v-model="new_summary" @keyup="countLengthSumary" name="new_summary" id="new_summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
+                            <textarea v-model="model.summary" @keyup="countLengthSumary" name="summary" id="new_summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
                             <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
                         </div>
                         <div class="col-lg-6 form-group">
-                            <textarea v-model="new_remember" @keyup="countLengthRemember" name="new_remember" id="new_remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
+                            <textarea v-model="model.remember" @keyup="countLengthRemember" name="remember" id="new_remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
                             <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
                         </div>
                     </div>
@@ -152,11 +152,11 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="edit_first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
+                            <input v-model="model.first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-headphones form-control-feedback"></span>
-                            <select v-model="edit_contact_atendant_id" class="form-control has-search-color" size="1">
+                            <select v-model="model.contact_atendant_id" class="form-control has-search-color" size="1">
                                 <option value="0">Asignar um Atendente agora?</option>
                                 <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
                             </select>
@@ -165,21 +165,21 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="edit_email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
+                            <input v-model="model.email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="edit_phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="model.phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                         </div>                                
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="edit_whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                            <input v-model="model.whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="edit_facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
+                            <input v-model="model.facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
@@ -189,23 +189,23 @@
                             </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-linkedin form-control-feedback"></span>
-                            <input v-model="edit_linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
+                            <input v-model="model.linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-6 form-group">
-                            <textarea v-model="edit_summary" @keyup="countLengthEditSumary" name="decription" id="decription" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
+                            <textarea v-model="model.summary" @keyup="countLengthEditSumary" name="decription" id="decription" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
                             <label class="form-group has-search-color" for="form-group">{{edit_summary_length}}/500</label>
                         </div>
                         <div class="col-lg-6 form-group">
-                            <textarea v-model="edit_remember" @keyup="countLengthEditRemember" name="decription" id="decription" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
+                            <textarea v-model="model.remember" @keyup="countLengthEditRemember" name="decription" id="decription" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
                             <label class="form-group has-search-color" for="form-group">{{edit_remember_length}}/500</label>
                         </div>
                     </div>
                     <div class="col-lg-12 m-t-25 text-center">
                         <button type="submit" class="btn btn-primary btn_width" @click.prevent="updateContact">Atualizar</button>
-                        <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalEditContact=!modalEditContact;formResetEdit">Cancelar</button>
+                        <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalEditContact=!modalEditContact;formReset">Cancelar</button>
                     </div>
                 </form> 
             </b-container>
@@ -213,7 +213,7 @@
 
         <!-- Delete Contact Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="false" title="Verificação de exclusão">
-            Tem certeza que deseja remover a matéria?
+            Tem certeza que deseja eliminar o contato?
         </b-modal>
 
     </div>
@@ -266,35 +266,25 @@
                 //---------Specific properties-----------------------------
                 contact_id: "",
 
+                model:{
+                    firt_name: "",
+                    last_name: "",
+                    phone: "",
+                    email: "",
+                    description: "",
+                    remember: "",
+                    summary: "",
+                    whatsapp_id: "",
+                    facebook_id: "",
+                    instagram_id: "",
+                    linkedin_id: "",
+                },
+                
                 //---------New record properties-----------------------------
-                new_first_name: "",
-                new_last_name: "",
-                new_phone: "",
-                new_email: "",
-                new_description: "",
-                new_remember: "",
-                new_summary: "",
-                new_whatsapp_id: "",
-                new_facebook_id: "",
-                new_instagram_id: "",
-                new_linkedin_id: "",
-                new_contact_atendant_id: 0,
                 new_summary_length:0,
                 new_remember_length:0,
 
                 //---------Edit record properties-----------------------------
-                edit_first_name: "",
-                edit_last_name: "",
-                edit_phone: "",
-                edit_email: "",
-                edit_description: "",
-                edit_remember: "",
-                edit_summary: "",
-                edit_contact_atendant_id: "0",                
-                edit_whatsapp_id: "",
-                edit_facebook_id: "",
-                edit_instagram_id: "",
-                edit_linkedin_id: "",
                 edit_summary_length:0,
                 edit_remember_length:0,
 
@@ -353,20 +343,7 @@
         methods: {  
             //------ CRUD Contacts methods------------------------
             addContact: function() { //C                
-                ApiService.post(this.url,{
-                    'first_name': this.new_first_name,
-                    'last_name': this.new_last_name,
-                    'email': this.new_email,
-                    'remember': this.new_remember,
-                    'summary': this.new_summary,
-                    'phone': this.new_phone,
-                    'description': this.new_description,
-                    'whatsapp_id': this.new_whatsapp_id,
-                    'facebook_id': this.new_facebook_id,
-                    'instagram_id': this.new_instagram_id,
-                    'linkedin_id': this.new_linkedin_id,                    
-                    'contact_atendant_id': this.new_contact_atendant_id,
-                })
+                ApiService.post(this.url,this.model)
                 .then(response => {
                     miniToastr.success("Contato adicionado com sucesso","Sucesso");
                     this.formReset();
@@ -403,39 +380,27 @@
 
             editContact: function(contact) { //U
                 this.contact_id = contact.id;
-                this.edit_first_name = contact.first_name;
-                this.edit_last_name = contact.last_name;
-                this.edit_phone = contact.phone;
-                this.edit_email = contact.email;
-                this.edit_description = contact.description;
-                this.edit_remember = contact.remember;
-                this.edit_summary = contact.summary;
-                this.edit_whatsapp_id = contact.whatsapp_id;                
-                this.edit_facebook_id = contact.facebook_id;
-                this.edit_instagram_id = contact.instagram_id;
-                this.edit_linkedin_id = contact.linkedin_id;
+                this.model.first_name = contact.first_name;
+                this.model.last_name = contact.last_name;
+                this.model.phone = contact.phone;
+                this.model.email = contact.email;
+                this.model.description = contact.description;
+                this.model.remember = contact.remember;
+                this.model.summary = contact.summary;
+                this.model.whatsapp_id = contact.whatsapp_id;                
+                this.model.facebook_id = contact.facebook_id;
+                this.model.instagram_id = contact.instagram_id;
+                this.model.linkedin_id = contact.linkedin_id;
                 this.edit_contact_atendant_id =  contact.contact_atendant_id !="" ? contact.contact_atendant_id : "0";
                 this.modalEditContact = !this.modalEditContact;
             },
 
-            updateContact: function() { //U                
-                ApiService.post(this.url+'/'+this.contact_id,{
-                    'first_name': this.edit_first_name,
-                    'last_name': this.edit_last_name,
-                    'phone': this.edit_phone,
-                    'email': this.edit_email,
-                    'description':this.edit_description,
-                    'remember':this.edit_remember,
-                    'summary':this.edit_summary,
-                    'whatsapp_id': this.edit_whatsapp_id,
-                    'facebook_id': this.edit_facebook_id,
-                    'instagram_id': this.edit_instagram_id,
-                    'linkedin_id': this.edit_linkedin_id,
-                    'contact_atendant_id':this.edit_contact_atendant_id,
-                })
+            updateContact: function() { //U
+                this.model.
+                ApiService.post(this.url+'/'+this.contact_id+'/'+this.edit_contact_atendant_id,this.model)
                 .then(response => {                
                     miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                    this.formResetEdit();
+                    this.formReset();
                     this.modalEditContact=!this.modalEditContact
                 })
                 .catch(function(error) {
@@ -490,35 +455,33 @@
             },
 
             formReset:function(){
-                this.new_first_name = "";
-                this.new_last_name = "";
-                this.new_email = "";
-                this.new_description = "";
-                this.new_remember = "";
-                this.new_summary = "";
-                this.new_phone = "";
-                this.new_whatsapp_id = "";
-                this.new_facebook_id = "";
-                this.new_instagram_id = "";
-                this.new_linkedin_id = "";
-                this.new_contact_atendant_id = 0;
+                this.model.first_name = "";
+                this.model.last_name = "";
+                this.model.email = "";
+                this.model.description = "";
+                this.model.remember = "";
+                this.model.summary = "";
+                this.model.phone = "";
+                this.model.whatsapp_id = "";
+                this.model.facebook_id = "";
+                this.model.instagram_id = "";
+                this.model.linkedin_id = "";
             },
 
-            formResetEdit:function(){
-                this.edit_first_name = "";
-                this.edit_last_name = "";
-                this.edit_email = "";
-                this.edit_description = "";
-                this.edit_remember = "";
-                this.edit_summary = "";
-                this.edit_phone = "";
-                this.edit_whatsapp_id = "";
-                this.edit_facebook_id = "";
-                this.edit_instagram_id = "";
-                this.edit_linkedin_id = "";
-                this.edit_contact_atendant_id = 0;                
-            },
+            exportExcel() {
+                const mimeType = 'data:application/vnd.ms-excel';
+                const html = this.renderTable().replace(/ /g, '%20');
 
+                const d = new Date();
+
+                var dummy = document.createElement('a');
+                dummy.href = mimeType + ', ' + html;
+                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
+                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
+                    '.xls';
+                dummy.click();
+            },
+            
             //------ externals methods--------------------
             getAttendantList: function() { //R
                 var url = "usersAttendants";
@@ -557,20 +520,6 @@
 
             click(row, index) {
                 this.$emit("rowClick", row, index);
-            },
-
-            exportExcel() {
-                const mimeType = 'data:application/vnd.ms-excel';
-                const html = this.renderTable().replace(/ /g, '%20');
-
-                const d = new Date();
-
-                var dummy = document.createElement('a');
-                dummy.href = mimeType + ', ' + html;
-                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
-                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
-                    '.xls';
-                dummy.click();
             },
 
             renderTable() {

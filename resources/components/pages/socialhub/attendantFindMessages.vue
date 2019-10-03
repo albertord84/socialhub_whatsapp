@@ -40,7 +40,7 @@
     
     Vue.use(VueForm, options);
     export default {
-        name: "edit_contact",
+        name: "attendantFindMessagest",
         data() {
             return {
                 ftext:'',

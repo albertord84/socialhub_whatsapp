@@ -8,7 +8,7 @@ const layout = [
         }
     }, {
         path: '/visitor/chat',
-        component: resolve => require(['pages/socialhub/attendant_chat'], resolve),
+        component: resolve => require(['pages/socialhub/attendantChat'], resolve),
         meta: {
             title: "Chat",
         }

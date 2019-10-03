@@ -2,25 +2,25 @@ const layout = [
 {
     path: '/manager',
     name: 'manager',
-    component: resolve => require(['pages/socialhub/manager_dashboard'], resolve),
+    component: resolve => require(['pages/socialhub/managerDashboard'], resolve),
     meta: {
         title: "Dashboard",
     }
 }, {
     path: '/manager/contacts',
-    component: resolve => require(['pages/socialhub/DataTableContacts'], resolve),
+    component: resolve => require(['pages/socialhub/managerContacts'], resolve),
     meta: {
         title: "Contatos",
     }
 }, {
     path: '/manager/attendant',
-    component: resolve => require(['pages/socialhub/DataTableAttendants'], resolve),
+    component: resolve => require(['pages/socialhub/managerAttendants'], resolve),
     meta: {
         title: "Chat",
     }
 },{
     path: '/manager/company',
-    component: resolve => require(['pages/socialhub/manage_company'], resolve),
+    component: resolve => require(['pages/socialhub/managerCompany'], resolve),
     meta: {
         title: "Empresa",
     }

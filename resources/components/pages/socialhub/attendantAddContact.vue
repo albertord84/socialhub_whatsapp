@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <div style="padding: 29px 0px 5px" class="form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="new_first_name" id="new_first_name" name="new_first_name" type="text" autofocus placeholder="Nome completo" class="form-control"/>
+                            <input v-model="model.first_name" id="first_name" name="first_name" type="text" autofocus placeholder="Nome completo" class="form-control"/>
                         </div>
                     </div>
                 </div>                
@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="new_email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                            <input v-model="model.email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="new_phone" id="new_phone" name="new_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="model.phone" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="new_whatsapp_id" id="new_whatsapp_id" name="new_whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                            <input v-model="model.whatsapp_id" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="new_facebook_id" id="new_facebook_id" name="new_facebook_id" type="text" placeholder="Facebook" class="form-control"/>
+                            <input v-model="model.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <div style=" " class="form-group has-search">
                             <span class="fa fa-instagram form-control-feedback"></span>
-                            <input v-model="new_instagram_id" id="new_instagram_id" name="new_instagram_id" type="text" placeholder="Instagram" class="form-control"/>
+                            <input v-model="model.instagram_id" id="instagram_id" name="instagram_id" type="text" placeholder="Instagram" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-linkedin form-control-feedback"></span>
-                            <input v-model="new_linkedin_id" id="new_linkedin_id" name="new_linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
+                            <input v-model="model.linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -82,13 +82,13 @@
 
                 <div  class="col-lg-12">
                     <div v-show="show_sumary==true" class="form-group">
-                        <textarea v-model="new_summary" @keyup="countLengthSumary" name="new_summary" id="new_summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="3"></textarea>
+                        <textarea v-model="model.summary" @keyup="countLengthSumary" name="summary" id="summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="3"></textarea>
                         <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div v-show="show_remember==true" class="form-group">
-                        <textarea v-model="new_remember" @keyup="countLengthRemember" name="new_remember" id="new_remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="3"></textarea>
+                        <textarea v-model="model.remember" @keyup="countLengthRemember" name="remember" id="remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="3"></textarea>
                         <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
                     </div>
                 </div>
@@ -119,19 +119,22 @@
                 contact_id: "",
 
                 //---------New record properties-----------------------------
-                new_first_name: "",
-                new_last_name: "",
-                new_phone: "",
-                new_email: "",
-                new_description: "",
-                new_remember: "",
-                new_summary: "",
-                new_whatsapp_id: "",
-                new_facebook_id: "",
-                new_instagram_id: "",
-                new_linkedin_id: "",
-                new_summary_length:0,
-                new_remember_length:0,
+                model:{
+                    //id: 4, //no debo pasar eso
+                    first_name: "",
+                    last_name: "",
+                    phone: "",
+                    email: "",
+                    description: "",
+                    remember: "",
+                    summary: "",
+                    whatsapp_id: "",
+                    facebook_id: "",
+                    instagram_id: "",
+                    linkedin_id: "",
+                    summary_length:0,
+                    remember_length:0,
+                },
 
                 show_sumary:false,
                 show_remember:false,
@@ -147,24 +150,12 @@
                 if (this.formstate.$invalid) {
                     return;
                 } else {
-                    ApiService.post('auth/add_user', {
-                        'first_name': this.new_first_name,
-                        'last_name': this.new_last_name,
-                        'email': this.new_email,
-                        'remember': this.new_remember,
-                        'summary': this.new_summary,
-                        'phone': this.new_phone,
-                        'description': this.new_description,
-                        'whatsapp_id': this.new_whatsapp_id,
-                        'facebook_id': this.new_facebook_id,
-                        'instagram_id': this.new_instagram_id,
-                        'linkedin_id': this.new_linkedin_id,                    
-                    })
+                    ApiService.post(this.url, this.model)
                     .then(data => {
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.formReset();
                         this.toggle_left('close');
-                    })                        
+                    })
                     .catch(error => {
                         ApiService.process_request_error(error); 
                         miniToastr.error(error, "Erro adicionando contato");  

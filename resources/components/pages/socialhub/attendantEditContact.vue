@@ -141,7 +141,7 @@
 
     Vue.use(VueForm, options);
     export default {
-        name: "edit_contact",
+        name: "attendantEditContact",
         data() {
             return {
                 formstate: {},

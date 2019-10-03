@@ -2,17 +2,17 @@
     <div id="left" :class="{ open: this.$store.state.left_open }">
         <div id="left-slim">
             <!-- <slot></slot> -->
-            <add_contact v-if="left_layout=='toggle-add-contact'"></add_contact>
-            <filter_contact v-if="left_layout=='toggle-filter-contact'"></filter_contact>
+            <attendantAddContact v-if="left_layout=='toggle-add-contact'"></attendantAddContact>
             
+            <attendantFilterContact v-if="left_layout=='toggle-filter-contact'"></attendantFilterContact>
         </div>
     </div>
 </template>
 <script>
     import "../../sass/_left_side_bar.scss"
 
-    import add_contact from "../pages/socialhub/add_contact.vue";
-    import filter_contact from "../pages/socialhub/filter_contact.vue";
+    import attendantAddContact from "../pages/socialhub/attendantAddContact.vue";
+    import attendantFilterContact from "../pages/socialhub/attendantFilterContact.vue";
 
     export default {
         name: "left_side_bar",
@@ -20,8 +20,8 @@
             left_layout:''
         },
         components:{
-            add_contact,
-            filter_contact
+            attendantAddContact,
+            attendantFilterContact
         },
         data(){
             return{
