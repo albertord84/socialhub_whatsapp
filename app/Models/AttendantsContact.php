@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  *
  * @property \App\Models\UsersAttendant attendant
  * @property \App\Models\Contact contact
- * @property \Illuminate\Database\Eloquent\Collection 
+ * @property \Illuminate\Database\Eloquent\Collection
  * @property integer attendant_id
  * @property integer contact_id
  */
@@ -19,15 +19,13 @@ class AttendantsContact extends Model
 {
 
     public $table = 'attendants_contacts';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
-
     public $fillable = [
         'attendant_id',
-        'contact_id'
+        'contact_id',
     ];
 
     /**
@@ -38,7 +36,7 @@ class AttendantsContact extends Model
     protected $casts = [
         'id' => 'integer',
         'attendant_id' => 'integer',
-        'contact_id' => 'integer'
+        'contact_id' => 'integer',
     ];
 
     /**
@@ -47,7 +45,7 @@ class AttendantsContact extends Model
      * @var array
      */
     public static $rules = [
-        'id' => 'required'
+        'id' => 'required',
     ];
 
     /**

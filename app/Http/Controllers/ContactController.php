@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Models\User;
+use App\Models\UsersAttendant;
 use ArrayObject;
 use Illuminate\Http\Request;
 use Flash;
@@ -32,21 +33,23 @@ class ContactController extends AppBaseController
     public function index(Request $request)
     {
         try {
+            // dd(UsersAttendant::with('User')->find(3));
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
             $User = new User();
-            $User->id = 3;
             $company_id = 1; // $request['$company_id'];
-            $user_role_id = ContactsStatusController::MANAGER;
-            $user_role_id = ContactsStatusController::ATTENDANT;
+            $User->id = 3; 
+            $User->role_id = ContactsStatusController::ATTENDANT;
+            $User->id = 2;
+            $User->role_id = ContactsStatusController::MANAGER;
             $Contacts = $this->contactRepository->all();;
-            if ($user_role_id == ContactsStatusController::MANAGER) {
+            if ($User->role_id == ContactsStatusController::MANAGER) {
                 $Contacts = $this->contactRepository->fullContacts($company_id, null);
             } 
-            else if ($user_role_id == ContactsStatusController::ATTENDANT) {
+            else if ($User->role_id == ContactsStatusController::ATTENDANT) {
                 $Contacts = $this->contactRepository->fullContacts($company_id, $User->id);
-                dd($Contacts);
             }
+            dd($Contacts);
 
             return $Contacts->toJson();
         } catch (\Throwable $th) {
