@@ -6,13 +6,10 @@ use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
 use App\Http\Controllers\AppBaseController;
-use App\Models\User;
-use App\Models\UsersAttendant;
-use ArrayObject;
 use Illuminate\Http\Request;
 use Flash;
-use Nexmo\Call\Collection;
 use Response;
+use Auth;
 
 class ContactController extends AppBaseController
 {
@@ -36,18 +33,13 @@ class ContactController extends AppBaseController
             // dd(UsersAttendant::with('User')->find(3));
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
-            $User = new User();
-            $company_id = 1; // $request['$company_id'];
-            $User->id = 3;             
-            $User->role_id = ContactsStatusController::ATTENDANT;
-            $User->id = 2;
-            $User->role_id = ContactsStatusController::MANAGER;
+            $User = Auth::check()? Auth::user():session('logged_user');
             $Contacts = $this->contactRepository->all();;
             if ($User->role_id == ContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts($company_id, null);
+                $Contacts = $this->contactRepository->fullContacts($User->company_id, null);
             } 
             else if ($User->role_id == ContactsStatusController::ATTENDANT) {
-                $Contacts = $this->contactRepository->fullContacts($company_id, $User->id);
+                $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
             }
             dd($Contacts);
 

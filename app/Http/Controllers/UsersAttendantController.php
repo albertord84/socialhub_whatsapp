@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use Auth;
 
 class UsersAttendantController extends AppBaseController
 {
@@ -31,8 +32,8 @@ class UsersAttendantController extends AppBaseController
     {
         $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
         //TODO: get manager_id form session
-        $manager_id = 2;
-        $usersAttendants = $this->usersAttendantRepository->Attendants_User($manager_id);
+        $User = Auth::check()? Auth::user():session('logged_user');
+        $usersAttendants = $this->usersAttendantRepository->Attendants_User((int)$User->id);
         
         return $usersAttendants->toJson();
     }

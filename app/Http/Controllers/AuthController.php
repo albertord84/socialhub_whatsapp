@@ -6,6 +6,7 @@ use App\Events\PasswordResetEvent;
 use App\Events\RegisterUserEvent;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
@@ -39,7 +40,7 @@ class AuthController extends Controller
         User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => bcrypt($request->get('password'))
+            'password' => bcrypt($request->get('password')),
         ]);
         event(new RegisterUserEvent($request->all()));
         return response()->json(['success' => 'success'], 200);
@@ -53,7 +54,9 @@ class AuthController extends Controller
     public function login()
     {
         $credentials = request(['email', 'password']);
-        if (!$token = auth('api')->attempt($credentials)) {
+        $remember = true;
+        $token = Auth::attempt($credentials, $remember);
+        if (!$token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $this->respondWithToken($token);
@@ -157,8 +160,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'user' => $this->guard()->user(),
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
-
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
 
         ]);
     }
@@ -176,7 +178,7 @@ class AuthController extends Controller
         User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => bcrypt($request->get('password'))
+            'password' => bcrypt($request->get('password')),
         ]);
         return response()->json(['success' => 'success'], 200);
     }
@@ -203,7 +205,7 @@ class AuthController extends Controller
         $user = User::findOrFail($request->get('user_id'));
         $user->update([
             'email' => $request->get('email'),
-            'name' => $request->get('name')
+            'name' => $request->get('name'),
         ]);
         return response()->json(['success' => 'success'], 200);
     }
@@ -216,9 +218,8 @@ class AuthController extends Controller
         return redirect('/#/users_list');
     }
 
-
     public function guard()
     {
-        return \Auth::Guard('api');
+        return \Auth::Guard('web');
     }
 }

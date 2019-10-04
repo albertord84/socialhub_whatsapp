@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class User
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property \App\Models\Company company
  * @property \App\Models\Role role
  * @property \App\Models\UsersStatus status
- * @property \Illuminate\Database\Eloquent\Collection 
+ * @property \Illuminate\Database\Eloquent\Collection
  * @property \Illuminate\Database\Eloquent\Collection 1s
  * @property \Illuminate\Database\Eloquent\Collection 2s
  * @property \App\Models\UsersManager usersManager
@@ -35,14 +35,12 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property integer status_id
  */
 class User extends Model
+// class User extends Authenticatable implements JWTSubject
 {
-
     public $table = 'users';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-
-
 
     public $fillable = [
         'company_id',
@@ -60,7 +58,7 @@ class User extends Model
         'phone',
         'image_path',
         'role_id',
-        'status_id'
+        'status_id',
     ];
 
     /**
@@ -85,7 +83,7 @@ class User extends Model
         'phone' => 'string',
         'image_path' => 'string',
         'role_id' => 'integer',
-        'status_id' => 'integer'
+        'status_id' => 'integer',
     ];
 
     /**
@@ -95,7 +93,7 @@ class User extends Model
      */
     public static $rules = [
         'id' => 'required',
-        'image_path' => 'required'
+        'image_path' => 'required',
     ];
 
     /**
@@ -128,5 +126,24 @@ class User extends Model
     public function usersManager()
     {
         return $this->hasOne(\App\Models\UsersManager::class);
+    }
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
