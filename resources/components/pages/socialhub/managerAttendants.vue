@@ -206,16 +206,19 @@
             getAttendants: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
-                        this.rows = response.data;
-                        console.log(this.rows);
+                        this.rows = [];
                         var This=this;
-                        response.data.forEach.bind(function(item, i){
+                        response.data.forEach(function(item, i){
+                            var obj = item.user;
+                            obj.created_at = item.created_at;
+                            obj.deleted_at = item.deleted_at;
+                            obj.updated_at = item.updated_at;
+                            obj.created_at = item.created_at;
+                            This.rows.push(obj);
                             // adicionar o nome do status a cada registro
                             
-                            // adicionar o nome do repectivo atendente a cada registro
-
-                            //adicionar as ações de ver conversas, editar e eliminar atendente a cada registro
                         });
+                        console.log(this.rows)
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os atendentes");   
