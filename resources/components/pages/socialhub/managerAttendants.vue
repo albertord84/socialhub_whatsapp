@@ -77,17 +77,17 @@
 
         <!-- Add Attendant Modal -->
         <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
-            <managerAddEditAttendant :url='url' :action='"insert"' :item='model'> </managerAddEditAttendant>
+            <managerAddEditAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onrelad='reloadDatas' @modalclose='closeModals'> </managerAddEditAttendant>
         </b-modal>
 
         <!-- Edit Attendant Modal -->
         <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
-            <managerAddEditAttendant :url='url' :action='"edit"' :item='model'> </managerAddEditAttendant>
+            <managerAddEditAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerAddEditAttendant>
         </b-modal>
 
         <!-- Delete Attendant Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="false" title="Verificação de exclusão">
-            Tem certeza que deseja remover esse Atendente?
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+            <managerAddEditAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerAddEditAttendant>            
         </b-modal>
 
     </div>
@@ -137,7 +137,9 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
+                
                 // model:{},
                 //---------Specific properties-----------------------------
                 attendant_id: "",
@@ -158,7 +160,8 @@
                 columns: [
                     {
                         label: 'Status',
-                        field: 'status_name',
+                        field: 'status_id',
+                        // field: 'status_name',
                         numeric: true, 
                         width: "90px",
                         html: false,
@@ -215,22 +218,29 @@
                             obj.updated_at = item.updated_at;
                             obj.created_at = item.created_at;
                             This.rows.push(obj);
-                            // adicionar o nome do status a cada registro
-                            
+                            //TODO-JR: adicionar o nome do status a cada registro
                         });
-                        console.log(this.rows)
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os atendentes");   
                     });
             }, 
 
+            reloadDatas(){
+                this.getAttendants();
+            },
+            
+            closeModals(){
+                this.modalAddAttendant = false;
+                this.modalEditAttendant = false;
+                this.modalDeleteAttendant = false;
+            },
+
             actionSeeAttendant: function(value){
                 this.model = value;
             },
 
             actionEditAttendant: function(value){
-                console.log(value);
                 this.model = value;
                 this.attendant_id = value.id;
                 this.modalEditAttendant = !this.modalEditAttendant;
@@ -238,6 +248,8 @@
 
             actionDeleteAttendant: function(value){
                 this.model = value;
+                this.attendant_id = value.id;
+                this.modalDeleteAttendant = !this.modalDeleteAttendant;
             },
 
             //------ Specific DataTable methods------------

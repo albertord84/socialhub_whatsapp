@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-container fluid>                
-            <form>                                        
+            <form v-show="action!='delete'">                                        
                 <div class="row">
                     {{model.user_id}}
                 </div>    
@@ -12,7 +12,7 @@
                     </div>
                     <div  class="col-lg-6 form-group has-search">
                         <span class="fa fa-envelope form-control-feedback"></span>
-                        <input v-model="model.email" id="email" name="email" type="text" required placeholder="Email (*)" class="form-control"/>                            
+                        <input v-model="model.email" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
                     </div>                                                      
                 </div>
                 <div class="row">
@@ -52,9 +52,17 @@
                 <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addAttendant">Adicionar</button>
                     <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateAttendant">Atualizar</button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalAddAttendant=!modalAddAttendant;formReset">Cancelar</button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
                 </div>
             </form>
+            <form v-show="action=='delete'">
+                Tem certeza que deseja remover esse Atendente?
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="deleteAttendant">Eliminar</button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+                </div>                    
+            </form>
+
         </b-container>
     </div>
 </template>
@@ -69,7 +77,8 @@
         name: 'managerAddAttendant',
 
         props: {
-            url:'', //controller url 
+            first_url:'', //user controller url 
+            url:'', //userAttendant controller url 
             action: "",
             item:{},
         },
@@ -82,6 +91,7 @@
                 attendant_id: "",
                 model:{
                     name: "",
+                    role_id: "",
                     email: "",
                     login: "",
                     CPF: "",
@@ -96,39 +106,76 @@
         },
 
         methods:{
-            addAttendant: function() { //C                
-                ApiService.post(this.url, this.model
-                )
+            addAttendant: function() { //C
+                this.model.id=8;
+                this.model.role_id=3;
+                this.model.image_path = "images/user.jpg";
+                ApiService.post(this.first_url, this.model)
                 .then(response => {
-                    miniToastr.success("Atendente adicionado com sucesso","Sucesso");
-                    this.formReset();
-                    // this.getAttendants();
-                    // this.modalAddAttendant=!this.modalAddAttendant;
+                    ApiService.post(this.url, { 
+                        'user_id':response.data.id,
+                        'user_manager_id':JSON.parse(localStorage.user).id
+                        })
+                        .then(response => {
+                            miniToastr.success("Atendente adicionado com sucesso","Sucesso");
+                            this.formReset();
+                            this.reload();
+                            this.formCancel();
+                        })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro adicionando Atendente");  
+                    });
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando atendente");  
+                    miniToastr.error(error, "Erro adicionando usuáio");  
                 });
             },
             
             editAttendant: function() { //U
                 this.attendant_id = this.item.id;
                 this.model = this.item;
-                //this.modalEditAttendant = !this.modalEditAttendant;
+                this.formCancel();
             },
 
-            updateAttendant: function() { //U                
-                ApiService.post(this.url+'/'+this.attendant_id, this.model)
+            updateAttendant: function() { //U
+                // var model_cpy = this.model;
+                var model_cpy = JSON.parse(JSON.stringify(this.model));
+                delete model_cpy.created_at;
+                delete model_cpy.updated_at;
+                delete model_cpy.deleted_at;
+
+                ApiService.post(this.first_url+'/'+this.attendant_id, model_cpy)
                 .then(response => {
-                    miniToastr.success("Atendente atualizado com sucesso","Sucesso");
-                    this.formReset();
-                    // this.getAttendants();
-                    //this.modalEditAttendant=!this.modalEditAttendant;
+                   ApiService.post(this.url+'/'+this.attendant_id,{})
+                    .then(response => {
+                        miniToastr.success("Atendente atualizado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error);  
+                        miniToastr.error(error, "Erro atualizando Atendente"); 
+                    });
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error);  
-                    miniToastr.error(error, "Erro atualizando atendente"); 
+                    miniToastr.error(error, "Erro atualizando Atendente"); 
                 });
+            },
+
+            deleteAttendant: function(){
+                ApiService.delete(this.url+'/'+this.item.id)
+                    .then(response => {
+                        miniToastr.success("Atendente eliminado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error);  
+                        miniToastr.error(error, "Erro eliminando Atendente"); 
+                    });
             },
 
             formReset:function(){
@@ -142,8 +189,17 @@
                 this.model.whatsapp_id= "";
                 this.model.facebook_id= "";
                 this.model.instagram_id= "";
-                this.model.linkedin_id="";
+                this.model.linkedin_id="";                
             },
+
+            formCancel(){
+                this.$emit('modalclose');
+            }, 
+            
+            reload(){
+                this.$emit('onreload');
+            }, 
+
         },
 
         mounted(){
