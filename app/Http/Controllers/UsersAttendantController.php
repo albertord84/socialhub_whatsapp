@@ -59,7 +59,9 @@ class UsersAttendantController extends AppBaseController
     public function store(CreateUsersAttendantRequest $request)
     {
         $input = $request->all();
-        //TODO-Alberto: pegar el id del manager que está insertando estes atendente
+
+        // dd($input);
+
         $usersAttendant = $this->usersAttendantRepository->create($input);
         
         Flash::success('Users Attendant saved successfully.');
