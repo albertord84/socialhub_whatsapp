@@ -29,6 +29,7 @@ class UsersAttendant extends Model
 
 
     public $fillable = [
+        'user_id',
         'user_manager_id',
         'code'
     ];

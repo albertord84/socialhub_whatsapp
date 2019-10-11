@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use Auth;
 
 class UserController extends AppBaseController
 {
@@ -56,6 +57,10 @@ class UserController extends AppBaseController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
+
+        $User = Auth::check()? Auth::user():session('logged_user');
+        $input['company_id'] = $User->company_id;
+        $input['role_id'] = ContactsStatusController::ATTENDANT;
 
         $user = $this->userRepository->create($input);
 

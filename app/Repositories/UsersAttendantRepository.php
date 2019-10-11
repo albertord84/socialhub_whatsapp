@@ -21,6 +21,7 @@ class UsersAttendantRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
+        'user_id',
         'user_manager_id',
         'code',
     ];
