@@ -104,12 +104,6 @@
             title: {
                 default: ""
             },
-            // columns: {
-            //     required: true
-            // },
-            // rows: {
-            //     required: true
-            // },
             perPage: {
                 default: 10
             },
@@ -216,7 +210,6 @@
                             obj.created_at = item.created_at;
                             obj.deleted_at = item.deleted_at;
                             obj.updated_at = item.updated_at;
-                            obj.created_at = item.created_at;
                             This.rows.push(obj);
                             //TODO-JR: adicionar o nome do status a cada registro
                         });

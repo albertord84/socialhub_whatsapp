@@ -74,7 +74,7 @@
     miniToastr.init();
     
     export default {
-        name: 'managerAddAttendant',
+        name: 'managerCRUDAttendant',
 
         props: {
             first_url:'', //user controller url 

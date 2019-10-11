@@ -41,7 +41,7 @@ class ContactController extends AppBaseController
             else if ($User->role_id == ContactsStatusController::ATTENDANT) {
                 $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
             }
-            dd($Contacts);
+            //dd($Contacts);
 
             return $Contacts->toJson();
         } catch (\Throwable $th) {
