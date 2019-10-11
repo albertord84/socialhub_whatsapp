@@ -33,6 +33,7 @@ class UsersAttendantController extends AppBaseController
         $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
         //TODO: get manager_id form session
         $User = Auth::check()? Auth::user():session('logged_user');
+        //TODO-ALBERTO: obtener el nombre del status del atendiente tambiem para mostrar al manager
         $usersAttendants = $this->usersAttendantRepository->Attendants_User((int)$User->id);
         
         return $usersAttendants->toJson();
@@ -58,12 +59,12 @@ class UsersAttendantController extends AppBaseController
     public function store(CreateUsersAttendantRequest $request)
     {
         $input = $request->all();
-
+        //TODO-Alberto: pegar el id del manager que está insertando estes atendente
         $usersAttendant = $this->usersAttendantRepository->create($input);
-
+        
         Flash::success('Users Attendant saved successfully.');
 
-        return redirect(route('usersAttendants.index'));
+        // return redirect(route('usersAttendants.index'));
     }
 
     /**
@@ -123,7 +124,7 @@ class UsersAttendantController extends AppBaseController
 
             return redirect(route('usersAttendants.index'));
         }
-
+        $request->updated_at = time();
         $usersAttendant = $this->usersAttendantRepository->update($request->all(), $id);
 
         Flash::success('Users Attendant updated successfully.');

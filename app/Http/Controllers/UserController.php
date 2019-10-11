@@ -61,7 +61,9 @@ class UserController extends AppBaseController
 
         Flash::success('User saved successfully.');
 
-        return redirect(route('users.index'));
+        //TODO-Alberto: retornar el usuario creado para coger el id y poder insertar un atendente
+        // return redirect(route('users.index'));
+        return $user->toJson();
     }
 
     /**

@@ -8,8 +8,8 @@
             <div id="search-input-container">
                 <label>
                     <div style="" class="form-group has-search">
-                            <span class="fa fa-search form-control-feedback"></span>
-                            <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
@@ -77,17 +77,17 @@
 
         <!-- Add Attendant Modal -->
         <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
-            <managerAddEditAttendant :url='url' :action='"insert"' :item='model'> </managerAddEditAttendant>
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onrelad='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Edit Attendant Modal -->
         <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
-            <managerAddEditAttendant :url='url' :action='"edit"' :item='model'> </managerAddEditAttendant>
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Delete Attendant Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="false" title="Verificação de exclusão">
-            Tem certeza que deseja remover esse Atendente?
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
         </b-modal>
 
     </div>
@@ -97,7 +97,7 @@
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-    import managerAddEditAttendant from "./popups/managerAddEditAttendant";
+    import managerCRUDAttendant from "./popups/managerCRUDAttendant";
 
     export default {
         props: {
@@ -131,13 +131,15 @@
         },
 
         components:{
-            managerAddEditAttendant
+            managerCRUDAttendant
         },
 
         data() {
             return {
                 //---------General properties-----------------------------
+                first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
+                
                 // model:{},
                 //---------Specific properties-----------------------------
                 attendant_id: "",
@@ -158,7 +160,8 @@
                 columns: [
                     {
                         label: 'Status',
-                        field: 'status_name',
+                        field: 'status_id',
+                        // field: 'status_name',
                         numeric: true, 
                         width: "90px",
                         html: false,
@@ -206,15 +209,16 @@
             getAttendants: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
-                        this.rows = response.data;
-                        console.log(this.rows);
+                        this.rows = [];
                         var This=this;
-                        response.data.forEach.bind(function(item, i){
-                            // adicionar o nome do status a cada registro
-                            
-                            // adicionar o nome do repectivo atendente a cada registro
-
-                            //adicionar as ações de ver conversas, editar e eliminar atendente a cada registro
+                        response.data.forEach(function(item, i){
+                            var obj = item.user;
+                            obj.created_at = item.created_at;
+                            obj.deleted_at = item.deleted_at;
+                            obj.updated_at = item.updated_at;
+                            obj.created_at = item.created_at;
+                            This.rows.push(obj);
+                            //TODO-JR: adicionar o nome do status a cada registro
                         });
                     })
                     .catch(function(error) {
@@ -222,12 +226,21 @@
                     });
             }, 
 
+            reloadDatas(){
+                this.getAttendants();
+            },
+            
+            closeModals(){
+                this.modalAddAttendant = false;
+                this.modalEditAttendant = false;
+                this.modalDeleteAttendant = false;
+            },
+
             actionSeeAttendant: function(value){
                 this.model = value;
             },
 
             actionEditAttendant: function(value){
-                console.log(value);
                 this.model = value;
                 this.attendant_id = value.id;
                 this.modalEditAttendant = !this.modalEditAttendant;
@@ -235,6 +248,8 @@
 
             actionDeleteAttendant: function(value){
                 this.model = value;
+                this.attendant_id = value.id;
+                this.modalDeleteAttendant = !this.modalDeleteAttendant;
             },
 
             //------ Specific DataTable methods------------
