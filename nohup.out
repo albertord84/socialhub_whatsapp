@@ -38255,3 +38255,19 @@ Laravel development server started: <http://127.0.0.1:8000>
 [Fri Oct  4 08:06:15 2019] 127.0.0.1:57832 [200]: /images/logo-social-hub.png?c69764408bd2af21c29270fd081a7155
 [Fri Oct  4 08:06:15 2019] 127.0.0.1:57834 [200]: /images/prf4.jpg
 [Fri Oct  4 08:06:15 2019] 127.0.0.1:57836 [200]: /images/prf4.jpg?3646660aa7d4cdde9b5072baaf6ea80e
+Laravel development server started: <http://127.0.0.1:8000>
+[Thu Oct 10 15:27:15 2019] 127.0.0.1:57986 [200]: /manifest.js
+[Thu Oct 10 15:27:15 2019] 127.0.0.1:57988 [200]: /vendor.js
+[Thu Oct 10 15:27:15 2019] 127.0.0.1:57990 [200]: /main.js
+[Thu Oct 10 15:27:17 2019] 127.0.0.1:57998 [200]: /js/12.js
+[Thu Oct 10 15:27:17 2019] 127.0.0.1:58002 [200]: /images/logo-social-hub.png?c69764408bd2af21c29270fd081a7155
+[Thu Oct 10 15:27:17 2019] 127.0.0.1:58004 [200]: /images/login.png?e639d73382016ce6d50862e345db6270
+[Thu Oct 10 15:27:17 2019] 127.0.0.1:58006 [200]: /images/background2.jpg?30d138e688b75bd3279927d7c70fa69d
+[Thu Oct 10 15:27:17 2019] 127.0.0.1:58008 [200]: /fonts/vendor/font-awesome/fontawesome-webfont.woff2?af7ae505a9eed503f8b8e6982036873e
+[Thu Oct 10 15:27:17 2019] 127.0.0.1:58010 [200]: /favicon.ico
+[Thu Oct 10 15:27:38 2019] 127.0.0.1:58020 [200]: /js/2.js
+[Thu Oct 10 15:27:38 2019] 127.0.0.1:58022 [200]: /js/8.js
+[Thu Oct 10 15:27:39 2019] 127.0.0.1:58024 [200]: /images/prf4.jpg
+[Thu Oct 10 15:27:39 2019] 127.0.0.1:58026 [200]: /images/prf4.jpg?3646660aa7d4cdde9b5072baaf6ea80e
+[Thu Oct 10 15:27:47 2019] 127.0.0.1:58038 [200]: /js/1.js
+[Thu Oct 10 15:27:51 2019] 127.0.0.1:58046 [200]: /js/11.js

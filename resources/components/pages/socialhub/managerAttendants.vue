@@ -8,8 +8,8 @@
             <div id="search-input-container">
                 <label>
                     <div style="" class="form-group has-search">
-                            <span class="fa fa-search form-control-feedback"></span>
-                            <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
@@ -77,17 +77,17 @@
 
         <!-- Add Attendant Modal -->
         <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
-            <managerAddEditAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onrelad='reloadDatas' @modalclose='closeModals'> </managerAddEditAttendant>
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onrelad='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Edit Attendant Modal -->
         <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
-            <managerAddEditAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerAddEditAttendant>
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Delete Attendant Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerAddEditAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerAddEditAttendant>            
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
         </b-modal>
 
     </div>
@@ -97,7 +97,7 @@
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-    import managerAddEditAttendant from "./popups/managerAddEditAttendant";
+    import managerCRUDAttendant from "./popups/managerCRUDAttendant";
 
     export default {
         props: {
@@ -131,7 +131,7 @@
         },
 
         components:{
-            managerAddEditAttendant
+            managerCRUDAttendant
         },
 
         data() {
