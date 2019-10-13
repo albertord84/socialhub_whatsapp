@@ -32,6 +32,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@socialhub.pro',
             'login' => 'admin',
             'role_id' => 1,
+            'status_id' => 1,
             'password' => bcrypt('admin'),
         ]);
         $this->command->info('Admin created: [user: admin@socialhub.pro, pass: admin]');
@@ -47,6 +48,7 @@ class UsersTableSeeder extends Seeder
             'login' => 'visitor',
             'CPF' => '77777777777', // $faker->creditCardNumber,
             'role_id' => 4,
+            'status_id' => 1,
             'password' => bcrypt('visitor'), // password
             'remember_token' => Str::random(10),
         ]);
@@ -63,6 +65,7 @@ class UsersTableSeeder extends Seeder
             'login' => 'manager',
             'CPF' => '00000000001',
             'role_id' => 2,
+            'status_id' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('manager'), // password
             'remember_token' => Str::random(10),
@@ -83,6 +86,7 @@ class UsersTableSeeder extends Seeder
             'login' => 'attendant1',
             'CPF' => '00000000002',
             'role_id' => 3,
+            'status_id' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('attendant1'), // password
             'remember_token' => Str::random(10),
@@ -100,12 +104,13 @@ class UsersTableSeeder extends Seeder
             'login' => 'attendant2',
             'CPF' => '00000000003',
             'role_id' => 3,
+            'status_id' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('attendant2'), // password
             'remember_token' => Str::random(10),
         ]);
         UsersAttendant::create([
-            'user_id' => 4,
+            'user_id' => 4,            
             'user_manager_id' => 2,
         ]);
         $this->command->info('Attendant 2 created: [user: attendant2, pass: attendant2]');

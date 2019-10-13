@@ -43,6 +43,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'ContactsStatus ACTIVE',
         ]);
         $this->command->info('ContactsStatus ACTIVE');
+        
+        ContactsStatus::create([
+            'id' => '2',
+            'name' => 'UNASSIGNED',
+            'description' => 'Contact not assigned to attendant yet',
+        ]);
+        $this->command->info('ContactsStatus ACTIVE');
     }
 
     function CreateUsersStatus() {

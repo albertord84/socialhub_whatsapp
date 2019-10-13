@@ -10,7 +10,7 @@
                     <span class="fa fa-headphones form-control-feedback"></span>
                     <select v-model="contact_atendant_id" class="form-control has-search-color" size="1">
                         <option value="0">Asignar um Atendente agora?</option>
-                        <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
+                        <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.id" :title="attendant.email">{{attendant.name}}</option>
                     </select>
                 </div>
             </div>
@@ -57,7 +57,7 @@
             <div class="col-lg-12 m-t-25 text-center">
                 <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addContact">Adicionar</button>
                 <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateContact">Atualizar</button>
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalAddContact=!modalAddContact;formReset">Cancelar</button>
+                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
             </div>
         </form>
         <form v-show="action=='delete'">
@@ -81,6 +81,7 @@
 
         props: {
             url:'', //contacts controller url 
+            secondUrl:'',
             action:"",
             attendants:null,
             item:{},
@@ -95,7 +96,7 @@
                 contact_atendant_id:0,
 
                 model:{
-                    firt_name: "",
+                    first_name: "",
                     last_name: "",
                     phone: "",
                     email: "",
@@ -113,14 +114,38 @@
                 remember_length:0,
             }
         },
+
         methods:{
             addContact: function() { //C
-                //TODO-JR: onde enviar o possivel contact_atendant_id, na url ou nos parametros?
+                if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                    miniToastr.error(error, "Erro adicionando contato");  
+                    return;
+                }
+                this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
+                if (this.contact_atendant_id)
+                    this.model.status_id = 1;
                 ApiService.post(this.url,this.model)
                 .then(response => {
-                    miniToastr.success("Contato adicionado com sucesso","Sucesso");
-                    this.formReset();
-                    this.modalAddContact=!this.modalAddContact
+                    if (this.contact_atendant_id) {
+                        ApiService.post(this.secondUrl,{
+                            'id':1, //TODO: el id debe ser autoincremental, no devo estar mandandolo
+                            'contact_id':response.data.id,
+                            'attendant_id':this.contact_atendant_id,
+                        })
+                        .then(response => {
+                            miniToastr.success("Contato adicionado com sucesso","Sucesso");
+                            this.reload();
+                            this.formCancel();
+                        })
+                        .catch(function(error) {
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro adicionando contato");  
+                        });    
+                    }else{
+                        miniToastr.success("Contato adicionado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
+                    }
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
@@ -129,19 +154,51 @@
             },
             
             editContact: function() { //U
-                this.contact_id = this.item.id;
-                this.model = this.item;
-                this.contact_atendant_id =  this.contact_atendant_id;
+                this.model = Object.assign({}, this.item);
+                this.contact_atendant_id =  this.item.contact_atendant_id;
                 this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U
-            //TODO-JR: onde enviar o possivel contact_atendant_id, na url ou nos parametros?
-                ApiService.post(this.url+'/'+this.contact_id+'/'+this.contact_atendant_id,this.model)
+                if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                    miniToastr.error(error, "Erro adicionando contato");  
+                    return;
+                }
+                ApiService.post(this.url+'/'+this.item.id, this.model)
+                .then(response => {
+                    // if (this.contact_atendant_id) {
+                    //     ApiService.post(this.secondUrl,{
+                    //         // 'id':1, //TODO: el id debe ser autoincremental, no devo estar mandandolo
+                    //         'contact_id':this.item.id,
+                    //         'attendant_id':this.contact_atendant_id,
+                    //     })
+                    //     .then(response => {
+                    //         miniToastr.success("Contato atualizado com sucesso","Sucesso");
+                    //         this.reload();
+                    //         this.formCancel();
+                    //     })
+                    //     .catch(function(error) {
+                    //         ApiService.process_request_error(error); 
+                    //         miniToastr.error(error, "Erro adicionando contato");  
+                    //     });    
+                    // }else{
+                    //     miniToastr.success("Contato adicionado com sucesso","Sucesso");
+                    //     this.reload();
+                    //     this.formCancel();
+                    // }
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro adicionando contato");  
+                });
+                
+                
+                
+                ApiService.post(+'/'+this.contact_atendant_id,this.model)
                 .then(response => {                
                     miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                    this.formReset();
-                    this.modalEditContact=!this.modalEditContact
+                    this.reload();
+                    this.formCancel();
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error);  
@@ -151,9 +208,10 @@
 
             deleteContact: function() { //D
                 ApiService.delete(this.url+'/'+this.item.id)
-                    .then(response => {
-                        this.getContacts();
+                    .then(response => {                        
                         miniToastr.success("Contato eliminado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
@@ -164,13 +222,21 @@
             //------ auxiliary methods--------------------
             countLengthSumary: function(){
                 this.model.summary = this.model.summary.length > 500 ? this.model.summary.substring(0, 500) : this.model.summary;
-                this.model.summary_length = this.model.summary.length;                    
+                this.summary_length = this.model.summary.length;                    
             },
 
             countLengthRemember: function(){
                 this.model.remember = this.model.remember.length > 500 ? this.model.remember.substring(0, 500) : this.model.remember;
-                this.model.remember_length = this.model.remember.length;
+                this.remember_length = this.model.remember.length;
             },
+
+            formCancel(){
+                this.$emit('modalclose');
+            }, 
+            
+            reload(){
+                this.$emit('onreloaddatas');
+            }, 
 
             formReset:function(){
                 this.model.first_name = "";

@@ -72,18 +72,26 @@ class ContactController extends AppBaseController
 
         //TODO-JR-ALBERTO: um contato pode ser criado por:
             //um robot: manda para sacola
-            //um admin desde CVS: vai para sacola
+            //um admin desde CVS: va para sacola
             //um atendente: deve ser inserido com o Id do atendente que esta na sessão
             //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente: 
-            // onde devo enviar o contact_atendant_id, por url ou nos dados? 
+            //onde devo enviar o contact_atendant_id, por url ou nos dados? 
+        
+        $User = Auth::check()? Auth::user():session('logged_user');
+        if ($User->role_id == ContactsStatusController::MANAGER) {
+            $input['company_id'] = $User->company_id;
+        } else
+        if ($User->role_id == ContactsStatusController::ATTENDANT) {
+            $input['company_id'] = 0; //TODO: obtener el id de la camponhia del atendetnte
+        } 
         $contact = $this->contactRepository->create($input);
 
         // TODO: Create Contact Chat Table
-        //
 
         Flash::success('Contact saved successfully.');
 
-        return redirect(route('contacts.index'));
+        return $contact->toJson();
+        //return redirect(route('contacts.index'));
     }
 
     /**
@@ -136,6 +144,7 @@ class ContactController extends AppBaseController
      */
     public function update($id, UpdateContactRequest $request)
     {
+        dd(request);
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:

@@ -52,14 +52,14 @@
                 <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addAttendant">Adicionar</button>
                     <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateAttendant">Atualizar</button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
             <form v-show="action=='delete'">
                 Tem certeza que deseja remover esse Atendente?
                 <div class="col-lg-12 mt-5 text-center">
                     <button type="submit" class="btn btn-primary btn_width" @click.prevent="deleteAttendant">Eliminar</button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
 
@@ -120,7 +120,7 @@
                             miniToastr.success("Atendente adicionado com sucesso","Sucesso");
                             this.formReset();
                             this.reload();
-                            this.formCancel();
+                            this.closeModals();
                         })
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
@@ -135,42 +135,41 @@
             
             editAttendant: function() { //U
                 this.attendant_id = this.item.id;
-                this.model = this.item;
-                this.formCancel();
+                this.model = Object.assign({}, this.item);
+                this.closeModals();
             },
 
             updateAttendant: function() { //U
-                // var model_cpy = this.model;
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
                 delete model_cpy.updated_at;
                 delete model_cpy.deleted_at;
-
                 ApiService.post(this.first_url+'/'+this.attendant_id, model_cpy)
-                .then(response => {
-                   ApiService.post(this.url+'/'+this.attendant_id,{})
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");
-                        this.reload();
-                        this.formCancel();
+                            this.reload();
+                            this.closeModals();
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro atualizando Atendente"); 
                     });
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error);  
-                    miniToastr.error(error, "Erro atualizando Atendente"); 
-                });
             },
 
             deleteAttendant: function(){
                 ApiService.delete(this.url+'/'+this.item.id)
                     .then(response => {
-                        miniToastr.success("Atendente eliminado com sucesso","Sucesso");
-                        this.reload();
-                        this.formCancel();
+                        //TODO-JR: eliminar un atendente elimina en cascada?
+                        // ApiService.delete(this.first_url+'/'+this.item.id)
+                        //     .then(response => {
+                                miniToastr.success("Atendente eliminado com sucesso","Sucesso");
+                                this.reload();
+                                this.closeModals();
+                            // })
+                            // .catch(function(error) {
+                            //     ApiService.process_request_error(error);  
+                            //     miniToastr.error(error, "Erro eliminando Atendente"); 
+                            // });
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
@@ -192,12 +191,12 @@
                 this.model.linkedin_id="";                
             },
 
-            formCancel(){
+            closeModals(){
                 this.$emit('modalclose');
             }, 
             
             reload(){
-                this.$emit('onreload');
+                this.$emit('onreloaddatas');
             }, 
 
         },

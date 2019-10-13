@@ -15,7 +15,6 @@ class CreateContactsTable extends Migration {
 		Schema::create('contacts', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			// $table->increments('id');
 			$table->integer('company_id')->nullable()->index('fk_contacts_company');
 			$table->string('first_name', 45)->nullable();
 			$table->string('last_name', 45)->nullable();
@@ -28,7 +27,7 @@ class CreateContactsTable extends Migration {
 			$table->string('facebook_id', 45)->nullable();
 			$table->string('instagram_id', 45)->nullable();
 			$table->string('linkedin_id', 45)->nullable();
-			$table->integer('status_id')->nullable()->index('fk_contacts_status');
+			$table->integer('status_id')->nullable()->index('fk_contacts_status')->default('2');
 			$table->timestamps();
 			$table->softDeletes();
 		});

@@ -53,7 +53,7 @@
                     <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
                     <option value="-1">Todos</option>
                 </select>
-                <div class="datatable-info  pb-2 mt-3">
+                <div class="datatable-info pb-2 mt-3">
                     <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
                     currentPerPage * currentPage)}} of {{processedRows.length}}
                     <span>linhas</span>
@@ -77,17 +77,17 @@
 
         <!-- Add Attendant Modal -->
         <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onrelad='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Edit Attendant Modal -->
         <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Delete Attendant Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
+            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
         </b-modal>
 
     </div>

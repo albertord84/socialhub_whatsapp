@@ -82,17 +82,17 @@
 
         <!-- Add Contact Modal -->
         <b-modal v-model="modalAddContact" size="lg" :hide-footer="true" title="Novo contato">
-            <managerCRUDContact :url='url' :action='"insert"' :attendants='attendants' :item='{}' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>
+            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"insert"' :attendants='attendants' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>
         </b-modal>
 
         <!-- Edit Contact Modal -->
         <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar contato">
-            <managerCRUDContact :url='url' :action='"edit"' :attendants='attendants' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
+            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"edit"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
         <!-- Delete Contact Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="false" title="Verificação de exclusão">
-            <managerCRUDContact :url='url' :action='"delete"' :attendants='attendants' :item='model' @onreload='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
     </div>
@@ -137,11 +137,12 @@
             return {
                 //---------General properties-----------------------------
                 url:'contacts',  //route to controller
+                secondUrl:'attendantsContacts',
                 url_attendants:'usersAttendants',  //route to controller
                 
                 //---------Specific properties-----------------------------
                 contact_id: "",
-                contact_atendant_id: "",
+                contact_atendant_id: 0,
                 model:{},
                 //---------New record properties-----------------------------
                 
@@ -206,7 +207,8 @@
                         this.rows = response.data;
                         var This=this;
                         response.data.forEach(function(item, i){
-                            item.status_name = item.status.name;
+                            if(item.status)
+                                item.status_name = item.status.name;
                             var name = "";
                             item.contact_atendant_id = 0;
                             if(item.latestAttendant){
@@ -237,7 +239,7 @@
             actionEditContact: function(value){
                 this.model = value;
                 this.contact_id = value.id;
-                this.contact_atendant_id = value.contact_atendant_id;
+                // this.contact_atendant_id = value.contact_atendant_id;
                 this.modalEditContact = !this.modalEditContact;
             },
 
