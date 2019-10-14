@@ -30,7 +30,6 @@ class ContactController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            // dd(UsersAttendant::with('User')->find(3));
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
            
@@ -40,7 +39,7 @@ class ContactController extends AppBaseController
                 $Contacts = $this->contactRepository->fullContacts($User->company_id, null);
             } 
             else if ($User->role_id == ContactsStatusController::ATTENDANT) {
-                $User->company_id =1; //TOD-Alaberto: obtener el id de la empresa del atendente actual
+                $User->company_id =1; //TODO-Alberto: obtener el id de la empresa del atendente actual
                 $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
             }
             //dd($Contacts);

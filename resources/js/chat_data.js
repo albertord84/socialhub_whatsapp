@@ -1,4 +1,5 @@
-let chat = [{
+let chat = [
+{
     user: "Rickey",
     image: require("img/authors/avatar2.jpg"),
     status: "Lorem ipsum dolor sit ametm  elit.",
@@ -11,11 +12,20 @@ let chat = [{
     }, {
         msg: "Good Morning",
         from: "me",
-        time:"09:11"
+        time:"09:11",     
     }, {
         msg: "Have a Nice day",
         from: "you",
-        time:"09:12"
+        time:"09:12",
+        type: 'audio',
+        src: "/public/audio/aaa.mp3"
+    }, {
+        msg: "image/logo-social-hub.png",        
+        from: "you",
+        time:"09:12",
+        type: 'image',
+        // src: require("img/authors/avatar4.jpg")      
+        src: "public/avatar4.jpg"
     }, {
         msg: "Hi ,How are you?",
         from: "me",
@@ -41,7 +51,9 @@ let chat = [{
         from: "you",
         time:"09:18"
     }]
-}, {
+}, 
+
+{
     user: "Jenny",
     image: require("img/authors/avatar4.jpg"),
     status: "Consec  ipsum  adipisicing.Lorem   elit.",
@@ -80,7 +92,9 @@ let chat = [{
         from: "you",
         time:"17:30"
     }]
-}, {
+},
+
+{
     user: "David",
     image: require("img/authors/avatar3.jpg"),
     status: "Lorem ipsum dolor ipsum dolor  elit",
@@ -115,7 +129,9 @@ let chat = [{
         from: "me",
         time:"13:55"
     }]
-}, {
+}, 
+
+{
     user: "Roysingh",
     image: require("img/authors/avatar5.jpg"),
     status: "Dolor ipsum amet elitLorem ipsum ",
@@ -138,7 +154,9 @@ let chat = [{
         from: "you",
         time:"19:20"
     }]
-},{
+},
+
+{
     user: "Joe",
     image: require("img/authors/avatar6.jpg"),
     status: "Dolor ipsum amet elitLorem ipsum ",
@@ -161,7 +179,9 @@ let chat = [{
         from: "you",
         time:"19:20"
     }]
-}, {
+}, 
+
+{
     user: "Shasla",
     image: require("img/authors/avatar.jpg"),
     status: "Dolor ipsum dolor dolor elitLorem ",
@@ -184,7 +204,9 @@ let chat = [{
         from: "me",
         time:"22:09"
     }]
-}]
+}
+
+]
 
 
 export default chat

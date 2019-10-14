@@ -150,10 +150,18 @@
                 <v-scroll :height="Height(131)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
                     <ul>
                         <li v-for='(item,index) in list[selected_user_index].messages' :key="index" :class="[{ sent: item.from=='me' },{ received: item.from!=='me' }]">
-                            <div>
-                                <div class="msg_time">{{item.time}}</div>
-                                <p>{{ item.msg }}</p>
-                            </div>
+                            <div><p> 
+                                <span v-show='item.type == "image"' class='mb-2'><img :src='item.src' style='width:100px'/><br></span>                                    
+                                <span style='text-align:center' v-show='item.type == "audio"' class='mb-2'>
+                                    <audio controls style='background-color:white'>
+                                        <!-- <source :src='item.src' type="audio/ogg"> -->
+                                        <source :src="item.src" type="audio/mpeg">
+                                        Seu navegador não suporta o elemento de áudio.
+                                    </audio> <br>
+                                </span>
+                                {{ item.msg }}<br>
+                                <span class="msg_time float-right">{{item.time}}</span>
+                            </p></div>
                         </li>
                     </ul>
                 </v-scroll>
@@ -512,12 +520,16 @@
 
     .received div p,
     .sent div p {
+        max-width:400px;
+        text-overflow:hidden;
+        word-break: break-all; 
         border-radius: 7px;
         display: inline-block;
         padding: 7px 12px;
         position: relative;
         border: 1px solid #d4d2d2;
     }
+
     .received div p::after{
         content: ' ';
         position: absolute;
@@ -528,7 +540,7 @@
         top: 0px;
         bottom: auto;
         border: 12px solid;
-        border-color: #dbf2fa transparent transparent transparent;
+        border-color: #fff transparent transparent transparent;
     }
     .received div p::before{
         content: ' ';
@@ -562,7 +574,7 @@
         top: 0;
         bottom: auto;
         border: 12px solid;
-        border-color: #fff transparent transparent transparent;
+        border-color: #dbf2fa transparent transparent transparent;
     }
 
     .self {
@@ -582,7 +594,7 @@
             font-size: 9px;
         }
         p {
-            background-color: #fff;
+            background-color: #dbf2fa;
         }
     }
 
@@ -593,9 +605,11 @@
             font-size: 9px;
         }
         p {
-            background-color: #dbf2fa;
+            background-color: #fff;
         }
     }
+
+   
 
     .chat_content {
         overflow: hidden;
@@ -656,6 +670,11 @@
     .myscrool{
         height: calc(100% - 50px);
     }
+
+
+
+
+
 
     //added here
     //-----------------------------------------------
