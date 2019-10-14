@@ -33,12 +33,14 @@ class ContactController extends AppBaseController
             // dd(UsersAttendant::with('User')->find(3));
             //TODO-JR-ALBERTO 
             //get contacts by company_id or by attendant_id
+           
             $User = Auth::check()? Auth::user():session('logged_user');
             $Contacts = $this->contactRepository->all();;
             if ($User->role_id == ContactsStatusController::MANAGER) {
                 $Contacts = $this->contactRepository->fullContacts($User->company_id, null);
             } 
             else if ($User->role_id == ContactsStatusController::ATTENDANT) {
+                $User->company_id =1; //TOD-Alaberto: obtener el id de la empresa del atendente actual
                 $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
             }
             //dd($Contacts);
@@ -82,7 +84,7 @@ class ContactController extends AppBaseController
             $input['company_id'] = $User->company_id;
         } else
         if ($User->role_id == ContactsStatusController::ATTENDANT) {
-            $input['company_id'] = 0; //TODO: obtener el id de la camponhia del atendetnte
+            $input['company_id'] = 1; //TODO: obtener el id de la camponhia del atendetnte
         } 
         $contact = $this->contactRepository->create($input);
 

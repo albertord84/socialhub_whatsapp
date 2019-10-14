@@ -118,7 +118,7 @@
         methods:{
             addContact: function() { //C
                 if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error(error, "Erro adicionando contato");  
+                    miniToastr.error(error, "Alguns dados incompletos");  
                     return;
                 }
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo

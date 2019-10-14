@@ -2,7 +2,7 @@
     <div class="">
             <div class="col-lg-12 sect_header">
                 <ul class="menu">
-                    <li><a href="javascript:void(0)" @click.prevent="toggle_left"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
+                    <li><a href="javascript:void(0)" @click.prevent="toggle_left()"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><p>Filtrar contatos</p> </li>
                     <ul class="menu float-right">
                         <li ><a href="javascript:void(0)" @click.prevent="toggle_left()"><i class="fa fa-close"></i></a></li>

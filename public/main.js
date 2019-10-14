@@ -4951,8 +4951,9 @@ var layout = [{
 }, {
     path: '/attendant/chat',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(4).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(795)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(4).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1086)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
+    // component: resolve => require(['pages/socialhub/attendantChat'], resolve),
     meta: {
         title: "Chat"
     }
@@ -7270,11 +7271,11 @@ var mutations = {
         }
         if (state.right_open) {
             document.getElementsByTagName("body")[0].classList.add("sidebar-right-opened");
-            document.getElementById("right-side").classList.add("right-active");
+            // document.getElementById("right-side").classList.add("right-active");
         } else {
             if (document.getElementsByTagName("body")[0] /*&& document.getElementById("right-side")*/) {
                     document.getElementsByTagName("body")[0].classList.remove("sidebar-right-opened");
-                    document.getElementById("right-side").classList.remove("right-active");
+                    // document.getElementById("right-side").classList.remove("right-active");
                 }
         }
     },
@@ -7288,11 +7289,11 @@ var mutations = {
         }
         if (state.left_open) {
             document.getElementsByTagName("body")[0].classList.add("sidebar-left-opened");
-            document.getElementById("left-side").classList.add("left-active");
+            // document.getElementById("left-side").classList.add("left-active");
         } else {
             if (document.getElementsByTagName("body")[0] /*&& document.getElementById("left-side")*/) {
                     document.getElementsByTagName("body")[0].classList.remove("sidebar-left-opened");
-                    document.getElementById("left-side").classList.remove("left-active");
+                    // document.getElementById("left-side").classList.remove("left-active");
                 }
         }
     },
