@@ -70,12 +70,13 @@ class ContactController extends AppBaseController
     {
         $input = $request->all();
 
+        
         //TODO-JR-ALBERTO: um contato pode ser criado por:
-            //um robot: manda para sacola
-            //um admin desde CVS: va para sacola
-            //um atendente: deve ser inserido com o Id do atendente que esta na sessão
-            //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente: 
-            //onde devo enviar o contact_atendant_id, por url ou nos dados? 
+        //um robot: manda para sacola
+        //um admin desde CVS: va para sacola
+        //um atendente: deve ser inserido com o Id do atendente que esta na sessão
+        //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente: 
+        //onde devo enviar o contact_atendant_id, por url ou nos dados? 
         
         $User = Auth::check()? Auth::user():session('logged_user');
         if ($User->role_id == ContactsStatusController::MANAGER) {
