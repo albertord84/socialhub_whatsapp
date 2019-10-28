@@ -36,11 +36,10 @@ class ContactController extends AppBaseController
             $User = Auth::check()? Auth::user():session('logged_user');
             $Contacts = $this->contactRepository->all();;
             if ($User->role_id == ContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts($User->company_id, null);
+                $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, null);
             } 
             else if ($User->role_id == ContactsStatusController::ATTENDANT) {
-                $User->company_id =1; //TODO-Alberto: obtener el id de la empresa del atendente actual
-                $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
+                $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, (int)$User->id);
             }
             //dd($Contacts);
 

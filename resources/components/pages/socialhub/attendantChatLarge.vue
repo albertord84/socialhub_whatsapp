@@ -81,31 +81,35 @@
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-linkedin"></i> LinkedIn</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
-                            </li> 
-                           
+                            </li>                            
                         </ul>
                     </ul>                    
                 </div>
                 <div class="sect_header">
-                    <div style="width:100%; padding:15px 9px 8px 5px" class="form-group has-search">
-                        <span class="fa fa-search form-control-feedback transp"></span>
-                        <input type="text" class="form-control transp" placeholder="Buscar contato">
+                     <div class="input-group" style="color:gray">
+                        <div class="input-group-prepend">
+                            <div style="background-color:#fffff8;color:gray" class="input-group-text border-right-0 border" id="btnGroupAddon2"><i class="fa fa-search"></i></div>
+                        </div>
+                        <input class="form-control search-input border-left-0 border" type="search" placeholder="Search">
+                        <div class="input-group-prepend">
+                            <div style="background-color:#fffff8;color:gray" class="input-group-text border" id="btnGroupAddon2"><i class="fa fa-close"></i></div>
+                        </div>
                     </div>
                 </div>
                 <v-scroll :height="Height(0)"  color="#ccc" bar-width="8px">
                     <ul>
                         <li v-for="(user,index) in list" class="chat_block" :key="index">
                             <a :href="user.user" @click.prevent="show_chat(user,index)">
-                                <article class="media">
+                                <article class="media mt-1 mb-4">
                                     <a class="float-left desc-img mt-3">
-                                        <img :src="user.image" class="img-fluid rounded-circle">
+                                        <img :src="user.image" class="my-rounded-circle">
                                     </a>
-                                    <span class="status-online"></span>
+                                    <span class="status-online">7</span>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-success " href="javascript:void(0)">{{user.user}}</a><br>
                                         <a class="text-muted"><span>{{ text_truncate(user.status,20) }}</span></a>
                                     </div>
-                                    <span class="mt-4 text-muted">12.54</span>
+                                    <span class="mt-2 text-muted">12.54</span>
                                 </article>
                             </a>
                         </li>
@@ -116,7 +120,7 @@
 
         <!-- Center side of chat-->
         <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
-            <div class="converstion_back">
+            <div v-if="selected_user_index>=0" class="converstion_back">
                 <div class="sect_header">
                     <ul class='menu'>
                         <li><span class="pl-4"><img :src="list[selected_user_index].image" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
@@ -147,35 +151,64 @@
                         </ul>
                     </ul> 
                 </div>
-                <v-scroll :height="Height(131)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
-                    <ul>
+                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
+                    <ul >
                         <li v-for='(item,index) in list[selected_user_index].messages' :key="index" :class="[{ sent: item.from=='me' },{ received: item.from!=='me' }]">
-                            <div><p> 
-                                <span v-show='item.type == "image"' class='mb-2'><img :src='item.src' style='width:100px'/><br></span>                                    
-                                <span style='text-align:center' v-show='item.type == "audio"' class='mb-2'>
-                                    <audio controls style='background-color:white'>
-                                        <!-- <source :src='item.src' type="audio/ogg"> -->
-                                        <source :src="item.src" type="audio/mpeg">
-                                        Seu navegador não suporta o elemento de áudio.
-                                    </audio> <br>
-                                </span>
-                                {{ item.msg }}<br>
-                                <span class="msg_time float-right">{{item.time}}</span>
-                            </p></div>
+                            <div class="" >
+                                <p class="message" @mouseover='mouseOverMessage("message-dropdown-"+index)' @mouseleave='mouseLeaveMessage("message-dropdown-"+index)'> 
+                                    <b-dropdown class="dropdown hidden-xs-down btn-group float-right message-hout" :id='"message-dropdown-"+index' variant="link" toggle-class="text-decoration-none"  right="">
+                                        <template v-slot:button-content>
+                                            <i class="fa fa-angle-down fa-lg mb-1" title="Opcões"  style="color:gray"></i>
+                                        </template>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-reply"></i> Responder</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivar</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-star-o"></i> Favoritar</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
+                                        </b-dropdown-item>
+                                    </b-dropdown>
+                                    <span v-show='item.type == "image"' class='mb-2'><img :src='item.src' style='width:100px'/></span>   <br>                                 
+                                    <span style='text-align:center' v-show='item.type == "audio"' class='mb-2'>
+                                        <audio controls class="mycontrolBar">
+                                            <source :src='item.src' type="audio/ogg">
+                                            <source :src="item.src" type="audio/mpeg">
+                                            Seu navegador não suporta o elemento de áudio.
+                                        </audio> <br>
+                                    </span>
+                                    <span style="font-size:12px; color:#4f4e4e">{{ item.msg }}</span><br>
+                                    <span class="msg_time float-right">{{item.time}}</span>
+                                </p>
+                            </div>
                         </li>
                     </ul>
-                </v-scroll>
-                <div class="input-group">
-                    <input type="text" @keyup.enter="send_message" v-model="newmessage" placeholder="New Message" class=" form-control" ref="input">
+                </v-scroll>                
+                <div class="input-group p-3" style="background-color:#ebf2f6">
                     <div class="input-group-append">
                         <button class="btn btn-success send-btn" type="submit" @click="send_message"><i class="fa fa-paper-plane-o text-white" aria-hidden="true"></i></button>
                     </div>
+                    <input type="text" @keyup.enter="send_message" v-model="newmessage" placeholder="Nova mensagem" class="form-control text-input-message" ref="input">
+                </div>
+            </div>
+            <div v-else class="non_converstion_back">
+                <div class="non-selected-chat text-center">
+                    <img src="~img/socialhub/attendant.jpg" alt="" >
+                    <h1>Mantenha seus contatos atualizados</h1>
+                    <p class="text-right">"Os clientes se lembram de um bom atendimento durante muito mais tempo do que se lembram do preço ..."
+                        <br>
+                        <b class="text-right">Kate Zabriskie</b>
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Right side of chat-->
-        <div id="chat-right-side" v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0"><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <div id="chat-right-side" v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0">
             <div class="sect_header">
                 <ul class='menu'>
                     <li><p>Detalhes</p></li>
@@ -207,7 +240,7 @@
             </div>
 
             <label></label>
-            <div class="profile sec_decription bg-white text-center">
+            <div v-if="selected_user_index>=0" class="profile sec_decription bg-white text-center">
                     <img :src="list[selected_user_index].image"  class="rounded-circle  mb-3 mt-3" alt="User Image">
                     <h4 class="text-gray">{{list[selected_user_index].user}}</h4>
                     <p>{{list[selected_user_index].status}}</p>
@@ -236,17 +269,23 @@
                             </div>
                         </div>
                     </div>
-
-
             </div>
         </div>
 
-        <!-- Find-Right side of chat-->
-        <div id="chat-find-right-side" v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0"><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <div id="chat-find-right-side" v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0">
             <div class="" style="margin-top:0px; width:100%">
                 <div class="col-lg-12 sect_header">
-                    <ul class="menu">
-                        <!-- <li><p>Mensagens anteriores</p> </li> -->
+                    <div class="input-group" style="color:gray">
+                        <div class="input-group-prepend">
+                            <div style="background-color:#fffff8;color:gray" class="input-group-text border-right-0 border" id="btnGroupAddon2"><i class="fa fa-search"></i></div>
+                        </div>
+                        <input class="form-control search-input border-left-0 border" type="search" placeholder="Buscar mensagens">
+                        <div class="input-group-prepend">
+                            <div style="background-color:#fffff8;color:gray" class="input-group-text border" @click.prevent="ftext='';fn_show_chat_find_right_side()/*toggle_right()*/"><i class="fa fa-close"></i></div>
+                        </div>
+                    </div>
+                    <!-- <ul class="menu">
                         <li>
                             <div style="width:100%; padding:15px 9px 8px 5px" class="form-group has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
@@ -256,34 +295,8 @@
                         <ul class="menu float-right">
                             <li ><a href="javascript:void(0)" @click.prevent="ftext='';fn_show_chat_find_right_side()/*toggle_right()*/"><i class="fa fa-close"></i></a></li>
                         </ul>
-                    </ul>
+                    </ul> -->
                 </div>
-                <!-- <div class="col-lg-12 p-0">
-                    <div class="converstion_back">                    
-                        <v-scroll :height="Height(131)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
-                            <ul>
-                                <li v-for='(item,index) in list[selected_user_index].messages' :key="index" :class="[{ sent: item.from=='me' },{ received: item.from!=='me' }]">
-                                    <div>
-                                        <div class="msg_time">{{item.time}}</div>
-                                        <p>{{ item.msg }}</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </v-scroll>                    
-                    </div>
-                </div> -->
-                <!-- <div class="col-lg-12 sect_header mb-0">
-                    <ul class="list-inline">
-                        <li class="list-inline-item">
-                            <a href="javascript:void(0)" class="box"><i class="fa fa-angle-double-down"></i> Resumo</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="javascript:void(0)" class="box"><i class="fa fa-angle-double-up"></i> Resumo</a>
-                        </li>
-                        
-                    </ul>
-                </div> -->
-                
             </div>
         </div>
         
@@ -324,7 +337,7 @@
                 bgColor:require('img/pages/chat_background.png'),
                 className:'',
                 newmessage: '',
-                selected_user_index: 0,
+                selected_user_index: -1,
                 right_layout:'toggle-edit-contact',
                 left_layout:'toggle-add-contact',
                 window: {
@@ -335,6 +348,16 @@
         },
         
         methods: {
+            mouseOverMessage(id){
+                document.getElementById(id).classList.remove("message-hout");
+                document.getElementById(id).classList.add("message-hover");
+            },
+
+            mouseLeaveMessage(id){
+                document.getElementById(id).classList.add("message-hout");
+                document.getElementById(id).classList.remove("message-hover");
+            },
+
             send_message() {
                 if (this.newmessage.trim() != "") {
                     this.list[this.selected_user_index].messages.push({
@@ -352,28 +375,27 @@
                         this.contacts = response.data;
                         console.log(this.contacts);
                         var This=this;
-                        response.data.forEach(function(item, i){
-                            if(item.status)
-                                item.status_name = item.status.name;
-                            var name = "";
-                            item.contact_atendant_id = 0;
-                            if(item.latestAttendant){
-                                item.attendant_name = item.latestAttendant.user.name;
-                                item.contact_atendant_id = item.latestAttendant.user.id;
-                            }
-                        });
+                        // response.data.forEach(function(item, i){
+                        //     if(item.status)
+                        //         item.status_name = item.status.name;
+                        //     var name = "";
+                        //     item.contact_atendant_id = 0;
+                        //     if(item.latestAttendant){
+                        //         item.attendant_name = item.latestAttendant.user.name;
+                        //         item.contact_atendant_id = item.latestAttendant.user.id;
+                        //     }
+                        // });
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
                     });
             }, 
 
-
             show_chat(user, index) {
                 this.selected_user_index = index;
                 setTimeout(() => {
                     this.$refs.input.focus();
-                }, 20)
+                }, 20);
             },
 
             fn_show_chat_right_side(){
@@ -438,6 +460,11 @@
             }
         },
 
+        updated(){
+            if(this.selected_user_index>=0)
+                this.$refs.message_scroller.scrolltobottom();
+        },
+
         beforeMount() {
             this.getContacts();
 
@@ -485,7 +512,7 @@
         }
     }
 
-    .converstion_back {
+    .converstion_back {        
         height: calc(100% - 50px);
         overflow: hidden;
         background: #fff !important;
@@ -503,26 +530,21 @@
                 width: 25px;
                 height: 25px;
             }
-            .bg1{
-                background-image: url("~img/pages/chat_background.png");
-            }
-            .bg2{
-                background-image: url("~img/pages/chat_background2.jpg");
-            }
-            .bg3{
-                background-image: url("~img/pages/chat_background3.jpg");
-            }
         }
        /deep/ .ss-wrapper{
-         height: 90%;
+            background-color: transparent;
+            top: 0%;
+            height: 96%;
+            //  height: 90%;
         }
     }
 
     .received div p,
     .sent div p {
         max-width:400px;
+        min-width:200px;
         text-overflow:hidden;
-        word-break: break-all; 
+        word-break: break-word; 
         border-radius: 7px;
         display: inline-block;
         padding: 7px 12px;
@@ -609,25 +631,22 @@
         }
     }
 
-   
-
     .chat_content {
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    .send-btn {
-        border-radius: 0;
-    }
-
     .status-online {
-        width: 12px;
-        height: 12px;
-        border-radius: 6px;
+        width: 18px;
+        height: 18px;
+        border-radius: 10px;
         background-color: #63c17f;
+        color: white;
+        font-size: 9px;
+        text-align: center;
         position: relative;
-        top: 40px;
-        left: -8px;
+        top: 8px;
+        left: -10px;
         border: 2px solid #fff;
     }
 
@@ -678,20 +697,16 @@
 
     //added here
     //-----------------------------------------------
-    .has-search .form-control {
-        padding-left: 2.375rem;
+    .search-input{
+        background-color:#fffff8;
+        font-size:12px;
     }
-    .has-search .form-control-feedback {
-        position: absolute;
-        z-index: 2;
-        display: block;
-        width: 2.375rem;
-        height: 2.375rem;
-        line-height: 2.375rem;
-        text-align: center;
-        pointer-events: none;
-        color: #aaa;
-    }  
+    .search-input:focus{
+        outline: 0 !important;
+        // border: none !important;
+        box-shadow: none;
+    }
+    
     
     //--------------------------------------------------
     .menu{
@@ -774,5 +789,74 @@
         height: calc(100vh - 50px);
         overflow: hidden;
     }  
+
+    .mycontrolBar{
+        background-color: white !important;
+        opacity:0.5;
+        color:white;
+    }
+
+    audio {
+        width: 270px;
+        height: 25px;
+        border-radius: 90px;
+        transform: scale(1.05);
+    }
+
+    .text-input-message{
+        background-color:#fffff8;
+        padding:22px 30px 22px 30px;
+        font-size:17px;
+        border-radius:20px;
+        border: none;
+    }
+    .text-input-message:focus{
+        outline: 0 !important;
+        border: none !important;
+        box-shadow: none;
+    }
+
+    .message{
+        min-width:160px;
+    }
+
+    .message-hover{
+        visibility:visible;
+    }
+
+    .message-hout{
+        visibility:hidden;
+    }
+
+    .send-btn{
+        border-top-right-radius:20px;
+        border-bottom-right-radius:20px;
+        // border-top-left-radius:20px;
+        // border-bottom-left-radius:20px;
+    }
+
+    .non_converstion_back{
+        background-image: url("~img/pages/chat_background.png");
+        height: 100%;
+        width: 100%;
+    }
+
+    .non-selected-chat {
+        position: absolute;
+        top: 40%;
+        left:50%;
+        transform: translate(-50%,-50%);
+
+        img{
+            width:220px; height:220px; border-radius:125px; opacity:0.5;
+        }
+    }
+
+    .my-rounded-circle{
+        border-radius: 50%;
+        width: 50px;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
 
 </style>

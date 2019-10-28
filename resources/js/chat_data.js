@@ -18,14 +18,13 @@ let chat = [
         from: "you",
         time:"09:12",
         type: 'audio',
-        src: "/public/audio/aaa.mp3"
+        src: "/audio/aaa.mp3"
     }, {
         msg: "image/logo-social-hub.png",        
         from: "you",
         time:"09:12",
         type: 'image',
-        // src: require("img/authors/avatar4.jpg")      
-        src: "public/avatar4.jpg"
+        src: "/images/avatar4.jpg"
     }, {
         msg: "Hi ,How are you?",
         from: "me",
@@ -47,7 +46,7 @@ let chat = [
         from: "me",
         time:"09:17",
     }, {
-        msg: "I am Good",
+        msg: " ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
         from: "you",
         time:"09:18"
     }]
