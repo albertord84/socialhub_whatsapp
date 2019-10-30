@@ -102,3 +102,5 @@ Route::resource('users', 'UserController');
 Route::resource('usersAttendants', 'UsersAttendantController');
 
 Route::resource('usersManagers', 'UsersManagerController');
+
+Route::resource('usersSellers', 'UsersSellerController');
