@@ -204,6 +204,7 @@
                 ApiService.get(this.url)
                     .then(response => {
                         this.rows = [];
+                        console.log(response.data);
                         var This=this;
                         response.data.forEach(function(item, i){
                             var obj = item.user;

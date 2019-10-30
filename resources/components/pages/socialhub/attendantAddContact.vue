@@ -172,7 +172,7 @@
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando contato");  
-                        });    
+                        });
                     }else{
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
