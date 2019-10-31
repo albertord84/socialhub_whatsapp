@@ -60,7 +60,7 @@ class UserController extends AppBaseController
 
         $User = Auth::check()? Auth::user():session('logged_user');
         $input['company_id'] = $User->company_id;
-        $input['role_id'] = ContactsStatusController::ATTENDANT;
+        $input['role_id'] = ExtendedContactsStatusController::ATTENDANT;
 
         $user = $this->userRepository->create($input);
 

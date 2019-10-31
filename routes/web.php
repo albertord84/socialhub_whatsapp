@@ -41,13 +41,13 @@ Route::resource('usersManagers', 'UsersManagerController');
 Route::resource('usersAttendants', 'UsersAttendantController');
 
 
-Route::resource('contacts', 'ContactController');
-// Route::get('contacts', 'ContactController');
+Route::resource('contacts', 'ExtendedContactController');
+// Route::get('contacts', 'ExtendedContactController');
 // Route::post('contacts/{id}', 'CourseController@update');
 // Route::delete('contacts/{id}', 'CourseController@delete');
 // Route::post('contacts/{id}/update_image', 'CourseController@update_image');
 
-Route::resource('contacts_status', 'ContactsStatusController');
+Route::resource('contacts_status', 'ExtendedContactsStatusController');
     
 Route::resource('messageTypes', 'MessageTypeController');
 
@@ -67,7 +67,7 @@ Route::resource('systemConfigs', 'SystemConfigController');
 
 Route::resource('usersStatuses', 'UsersStatusController');
 
-Route::resource('contactsStatuses', 'ContactsStatusController');
+Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
 
 Route::resource('messagesStatuses', 'MessagesStatusController');
 
@@ -75,13 +75,13 @@ Route::resource('attendantsContacts', 'AttendantsContactController');
 
 Route::resource('users', 'UserController');
 
-Route::resource('contacts', 'ContactController');
+Route::resource('contacts', 'ExtendedContactController');
 
 Route::resource('companies', 'CompanyController');
 
 Route::resource('companies', 'CompanyController');
 
-Route::resource('contacts', 'ContactController');
+Route::resource('contacts', 'ExtendedContactController');
 
 Route::resource('users', 'UserController');
 
@@ -89,13 +89,13 @@ Route::resource('usersAttendants', 'UsersAttendantController');
 
 Route::resource('usersManagers', 'UsersManagerController');
 
-Route::resource('contacts', 'ContactController');
+Route::resource('contacts', 'ExtendedContactController');
 
 Route::resource('companies', 'CompanyController');
 
 Route::resource('companies', 'CompanyController');
 
-Route::resource('contacts', 'ContactController');
+Route::resource('contacts', 'ExtendedContactController');
 
 Route::resource('users', 'UserController');
 
@@ -104,3 +104,5 @@ Route::resource('usersAttendants', 'UsersAttendantController');
 Route::resource('usersManagers', 'UsersManagerController');
 
 Route::resource('usersSellers', 'UsersSellerController');
+
+Route::resource('chats', 'ChatController');

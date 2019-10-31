@@ -49,6 +49,7 @@ class ContactsTableSeeder extends Seeder
             'status_id' => 1,
         ]);
         $this->command->info('Contact Marcos Medina');
+        
         for( $i=4;$i<14;$i++){
             Contact::create([
                 'id' => $i,

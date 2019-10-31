@@ -1,26 +1,32 @@
 import routes_admin from './routes_admin.js'
 import routes_attendant from './routes_attendant.js'
 import routes_manager from './routes_manager.js'
+import routes_seller from './routes_seller.js'
 
 const routes = [{
         path: '/admin', //para todo o que precisar de customer
         name: 'admin',
-        component: resolve => require(['src/layout_admin'], resolve),
+        component: resolve => require(['src/components/layouts/principals/layout_admin'], resolve),
         children: routes_admin
+    }, {
+        path: '/seller', //para todo o que precisar de customer
+        name: 'seller',
+        component: resolve => require(['src/components/layouts/principals/layout_seller'], resolve),
+        children: routes_seller
     }, {
         path: '/manager', //para todo o que precisar de customer
         name: 'manager',
-        component: resolve => require(['src/layout_manager'], resolve),
+        component: resolve => require(['src/components/layouts/principals/layout_manager'], resolve),
         children: routes_manager
     }, {
         path: '/attendant', //para todo o que precisar de customer
         name: 'attendant',
-        component: resolve => require(['src/layout_attendant'], resolve),
+        component: resolve => require(['src/components/layouts/principals/layout_attendant'], resolve),
         children: routes_attendant
     }, {
         path: '/visitor', //para todo o que precisar de customer
         name: 'visitor',
-        component: resolve => require(['src/layout_visitor'], resolve),
+        component: resolve => require(['src/components/layouts/principals/layout_visitor'], resolve),
         children: routes_attendant
     }, {
         path: '/',
