@@ -13,6 +13,7 @@
 
     </div>
 </template>
+
 <script>
     /**
      * These are the files that enable you to change layouts and other options
@@ -109,6 +110,7 @@
 
     }
 </script>
+
 <style lang="scss" scoped>
     .wrapper:before,
     .wrapper:after {
@@ -146,3 +148,4 @@
         }
     }
 </style>
+
