@@ -89,24 +89,24 @@
         }
     </style>
     <script>
-    window.onload=function () {
-        document.querySelector('#preloader').remove()
-    }
+        window.onload=function () {
+            document.querySelector('#preloader').remove()
+        }
     </script>
 </head>
 
 <body>
-<div id="preloader">
-<div class="spinner">
-    <div class="dot1"></div>
-    <div class="dot2"></div>
-</div>
-</div>
-<div id="app"></div>
+    <div id="preloader">
+        <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+        </div>
+    </div>
+    <div id="app"></div>
 
-<script type="text/javascript" src="{{ url(mix('manifest.js'))}}"></script>
-<script type="text/javascript" src="{{ url(mix('vendor.js'))}}"></script>
-<script type="text/javascript" src="{{ url(mix('main.js'))}}"></script>
+    <script type="text/javascript" src="{{ url(mix('manifest.js'))}}"></script>
+    <script type="text/javascript" src="{{ url(mix('vendor.js'))}}"></script>
+    <script type="text/javascript" src="{{ url(mix('main.js'))}}"></script>
 
 </body>
 

@@ -36,5 +36,14 @@ class AttendantsContactsTableSeeder extends Seeder
             'contact_id' => 2,
         ]);
         $this->command->info('AttendantContact rel Attendant 3 x Contact 2');
+
+        for($i=4;$i<14;$i++){
+            AttendantsContact::create([
+                'id' => $i,
+                'attendant_id' => ($i%2+3),
+                'contact_id' => $i,
+            ]);
+            $this->command->info('AttendantContact rel Attendant '.($i%2+3).' x Contact_authomatic '.$i);
+        }
     }
 }
