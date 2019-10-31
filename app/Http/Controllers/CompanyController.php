@@ -32,8 +32,10 @@ class CompanyController extends AppBaseController
         $this->companyRepository->pushCriteria(new RequestCriteria($request));
         $companies = $this->companyRepository->all();
 
-        return view('companies.index')
-            ->with('companies', $companies);
+        return $companies->toJson();
+        
+        // return view('companies.index')
+        //     ->with('companies', $companies);
     }
 
     /**

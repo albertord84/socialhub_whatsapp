@@ -205,14 +205,10 @@
                     .then(response => {
                         this.rows = [];
                         var This=this;
-                        response.data.forEach(function(item, i){
-                            var obj = item.user;
-                            obj.created_at = item.created_at;
-                            obj.deleted_at = item.deleted_at;
-                            obj.updated_at = item.updated_at;
-                            This.rows.push(obj);
-                            //TODO-JR: adicionar o nome do status a cada registro
-                        });
+                        // response.data.forEach(function(item, i){
+                        //     var obj = item.user;
+                        //     This.rows.push(obj);
+                        // });
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os vendedores");   

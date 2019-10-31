@@ -14,72 +14,12 @@
     </div>
 </template>
 <script>
-    /**
-     * These are the files that enable you to change layouts and other options
-     */
-
-    /**
-     * import preloader
-     * choose from preloader and bounce
-     */
     import preloader from 'components/layouts/preloader/preloader'
-
-    /**
-     * The right side content
-     */
     import right_side from 'components/layouts/right-side'
-
-    /**
-     * import left-side from default or horizontal-menu or mini-menu
-     * eg: import left_side from 'components/layouts/left-side/horizontal-menu/left-side'
-     */
-    // import left_side from 'components/layouts/left-side/horizontal-menu/left-side'
-    // import left_side from 'components/layouts/left-side/mini-menu/left-side'
     import left_side_seller from 'components/layouts/left-side/default/left-side-seller'
-
-    /**
-     * import from header or fixed-header or no-header
-     */
     import vueadmin_header_admin from 'components/layouts/header/fixed-header-admin'
-
-    /**
-     * Styles
-     */
-
-    /**
-     * Main stylesheet for the layout
-     */
     import 'resources/sass/custom.scss'
-
-    /**
-     * Style required for a boxed layout
-     */
-    // import 'components/layouts/css/boxed.scss'
-
-    /**
-     * Style required for a fixed-menu layout
-     */
-    import 'components/layouts/css/fixed-menu.scss'
-
-    /**
-     * Style required for a compact-menu layout
-     */
-//     import 'components/layouts/css/compact-menu.scss'
-
-    /**
-     * Style required for a centered-logo layout
-     */
-    // import 'components/layouts/css/centered-logo.scss'
-
-    /**
-     * Style required for a content-menu layout
-     */
-    // import 'components/layouts/css/content_menu.scss'
-
-
-    /**
-     * import animejs for the menu transition effects
-     */
+    import 'components/layouts/css/fixed-menu.scss'    
     import anime from 'animejs'
 
     export default {

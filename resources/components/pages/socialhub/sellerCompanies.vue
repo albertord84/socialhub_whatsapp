@@ -18,7 +18,7 @@
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddSellers = !modalAddSellers" title="Novo empresa">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
@@ -36,9 +36,8 @@
                                 {{ collect(row, column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeSellers(row)"><i class='fa fa-headphones text-dark mr-3'></i></a>
-                                <a class="text-18" href="javascript:void(0)" @click.prevent="actionEditSellers(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" @click.prevent="actionDeleteSellers(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-ban text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -75,19 +74,19 @@
             </div>
         </div>
 
-        <!-- Add Sellers Modal -->
-        <b-modal v-model="modalAddSellers" size="lg" :hide-footer="true" title="Novo empresa">
-            <sellerCRUDCompanies :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
+        <!-- Add Companies Modal -->
+        <b-modal v-model="modalAddCompanies" size="lg" :hide-footer="true" title="Nova empresa">
+            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
-        <!-- Edit Sellers Modal -->
-        <b-modal v-model="modalEditSellers" size="lg" :hide-footer="true" title="Editar empresa">
-            <sellerCRUDCompanies :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
+        <!-- Edit Companies Modal -->
+        <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa">
+            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
-        <!-- Delete Sellers Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteSellers" :hide-footer="true" title="Verificação de exclusão">
-            <sellerCRUDCompanies :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
+        <!-- Delete Companies Modal -->
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteCompanies" :hide-footer="true" title="Verificação de cancelamento">
+            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
         </b-modal>
 
     </div>
@@ -131,21 +130,22 @@
         data() {
             return {
                 //---------General properties-----------------------------
-                first_url:'users',  //route to controller
-                url:'usersSellers',  //route to controller
+                companies_url:'companies',  //route to controller
+                users_url:'users',  //route to controller
+                usersManager_url:'usersManagers',  //route to controller
                 
                 // model:{},
                 //---------Specific properties-----------------------------
-                Sellers_id: "",
+                companies_id: "",
                 model:{},
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
 
                 //---------Show Modals properties-----------------------------
-                modalAddSellers: false,
-                modalEditSellers: false,
-                modalDeleteSellers: false,
+                modalAddCompanies: false,
+                modalEditCompanies: false,
+                modalDeleteCompanies: false,
 
                 //---------Externals properties-----------------------------
 
@@ -153,35 +153,33 @@
                 rows:[],
                 columns: [
                     {
-                        label: 'Status',
-                        field: 'status_id',
-                        // field: 'status_name',
-                        numeric: true, 
-                        width: "90px",
-                        html: false,
-                    },{
-                        label: 'Login', 
-                        field: 'login', 
+                        label: 'Nome', 
+                        field: 'name', 
                         numeric: false, 
                         html: false, 
                     },{
-                        label: 'Nome completo', 
-                        field: 'name', 
+                        label: 'CNPJ', 
+                        field: 'CNPJ', 
                         numeric: false, 
                         html: false,                     
-                    }, {
-                        label: 'Email',
-                        field: 'email',
-                        numeric: false,
-                        html: false,
                     }, {
                         label: 'Telefone',
                         field: 'phone',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'CPF',
-                        field: 'CPF',
+                        label: 'Email',
+                        field: 'email',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'Descrição',
+                        field: 'description',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'Manager',
+                        field: 'manager_name',
                         numeric: false,
                         html: false,
                     }, {
@@ -200,18 +198,22 @@
         },
 
         methods: {  
-            getSellers: function() { //R
-                ApiService.get(this.url)
+            getCompanies: function() { //R
+                ApiService.get(this.companies_url)
                     .then(response => {
-                        this.rows = [];
-                        var This=this;
+                        this.rows = response.data;
+                        var This = this;
                         response.data.forEach(function(item, i){
-                            var obj = item.user;
-                            obj.created_at = item.created_at;
-                            obj.deleted_at = item.deleted_at;
-                            obj.updated_at = item.updated_at;
-                            This.rows.push(obj);
-                            //TODO-JR: adicionar o nome do status a cada registro
+                            //TODO-JR: pegar o nome do gerente e adicionar para mostrar na tabela
+
+                            // if(item.status)
+                            //     item.status_name = item.status.name;
+                            // var name = "";
+                            // item.contact_atendant_id = 0;
+                            // if(item.latestAttendant){
+                            //     item.attendant_name = item.latestAttendant.user.name;
+                            //     item.contact_atendant_id = item.latestAttendant.user.id;
+                            // }
                         });
                     })
                     .catch(function(error) {
@@ -220,29 +222,29 @@
             }, 
 
             reloadDatas(){
-                this.getSellers();
+                this.getCompanies();
             },
             
             closeModals(){
-                this.modalAddSellers = false;
-                this.modalEditSellers = false;
-                this.modalDeleteSellers = false;
+                this.modalAddCompanies = false;
+                this.modalEditCompanies = false;
+                this.modalDeleteCompanies = false;
             },
 
-            actionSeeSellers: function(value){
+            actionSeeCompanies: function(value){
                 this.model = value;
             },
 
-            actionEditSellers: function(value){
+            actionEditCompanies: function(value){
                 this.model = value;
-                this.Sellers_id = value.id;
-                this.modalEditSellers = !this.modalEditSellers;
+                this.companies_id = value.id;
+                this.modalEditCompanies = !this.modalEditCompanies;
             },
 
-            actionDeleteSellers: function(value){
+            actionDeleteCompanies: function(value){
                 this.model = value;
-                this.Sellers_id = value.id;
-                this.modalDeleteSellers = !this.modalDeleteSellers;
+                this.companies_id = value.id;
+                this.modalDeleteCompanies = !this.modalDeleteCompanies;
             },
 
             //------ Specific DataTable methods------------
@@ -343,7 +345,7 @@
         },
 
         beforeMount(){
-            this.getSellers();
+            this.getCompanies();
         },
 
         mounted() {

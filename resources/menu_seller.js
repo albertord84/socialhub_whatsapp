@@ -3,7 +3,7 @@ const menu_items = [{
         link: '/seller',
         icon: ' fa fa-home'
     }, {
-        name: 'Companies',
+        name: 'Empresas',
         link: '/seller/companies',
         icon: 'fa fa-address-book-o'
     }, /*{

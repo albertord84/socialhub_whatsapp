@@ -361,8 +361,6 @@
         }
     }
 </script>
-<!-- styles -->
-<!-- adding scoped attribute will apply the css to this component only -->
 <style src="../../../css/widgets.css" scoped></style>
 <style scoped>
     .swiper-pagination {
