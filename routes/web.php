@@ -36,7 +36,7 @@ Route::resource('roles', 'RoleController');
 Route::resource('users', 'UserController');
 Route::resource('usersManagers', 'UsersManagerController');
 Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
-Route::resource('usersSellers', 'UsersSellerController');
+Route::resource('usersSellers', 'ExtendedUsersSellerController');
 Route::resource('passwordResets', 'PasswordResetController');
 
 Route::resource('contacts', 'ExtendedContactController');
@@ -52,3 +52,6 @@ Route::resource('messagesStatuses', 'MessagesStatusController');
 Route::resource('systemConfigs', 'SystemConfigController');
 
 Route::resource('chats', 'ExtendedChatController');
+
+
+Route::resource('test', 'TestController');

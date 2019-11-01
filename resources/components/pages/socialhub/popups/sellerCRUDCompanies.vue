@@ -2,6 +2,30 @@
     <div>
         <b-container fluid>                
             <form v-show="action!='delete'"> 
+                <div class="pb-5">
+                    <h3>Dados do manager da empresa</h3>
+                    <div class="row">
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-user form-control-feedback"></span>
+                            <input v-model="model_manager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model_manager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model_manager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-phone form-control-feedback"></span>
+                            <input v-model="model_manager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                        </div>
+                    </div>                
+                </div> 
+                <hr>
                 <div>
                     <h3>Dados da empresa</h3>
                     <div class="row">
@@ -30,30 +54,8 @@
                         </div>                                                                         
                     </div>
                 </div>
-                <hr>
-                <div class="pb-5">
-                    <h3>Dados do manager da empresa</h3>
-                    <div class="row">
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model_manager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="model_manager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="model_manager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model_manager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
-                        </div>
-                    </div>                
-                </div>                
+                
+                               
                 <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addCompany">Adicionar</button>
                     <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateCompany">Atualizar</button>

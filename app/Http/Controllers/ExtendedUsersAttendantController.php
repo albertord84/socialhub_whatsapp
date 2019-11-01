@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUsersAttendantRequest;
 use App\Http\Requests\UpdateUsersAttendantRequest;
 use Illuminate\Http\Request;
 use Flash;
@@ -9,7 +10,6 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use Auth;
 
-use App\Http\Requests\CreateUsersAttendantRequest;
 use App\Repositories\ExtendedUsersAttendantRepository;
 
 class ExtendedUsersAttendantController extends UsersAttendantController

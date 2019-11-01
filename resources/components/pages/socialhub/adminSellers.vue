@@ -27,7 +27,10 @@
         <div class="table-responsive">
             <table ref="table" class="table">
                 <thead>
-                    <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
+                    <tr> 
+                        <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th>
+                            <slot name="thead-tr"></slot>
+                        </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
@@ -92,6 +95,7 @@
 
     </div>
 </template>
+
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
@@ -154,34 +158,29 @@
                 columns: [
                     {
                         label: 'Status',
-                        field: 'status_id',
+                        field: 'user.status_id',
                         // field: 'status_name',
                         numeric: true, 
                         width: "90px",
                         html: false,
                     },{
                         label: 'Login', 
-                        field: 'login', 
+                        field: 'user.name', 
                         numeric: false, 
                         html: false, 
                     },{
-                        label: 'Nome completo', 
-                        field: 'name', 
-                        numeric: false, 
-                        html: false,                     
-                    }, {
                         label: 'Email',
-                        field: 'email',
+                        field: 'user.email',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'Telefone',
-                        field: 'phone',
+                        field: 'user.phone',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'CPF',
-                        field: 'CPF',
+                        field: 'user.CPF',
                         numeric: false,
                         html: false,
                     }, {
@@ -203,12 +202,8 @@
             getSellers: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
-                        this.rows = [];
-                        var This=this;
-                        // response.data.forEach(function(item, i){
-                        //     var obj = item.user;
-                        //     This.rows.push(obj);
-                        // });
+                        console.log(response.data);
+                        this.rows = response.data;                       
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os vendedores");   

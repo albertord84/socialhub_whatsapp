@@ -3,8 +3,6 @@
 namespace App\Repositories;
 
 use CreateChatsTable;
-use App\Models\UsersAttendant;
-use InfyOm\Generator\Common\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 /**
  * Class ExtendedUsersAttendantRepository

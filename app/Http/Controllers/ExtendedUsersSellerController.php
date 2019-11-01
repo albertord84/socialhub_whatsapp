@@ -4,19 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUsersSellerRequest;
 use App\Http\Requests\UpdateUsersSellerRequest;
-use App\Repositories\UsersSellerRepository;
-use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use Auth;
 
-class UsersSellerController extends AppBaseController
+use App\Repositories\ExtendedUsersSellerRepository;
+
+class ExtendedUsersSellerController extends UsersSellerController
 {
-    /** @var  UsersSellerRepository */
-    private $usersSellerRepository;
 
-    public function __construct(UsersSellerRepository $usersSellerRepo)
+    public function __construct(ExtendedUsersSellerRepository $usersSellerRepo)
     {
         $this->usersSellerRepository = $usersSellerRepo;
     }
@@ -30,21 +29,11 @@ class UsersSellerController extends AppBaseController
     public function index(Request $request)
     {
         $this->usersSellerRepository->pushCriteria(new RequestCriteria($request));
-        $usersSellers = $this->usersSellerRepository->all();
+        $usersSellers = $this->usersSellerRepository->Sellers_User();
 
-        //return $usersSellers->toJson();
-         return view('users_sellers.index')
-             ->with('usersSellers', $usersSellers);
-    }
-
-    /**
-     * Show the form for creating a new UsersSeller.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('users_sellers.create');
+        return $usersSellers->toJson();
+        // return view('users_sellers.index')
+        //     ->with('usersSellers', $usersSellers);
     }
 
     /**
@@ -63,46 +52,6 @@ class UsersSellerController extends AppBaseController
         Flash::success('Users Seller saved successfully.');
 
         return redirect(route('usersSellers.index'));
-    }
-
-    /**
-     * Display the specified UsersSeller.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        $usersSeller = $this->usersSellerRepository->findWithoutFail($id);
-
-        if (empty($usersSeller)) {
-            Flash::error('Users Seller not found');
-
-            return redirect(route('usersSellers.index'));
-        }
-
-        return view('users_sellers.show')->with('usersSeller', $usersSeller);
-    }
-
-    /**
-     * Show the form for editing the specified UsersSeller.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $usersSeller = $this->usersSellerRepository->findWithoutFail($id);
-
-        if (empty($usersSeller)) {
-            Flash::error('Users Seller not found');
-
-            return redirect(route('usersSellers.index'));
-        }
-
-        return view('users_sellers.edit')->with('usersSeller', $usersSeller);
     }
 
     /**
