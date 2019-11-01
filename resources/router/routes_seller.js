@@ -12,7 +12,7 @@ const layout = [{
             title: "Empresas",
         }
     }, {       
-        path: '/user_profile',
+        path: '/seller/user_profile',
         component: resolve => require(['pages/socialhub/user_profile'], resolve),
         meta: {
             title: "Perfil",

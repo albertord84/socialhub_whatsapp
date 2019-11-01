@@ -62,6 +62,9 @@ class UserController extends AppBaseController
         $input['company_id'] = $User->company_id;
         $input['role_id'] = ExtendedContactsStatusController::ATTENDANT;
 
+        // $this->withoutEvents();
+        // $User->withoutEvents();
+
         $user = $this->userRepository->create($input);
 
         Flash::success('User saved successfully.');
@@ -158,5 +161,9 @@ class UserController extends AppBaseController
         Flash::success('User deleted successfully.');
 
         // return redirect(route('users.index'));
+    }
+
+    static function withoutEvents() {
+
     }
 }

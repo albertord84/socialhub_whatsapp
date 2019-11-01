@@ -22,7 +22,7 @@ var layout = [{
         title: "Empresas"
     }
 }, {
-    path: '/user_profile',
+    path: '/seller/user_profile',
     component: function component(resolve) {
         return __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(188)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
@@ -4967,7 +4967,7 @@ var layout = [{
         title: "Configuração"
     }
 }, {
-    path: '/user_profile',
+    path: '/admin/user_profile',
     component: function component(resolve) {
         return __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(188)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
@@ -5062,7 +5062,7 @@ var layout = [{
         title: "Empresa"
     }
 }, {
-    path: '/user_profile',
+    path: '/manager/user_profile',
     component: function component(resolve) {
         return __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(188)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },

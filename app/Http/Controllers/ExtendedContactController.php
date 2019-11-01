@@ -30,9 +30,6 @@ class ExtendedContactController extends ContactController
     public function index(Request $request)
     {
         try {
-            //TODO-JR-ALBERTO 
-            //get contacts by company_id or by attendant_id
-           
             $User = Auth::check()? Auth::user():session('logged_user');
             $Contacts = $this->contactRepository->all();;
             if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
@@ -41,7 +38,6 @@ class ExtendedContactController extends ContactController
             else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
                 $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, (int)$User->id);
             }
-            //dd($Contacts);
 
             return $Contacts->toJson();
         } catch (\Throwable $th) {

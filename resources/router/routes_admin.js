@@ -18,7 +18,7 @@ const layout = [{
             title: "Configuração",
         }
     }, {
-        path: '/user_profile',
+        path: '/admin/user_profile',
         component: resolve => require(['pages/socialhub/user_profile'], resolve),
         meta: {
             title: "Perfil",

@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
-use App\Repositories\ChatRepository;
+use App\Repositories\ExtendedChatRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
-class ChatController extends AppBaseController
+class ExtendedChatController extends ChatController
 {
     /** @var  ChatRepository */
     private $chatRepository;

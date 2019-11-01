@@ -324,7 +324,7 @@
          data() {
             return {
                 contacts_url: 'contacts',
-                messages_url: 'contacts',
+                chat_url: '',
                 contacts:[],
                 messages:[],
                 index:0,
@@ -348,16 +348,7 @@
         },
         
         methods: {
-            mouseOverMessage(id){
-                document.getElementById(id).classList.remove("message-hout");
-                document.getElementById(id).classList.add("message-hover");
-            },
-
-            mouseLeaveMessage(id){
-                document.getElementById(id).classList.add("message-hout");
-                document.getElementById(id).classList.remove("message-hover");
-            },
-
+            //primary functions
             send_message() {
                 if (this.newmessage.trim() != "") {
                     this.list[this.selected_user_index].messages.push({
@@ -390,6 +381,17 @@
                         miniToastr.error(error, "Error carregando os contatos");   
                     });
             }, 
+
+            //secundary functions
+            mouseOverMessage(id){
+                document.getElementById(id).classList.remove("message-hout");
+                document.getElementById(id).classList.add("message-hover");
+            },
+
+            mouseLeaveMessage(id){
+                document.getElementById(id).classList.add("message-hout");
+                document.getElementById(id).classList.remove("message-hover");
+            },
 
             show_chat(user, index) {
                 this.selected_user_index = index;

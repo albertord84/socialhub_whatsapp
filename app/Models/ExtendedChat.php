@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property integer status_id
  * @property integer socialnetwork_id
  */
-class Chat extends Model
+class ExtendedChat extends Chat
 {
 
     public $table = 'chats';
