@@ -10,9 +10,9 @@ class CreateChatsTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function up()
+	public function up(string $table_name = "chats")
 	{
-		Schema::connection('socialhub_mvp.chats')->create('chats', function(Blueprint $table)
+		Schema::connection('socialhub_mvp.chats')->create($table_name, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->integer('contact_id')->index('fk_chats_contact');
@@ -33,9 +33,9 @@ class CreateChatsTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
+	public function down(string $table_name = "chats")
 	{
-		Schema::connection('socialhub_mvp.chats')->drop('chats');
+		Schema::connection('socialhub_mvp.chats')->drop($table_name);
 	}
 
 }

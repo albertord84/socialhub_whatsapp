@@ -82,138 +82,17 @@
 
         <!-- Add Contact Modal -->
         <b-modal v-model="modalAddContact" size="lg" :hide-footer="true" title="Novo contato">
-            <b-container fluid>                
-                <form>                    
-                    <div class="row">
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model.first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-headphones form-control-feedback"></span>
-                            <select v-model="contact_atendant_id" class="form-control has-search-color" size="1">
-                                <option value="0">Asignar um Atendente agora?</option>
-                                <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="model.email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" id="phone" name="hone" type="text" placeholder="Telefone fixo" class="form-control"/>
-                        </div>                                
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="model.whatsapp_id" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="model.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                                <span class="fa fa-instagram form-control-feedback"></span>
-                                <input v-model="model.instagram_id" id="instagram_id" name="instagram_id" type="text" placeholder="Instagram" class="form-control"/>
-                            </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-linkedin form-control-feedback"></span>
-                            <input v-model="model.linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group">
-                            <textarea v-model="model.summary" @keyup="countLengthSumary" name="summary" id="new_summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
-                            <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
-                        </div>
-                        <div class="col-lg-6 form-group">
-                            <textarea v-model="model.remember" @keyup="countLengthRemember" name="remember" id="new_remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
-                            <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 m-t-25 text-center">
-                        <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContact">Adicionar</button>
-                        <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalAddContact=!modalAddContact;formReset">Cancelar</button>
-                    </div>
-                </form> 
-            </b-container>
+            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"insert"' :attendants='attendants' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>
         </b-modal>
 
         <!-- Edit Contact Modal -->
         <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar contato">
-            <b-container fluid>                
-                <form>                    
-                    <div class="row">
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model.first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-headphones form-control-feedback"></span>
-                            <select v-model="contact_atendant_id" class="form-control has-search-color" size="1">
-                                <option value="0">Asignar um Atendente agora?</option>
-                                <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.user_id" :title="attendant.email">{{attendant.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="model.email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
-                        </div>                                
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="model.whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="model.facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                                <span class="fa fa-instagram form-control-feedback"></span>
-                                <input v-model="edit_instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
-                            </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-linkedin form-control-feedback"></span>
-                            <input v-model="model.linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 form-group">
-                            <textarea v-model="model.summary" @keyup="countLengthEditSumary" name="decription" id="decription" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
-                            <label class="form-group has-search-color" for="form-group">{{edit_summary_length}}/500</label>
-                        </div>
-                        <div class="col-lg-6 form-group">
-                            <textarea v-model="model.remember" @keyup="countLengthEditRemember" name="decription" id="decription" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="4"></textarea>
-                            <label class="form-group has-search-color" for="form-group">{{edit_remember_length}}/500</label>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 m-t-25 text-center">
-                        <button type="submit" class="btn btn-primary btn_width" @click.prevent="updateContact">Atualizar</button>
-                        <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalEditContact=!modalEditContact;formReset">Cancelar</button>
-                    </div>
-                </form> 
-            </b-container>
+            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"edit"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
         <!-- Delete Contact Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="false" title="Verificação de exclusão">
-            Tem certeza que deseja eliminar o contato?
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
     </div>
@@ -223,18 +102,13 @@
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
+    import managerCRUDContact from "./popups/managerCRUDContact";
 
     export default {
         props: {
             title: {
                 default: ""
             },
-            // columns: {
-            //     required: true
-            // },
-            // rows: {
-            //     required: true
-            // },
             perPage: {
                 default: 10
             },
@@ -256,46 +130,31 @@
         },
 
         components:{
+            managerCRUDContact
         },
 
         data() {
             return {
                 //---------General properties-----------------------------
                 url:'contacts',  //route to controller
+                secondUrl:'attendantsContacts',
+                url_attendants:'usersAttendants',  //route to controller
                 
                 //---------Specific properties-----------------------------
                 contact_id: "",
-                contact_atendant_id:"",
-
-                model:{
-                    firt_name: "",
-                    last_name: "",
-                    phone: "",
-                    email: "",
-                    description: "",
-                    remember: "",
-                    summary: "",
-                    whatsapp_id: "",
-                    facebook_id: "",
-                    instagram_id: "",
-                    linkedin_id: "",
-                },
-                
+                contact_atendant_id: 0,
+                model:{},
                 //---------New record properties-----------------------------
-                new_summary_length:0,
-                new_remember_length:0,
-
+                
                 //---------Edit record properties-----------------------------
-                edit_summary_length:0,
-                edit_remember_length:0,
-
+                
                 //---------Show Modals properties-----------------------------
                 modalAddContact: false,
                 modalEditContact: false,
                 modalDeleteContact: false,
 
                 //---------Externals properties-----------------------------
-                attendants:[],
+                attendants:null,
 
                 //---------DataTable properties-----------------------------
                 rows:[],
@@ -323,7 +182,7 @@
                         html: false,
                     }, {
                         label: 'Atendente',
-                        field: 'attendant_id',
+                        field: 'attendant_name',
                         numeric: false,
                         html: false,
                     }, {
@@ -342,30 +201,20 @@
         },
 
         methods: {  
-            //------ CRUD Contacts methods------------------------
-            addContact: function() { //C
-                //TODO-JR: onde enviar o possivel contact_atendant_id, na url ou nos parametros?
-                ApiService.post(this.url,this.model)
-                .then(response => {
-                    miniToastr.success("Contato adicionado com sucesso","Sucesso");
-                    this.formReset();
-                    this.modalAddContact=!this.modalAddContact
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando contato");  
-                });
-            },
-           
             getContacts: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
                         this.rows = response.data;
-                        console.log(this.rows);
                         var This=this;
                         response.data.forEach(function(item, i){
-                            item.status_name = item.status.name;
-                            //TODO-JR: adicionar o nome do atendente atual a cada contato
+                            if(item.status)
+                                item.status_name = item.status.name;
+                            var name = "";
+                            item.contact_atendant_id = 0;
+                            if(item.latestAttendant){
+                                item.attendant_name = item.latestAttendant.user.name;
+                                item.contact_atendant_id = item.latestAttendant.user.id;
+                            }
                         });
                     })
                     .catch(function(error) {
@@ -373,37 +222,14 @@
                     });
             }, 
 
-            editContact: function(contact) { //U
-                this.contact_id = contact.id;
-                this.model = contact;
-                this.contact_atendant_id =  this.contact_atendant_id !="" ? this.contact_atendant_id : "0";
-                this.modalEditContact = !this.modalEditContact;
+            reloadDatas(){
+                this.getContacts();
             },
-
-            updateContact: function() { //U
-            //TODO-JR: onde enviar o possivel contact_atendant_id, na url ou nos parametros?
-                ApiService.post(this.url+'/'+this.contact_id+'/'+this.contact_atendant_id,this.model)
-                .then(response => {                
-                    miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                    this.formReset();
-                    this.modalEditContact=!this.modalEditContact
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error);  
-                    miniToastr.error(error, "Erro atualizando contato"); 
-                });
-            },
-
-            deleteContact: function(contact) { //D
-                ApiService.delete(this.url+'/'+contact.id)
-                    .then(response => {
-                        this.getContacts();
-                        miniToastr.success("Contato eliminado com sucesso","Sucesso");
-                    })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando o contato"); 
-                    });                
+            
+            closeModals(){
+                this.modalAddContact = false;
+                this.modalEditContact = false;
+                this.modalDeleteContact = false;
             },
 
             actionSeeContact: function(value){
@@ -411,74 +237,37 @@
             },
 
             actionEditContact: function(value){
-                this.editContact(value);
+                this.model = value;
+                this.contact_id = value.id;
+                // this.contact_atendant_id = value.contact_atendant_id;
+                this.modalEditContact = !this.modalEditContact;
             },
 
             actionDeleteContact: function(value){
-                this.deleteContact(value);
+                this.model = value;
+                this.contact_id = value.id;
+                this.modalDeleteContact = !this.modalDeleteContact;
             },
 
-            //------ auxiliary methods--------------------
-            countLengthSumary: function(){
-                this.new_summary = this.new_summary.length > 500 ? this.new_summary.substring(0, 500) : this.new_summary;
-                this.new_summary_length = this.new_summary.length;                    
-            },
-
-            countLengthRemember: function(){
-                this.new_remember = this.new_remember.length > 500 ? this.new_remember.substring(0, 500) : this.new_remember;
-                this.new_remember_length = this.new_remember.length;
-            },
-
-            countLengthEditSumary: function(){
-                this.edit_summary = this.edit_summary.length > 500 ? this.edit_summary.substring(0, 500) : this.edit_summary;
-                this.edit_summary_length = this.edit_summary.length;
-            },
-
-            countLengthEditRemember: function(){
-                this.edit_remember = this.edit_remember.length > 500 ? this.edit_remember.substring(0, 500) : this.edit_remember;
-                this.edit_remember_length = this.edit_remember.length;
-            },
-
-            formReset:function(){
-                this.model.first_name = "";
-                this.model.last_name = "";
-                this.model.email = "";
-                this.model.description = "";
-                this.model.remember = "";
-                this.model.summary = "";
-                this.model.phone = "";
-                this.model.whatsapp_id = "";
-                this.model.facebook_id = "";
-                this.model.instagram_id = "";
-                this.model.linkedin_id = "";
-            },
-
-            exportExcel() {
-                const mimeType = 'data:application/vnd.ms-excel';
-                const html = this.renderTable().replace(/ /g, '%20');
-
-                const d = new Date();
-
-                var dummy = document.createElement('a');
-                dummy.href = mimeType + ', ' + html;
-                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
-                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
-                    '.xls';
-                dummy.click();
-            },
-            
             //------ externals methods--------------------
             getAttendantList: function() { //R
-                var url = "usersAttendants";
-                this.attendants = [];
-                ApiService.get(url)
+                ApiService.get(this.url_attendants)
                     .then(response => {
-                        this.attendants = response.data;
+                        this.attendants = [];
+                        var This=this;
+                        response.data.forEach(function(item, i){
+                            var obj = item.user;
+                            obj.created_at = item.created_at;
+                            obj.deleted_at = item.deleted_at;
+                            obj.updated_at = item.updated_at;
+                            This.attendants.push(obj);
+                            //TODO-JR: adicionar o nome do status a cada registro
+                        });
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os Atendentes");   
+                        miniToastr.error(error, "Error carregando os atendentes");   
                     });
-            },
+            }, 
 
             //------ Specific DataTable methods------------
             nextPage() {
@@ -505,6 +294,20 @@
 
             click(row, index) {
                 this.$emit("rowClick", row, index);
+            },
+
+            exportExcel() {
+                const mimeType = 'data:application/vnd.ms-excel';
+                const html = this.renderTable().replace(/ /g, '%20');
+
+                const d = new Date();
+
+                var dummy = document.createElement('a');
+                dummy.href = mimeType + ', ' + html;
+                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
+                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
+                    '.xls';
+                dummy.click();
             },
 
             renderTable() {
@@ -564,8 +367,8 @@
         },
 
         beforeMount(){
+            this.getAttendantList();
             this.getContacts();
-            // this.getAttendantList();
         },
 
         mounted() {

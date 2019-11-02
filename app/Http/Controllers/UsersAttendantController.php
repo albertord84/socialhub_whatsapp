@@ -142,19 +142,19 @@ class UsersAttendantController extends AppBaseController
      * @return Response
      */
     public function destroy($id)
-    {
+    {   
         $usersAttendant = $this->usersAttendantRepository->findWithoutFail($id);
-
+        
         if (empty($usersAttendant)) {
             Flash::error('Users Attendant not found');
-
+            
             return redirect(route('usersAttendants.index'));
         }
-
+        
         $this->usersAttendantRepository->delete($id);
-
+        
         Flash::success('Users Attendant deleted successfully.');
-
-        return redirect(route('usersAttendants.index'));
+        
+        // return redirect(route('usersAttendants.index'));
     }
 }

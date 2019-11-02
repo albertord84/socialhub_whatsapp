@@ -29,24 +29,7 @@ class ContactController extends AppBaseController
      */
     public function index(Request $request)
     {
-        try {
-            // dd(UsersAttendant::with('User')->find(3));
-            //TODO-JR-ALBERTO 
-            //get contacts by company_id or by attendant_id
-            $User = Auth::check()? Auth::user():session('logged_user');
-            $Contacts = $this->contactRepository->all();;
-            if ($User->role_id == ContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts($User->company_id, null);
-            } 
-            else if ($User->role_id == ContactsStatusController::ATTENDANT) {
-                $Contacts = $this->contactRepository->fullContacts($User->company_id, (int)$User->id);
-            }
-            dd($Contacts);
-
-            return $Contacts->toJson();
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+        die("Alberto: Has to use ExtendedContactController->index() intead ContactController->index()");
     }
 
     /**
@@ -68,22 +51,7 @@ class ContactController extends AppBaseController
      */
     public function store(CreateContactRequest $request)
     {
-        $input = $request->all();
-
-        //TODO-JR-ALBERTO: um contato pode ser criado por:
-            //um robot: manda para sacola
-            //um admin desde CVS: vai para sacola
-            //um atendente: deve ser inserido com o Id do atendente que esta na sessão
-            //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente: 
-            // onde devo enviar o contact_atendant_id, por url ou nos dados? 
-        $contact = $this->contactRepository->create($input);
-
-        // TODO: Create Contact Chat Table
-        //
-
-        Flash::success('Contact saved successfully.');
-
-        return redirect(route('contacts.index'));
+        die("Alberto: Has to use ExtendedContactController->store() intead ContactController->store()");
     }
 
     /**
@@ -136,6 +104,7 @@ class ContactController extends AppBaseController
      */
     public function update($id, UpdateContactRequest $request)
     {
+        dd(request);
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:

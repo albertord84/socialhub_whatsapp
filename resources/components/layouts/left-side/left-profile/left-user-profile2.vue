@@ -12,7 +12,7 @@
                     <div class="row text-center">
                         <div class="col-md-3"></div>
                         <div class="col-md-2">
-                            <a href="#/user_profile" title="Perfil"><i class="fa fa-user-o"></i></a>
+                            <a :href='link+"/user_profile"' title="Perfil"><i class="fa fa-user-o"></i></a>
                         </div>
                         <div class="col-md-2">
                             <a href="#/lockscreen" title="Bloquear"><i class="fa fa-lock" aria-hidden="true"></i></a>
@@ -37,7 +37,8 @@ export default {
     return {
       user: {},
       email: "",
-      name: ""
+      name: "",
+      link:''
     };
   },
 
@@ -57,7 +58,31 @@ export default {
       this.email = JSON.parse(this.user)["email"];
     }
   },
-  mounted: function() {},
+
+  mounted() {
+      var logged_user = JSON.parse(localStorage.user);
+      var link;
+      switch(logged_user.role_id) {
+          case 1: /*ADMIN*/ 
+              link = "admin";
+              break;
+          case 2: /*SELLER*/ 
+              link = "seller";
+              break;
+          case 3: /*MANAGER*/ 
+              link = "manager";
+              break;
+          case 4: /*ATTENDANT*/ 
+              link = "attendant";
+              break;
+          case 5: /*VISITOR*/ 
+              link = "visitor";
+              break;
+          default:
+              link = "login";
+      }
+  },
+
   destroyed: function() {}
 };
 </script>

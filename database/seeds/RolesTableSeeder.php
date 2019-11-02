@@ -17,27 +17,38 @@ class RolesTableSeeder extends Seeder
         DB::table('roles')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->command->info('Create Users Roles:');
+        $this->command->info('Creating Users Roles:');
+
         Role::create([
             'id' => '1',
             'name' => 'ADMIN',
             'description' => 'Role Admin',
         ]);
         $this->command->info('Role ADMIN');
+
         Role::create([
             'id' => '2',
+            'name' => 'SELLER',
+            'description' => 'Role SELLER',
+        ]);
+        $this->command->info('Role SELLER');
+
+        Role::create([
+            'id' => '3',
             'name' => 'MANAGER',
             'description' => 'Role MANAGER',
         ]);
         $this->command->info('Role MANAGER');
+
         Role::create([
-            'id' => '3',
+            'id' => '4',
             'name' => 'ATTENDANT',
             'description' => 'Role ATTENDANT',
         ]);
         $this->command->info('Role ATTENDANT');
+
         Role::create([
-            'id' => '4',
+            'id' => '5',
             'name' => 'VISITOR',
             'description' => 'Role VISITOR',
         ]);

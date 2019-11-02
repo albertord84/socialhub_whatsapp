@@ -26,7 +26,7 @@ class StatusTableSeeder extends Seeder
     }
 
     function CreateMessagesStatus() {
-        $this->command->info('Create Users MessagesStatus:');
+        $this->command->info('Creating Users MessagesStatus:');
         MessagesStatus::create([
             'id' => '1',
             'name' => 'ACTIVE',
@@ -36,17 +36,24 @@ class StatusTableSeeder extends Seeder
     }
 
     function CreateContactsStatus() {
-        $this->command->info('Create Users ContactsStatus:');
+        $this->command->info('Creating Users ContactsStatus:');
         ContactsStatus::create([
             'id' => '1',
             'name' => 'ACTIVE',
             'description' => 'ContactsStatus ACTIVE',
         ]);
         $this->command->info('ContactsStatus ACTIVE');
+        
+        ContactsStatus::create([
+            'id' => '2',
+            'name' => 'UNASSIGNED',
+            'description' => 'Contact not assigned to attendant yet',
+        ]);
+        $this->command->info('ContactsStatus ACTIVE');
     }
 
     function CreateUsersStatus() {
-        $this->command->info('Create Users UsersStatus:');
+        $this->command->info('Creating Users UsersStatus:');
         UsersStatus::create([
             'id' => '1',
             'name' => 'ACTIVE',

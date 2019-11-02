@@ -49,5 +49,18 @@ class ContactsTableSeeder extends Seeder
             'status_id' => 1,
         ]);
         $this->command->info('Contact Marcos Medina');
+        
+        for( $i=4;$i<14;$i++){
+            Contact::create([
+                'id' => $i,
+                'company_id' => 1,
+                'first_name' => 'name_'.$i,
+                'last_name' => 'surename_'.$i,
+                'email' => 'authomatic_'.$i.'@gmail.com',
+                'whatsapp_id' => '5511970111071_'.$i,
+                'status_id' => 1,
+            ]);
+            $this->command->info('Created authomatic contact name_'.$i);
+        }
     }
 }

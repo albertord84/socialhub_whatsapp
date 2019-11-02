@@ -83,13 +83,13 @@
                 <div  class="col-lg-12">
                     <div v-show="show_sumary==true" class="form-group">
                         <textarea v-model="model.summary" @keyup="countLengthSumary" name="summary" id="summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="3"></textarea>
-                        <label class="form-group has-search-color" for="form-group">{{new_summary_length}}/500</label>
+                        <label class="form-group has-search-color" for="form-group">{{summary_length}}/500</label>
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div v-show="show_remember==true" class="form-group">
                         <textarea v-model="model.remember" @keyup="countLengthRemember" name="remember" id="remember" placeholder="Adicione um lembrete ..." class="form-control" cols="30" rows="3"></textarea>
-                        <label class="form-group has-search-color" for="form-group">{{new_remember_length}}/500</label>
+                        <label class="form-group has-search-color" for="form-group">{{remember_length}}/500</label>
                     </div>
                 </div>
                 <div class="col-lg-12 mt-2 text-center">
@@ -103,7 +103,7 @@
     import Vue from 'vue';
     import VueForm from "vue-form";
     import options from "src/validations/validations.js";
-    import ApiService from "resources/common/api.service";
+    import ApiService from "resources/common/api.service";    
     import miniToastr from "mini-toastr";
     miniToastr.init();
 
@@ -114,13 +114,13 @@
             return {
                 //---------General properties-----------------------------
                 url:'contacts',  //route to controller
+                secondUrl:'attendantsContacts',  //route to controller
                 
                 //---------Specific properties-----------------------------
                 contact_id: "",
 
                 //---------New record properties-----------------------------
                 model:{
-                    //id: 4, //no debo pasar eso
                     first_name: "",
                     last_name: "",
                     phone: "",
@@ -132,9 +132,10 @@
                     facebook_id: "",
                     instagram_id: "",
                     linkedin_id: "",
-                    summary_length:0,
-                    remember_length:0,
                 },
+
+                summary_length:0,
+                remember_length:0,
 
                 show_sumary:false,
                 show_remember:false,
@@ -147,44 +148,65 @@
         },
         methods: {
             addContact: function () {
-                if (this.formstate.$invalid) {
+                if(this.formstate.$invalid || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                    miniToastr.error(error, "Alguns dados incompletos");  
                     return;
-                } else {
-                    ApiService.post(this.url, this.model)
-                    .then(data => {
-                        miniToastr.success("Contato adicionado com sucesso","Sucesso");
-                        this.formReset();
-                        this.toggle_left('close');
-                    })
-                    .catch(error => {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando contato");  
-                    });
                 }
+                this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
+                this.model.status_id = 1;
+                this.contact_atendant_id = JSON.parse(localStorage.user).id;
+                ApiService.post(this.url,this.model)
+                .then(response => {
+                    if (this.contact_atendant_id) {
+                        ApiService.post(this.secondUrl,{
+                            'id':1, //TODO: el id debe ser autoincremental, no devo estar mandandolo
+                            'contact_id':response.data.id,
+                            'attendant_id':this.contact_atendant_id,
+                        })
+                        .then(response => {
+                            miniToastr.success("Contato adicionado com sucesso","Sucesso");
+                            this.formReset();
+                            this.toggle_left('close');
+                            this.reload();
+                        })
+                        .catch(function(error) {
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro adicionando contato");  
+                        });
+                    }else{
+                        miniToastr.success("Contato adicionado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
+                    }
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro adicionando contato");  
+                });
             },
 
             formReset:function(){
-                this.new_first_name = "";
-                this.new_last_name = "";
-                this.new_email = "";
-                this.new_description = "";
-                this.new_remember = "";
-                this.new_summary = "";
-                this.new_phone = "";
-                this.new_whatsapp_id = "";
-                this.new_facebook_id = "";
-                this.new_instagram_id = "";
-                this.new_linkedin_id = "";
+                this.model.first_name = "";
+                this.model.last_name = "";
+                this.model.email = "";
+                this.model.description = "";
+                this.model.remember = "";
+                this.model.summary = "";
+                this.model.phone = "";
+                this.model.whatsapp_id = "";
+                this.model.facebook_id = "";
+                this.model.instagram_id = "";
+                this.model.linkedin_id = "";
             },
 
             countLengthSumary: function(){
-                this.new_summary = this.new_summary.length > 500 ? this.new_summary.substring(0, 500) : this.new_summary;
-                this.new_summary_length = this.new_summary.length;                    
+                this.model.summary = this.model.summary.length > 500 ? this.model.summary.substring(0, 500) : this.model.summary;
+                this.summary_length = this.model.summary.length;                    
             },
 
             countLengthRemember: function(){
-                this.new_remember = this.new_remember.length > 500 ? this.new_remember.substring(0, 500) : this.new_remember;
-                this.new_remember_length = this.new_remember.length;
+                this.model.remember = this.model.remember.length > 500 ? this.model.remember.substring(0, 500) : this.model.remember;
+                this.remember_length = this.model.remember.length;
             },
 
             toggle_left(action) {

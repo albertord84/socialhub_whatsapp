@@ -139,13 +139,16 @@
                                 case 1: /*ADMIN*/ 
                                     link = "admin";
                                     break;
-                                case 2: /*MANAGER*/ 
+                                case 2: /*SELLER*/ 
+                                    link = "seller";
+                                    break;
+                                case 3: /*MANAGER*/ 
                                     link = "manager";
                                     break;
-                                case 3: /*ATTENDANT*/ 
+                                case 4: /*ATTENDANT*/ 
                                     link = "attendant";
                                     break;
-                                case 4: /*VISITOR*/ 
+                                case 5: /*VISITOR*/ 
                                     link = "visitor";
                                     break;
                                 default:

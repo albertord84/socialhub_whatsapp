@@ -61,7 +61,7 @@ class AttendantsContactController extends AppBaseController
 
         Flash::success('Attendants Contact saved successfully.');
 
-        return redirect(route('attendantsContacts.index'));
+        // return redirect(route('attendantsContacts.index'));
     }
 
     /**

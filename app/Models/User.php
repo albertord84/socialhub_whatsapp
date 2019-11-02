@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class User
@@ -34,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer role_id
  * @property integer status_id
  */
+
 class User extends Model
 // class User extends Authenticatable implements JWTSubject
 {
@@ -146,4 +149,5 @@ class User extends Model
     {
         return [];
     }
+
 }

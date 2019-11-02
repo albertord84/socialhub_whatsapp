@@ -2,13 +2,13 @@ const layout = [
     {
         path: '/attendant',
         name: 'attendant',
-        component: resolve => require(['pages/socialhub/index'], resolve),
+        component: resolve => require(['pages/socialhub/attendantDashboard'], resolve),
         meta: {
             title: "Dashboard",
         }
     }, {
         path: '/attendant/chat',
-        component: resolve => require(['pages/socialhub/attendantChat'], resolve),
+        component: resolve => require(['pages/socialhub/attendantChatLarge'], resolve),
         meta: {
             title: "Chat",
         }
