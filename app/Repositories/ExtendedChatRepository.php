@@ -6,17 +6,14 @@ use App\Models\ExtendedChat;
 class ExtendedChatRepository extends ChatRepository
 {    
     //aqui vamos a tener que modificar la modelo tambien para coger la tabla chat del id del atendente
-    
-    public function model()
-    {
-        return ExtendedChat::class;
-    }
-
 
     public function contactChat(int $attendant_id): Collection{
-        $this->table = $attendant_id;
-        $Chat = UsersAttendant::with('AttendantsContacts')->find($attendant_id);   /// NOOOOOOOO
-	    $this->model()::with(...) //// THIS WAY
+        $chatModel = $this->model();
+        $chatModel->table = (string)$attendant_id;
+
+        $chatModel->model::with(...) //// THIS WAY
+        
+        // $Chat = UsersAttendant::with('AttendantsContacts')->find($attendant_id);   /// NOOOOOOOO
 
         // $Chat = UsersAttendant::with('AttendantsContacts')->find($attendant_id);
         // $Chat = new Collection();
@@ -27,4 +24,13 @@ class ExtendedChatRepository extends ChatRepository
         //     }
         return $Chat;
     }
+
+    /**
+     * Configure the Model
+     **/
+    public function model()
+    {
+        return ExtendedChat::class;
+    }
+
 }

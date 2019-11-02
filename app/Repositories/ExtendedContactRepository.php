@@ -19,8 +19,13 @@ class ExtendedContactRepository extends ContactRepository
             foreach ($Attentand['AttendantsContacts'] as $key => $AttendantsContact) {
                 $AttendantsContactContact = $AttendantsContact->with('Contact')->find($AttendantsContact->id);
                 $AttendantsContactContactStatus = $AttendantsContactContact['Contact']->with('Status')->find($AttendantsContactContact->contact_id);
+
+                // TODO Alberto: carregar aqui a pagina mais recente de conversas para cada um dos contatos
+                // $contactLastMessage
+                // $countUnreadMessages
+
                 $Contacts[$key] = $AttendantsContactContactStatus;
-                // TODO: carregar aqui a pagina mais recente de conversas para cada um dos contatos
+                // $Contacts[$key] = 
             }
         }
         else {
