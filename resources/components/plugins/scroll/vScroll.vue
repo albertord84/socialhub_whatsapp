@@ -76,7 +76,6 @@ export default {
         },
 
         scrolltobottom() {
-            console.log(this.$refs.content.scrollHeight);
             this.$refs.content.scrollTop = this.$refs.content.scrollHeight;
         }
     }
