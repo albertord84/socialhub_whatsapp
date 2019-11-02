@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\ExtendedUsersSellerRepository;
-use Illuminate\Http\Request;
-use Response;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use RuntimeException;
 
 class TestController extends AppBaseController
 {
@@ -25,6 +25,8 @@ class TestController extends AppBaseController
 
     public function index()
     {
+
+        Bugsnag::notifyException(new RuntimeException("Test error"));
 
         $Controller = new ExtendedUsersSellerController($this->repository);
 
