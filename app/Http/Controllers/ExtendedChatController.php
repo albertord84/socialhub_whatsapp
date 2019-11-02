@@ -5,55 +5,42 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Repositories\ExtendedChatRepository;
-use App\Http\Controllers\AppBaseController;
+
 use Illuminate\Http\Request;
 use Flash;
 use Response;
 
 class ExtendedChatController extends ChatController
 {
-    /** @var  ChatRepository */
-    private $chatRepository;
 
-    public function __construct(ChatRepository $chatRepo)
+    public function __construct(ExtendedChatRepository $chatRepo)
     {
         $this->chatRepository = $chatRepo;
     }
 
     /**
      * Display a listing of the Chat.
-     *
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request){
+        //em $request->id deve vir o id do contato e a pagina de busca (que por default 0 é a mais recente)
+        $User = Auth::check()? Auth::user():session('logged_user');
         $this->chatRepository->pushCriteria(new RequestCriteria($request));
-        $chats = $this->chatRepository->all();
+        $chats = $this->chatRepository->contactChat($User->id);
+        return $chats->toJson();
 
-        return view('chats.index')
-            ->with('chats', $chats);
-    }
-
-    /**
-     * Show the form for creating a new Chat.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('chats.create');
+        // $chats = $this->chatRepository->all();
+        // return view('chats.index')
+        //     ->with('chats', $chats);
     }
 
     /**
      * Store a newly created Chat in storage.
-     *
      * @param CreateChatRequest $request
-     *
      * @return Response
      */
-    public function store(CreateChatRequest $request)
-    {
+    public function store(CreateChatRequest $request){
         $input = $request->all();
 
         $chat = $this->chatRepository->create($input);
@@ -64,55 +51,12 @@ class ExtendedChatController extends ChatController
     }
 
     /**
-     * Display the specified Chat.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        $chat = $this->chatRepository->findWithoutFail($id);
-
-        if (empty($chat)) {
-            Flash::error('Chat not found');
-
-            return redirect(route('chats.index'));
-        }
-
-        return view('chats.show')->with('chat', $chat);
-    }
-
-    /**
-     * Show the form for editing the specified Chat.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $chat = $this->chatRepository->findWithoutFail($id);
-
-        if (empty($chat)) {
-            Flash::error('Chat not found');
-
-            return redirect(route('chats.index'));
-        }
-
-        return view('chats.edit')->with('chat', $chat);
-    }
-
-    /**
      * Update the specified Chat in storage.
-     *
      * @param  int              $id
      * @param UpdateChatRequest $request
-     *
      * @return Response
      */
-    public function update($id, UpdateChatRequest $request)
-    {
+    public function update($id, UpdateChatRequest $request){
         $chat = $this->chatRepository->findWithoutFail($id);
 
         if (empty($chat)) {
@@ -130,13 +74,10 @@ class ExtendedChatController extends ChatController
 
     /**
      * Remove the specified Chat from storage.
-     *
      * @param  int $id
-     *
      * @return Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         $chat = $this->chatRepository->findWithoutFail($id);
 
         if (empty($chat)) {

@@ -15,12 +15,12 @@ class ExtendedContactRepository extends ContactRepository
     {
         if ($attendant_id) {
             $Attentand = UsersAttendant::with('AttendantsContacts')->find($attendant_id);
-            
             $Contacts = new Collection();
             foreach ($Attentand['AttendantsContacts'] as $key => $AttendantsContact) {
                 $AttendantsContactContact = $AttendantsContact->with('Contact')->find($AttendantsContact->id);
                 $AttendantsContactContactStatus = $AttendantsContactContact['Contact']->with('Status')->find($AttendantsContactContact->contact_id);
                 $Contacts[$key] = $AttendantsContactContactStatus;
+                // TODO: carregar aqui a pagina mais recente de conversas para cada um dos contatos
             }
         }
         else {
