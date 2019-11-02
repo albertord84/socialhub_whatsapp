@@ -24,6 +24,7 @@ class ExtendedChatController extends ChatController
      * @return Response
      */
     public function index(Request $request){
+        dd($request);
         //em $request->id deve vir o id do contato e a pagina de busca (que por default 0 é a mais recente)
         $User = Auth::check()? Auth::user():session('logged_user');
         $this->chatRepository->pushCriteria(new RequestCriteria($request));

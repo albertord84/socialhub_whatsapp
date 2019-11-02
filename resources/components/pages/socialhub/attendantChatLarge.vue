@@ -317,7 +317,8 @@
     import leftSideBar  from '../../layouts/left-side-bar'
     import attendantFindMessages  from 'resources/components/pages/socialhub/attendantFindMessages'
     
-    import chat_data from "../../../js/chat_data";
+    // import chat_data from "../../../js/chat_data";
+
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
@@ -333,24 +334,22 @@
          data() {
             return {
                 contacts_url: 'contacts',
-                chat_url: '',
+                chat_url: 'chats',
+
+                contacts:[],//chat_data,
                 messages:[],
-                index:0,
                 selected_contact_index: -1,
                 
-                contacts:[],
-                // contacts:chat_data,
                 searchContactByStringInput:'',
                 searchMessageByStringInput:'',
-                ftext:'',
+
+                newmessage: '',
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
-                bgColor:require('img/pages/chat_background.png'),
-                className:'',
-                newmessage: '',
                 right_layout:'toggle-edit-contact',
                 left_layout:'toggle-add-contact',
+                bgColor:require('img/pages/chat_background.png'),
                 window: {
                     width: 0,
                     height: 0
@@ -380,7 +379,6 @@
                             // if(item.status)
                             //     item.status_name = item.status.name;
                             item.index = i++;
-                            console.log(item);
                         });
                     })
                     .catch(function(error) {
@@ -402,7 +400,6 @@
                     this.$refs.input.focus();
                 }, 20);
             },
-
 
             //secundary functions
             mouseOverMessage(id){
@@ -492,6 +489,7 @@
         created() {
             window.addEventListener('resize', this.handleResize)
             this.handleResize();
+
             miniToastr.setIcon("error", "i", {class: "fa fa-times"});
             miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
             miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
@@ -503,20 +501,9 @@
         },
 
         computed: {
-            /*allContents: function() {
-                var self = this;
-                return this.contents.filter(function(content) {
-                    var str = content.name + ' ' + content.subject + ' '+content.description + ' '+content.nameType;
-                    return (
-                        // content.subject.toLowerCase().indexOf(self.search.toLowerCase()) >=0
-                        str.toLowerCase().indexOf(self.search.toLowerCase()) >=0
-                    );
-                });
-            },*/
             allContacts: function() {
                 var self = this;
                 return this.contacts.filter(function(contact) {
-                    // var str =   contact.user;
                     var str =   contact.name +
                             ' '+contact.first_name +
                             ' '+contact.last_name +
@@ -533,6 +520,7 @@
             },
             
         },
+
         watch:{
             
         }
