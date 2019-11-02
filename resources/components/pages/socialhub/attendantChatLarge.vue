@@ -388,9 +388,16 @@
                     });
             }, 
 
-            show_chat(contact) {
-                console.log(contact.index);
+            show_chat(contact) {                
                 this.selected_contact_index = contact.index;
+                ApiService.get(this.chat_url,{'id':contact.id, 'page':0})
+                    .then(response => {
+                        this.contacts[this.selected_contact_index].messages = response.data;                        
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
+                    });
+
                 setTimeout(() => {
                     this.$refs.input.focus();
                 }, 20);
