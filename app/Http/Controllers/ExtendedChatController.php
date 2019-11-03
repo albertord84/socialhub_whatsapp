@@ -8,6 +8,8 @@ use App\Repositories\ExtendedChatRepository;
 
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Auth;
+use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 class ExtendedChatController extends ChatController
@@ -26,8 +28,10 @@ class ExtendedChatController extends ChatController
     public function index(Request $request){
         //em $request->id deve vir o id do contato e a pagina de busca (que por default 0 é a mais recente)
         $User = Auth::check()? Auth::user():session('logged_user');
+        $User->id = 4;
         $this->chatRepository->pushCriteria(new RequestCriteria($request));
-        $chats = $this->chatRepository->contactChat($User->id);
+        $contact_id = 1;
+        $chats = $this->chatRepository->contactChat($User->id, $contact_id);
         return $chats->toJson();
 
         // $chats = $this->chatRepository->all();
