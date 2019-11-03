@@ -11,7 +11,7 @@ class ExtendedChatRepository extends ChatRepository
         $chatModel = $this->model();
         $chatModel->table = (string)$attendant_id;
 
-        $chatModel->model::with(...) //// THIS WAY
+        //$chatModel->model::with(...) //// THIS WAY
         
         // $Chat = UsersAttendant::with('AttendantsContacts')->find($attendant_id);   /// NOOOOOOOO
 
