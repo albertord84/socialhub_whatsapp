@@ -7,21 +7,14 @@ class ExtendedChatRepository extends ChatRepository
 {    
     //aqui vamos a tener que modificar la modelo tambien para coger la tabla chat del id del atendente
 
-    public function contactChat(int $attendant_id): Collection{
-        $chatModel = $this->model();
-        $chatModel->table = (string)$attendant_id;
-
-        //$chatModel->model::with(...) //// THIS WAY
-        
-        // $Chat = UsersAttendant::with('AttendantsContacts')->find($attendant_id);   /// NOOOOOOOO
-
-        // $Chat = UsersAttendant::with('AttendantsContacts')->find($attendant_id);
-        // $Chat = new Collection();
-        //     foreach ($Attentand['AttendantsContacts'] as $key => $AttendantsContact) {
-        //         $AttendantsContactContact = $AttendantsContact->with('Contact')->find($AttendantsContact->id);
-        //         $AttendantsContactContactStatus = $AttendantsContactContact['Contact']->with('Status')->find($AttendantsContactContact->contact_id);
-        //         $Contacts[$key] = $AttendantsContactContactStatus;
-        //     }
+    public function contactChat(int $attendant_id, $contact_id, $page): Collection{
+        $chatModel = new ExtendedChat();
+        // $chatModel = new ExtendedChat($attendant_id);
+        // $chatModel = $this->model();
+        // $chatModel = new $this->model();
+        // $chatModel->table = (string)$attendant_id;
+        $Chat = $chatModel->model::get();
+        dd($Chat);
         return $Chat;
     }
 
