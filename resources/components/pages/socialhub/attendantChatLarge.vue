@@ -116,7 +116,7 @@
                                     <span class="status-online">7</span>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-success " href="javascript:void(0)">{{contact.first_name + ' ' + contact.last_name}}</a><br>
-                                        <!-- <a class="text-muted"><span>{{ text_truncate(contact.status,20) }}</span></a> -->
+                                        <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
                                     <span class="mt-2 text-muted">12.54</span>
                                 </article>
@@ -374,6 +374,7 @@
                 ApiService.get(this.contacts_url)
                     .then(response => {
                         this.contacts = response.data;
+                        console.log(this.contacts);
                         var This = this, i = 0;
                         this.contacts.forEach(function(item, i){
                             // if(item.status)

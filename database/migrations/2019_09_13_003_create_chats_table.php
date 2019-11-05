@@ -12,11 +12,17 @@ class CreateChatsTable extends Migration {
 	 */
 	public function up(string $table_name = "chats")
 	{
+		try {
+			$this->down($table_name);
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
 		Schema::connection('socialhub_mvp.chats')->create($table_name, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->integer('contact_id')->index('fk_chats_contact');
 			$table->integer('attendant_id')->index('fk_chats_attendant');
+			$table->boolean('from');
 			$table->text('message', 65535)->nullable();
 			$table->integer('type_id')->nullable()->index('fk_chats_type');
 			$table->string('data', 45)->nullable();

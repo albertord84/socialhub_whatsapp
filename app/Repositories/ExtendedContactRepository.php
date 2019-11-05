@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\ExtendedChat;
 use App\Models\UsersAttendant;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,18 +15,23 @@ class ExtendedContactRepository extends ContactRepository
     public function fullContacts(int $company_id, ?int $attendant_id): Collection
     {
         if ($attendant_id) {
+            $chatModel = new ExtendedChat();
+            $chatModel->table = (string)$attendant_id;
+            
             $Attentand = UsersAttendant::with('AttendantsContacts')->find($attendant_id);
             $Contacts = new Collection();
             foreach ($Attentand['AttendantsContacts'] as $key => $AttendantsContact) {
                 $AttendantsContactContact = $AttendantsContact->with('Contact')->find($AttendantsContact->id);
                 $AttendantsContactContactStatus = $AttendantsContactContact['Contact']->with('Status')->find($AttendantsContactContact->contact_id);
-
-                // TODO Alberto: carregar aqui a pagina mais recente de conversas para cada um dos contatos
-                // $contactLastMessage
-                // $countUnreadMessages
-
+                $lastMesssage = $chatModel->where('contact_id', $AttendantsContact->id)->latest('created_at')->get()->first();
+                //TODO-No esta funcionando esa consulta y mucho menos el count
+                $countUnreadMessages = $chatModel->where([
+                    'contact_id' => $AttendantsContact->id,
+                    'status_id'=> 2 // TODO: UNREAD MESSAGE
+                    ])->Count();
                 $Contacts[$key] = $AttendantsContactContactStatus;
-                // $Contacts[$key] = 
+                $Contacts[$key]['last_message'] = $lastMesssage;
+                $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
             }
         }
         else {

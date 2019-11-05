@@ -3,7 +3,7 @@
 use App\Models\User;
 use App\Models\UsersAttendant;
 use App\Models\UsersManager;
-use Faker\Generator as Faker;
+use App\Repositories\ExtendedUsersAttendantRepository;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -14,8 +14,7 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run(){
         $this->command->info('Truncate Users Table...');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('users_managers')->truncate();
@@ -89,7 +88,8 @@ class UsersTableSeeder extends Seeder
         $this->command->info('Manager 1 created: [user: manager, pass: manager]');
     }
 
-    public function createAttendants($role_id){        
+    public function createAttendants($role_id){
+        $attendantRepository = new ExtendedUsersAttendantRepository(app());
         User::create([
             'id' => 4,
             'company_id' => 1,
@@ -107,7 +107,9 @@ class UsersTableSeeder extends Seeder
             'user_id' => 4,
             'user_manager_id' => 3,
         ]);
+        $attendantRepository->createAttendantChatTable(4);
         $this->command->info('Attendant 1 created: [user: attendant1, pass: attendant1]');
+        
         User::create([
             'id' => 5,
             'company_id' => 1,
@@ -121,6 +123,7 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('attendant2'), // password
             'remember_token' => Str::random(10),
         ]);
+        $attendantRepository->createAttendantChatTable(5);
         UsersAttendant::create([
             'user_id' => 5,            
             'user_manager_id' => 3,
