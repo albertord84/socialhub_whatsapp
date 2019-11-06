@@ -113,12 +113,13 @@
                                     <a class="float-left desc-img mt-3">
                                         <img :src="JSON.parse(contact.json_data).urlProfilePicture" class="my-rounded-circle">
                                     </a>
-                                    <span class="status-online">7</span>
+                                    <span v-show="contact.count_unread_messagess>0" class="status-new-messages" :title='contact.count_unread_messagess+" mensagens novas"'>{{contact.count_unread_messagess}}</span>
+                                    <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-success " href="javascript:void(0)">{{contact.first_name + ' ' + contact.last_name}}</a><br>
                                         <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
-                                    <span class="mt-2 text-muted">12.54</span>
+                                    <span class="mt-2 text-muted">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
                                 </article>
                             </a>
                         </li>
@@ -387,7 +388,7 @@
                     });
             }, 
 
-            show_chat(contact) {                
+            show_chat: function(contact) {                
                 this.selected_contact_index = contact.index;
                 ApiService.get(this.chat_url,{'id':contact.id, 'page':0})
                     .then(response => {
@@ -401,6 +402,29 @@
                 setTimeout(() => {
                     this.$refs.input.focus();
                 }, 20);
+            },
+
+            get_last_message_time: function(time){
+                alert(time);
+                return '00:00';
+                // alert(Date(time));
+                // var date1 = Date.parse(time); //2019-11-05 02:07:43
+                // var date2 = Date.now(); 
+                // var Difference_In_Time = date2 - date1; 
+                // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);  
+                // alert(Difference_In_Days);
+                
+                // if(Difference_In_Days < 1){ //menos de 24 horas retornar a hora
+                //     return date2.getHours() + ':' + date2.getMinutes();
+                // }else //mais de 24 horas e até 7 dias atrás retornar "x dias"
+                // if(Difference_In_Days == 1){
+                //     return '1 dia';
+                // }else
+                // if(Difference_In_Days > 1 && Difference_In_Days <= 7){
+                //     return Difference_In_Days + ' dias';
+                // }else{ //mais de 7 dias atrás retornar o mes
+                //     date2.getMonth();
+                // }
             },
 
             //secundary functions
@@ -682,7 +706,7 @@
         text-overflow: ellipsis;
     }
 
-    .status-online {
+    .status-new-messages {
         width: 18px;
         height: 18px;
         border-radius: 10px;
@@ -694,6 +718,17 @@
         top: 8px;
         left: -10px;
         border: 2px solid #fff;
+    }
+
+    .status-not-messages {
+        width: 18px;
+        height: 18px;
+        border-radius: 10px;
+        background-color: transparent;
+        text-align: center;
+        position: relative;
+        top: 8px;
+        left: -10px;
     }
 
     .person_name:before {

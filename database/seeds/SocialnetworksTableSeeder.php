@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Company;
+use App\Models\Socialnetwork;
 use Illuminate\Database\Seeder;
 
 class SocialnetworksTableSeeder extends Seeder
@@ -17,12 +17,11 @@ class SocialnetworksTableSeeder extends Seeder
         DB::table('socialnetworks')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->command->info('Create Socialnetworks Roles:');
-        Company::create([
+        $this->command->info('Create Socialnetworks:');
+        Socialnetwork::create([
             'id' => '1',
-            'name' => 'WhatsApp',
-            'description' => 'WhatsApp',
+            'name' => 'WhatsApp'
         ]);
-        $this->command->info('Socialnetworks');
+        $this->command->info('Created Socialnetworks');
     }
 }

@@ -17,7 +17,7 @@ class CompaniesTableSeeder extends Seeder
         DB::table('companies')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->command->info('Create Companies Roles:');
+        $this->command->info('Create Companies:');
         Company::create([
             'id' => '1',
             'name' => 'Social Hub',

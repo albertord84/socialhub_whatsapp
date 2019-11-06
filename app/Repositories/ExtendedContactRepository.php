@@ -24,11 +24,10 @@ class ExtendedContactRepository extends ContactRepository
                 $AttendantsContactContact = $AttendantsContact->with('Contact')->find($AttendantsContact->id);
                 $AttendantsContactContactStatus = $AttendantsContactContact['Contact']->with('Status')->find($AttendantsContactContact->contact_id);
                 $lastMesssage = $chatModel->where('contact_id', $AttendantsContact->id)->latest('created_at')->get()->first();
-                //TODO-No esta funcionando esa consulta y mucho menos el count
-                $countUnreadMessages = $chatModel->where([
-                    'contact_id' => $AttendantsContact->id,
-                    'status_id'=> 2 // TODO: UNREAD MESSAGE
-                    ])->Count();
+                $countUnreadMessages = $chatModel
+                    ->where('contact_id', $AttendantsContact->id)
+                    ->where('status_id', 1)
+                    ->count();
                 $Contacts[$key] = $AttendantsContactContactStatus;
                 $Contacts[$key]['last_message'] = $lastMesssage;
                 $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;

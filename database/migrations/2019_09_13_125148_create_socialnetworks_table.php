@@ -16,6 +16,7 @@ class CreateSocialnetworksTable extends Migration {
 		{
 			$table->integer('id')->primary();
 			$table->string('name', 45)->nullable();
+			$table->timestamps();
 		});
 	}
 
