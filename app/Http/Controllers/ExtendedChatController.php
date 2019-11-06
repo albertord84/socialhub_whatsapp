@@ -26,12 +26,10 @@ class ExtendedChatController extends ChatController
      * @return Response
      */
     public function index(Request $request){
-        //em $request->id deve vir o id do contato e a pagina de busca (que por default 0 é a mais recente)
         $User = Auth::check()? Auth::user():session('logged_user');
-        $User->id = 4;
-        $this->chatRepository->pushCriteria(new RequestCriteria($request));
-        $contact_id = 1;
-        $chats = $this->chatRepository->contactChat($User->id, $contact_id);
+        $contact_id = (int)$request['contact_id'];
+        $page = (int)$request['page'];
+        $chats = $this->chatRepository->contactChat($User->id, $contact_id , $page);
         return $chats->toJson();
 
         // $chats = $this->chatRepository->all();

@@ -1,7 +1,7 @@
 <template>
     <div class="row chat">
 
-        <right-side-bar  :right_layout ="right_layout"></right-side-bar>
+        <right-side-bar :right_layout ="right_layout"></right-side-bar>
         <left-side-bar  :left_layout ="left_layout"></left-side-bar>
 
         <!-- Left side of chat-->
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                 </div>
-                <v-scroll :height="Height(0)"  color="#ccc" bar-width="8px">
+                <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
                             <a :href="contact.first_name" @click.prevent="show_chat(contact)">
@@ -119,7 +119,7 @@
                                         <a class="text-success " href="javascript:void(0)">{{contact.first_name + ' ' + contact.last_name}}</a><br>
                                         <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
-                                    <span class="mt-2 text-muted">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:10px">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
                                 </article>
                             </a>
                         </li>
@@ -163,7 +163,7 @@
                 </div>
                 <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
                     <ul >
-                        <li v-for='(contact,index) in contacts[selected_contact_index].messages' :key="index" :class="[{ sent: contact.from=='me' },{ received: contact.from!=='me' }]">
+                        <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.from==0 },{ received: message.from==1 }]">
                             <div class="" >
                                 <p class="message" @mouseover='mouseOverMessage("message-dropdown-"+index)' @mouseleave='mouseLeaveMessage("message-dropdown-"+index)'> 
                                     <b-dropdown class="dropdown hidden-xs-down btn-group float-right message-hout" :id='"message-dropdown-"+index' variant="link" toggle-class="text-decoration-none"  right="">
@@ -183,16 +183,18 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
                                         </b-dropdown-item>
                                     </b-dropdown>
-                                    <span v-show='contact.type == "image"' class='mb-2'><img :src='contact.src' style='width:100px'/></span>   <br>                                 
-                                    <span style='text-align:center' v-show='contact.type == "audio"' class='mb-2'>
+                                    <span v-show='message.type_id == "1"/*image*/' class='mb-2'>
+                                        <img :src='message.src' style='width:100px'/>
+                                    </span>   <br>                                 
+                                    <span v-show='message.type_id == "2"/*audio*/' class='mb-2' style='text-align:center'>
                                         <audio controls class="mycontrolBar">
-                                            <source :src='contact.src' type="audio/ogg">
-                                            <source :src="contact.src" type="audio/mpeg">
+                                            <source :src='message.src' type="audio/ogg">
+                                            <source :src="message.src" type="audio/mpeg">
                                             Seu navegador não suporta o elemento de áudio.
                                         </audio> <br>
                                     </span>
-                                    <span style="font-size:12px; color:#4f4e4e">{{ contact.msg }}</span><br>
-                                    <span class="msg_time float-right">{{contact.time}}</span>
+                                    <span style="font-size:12px; color:#4f4e4e">{{ message.message }}</span><br>
+                                    <span class="msg_time float-right">{{message.created_at}}</span>
                                 </p>
                             </div>
                         </li>
@@ -251,34 +253,47 @@
             </div>
             <label></label>
             <div v-if="selected_contact_index>=0" class="profile sec_decription bg-white text-center">
-                    <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture"  class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
-                    <h4 class="text-gray">{{contacts[selected_contact_index].user}}</h4>
-                    <p>{{contacts[selected_contact_index].status}}</p>
-                    <p>Mobile Number: <b>{{contacts[selected_contact_index].mbl_num}}</b></p>
-                    <p>Organisation: <b>{{contacts[selected_contact_index].work}}</b></p>
-                    <div class="attachments  p-4">
-                        <h5>Attachments</h5>
-                        <div class="row">
-                            <div class="col-4 mt-2">
-                                <img src="~img/pages/14.jpg" alt="" class="img-fluid">
-                            </div>
-                            <div class="col-4 mt-2">
-                                <img src="~img/pages/15.jpg" alt="" class="img-fluid">
-                            </div>
-                            <div class="col-4 mt-2">
-                                <img src="~img/pages/16.jpg" alt="" class="img-fluid">
-                            </div>
-                            <div class="col-4 mt-2">
-                                <img src="~img/pages/17.jpg" alt="" class="img-fluid">
-                            </div>
-                            <div class="col-4 mt-2">
-                                <img src="~img/pages/18.jpg" alt="" class="img-fluid">
-                            </div>
-                            <div class="col-4 mt-2">
-                                <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+                <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
+                    <div>
+                        <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture"  class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
+                        <h6 class="text-gray">{{contacts[selected_contact_index].first_name+' '+contacts[selected_contact_index].last_name}}</h6>
+                        <!-- <p>{{contacts[selected_contact_index].status}}</p> -->
+                        <p>Email: <b>{{contacts[selected_contact_index].email}}</b></p>
+                        <p>Telefone: <b>{{contacts[selected_contact_index].phone}}</b></p>
+                        <p>Resumo: <b>{{contacts[selected_contact_index].summary}}</b></p>
+                        <p>Lembretes: <b>{{contacts[selected_contact_index].remember}}</b></p>
+                        <hr>
+                        <h5>Redes sociais</h5>
+                        <p>WhatsApp: <b>{{contacts[selected_contact_index].whatsapp_id}}</b></p>
+                        <p>Facebook: <b>{{contacts[selected_contact_index].facebook_id}}</b></p>
+                        <p>Instagram: <b>{{contacts[selected_contact_index].instagram_id}}</b></p>
+                        <p>Linkedin: <b>{{contacts[selected_contact_index].linkedin_id}}</b></p>
+                        <hr>
+                        <div class="attachments  p-4">
+                            <h5>Attachments</h5>
+                            <div class="row">
+                                <div class="col-4 mt-2">
+                                    <img src="~img/pages/14.jpg" alt="" class="img-fluid">
+                                </div>
+                                <div class="col-4 mt-2">
+                                    <img src="~img/pages/15.jpg" alt="" class="img-fluid">
+                                </div>
+                                <div class="col-4 mt-2">
+                                    <img src="~img/pages/16.jpg" alt="" class="img-fluid">
+                                </div>
+                                <div class="col-4 mt-2">
+                                    <img src="~img/pages/17.jpg" alt="" class="img-fluid">
+                                </div>
+                                <div class="col-4 mt-2">
+                                    <img src="~img/pages/18.jpg" alt="" class="img-fluid">
+                                </div>
+                                <div class="col-4 mt-2">
+                                    <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+                                </div>
                             </div>
                         </div>
                     </div>
+                </v-scroll>
             </div>
         </div>
 
@@ -313,10 +328,20 @@
     </div>
 </template>
 <script>
+    import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
     import attendantFindMessages  from 'resources/components/pages/socialhub/attendantFindMessages'
+    import VueTimeago from 'vue-timeago'; 
+    Vue.use(VueTimeago, {
+        name: 'Timeago',
+        locale: 'en', 
+        locales: {
+            'en': require('date-fns/locale/en'), ja: require('date-fns/locale/ja')
+            // 'pt': require('date-fns/locale/pt'), ja: require('date-fns/locale/ja')
+        }
+    })
     
     // import chat_data from "../../../js/chat_data";
 
@@ -326,6 +351,7 @@
 
     export default {
         components: {
+            VueTimeago,
             vScroll,
             rightSideBar,
             leftSideBar,
@@ -344,7 +370,14 @@
                 searchContactByStringInput:'',
                 searchMessageByStringInput:'',
 
-                newmessage: '',
+                newMessage: {
+                    'contact_id':0,
+                    'message':'',
+                    'from':0,
+                    'type_id':1, //text //TODO criar tabela
+                    'status_id':1, //text //TODO criar tabela
+                    'socialnetwork_id':1, //Whatsapp
+                },
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
@@ -361,13 +394,18 @@
         methods: {
             //primary functions
             send_message() {
-                if (this.newmessage.trim() != "") {
-                    this.contacts[this.selected_contact_index].messages.push({
-                        msg: this.newmessage,
-                        from: "me"
+                if (this.newMessage.message.trim() != "") {
+                    this.newMessage.contact_id = contacts[selected_contact_index].id;
+                    ApiService.post(this.chat_url,this.newMessage)
+                    .then(response => {
+                        var copyMessage = Object.assign({}, this.newMessage)
+                        this.messages.push(copyMessage);
+                        this.newMessage.message = "";
+                        this.$refs.message_scroller.scrolltobottom();
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
                     });
-                    this.newmessage = "";
-                    this.$refs.message_scroller.scrolltobottom();
                 }
             },
 
@@ -375,7 +413,6 @@
                 ApiService.get(this.contacts_url)
                     .then(response => {
                         this.contacts = response.data;
-                        console.log(this.contacts);
                         var This = this, i = 0;
                         this.contacts.forEach(function(item, i){
                             // if(item.status)
@@ -388,43 +425,45 @@
                     });
             }, 
 
-            show_chat: function(contact) {                
-                this.selected_contact_index = contact.index;
-                ApiService.get(this.chat_url,{'id':contact.id, 'page':0})
-                    .then(response => {
-                        console.log(response.data);
-                        // this.contacts[this.selected_contact_index].messages = response.data;                        
-                    })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
-                    });
-
-                setTimeout(() => {
-                    this.$refs.input.focus();
-                }, 20);
+            show_chat: function(contact) {
+                if(this.selected_contact_index!=contact.index){
+                    this.selected_contact_index = contact.index;
+                    ApiService.get(this.chat_url,{'contact_id':contact.id, 'page':0})
+                        .then(response => {
+                            console.log(this.messages);
+                            this.messages = response.data;                        
+                        })
+                        .catch(function(error) {
+                            miniToastr.error(error, "Error carregando os contatos");   
+                        });
+    
+                    setTimeout(() => {
+                        this.$refs.input.focus();
+                    }, 20);
+                }
             },
 
             get_last_message_time: function(time){
-                alert(time);
-                return '00:00';
-                // alert(Date(time));
-                // var date1 = Date.parse(time); //2019-11-05 02:07:43
-                // var date2 = Date.now(); 
-                // var Difference_In_Time = date2 - date1; 
-                // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);  
-                // alert(Difference_In_Days);
-                
-                // if(Difference_In_Days < 1){ //menos de 24 horas retornar a hora
-                //     return date2.getHours() + ':' + date2.getMinutes();
-                // }else //mais de 24 horas e até 7 dias atrás retornar "x dias"
-                // if(Difference_In_Days == 1){
-                //     return '1 dia';
-                // }else
-                // if(Difference_In_Days > 1 && Difference_In_Days <= 7){
-                //     return Difference_In_Days + ' dias';
-                // }else{ //mais de 7 dias atrás retornar o mes
-                //     date2.getMonth();
-                // }
+                var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+                var date_format = new Date(time);
+                var date1 = Date.parse(time); //to timestamp
+                var date2 = Date.now(); //to timestamp
+                var Difference_In_Time = date2 - date1; 
+                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);  
+                if(Difference_In_Days < 1){ //menos de 24 horas retornar a hora
+                    var timeString =date_format.getHours().toString().padStart(2, '0') + ':' + date_format.getMinutes().toString().padStart(2, '0');
+                    return timeString;
+                } else //mais de 24 horas e até 7 dias atrás retornar "x dias"
+                if(Difference_In_Days >= 1 && Difference_In_Days < 2){
+                    return 'Ontem';
+                } else
+                if(Difference_In_Days >= 2 && Difference_In_Days <= 7){
+                    var timeString = weekDays[date_format.getDay()];
+                    return timeString;
+                } else{ //mais de 7 dias atrás retornar o mes
+                    var timeString =date_format.getDate().toString().padStart(2, '0') + '/' + (date_format.getMonth()+1).toString().padStart(2, '0')+ '/' + date_format.getFullYear().toString().padStart(4, '0');
+                    return timeString;
+                }
             },
 
             //secundary functions

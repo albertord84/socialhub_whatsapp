@@ -25,7 +25,7 @@ class ContactsTableSeeder extends Seeder
             'last_name' => 'Reyes',
             'email' => 'albertord84@gmail.com',
             'whatsapp_id' => '5521965536174',
-            'json_data' => '{"urlProfilePicture":"https://pps.whatsapp.net/v/t61.24694-24/56106051_270963853793043_4343519337185804288_n.jpg?oe=5DC1B3BB&oh=fd9bd05b55714e5aa6b1ad892fb66903"}',
+            'json_data' => '{"urlProfilePicture":"images/contacts/alberto.jpg"}',
             'status_id' => 1,
         ]);
         $this->command->info('Contact Alberto Reyes');
@@ -37,7 +37,7 @@ class ContactsTableSeeder extends Seeder
             'last_name' => 'Ramon',
             'email' => 'josergm86@gmail.com',
             'whatsapp_id' => '5521965913089',
-            'json_data' => '{"urlProfilePicture":"https://pps.whatsapp.net/v/t61.24694-24/56153764_2440222649335231_7717483608692228096_n.jpg?oe=5DC1B3BB&oh=47eaf313bce1feb6fa54a48a1fbdfa8c"}',
+            'json_data' => '{"urlProfilePicture":"images/contacts/jose_ramon.jpg"}',
             'status_id' => 1,
         ]);
         $this->command->info('Contact Jose Ramon');
@@ -49,7 +49,7 @@ class ContactsTableSeeder extends Seeder
             'last_name' => 'Medina',
             'email' => 'marcosmedina@azuregroup.com',
             'whatsapp_id' => '5511970111071',
-            'json_data' => '{"urlProfilePicture":"https://pps.whatsapp.net/v/t61.24694-24/69421822_488551565063752_860755220425080832_n.jpg?oe=5DC1B413&oh=ca39d010bbe344da5a12c3ebdb303438"}',
+            'json_data' => '{"urlProfilePicture":"images/contacts/medina.jpg"}',
             'status_id' => 1,
         ]);
         $this->command->info('Contact Marcos Medina');
