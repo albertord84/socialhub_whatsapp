@@ -21,7 +21,6 @@ class ExtendedChatRepository extends ChatRepository
     public function createMessage(array $attributes)
     {   
         $attendant_id = $attributes['attendant_id'];
-        $source = $attributes['source'];
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
         return $chatModel->create($attributes);

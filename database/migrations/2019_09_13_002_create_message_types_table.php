@@ -17,6 +17,7 @@ class CreateMessageTypesTable extends Migration {
 			$table->integer('id', true);
 			$table->string('name', 45)->nullable();
 			$table->string('description', 100)->nullable();
+			$table->timestamps();
 		});
 	}
 

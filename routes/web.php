@@ -57,3 +57,7 @@ Route::resource('chats', 'ExtendedChatController');
 Route::resource('test', 'TestController');
 
 Route::resource('socialnetworks', 'SocialnetworkController');
+
+Route::resource('messagesTypes', 'MessagesTypesController');
+
+Route::resource('messagesTypes', 'MessagesTypeController');

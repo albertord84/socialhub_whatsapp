@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\UsersStatus;
 use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
@@ -42,21 +41,18 @@ class StatusTableSeeder extends Seeder
             'description' => 'Message sended from server to Rasberry',
         ]);
         $this->command->info('Messages Status SENDED');
-
         MessagesStatus::create([
             'id' => '3',
             'name' => 'RECEVEIVED',
             'description' => 'Message was received by contact',
         ]);
         $this->command->info('Messages Status RECEVEIVED');
-
         MessagesStatus::create([
             'id' => '4',
             'name' => 'READED',
             'description' => 'Message was readed by contact',
         ]);
         $this->command->info('MessagesStatus READED');
-
         MessagesStatus::create([
             'id' => '5',
             'name' => 'DELETED',
@@ -80,7 +76,6 @@ class StatusTableSeeder extends Seeder
             'description' => 'Contact not assigned to attendant yet',
         ]);
         $this->command->info('Contacts Status UNASSIGNED');
-
         ContactsStatus::create([
             'id' => '3',
             'name' => 'PRIORITY',
@@ -94,7 +89,6 @@ class StatusTableSeeder extends Seeder
             'description' => 'Contact need to be folowup by attendant',
         ]);
         $this->command->info('Contacts Status FOLLOWUP');
-
         ContactsStatus::create([
             'id' => '5',
             'name' => 'ARCHIVED',
@@ -111,28 +105,24 @@ class StatusTableSeeder extends Seeder
             'description' => 'UsersStatus ACTIVE',
         ]);
         $this->command->info('UsersStatus ACTIVE');
-
         UsersStatus::create([
             'id' => '2',
             'name' => 'DELETED',
             'description' => 'UsersStatus DELETED',
         ]);
         $this->command->info('UsersStatus DELETED');
-
         UsersStatus::create([
             'id' => '3',
             'name' => 'INACTIVE',
             'description' => 'UsersStatus INACTIVE',
         ]);
         $this->command->info('UsersStatus INACTIVE');
-
         UsersStatus::create([
             'id' => '4',
             'name' => 'PENDING',
             'description' => 'UsersStatus PENDING',
         ]);
         $this->command->info('UsersStatus PENDING');
-
         UsersStatus::create([
             'id' => '5',
             'name' => 'BEGINNER',
@@ -146,7 +136,6 @@ class StatusTableSeeder extends Seeder
             'description' => 'UsersStatus VERIFY_ACCOUNT',
         ]);
         $this->command->info('UsersStatus VERIFY_ACCOUNT');
-
         UsersStatus::create([
             'id' => '7',
             'name' => 'PAUSED',
@@ -158,18 +147,17 @@ class StatusTableSeeder extends Seeder
     function CreateMessageTypes(){
         $this->command->info('Creating MessageTypes:');
         MessagesType::create([
-            'id' => '5',
+            'id' => '1',
             'name' => 'REMINDER',
             'description' => 'Message was remindered by attendant',//lembrete
         ]);
         $this->command->info('MessageType REMINDER');
         
         MessagesType::create([
-            'id' => '5',
+            'id' => '2',
             'name' => 'SUMMARY',
             'description' => 'Message was remindered by attendant',//lembrete
         ]);
         $this->command->info('MessageType SUMMARY');
     }
-
 }

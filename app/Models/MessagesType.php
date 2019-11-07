@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model as Model;
 
 /**
- * Class MessageType
+ * Class MessagesType
  * @package App\Models
- * @version September 13, 2019, 9:10 pm UTC
+ * @version November 7, 2019, 8:04 pm UTC
  *
- * @property \Illuminate\Database\Eloquent\Collection 
  * @property string name
  * @property string description
  */
-class MessageType extends Model
+class MessagesType extends Model
 {
 
-    public $table = 'message_types';
+    public $table = 'messages_types';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+
 
 
 
@@ -45,7 +45,7 @@ class MessageType extends Model
      * @var array
      */
     public static $rules = [
-        'id' => 'required'
+        
     ];
 
     
