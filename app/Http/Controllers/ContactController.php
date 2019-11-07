@@ -104,7 +104,6 @@ class ContactController extends AppBaseController
      */
     public function update($id, UpdateContactRequest $request)
     {
-        dd(request);
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:

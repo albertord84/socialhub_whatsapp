@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  *
  * @property integer contact_id
  * @property integer attendant_id
+ * @property integer source
  * @property string message
  * @property integer type_id
  * @property string data
@@ -31,6 +32,7 @@ class Chat extends Model
     public $fillable = [
         'contact_id',
         'attendant_id',
+        'source',
         'message',
         'type_id',
         'data',
@@ -47,6 +49,7 @@ class Chat extends Model
         'id' => 'integer',
         'contact_id' => 'integer',
         'attendant_id' => 'integer',
+        'source' => 'integer',
         'message' => 'string',
         'type_id' => 'integer',
         'data' => 'string',

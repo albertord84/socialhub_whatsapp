@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ExtendedChatRepository extends ChatRepository
 {    
-    //aqui vamos a tener que modificar la modelo tambien para coger la tabla chat del id del atendente
 
-    // public function contactChat(int $attendant_id, int $contact_id) {
     public function contactChat(int $attendant_id, int $contact_id, int $page): Collection{
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
@@ -18,6 +16,15 @@ class ExtendedChatRepository extends ChatRepository
         //     })
         //     ->pluck('name', 'id');
         return $Chat;
+    }
+
+    public function createMessage(array $attributes)
+    {   
+        $attendant_id = $attributes['attendant_id'];
+        $source = $attributes['source'];
+        $chatModel = new $this->model();
+        $chatModel->table = (string)$attendant_id;
+        return $chatModel->create($attributes);
     }
 
     /**

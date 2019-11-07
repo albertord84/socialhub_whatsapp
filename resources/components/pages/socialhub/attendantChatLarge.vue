@@ -2,7 +2,7 @@
     <div class="row chat">
 
         <right-side-bar :right_layout ="right_layout"></right-side-bar>
-        <left-side-bar  :left_layout ="left_layout"></left-side-bar>
+        <left-side-bar  :left_layout ="left_layout" @reloadContacts='reloadContacts'></left-side-bar>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -16,25 +16,22 @@
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
-                                        <img width="20px" class="mt-3" src="~img/icons/filter-by-chat.png" title="Filtar por mensagens" alt="">
+                                        <img width="20px" class="mt-3" src="~img/icons/filter-by-chat.png" title="Filtar contatos segundo as mensagens" alt="">
                                         <!-- <i class="fa fa-paper-plane mt-3" title="Mensagens" style="color:gray"></i> -->
                                     </template>
-                                    <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivadas</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <b-dropdown-item title="Contatos com mensagens favoritas" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-star-o"></i> Favoritas</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <b-dropdown-item title="Contatos que possuem lembretes" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembretes</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <b-dropdown-item title="Contatos que possuem resumo" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-address-card-o"></i> Resumos</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <b-dropdown-item title="Contatos com mensagem lidas somente" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-envelope-open-o"></i> Lidas</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <b-dropdown-item title="Contatos com mensagem não lidas somente" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-envelope-o"></i> Não lidas</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
@@ -43,44 +40,44 @@
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
                                         <!-- <img width="20px" class="mt-3" src="~img/icons/filter-by-user.jpg" title="Filtar por status" alt=""> -->
-                                        <i class="fa fa-filter mt-3" title="Status"  style="color:gray"></i>
+                                        <i class="fa fa-filter mt-3" title="Filtar contatos segundo seu status"  style="color:gray"></i>
                                     </template>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-users"></i> Todos</a>
+                                        <a href="javascript:void(0)" title="Todos os contatos" exact class="drpodowtext"><i class="fa fa-users"></i> Todos</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-ambulance"></i> Prioridade</a>
+                                        <a href="javascript:void(0)" title="Contatos com prioridade" exact class="drpodowtext"><i class="fa fa-ambulance"></i> Prioridade</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-eye"></i> Seguimento</a>
+                                        <a href="javascript:void(0)" title="Contatos que precisam seguimento" exact class="drpodowtext"><i class="fa fa-eye"></i> Seguimento</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-hand-peace-o"></i> Encerrados</a>
+                                        <a href="javascript:void(0)" title="Contatos arquivados" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivados</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <!-- <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-exchange"></i> Transferidos</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    </b-dropdown-item> -->
+                                    <!-- <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-sort-amount-desc"></i> Adhesão</a>
-                                    </b-dropdown-item>
+                                    </b-dropdown-item> -->
                                 </b-dropdown>
                             </li> 
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
-                                        <i class="fa fa-globe fa-lg mt-3" title="Rede Social" style="color:gray"></i>
+                                        <i class="fa fa-globe fa-lg mt-3" title="Filtrar contatos segundo a rede social" style="color:gray"></i>
                                     </template>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+                                        <a href="javascript:void(0)" title="Contatos que possuem WhatsApp" exact class="drpodowtext"><i class="fa fa-whatsapp"></i> WhatsApp</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-facebook-official"></i> Facebook</a>
+                                        <a href="javascript:void(0)" title="Contatos que possuem Facebook" exact class="drpodowtext"><i class="fa fa-facebook-official"></i> Facebook</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-instagram"></i> Instagram</a>
+                                        <a href="javascript:void(0)" title="Contatos que possuem Instagram" exact class="drpodowtext"><i class="fa fa-instagram"></i> Instagram</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-linkedin"></i> LinkedIn</a>
+                                        <a href="javascript:void(0)" title="Contatos que possuem LinkedIn" exact class="drpodowtext"><i class="fa fa-linkedin"></i> LinkedIn</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
                             </li>                            
@@ -105,14 +102,12 @@
                         </div>
                     </div>
                 </div>
-                <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
+                <v-scroll :height="Height(100)"  color="#ccc" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
                             <a :href="contact.first_name" @click.prevent="show_chat(contact)">
                                 <article class="media mt-1 mb-4">
-                                    <a class="float-left desc-img mt-3">
-                                        <img :src="JSON.parse(contact.json_data).urlProfilePicture" class="my-rounded-circle">
-                                    </a>
+                                    <a class="float-left desc-img mt-3"><img :src="JSON.parse(contact.json_data).urlProfilePicture" class="my-rounded-circle"></a>
                                     <span v-show="contact.count_unread_messagess>0" class="status-new-messages" :title='contact.count_unread_messagess+" mensagens novas"'>{{contact.count_unread_messagess}}</span>
                                     <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
@@ -163,7 +158,7 @@
                 </div>
                 <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :style="{ backgroundImage: 'url('+bgColor+')'}">
                     <ul >
-                        <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.from==0 },{ received: message.from==1 }]">
+                        <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
                             <div class="" >
                                 <p class="message" @mouseover='mouseOverMessage("message-dropdown-"+index)' @mouseleave='mouseLeaveMessage("message-dropdown-"+index)'> 
                                     <b-dropdown class="dropdown hidden-xs-down btn-group float-right message-hout" :id='"message-dropdown-"+index' variant="link" toggle-class="text-decoration-none"  right="">
@@ -204,7 +199,7 @@
                     <div class="input-group-append">
                         <button class="btn btn-success send-btn" type="submit" @click="send_message"><i class="fa fa-paper-plane-o text-white" aria-hidden="true"></i></button>
                     </div>
-                    <input type="text" @keyup.enter="send_message" v-model="newmessage" placeholder="Nova mensagem" class="form-control text-input-message" ref="input">
+                    <input type="text" @keyup.enter="send_message" v-model="newMessage.message" placeholder="Nova mensagem" class="form-control text-input-message" ref="input">
                 </div>
             </div>
             <div v-else class="non_converstion_back">
@@ -333,25 +328,13 @@
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
     import attendantFindMessages  from 'resources/components/pages/socialhub/attendantFindMessages'
-    import VueTimeago from 'vue-timeago'; 
-    Vue.use(VueTimeago, {
-        name: 'Timeago',
-        locale: 'en', 
-        locales: {
-            'en': require('date-fns/locale/en'), ja: require('date-fns/locale/ja')
-            // 'pt': require('date-fns/locale/pt'), ja: require('date-fns/locale/ja')
-        }
-    })
     
-    // import chat_data from "../../../js/chat_data";
-
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
 
     export default {
         components: {
-            VueTimeago,
             vScroll,
             rightSideBar,
             leftSideBar,
@@ -362,23 +345,20 @@
             return {
                 contacts_url: 'contacts',
                 chat_url: 'chats',
-
                 contacts:[],//chat_data,
                 messages:[],
                 selected_contact_index: -1,
-                
                 searchContactByStringInput:'',
                 searchMessageByStringInput:'',
-
                 newMessage: {
+                    'attendant_id':0,
                     'contact_id':0,
                     'message':'',
-                    'from':0,
+                    'source':0,
                     'type_id':1, //text //TODO criar tabela
                     'status_id':1, //text //TODO criar tabela
                     'socialnetwork_id':1, //Whatsapp
                 },
-
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
                 right_layout:'toggle-edit-contact',
@@ -394,17 +374,19 @@
         methods: {
             //primary functions
             send_message() {
-                if (this.newMessage.message.trim() != "") {
-                    this.newMessage.contact_id = contacts[selected_contact_index].id;
+                this.newMessage.message = this.newMessage.message.trim();
+                if (this.newMessage.message != "") {
+                    this.newMessage.contact_id = this.contacts[this.selected_contact_index].id;
                     ApiService.post(this.chat_url,this.newMessage)
                     .then(response => {
-                        var copyMessage = Object.assign({}, this.newMessage)
-                        this.messages.push(copyMessage);
+                        this.messages.push(response.data);
+                        if(this.contacts[this.selected_contact_index].last_message)
+                            this.contacts[this.selected_contact_index].last_message.message = this.newMessage.message;
                         this.newMessage.message = "";
                         this.$refs.message_scroller.scrolltobottom();
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                        miniToastr.error(error, "Error enviando mensagem");   
                     });
                 }
             },
@@ -415,8 +397,6 @@
                         this.contacts = response.data;
                         var This = this, i = 0;
                         this.contacts.forEach(function(item, i){
-                            // if(item.status)
-                            //     item.status_name = item.status.name;
                             item.index = i++;
                         });
                     })
@@ -430,7 +410,6 @@
                     this.selected_contact_index = contact.index;
                     ApiService.get(this.chat_url,{'contact_id':contact.id, 'page':0})
                         .then(response => {
-                            console.log(this.messages);
                             this.messages = response.data;                        
                         })
                         .catch(function(error) {
@@ -536,7 +515,11 @@
             handleResize() {
                 this.window.width = window.innerWidth;
                 this.window.height = window.innerHeight;
-            }
+            },
+
+            reloadContacts(){
+                this.getContacts();
+            },
         },
 
         updated(){
@@ -810,11 +793,6 @@
         height: calc(100% - 50px);
     }
 
-
-
-
-
-
     //added here
     //-----------------------------------------------
     .search-input{
@@ -951,8 +929,6 @@
     .send-btn{
         border-top-right-radius:20px;
         border-bottom-right-radius:20px;
-        // border-top-left-radius:20px;
-        // border-bottom-left-radius:20px;
     }
 
     .non_converstion_back{

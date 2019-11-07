@@ -38,7 +38,7 @@ class ChatsTableSeeder extends Seeder
                 'id' => $i,
                 'contact_id' => $contact_id,
                 'attendant_id' => $attendant_id,
-                'from' => $i%2, //0->me  and 1->you
+                'source' => $i%2, //0->me  and 1->you
                 'message' => Lorem::sentence(($i%9)+1, true),
                 'type_id' => '1',
                 'data' => '',

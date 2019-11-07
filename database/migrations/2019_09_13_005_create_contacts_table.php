@@ -27,7 +27,7 @@ class CreateContactsTable extends Migration {
 			$table->string('facebook_id', 45)->nullable();
 			$table->string('instagram_id', 45)->nullable();
 			$table->string('linkedin_id', 45)->nullable();
-			$table->string('json_data')->nullable();
+			$table->string('json_data')->default('{"urlProfilePicture":"images/contacts/default.png"}');
 			$table->integer('status_id')->nullable()->index('fk_contacts_status')->default('2');
 			$table->timestamps();
 			$table->softDeletes();

@@ -2,9 +2,9 @@
     <div id="left" :class="{ open: this.$store.state.left_open }">
         <div id="left-slim">
             <!-- <slot></slot> -->
-            <attendantAddContact v-if="left_layout=='toggle-add-contact'"></attendantAddContact>
+            <attendantAddContact v-if="left_layout=='toggle-add-contact'" @onreloaddatas='reloadContacts'></attendantAddContact>
             
-            <attendantFilterContact v-if="left_layout=='toggle-filter-contact'"></attendantFilterContact>
+            <!-- <attendantFilterContact v-if="left_layout=='toggle-filter-contact'"></attendantFilterContact> -->
         </div>
     </div>
 </template>
@@ -37,7 +37,11 @@
         },
         methods: {
             change_skin() {
-            }
+            },
+
+            reloadContacts(){
+                this.$emit('reloadContacts');
+            },
         },        
     }
 </script>

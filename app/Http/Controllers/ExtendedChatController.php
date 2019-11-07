@@ -44,12 +44,12 @@ class ExtendedChatController extends ChatController
      */
     public function store(CreateChatRequest $request){
         $input = $request->all();
-
-        $chat = $this->chatRepository->create($input);
-
-        Flash::success('Chat saved successfully.');
-
-        return redirect(route('chats.index'));
+        $User = Auth::check()? Auth::user():session('logged_user');
+        $input['attendant_id'] = $User->id;
+        $chat = $this->chatRepository->createMessage($input);
+        return $chat->toJson();
+        // Flash::success('Chat saved successfully.');
+        // return redirect(route('chats.index'));
     }
 
     /**

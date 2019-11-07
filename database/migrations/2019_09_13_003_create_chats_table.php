@@ -22,7 +22,7 @@ class CreateChatsTable extends Migration {
 			$table->integer('id', true);
 			$table->integer('contact_id')->index('fk_chats_contact');
 			$table->integer('attendant_id')->index('fk_chats_attendant');
-			$table->boolean('from')->nullable();
+			$table->integer('source')->nullable();
 			$table->text('message', 65535)->nullable();
 			$table->integer('type_id')->nullable()->index('fk_chats_type');
 			$table->string('data', 45)->nullable();

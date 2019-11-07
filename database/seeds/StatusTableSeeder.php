@@ -3,6 +3,7 @@
 use App\Models\UsersStatus;
 use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
+use App\Models\MessagesType;
 use Illuminate\Database\Seeder;
 class StatusTableSeeder extends Seeder
 {
@@ -23,16 +24,45 @@ class StatusTableSeeder extends Seeder
         $this->CreateUsersStatus();
         $this->CreateContactsStatus();
         $this->CreateMessagesStatus();
+        $this->CreateMessageTypes();
     }
 
     function CreateMessagesStatus() {
         $this->command->info('Creating Users MessagesStatus:');
         MessagesStatus::create([
             'id' => '1',
-            'name' => 'ACTIVE',
-            'description' => 'MessagesStatus ACTIVE',
+            'name' => 'ROUTED',
+            'description' => 'Message sended from browser to server',
         ]);
-        $this->command->info('MessagesStatus ACTIVE');
+        $this->command->info('Messages Status ROUTED');
+        
+        MessagesStatus::create([
+            'id' => '2',
+            'name' => 'SENDED',
+            'description' => 'Message sended from server to Rasberry',
+        ]);
+        $this->command->info('Messages Status SENDED');
+
+        MessagesStatus::create([
+            'id' => '3',
+            'name' => 'RECEVEIVED',
+            'description' => 'Message was received by contact',
+        ]);
+        $this->command->info('Messages Status RECEVEIVED');
+
+        MessagesStatus::create([
+            'id' => '4',
+            'name' => 'READED',
+            'description' => 'Message was readed by contact',
+        ]);
+        $this->command->info('MessagesStatus READED');
+
+        MessagesStatus::create([
+            'id' => '5',
+            'name' => 'DELETED',
+            'description' => 'Message was deleted',
+        ]);
+        $this->command->info('MessagesStatus DELETED');
     }
 
     function CreateContactsStatus() {
@@ -40,7 +70,7 @@ class StatusTableSeeder extends Seeder
         ContactsStatus::create([
             'id' => '1',
             'name' => 'ACTIVE',
-            'description' => 'ContactsStatus ACTIVE',
+            'description' => 'Contacts Status ACTIVE',
         ]);
         $this->command->info('ContactsStatus ACTIVE');
         
@@ -49,7 +79,28 @@ class StatusTableSeeder extends Seeder
             'name' => 'UNASSIGNED',
             'description' => 'Contact not assigned to attendant yet',
         ]);
-        $this->command->info('ContactsStatus ACTIVE');
+        $this->command->info('Contacts Status UNASSIGNED');
+
+        ContactsStatus::create([
+            'id' => '3',
+            'name' => 'PRIORITY',
+            'description' => 'Contact have high priority',
+        ]);
+        $this->command->info('Contacts Status PRIORITY');
+        
+        ContactsStatus::create([
+            'id' => '4',
+            'name' => 'FOLLOWUP',
+            'description' => 'Contact need to be folowup by attendant',
+        ]);
+        $this->command->info('Contacts Status FOLLOWUP');
+
+        ContactsStatus::create([
+            'id' => '5',
+            'name' => 'ARCHIVED',
+            'description' => 'Conversation wit this contact was classed and is archived. The contact will be not appear in the contact list',
+        ]);
+        $this->command->info('Contacts Status ARCHIVED');
     }
 
     function CreateUsersStatus() {
@@ -103,4 +154,22 @@ class StatusTableSeeder extends Seeder
         ]);
         $this->command->info('UsersStatus PAUSED');    
     }
+
+    function CreateMessageTypes(){
+        $this->command->info('Creating MessageTypes:');
+        MessagesType::create([
+            'id' => '5',
+            'name' => 'REMINDER',
+            'description' => 'Message was remindered by attendant',//lembrete
+        ]);
+        $this->command->info('MessageType REMINDER');
+        
+        MessagesType::create([
+            'id' => '5',
+            'name' => 'SUMMARY',
+            'description' => 'Message was remindered by attendant',//lembrete
+        ]);
+        $this->command->info('MessageType SUMMARY');
+    }
+
 }

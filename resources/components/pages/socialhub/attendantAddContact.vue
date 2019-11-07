@@ -121,18 +121,31 @@
 
                 //---------New record properties-----------------------------
                 model:{
-                    first_name: "",
-                    last_name: "",
-                    phone: "",
-                    email: "",
-                    description: "",
-                    remember: "",
-                    summary: "",
-                    whatsapp_id: "",
-                    facebook_id: "",
-                    instagram_id: "",
-                    linkedin_id: "",
+                    first_name: "Novo",
+                    last_name: "Novo",
+                    phone: "123456789",
+                    email: "novo@gmail.com",
+                    description: "nada",
+                    remember: "naada",
+                    summary: "nada",
+                    whatsapp_id: "123456789",
+                    facebook_id: "novofb",
+                    instagram_id: "novoig",
+                    linkedin_id: "novoln",
                 },
+                // model:{
+                //     first_name: "",
+                //     last_name: "",
+                //     phone: "",
+                //     email: "",
+                //     description: "",
+                //     remember: "",
+                //     summary: "",
+                //     whatsapp_id: "",
+                //     facebook_id: "",
+                //     instagram_id: "",
+                //     linkedin_id: "",
+                // },
 
                 summary_length:0,
                 remember_length:0,
@@ -164,7 +177,7 @@
                             'attendant_id':this.contact_atendant_id,
                         })
                         .then(response => {
-                            miniToastr.success("Contato adicionado com sucesso","Sucesso");
+                            miniToastr.success("Contato adicionado com sucesso. Procure-o na lista de contatos","Sucesso");
                             this.formReset();
                             this.toggle_left('close');
                             this.reload();
@@ -197,6 +210,10 @@
                 this.model.facebook_id = "";
                 this.model.instagram_id = "";
                 this.model.linkedin_id = "";
+            },
+
+            reload(){
+                this.$emit('onreloaddatas');
             },
 
             countLengthSumary: function(){
