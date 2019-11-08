@@ -320,16 +320,16 @@
             </div>
                 <v-scroll :height="Height(100)"  color="#ccc" style="background-color:white" bar-width="8px">
                     <ul>
-                        <li v-for="(message,index) in messagesWhereLike" class="chat_block" :key="index">
+                        <li v-for="(message,index) in messagesWhereLike" style="margin-left:0px" :key="index">
                             <a href="javascript:void()" @click.prevent="1">
-                                <article class="media mt-1 mb-4">
-                                    <span >{{message.message}}</span>
+                                <p >{{message.message}}</p>
+                                <!-- <article class="media mt-1 mb-1"> -->
                                     <!-- <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-success " href="javascript:void(0)">{{contact.first_name + ' ' + contact.last_name}}</a><br>
                                         <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
                                     <span class="mt-2 text-muted" style="font-size:10px">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span> -->
-                                </article>
+                                <!-- </article> -->
                             </a>
                         </li>
                     </ul>
@@ -432,6 +432,9 @@
                     this.selected_contact_index = contact.index;
                     ApiService.get(this.chat_url,{'contact_id':contact.id, 'page':0})
                         .then(response => {
+                            this.messagesWhereLike = [];
+                            this.searchMessageByStringInput = [];
+                            this.fn_show_chat_find_right_side();
                             this.messages = response.data;                        
                         })
                         .catch(function(error) {
@@ -453,16 +456,13 @@
                             'page': 1
                         })
                         .then(response => {
-                            // this.$ref.searchMessageByStringInputref.focus();                       
                             this.messagesWhereLike = response.data;
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
                         });
-
-                    setTimeout(() => {
-                        this.$refs.input.focus();
-                    }, 20);
+                } else{
+                    this.messagesWhereLike = [];
                 }
             },
 
