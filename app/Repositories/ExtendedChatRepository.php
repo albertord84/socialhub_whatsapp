@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedChatRepository extends ChatRepository
 {    
 
-    public function contactChat(int $attendant_id, int $contact_id, int $page): Collection{
+    public function contactChat(int $attendant_id, int $contact_id, int $page, string $searchMessageByStringInput): Collection{
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
-        $Chat = $chatModel->where('contact_id', $contact_id)->get();
+        if($searchMessageByStringInput ==''){
+            $Chat = $chatModel->where('contact_id', $contact_id)->get();
+        }else{
+            $Chat = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
+        }
         // $cities = $chatModel->model::whereHas('state', function($query) {
         //         $query->whereId($attendant_id);
         //     })

@@ -29,12 +29,9 @@ class ExtendedChatController extends ChatController
         $User = Auth::check()? Auth::user():session('logged_user');
         $contact_id = (int)$request['contact_id'];
         $page = (int)$request['page'];
-        $chats = $this->chatRepository->contactChat($User->id, $contact_id, $page);
+        $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
+        $chats = $this->chatRepository->contactChat($User->id, $contact_id, $page, $searchMessageByStringInput);
         return $chats->toJson();
-
-        // $chats = $this->chatRepository->all();
-        // return view('chats.index')
-        //     ->with('chats', $chats);
     }
 
     /**

@@ -105,7 +105,7 @@
                 <v-scroll :height="Height(100)"  color="#ccc" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
-                            <a :href="contact.first_name" @click.prevent="show_chat(contact)">
+                            <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
                                 <article class="media mt-1 mb-4">
                                     <a class="float-left desc-img mt-3"><img :src="JSON.parse(contact.json_data).urlProfilePicture" class="my-rounded-circle"></a>
                                     <span v-show="contact.count_unread_messagess>0" class="status-new-messages" :title='contact.count_unread_messagess+" mensagens novas"'>{{contact.count_unread_messagess}}</span>
@@ -310,7 +310,7 @@
                             <i class="fa fa-arrow-left"></i>
                         </div>
                     </div>
-                    <input class="form-control search-input border-left-0 border-right-0 border" type="search" v-model="searchMessageByStringInput" placeholder="Buscar..." >
+                    <input class="form-control search-input border-left-0 border-right-0 border" type="search" v-model="searchMessageByStringInput" @keyup="getContactChatWhereLike" placeholder="Buscar..." >
                     <div v-if="searchMessageByStringInput.length>0" class="input-group-prepend">
                         <div style="background-color:#fffff8;color:gray" @click="searchMessageByStringInput=''" class="input-group-text border-left-0 border">
                             <i class="fa fa-close"></i>
@@ -345,11 +345,12 @@
             return {
                 contacts_url: 'contacts',
                 chat_url: 'chats',
-                contacts:[],//chat_data,
-                messages:[],
+
+                contacts:[],
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
-                searchMessageByStringInput:'',
+
+                messages:[],
                 newMessage: {
                     'attendant_id':0,
                     'contact_id':0,
@@ -359,6 +360,9 @@
                     'status_id':1, //text //TODO criar tabela
                     'socialnetwork_id':1, //Whatsapp
                 },
+                searchMessageByStringInput:'',
+                messagesWhereLike:[],
+
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
                 right_layout:'toggle-edit-contact',
@@ -405,7 +409,7 @@
                     });
             }, 
 
-            show_chat: function(contact) {
+            getContactChat: function(contact) {
                 if(this.selected_contact_index!=contact.index){
                     this.selected_contact_index = contact.index;
                     ApiService.get(this.chat_url,{'contact_id':contact.id, 'page':0})
@@ -416,6 +420,28 @@
                             miniToastr.error(error, "Error carregando os contatos");   
                         });
     
+                    setTimeout(() => {
+                        this.$refs.input.focus();
+                    }, 20);
+                }
+            },
+            
+            getContactChatWhereLike: function() {
+                this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
+                if (this.searchMessageByStringInput.length > 1){
+                    ApiService.get(this.chat_url,{
+                            'contact_id': this.contacts[this.selected_contact_index].id,
+                            'searchMessageByStringInput': this.searchMessageByStringInput,
+                            'page': 1
+                        })
+                        .then(response => {
+                            console.log(response.data);
+                            this.messagesWhereLike = response.data;                        
+                        })
+                        .catch(function(error) {
+                            miniToastr.error(error, "Error carregando os contatos");   
+                        });
+
                     setTimeout(() => {
                         this.$refs.input.focus();
                     }, 20);
