@@ -306,17 +306,35 @@
                         <div v-if="searchMessageByStringInput.length==0" style="background-color:#fffff8;color:gray" class="input-group-text border-right-0 border">
                             <i class="fa fa-search"></i>
                         </div>
-                        <div v-if="searchMessageByStringInput.length>0" @click="searchMessageByStringInput=''" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-right-0 border">
+                        <div v-if="searchMessageByStringInput.length>0" @click="searchMessageByStringInput='';messagesWhereLike=[];" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-right-0 border">
                             <i class="fa fa-arrow-left"></i>
                         </div>
                     </div>
-                    <input class="form-control search-input border-left-0 border-right-0 border" type="search" v-model="searchMessageByStringInput" @keyup="getContactChatWhereLike" placeholder="Buscar..." >
+                    <input class="form-control search-input border-left-0 border-right-0 border" ref="searchMessageByStringInputref" type="search" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" placeholder="Buscar..." >
                     <div v-if="searchMessageByStringInput.length>0" class="input-group-prepend">
-                        <div style="background-color:#fffff8;color:gray" @click="searchMessageByStringInput=''" class="input-group-text border-left-0 border">
+                        <div style="background-color:#fffff8;color:gray" @click="searchMessageByStringInput='';messagesWhereLike=[];" class="input-group-text border-left-0 border">
                             <i class="fa fa-close"></i>
                         </div>
                     </div>
                 </div>
+            </div>
+                <v-scroll :height="Height(100)"  color="#ccc" style="background-color:white" bar-width="8px">
+                    <ul>
+                        <li v-for="(message,index) in messagesWhereLike" class="chat_block" :key="index">
+                            <a href="javascript:void()" @click.prevent="1">
+                                <article class="media mt-1 mb-4">
+                                    <span >{{message.message}}</span>
+                                    <!-- <div class="media-body pl-3 mb-1 mt-3 chat_content">
+                                        <a class="text-success " href="javascript:void(0)">{{contact.first_name + ' ' + contact.last_name}}</a><br>
+                                        <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
+                                    </div>
+                                    <span class="mt-2 text-muted" style="font-size:10px">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span> -->
+                                </article>
+                            </a>
+                        </li>
+                    </ul>
+                </v-scroll>
+            <div>
             </div>
         </div>
         
@@ -435,8 +453,8 @@
                             'page': 1
                         })
                         .then(response => {
-                            console.log(response.data);
-                            this.messagesWhereLike = response.data;                        
+                            // this.$ref.searchMessageByStringInputref.focus();                       
+                            this.messagesWhereLike = response.data;
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
