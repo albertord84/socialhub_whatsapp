@@ -25,6 +25,11 @@ class ExtendedChatController extends ChatController
      * @param Request $request
      * @return Response
      */
+    public function aaa(Request $request) {
+        dd('ok ok');
+    }
+
+
     public function index(Request $request) {
         $User = Auth::check()? Auth::user():session('logged_user');
         $contact_id = (int)$request['contact_id'];
