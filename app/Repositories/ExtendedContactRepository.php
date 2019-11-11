@@ -16,8 +16,8 @@ class ExtendedContactRepository extends ContactRepository
     {
         if ($attendant_id) {
             $chatModel = new ExtendedChat();
-            $chatModel->table = (string)$attendant_id;
-            
+            $chatModel->table = (string) $attendant_id;
+
             $Attentand = UsersAttendant::with('AttendantsContacts')->find($attendant_id);
             $Contacts = new Collection();
             foreach ($Attentand['AttendantsContacts'] as $key => $AttendantsContact) {
@@ -32,20 +32,15 @@ class ExtendedContactRepository extends ContactRepository
                 $Contacts[$key]['last_message'] = $lastMesssage;
                 $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
             }
-        }
-        else {
-            $Contacts = $this->with(['Status', 'latestAttendantContact'])->findWhere(['company_id' => $company_id])->each(function ($Contact, $key) {
-                $Attendant_User = null;
-                if ($Contact['latestAttendantContact']) {
-                    $latestAttendant = $Contact['latestAttendantContact']->with('Attendant')->find($Contact->id);
-                    $Attendant_User = $latestAttendant['Attendant']->with('User')->find($latestAttendant->attendant_id);
+        } else {
+            // $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->get();
+            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->each(function ($Contact, $key) {
+                if ($Contact->latestAttendant) {
+                    $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
                 }
-                $Contact->latestAttendant = $Attendant_User;
             });
         }
         return $Contacts;
     }
-
-    
 
 }

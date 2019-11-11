@@ -56,7 +56,7 @@ class TestController extends AppBaseController
         // Notification::send($User, new NewContactMessage("Test New Contact Message"));
 
         // broadcast(new newMessage("{'message':'test 77'}"));
-        broadcast(new newMessage("{'message':'test 77'}"));
+        broadcast(new MessageToAttendant("{'message':'test 77'}"));
 
         // $Collection = $this->repository->fullContacts(1, 4);
 
@@ -68,6 +68,68 @@ class TestController extends AppBaseController
 
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
+    }
+
+
+    public function getGuzzleRequest()
+    {
+        $client = new \GuzzleHttp\Client();
+        $request = $client->get('http://myexample.com');
+        $response = $request->getBody();
+
+        dd($response);
+    }
+
+    public function postGuzzleRequest()
+    {
+        $client = new \GuzzleHttp\Client();
+        $url = "http://myexample.com/api/posts";
+
+        $myBody['name'] = "Demo";
+        $request = $client->post($url, [
+            'multipart' => [
+                [
+                    'name'     => 'file_name',
+                    'contents' => fopen('/path/to/file', 'r')
+                ],
+                [
+                    'name'     => 'csv_header',
+                    'contents' => 'First Name, Last Name, Username',
+                    'filename' => 'csv_header.csv'
+                ]
+            ]]);
+        $response = $request->send();
+    
+        dd($response);
+    }
+
+    public function putGuzzleRequest()
+    {
+        $client = new \GuzzleHttp\Client();
+        // PUT
+        $client->put('http://www.example.com/user/4', [
+            'body' => [
+                'email' => 'test@gmail.com',
+                'name' => 'Test user',
+                'password' => 'testpassword',
+            ],
+            'timeout' => 5
+        ]);
+
+        // DELETE
+        $client->delete('http://www.example.com/user');
+    
+        dd($response);
+    }
+
+    public function deleteGuzzleRequest()
+    {
+        $client = new \GuzzleHttp\Client();
+        $url = "http://myexample.com/api/posts/1";
+        $request = $client->delete($url);
+        $response = $request->send();
+    
+        dd($response);
     }
 
 }

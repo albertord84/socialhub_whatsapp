@@ -18,6 +18,8 @@ class ChatController extends AppBaseController
 
     public function __construct(ChatRepository $chatRepo)
     {
+        // $this->middleware('guest');
+
         $this->chatRepository = $chatRepo;
     }
 
