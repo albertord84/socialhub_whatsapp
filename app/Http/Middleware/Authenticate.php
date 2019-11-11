@@ -16,4 +16,15 @@ class Authenticate extends Middleware
     {
         return route('login');
     }
+
+    /**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array
+     */
+    protected $except = [
+        'RPI/reciveTextMessage',
+        'reciveTextMessage'
+        //
+    ];    
 }

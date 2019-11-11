@@ -6,18 +6,22 @@ use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Contact;
 use App\Repositories\ExtendedChatRepository;
-
-use Illuminate\Http\Request;
-use Flash;
-use Response;
 use Auth;
+use Flash;
+use Illuminate\Http\Request;
+use Response;
 
 class ExtendedChatController extends ChatController
 {
+    private $APP_WP_API_URL;
 
     public function __construct(ExtendedChatRepository $chatRepo)
     {
+        // $this->middleware('guest');
+
         $this->chatRepository = $chatRepo;
+
+        $this->APP_WP_API_URL = env('APP_WP_API_URL');
     }
 
     /**
@@ -25,10 +29,11 @@ class ExtendedChatController extends ChatController
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request) {
-        $User = Auth::check()? Auth::user():session('logged_user');
-        $contact_id = (int)$request['contact_id'];
-        $page = (int)$request['page'];
+    public function index(Request $request)
+    {
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $contact_id = (int) $request['contact_id'];
+        $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         $chats = $this->chatRepository->contactChat($User->id, $contact_id, $page, $searchMessageByStringInput);
         return $chats->toJson();
@@ -39,17 +44,18 @@ class ExtendedChatController extends ChatController
      * @param CreateChatRequest $request
      * @return Response
      */
-    public function store(CreateChatRequest $request) {
-        // Send text message to SH Rest API 
-        $User = Auth::check()? Auth::user():session('logged_user');
+    public function store(CreateChatRequest $request)
+    {
+        // Send text message to SH Rest API
+        $User = Auth::check() ? Auth::user() : session('logged_user');
         $input = $request->all();
         $input['attendant_id'] = $User->id;
 
         $Contact = Contact::findOrFail($input['contact_id']);
         if ($this->send_message($input['message'], $Contact->whatsapp_id)) {
-            $chat = $this->chatRepository->createMessage($input);        
+            $chat = $this->chatRepository->createMessage($input);
             return $chat->toJson();
-        }        
+        }
 
         return Flash::error('Chat saved successfully.');
 
@@ -57,64 +63,57 @@ class ExtendedChatController extends ChatController
         // return redirect(route('chats.index'));
     }
 
-    public function send_message(string $message, string $contact_id)
+    // /**
+    //  * Store a newly created Chat in storage.
+    //  * @param Request  $request
+    //  * @return Response
+    //  */
+    // public function store(Request $request) {
+    //     // Send text message to SH Rest API
+    //     // $User = Auth::check()? Auth::user():session('logged_user');
+    //     dd("ok");
+    //     $input = $request->all();
+    //     $contact_id = $input['Jid'];
+
+    //     // $Contact = Contact::findOrFail($contact_id);
+    //     $Contact = $this->with(['Status', 'latestAttendantContact'])->findWhere(['contact_id' => $contact_id])->get();
+    //     dd($Contact);
+    //     // $Contact = $this->with(['Status', 'latestAttendantContact'])->findWhere(['contact_id' => $contact_id])->each(function ($Contact, $key) {
+
+    //     // });
+    //     $Attendant = $Contact->latestAttendant();
+    //     if ($this->send_message($input['message'], $Contact->whatsapp_id)) {
+    //         $chat = $this->chatRepository->createMessage($input);
+    //         return $chat->toJson();
+    //     }
+
+    //     return Flash::error('Chat saved successfully.');
+
+    //     // Flash::success('Chat saved successfully.');
+    //     // return redirect(route('chats.index'));
+    // }
+
+    public function send_message(string $message, string $contact_Jid)
     {
         try {
             $client = new \GuzzleHttp\Client();
-            $url = "http://192.168.25.91:8000/SendTextMessage";
-            
-            $myBody['RemoteJid'] = $contact_id;
-            $myBody['Message'] = $message;
-            $request = $client->post($url,  ['body'=>$myBody]);
-            $response = $request->send();
+            $url = $this->APP_WP_API_URL . '/SendTextMessage';
 
-            dd($response);
-            // return $response;
+            $form_params['RemoteJid'] = $contact_Jid;
+            $form_params['Contact'] = Contact::where(['whatsapp_id' => $contact_Jid])->first();
+            $form_params['Message'] = $message;
+            $response = $client->request('POST', $url, [
+                'form_params' => [
+                    'RemoteJid' => $contact_Jid,
+                    'Message' => $message,
+                ],
+            ]);
+
+            // dd($response);
+            return $response;
         } catch (\Throwable $th) {
             throw $th;
         }
-    }
-
-    public function getGuzzleRequest()
-    {
-        $client = new \GuzzleHttp\Client();
-        $request = $client->get('http://myexample.com');
-        $response = $request->getBody();
-
-        dd($response);
-    }
-
-    public function postGuzzleRequest()
-    {
-        $client = new \GuzzleHttp\Client();
-        $url = "http://myexample.com/api/posts";
-
-        $myBody['name'] = "Demo";
-        $request = $client->post($url,  ['body'=>$myBody]);
-        $response = $request->send();
-    
-        dd($response);
-    }
-
-    public function putGuzzleRequest()
-    {
-        $client = new \GuzzleHttp\Client();
-        $url = "http://myexample.com/api/posts/1";
-        $myBody['name'] = "Demo";
-        $request = $client->put($url,  ['body'=>$myBody]);
-        $response = $request->send();
-    
-        dd($response);
-    }
-
-    public function deleteGuzzleRequest()
-    {
-        $client = new \GuzzleHttp\Client();
-        $url = "http://myexample.com/api/posts/1";
-        $request = $client->delete($url);
-        $response = $request->send();
-    
-        dd($response);
     }
 
     /**
@@ -123,7 +122,8 @@ class ExtendedChatController extends ChatController
      * @param UpdateChatRequest $request
      * @return Response
      */
-    public function update($id, UpdateChatRequest $request){
+    public function update($id, UpdateChatRequest $request)
+    {
         $chat = $this->chatRepository->findWithoutFail($id);
 
         if (empty($chat)) {
@@ -144,7 +144,8 @@ class ExtendedChatController extends ChatController
      * @param  int $id
      * @return Response
      */
-    public function destroy($id){
+    public function destroy($id)
+    {
         $chat = $this->chatRepository->findWithoutFail($id);
 
         if (empty($chat)) {

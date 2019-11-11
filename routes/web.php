@@ -9,7 +9,18 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
+
+// Route::post('storeFromRPi', 'ExtendedChatController@storeFromRPi');
+// Route::get('reciveTextMessage', function() {
+//     die("ok");
+// });
+
+// Route::group(['prefix' => 'RPI'], function ($router) {
+Route::post('reciveTextMessage', 'RPIController@reciveTextMessage');
+// Route::get('store', 'RPIController@store');
+// Route::get('index', 'ExtendedChatController@index');
+// });
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,14 +56,13 @@ Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
 Route::resource('attendantsContacts', 'AttendantsContactController');
 
 Route::resource('companies', 'CompanyController');
-    
+
 Route::resource('messageTypes', 'MessageTypeController');
 Route::resource('messagesStatuses', 'MessagesStatusController');
 
 Route::resource('systemConfigs', 'SystemConfigController');
 
 Route::resource('chats', 'ExtendedChatController');
-
 
 Route::resource('test', 'TestController');
 
