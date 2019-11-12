@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
 use App\Models\ExtendedChat;
 use App\Repositories\ExtendedChatRepository;
@@ -13,7 +13,7 @@ use RuntimeException;
 
 use App\Events\newMessage;
 use App\Models\UsersAttendant;
-use App\Notifications\NewContactMessage;
+use App\Events\NewContactMessage;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +56,18 @@ class TestController extends AppBaseController
         // Notification::send($User, new NewContactMessage("Test New Contact Message"));
 
         // broadcast(new newMessage("{'message':'test 77'}"));
-        broadcast(new MessageToAttendant("{'message':'test 77'}"));
+
+
+
+        $Chat = ExtendedChat::find(1);
+        broadcast(new MessageToAttendant($Chat));
+        
+
+
+        // broadcast(new NewContactMessage(1));
+        // broadcast(new NewContactMessage($User->company_id));
+
+
 
         // $Collection = $this->repository->fullContacts(1, 4);
 

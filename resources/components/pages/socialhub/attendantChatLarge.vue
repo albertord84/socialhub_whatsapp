@@ -580,38 +580,47 @@
         },
 
         mounted(){
-            console.log(process.env); //socialhub_mvp
 
-            // window.Echo = new Echo({
-            var Echo1 = new Echo({
+            // alert(this.contacts[this.selected_contact_index].id);
+
+            window.Echo = new Echo({
                 broadcaster: 'pusher',
-                // key: 'socialhub',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
                 wsHost: window.location.hostname,
                 wsPort: 6001,
                 wssPort: 6001,
                 encrypted: false,
-                disableStats: false //pra que não envie estatísticas
+                disableStats: false
             });
 
-            // window.Echo.channel('shchat')
-            Echo1.join('shchat')
-                .here(user => {
-                    console.log("Here");
-                    console.log(user);
-                })
-                .joining(user => {
-                    console.log("Here");
-                    console.log(user);
-                })
-                .leaving(user => {
-                    console.log("Here");
-                    console.log(user);
-                })
-                .listen('newMessage', (e) => {
+
+            var attendant_id = JSON.parse(localStorage.user).id;
+            window.Echo.channel('sh.message-to-attendant.' + attendant_id)
+                .listen('MessageToAttendant', (e) => {
+                    var message = JSON.parse(e.message);
+                    if(this.selected_contact_index >= 0 && this.contacts[this.selected_contact_index].id == message.contact_id){
+                        this.messages.push(message);
+                        this.contacts[this.selected_contact_index].last_message.message = message.message;
+                        this.$refs.message_scroller.scrolltobottom();
+                    }else{
+                        var This = this;
+                        This.contacts.forEach((item, index) => {
+                            if(item.id == message.contact_id){
+                                item.count_unread_messagess = item.count_unread_messagess + 1;
+                                item.last_message.message = message.message;
+                            }
+                        });
+                    }                    
+                });
+
+
+            var company_id = JSON.parse(localStorage.user).company_id;
+            window.Echo.channel('sh.contact-to-bag.' + company_id)
+                .listen('NewContactMessage', (e) => {
                     console.log(e);
-            });
+                });
+            
         },
 
         created() {

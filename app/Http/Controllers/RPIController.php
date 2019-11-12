@@ -39,6 +39,12 @@ class RPIController extends Controller
         $input = $request->all();
         // var_dump($input);
         $contact_Jid = $input['Jid'];
+
+
+
+        // TODO: Alberto
+        $company_id = 1;
+        // $company_id = $input['company_id'];
         // $contact_Jid = "123";
         
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
@@ -80,7 +86,7 @@ class RPIController extends Controller
             // Create Chat Message
             $Chat->contact_id = $Contact->id;
             
-            broadcast(new NewContactMessage());
+            broadcast(new NewContactMessage($company_id));
             
         }
 

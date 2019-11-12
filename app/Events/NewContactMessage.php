@@ -16,14 +16,17 @@ class NewContactMessage implements ShouldBroadcast
 
     public $message;
 
+    public $channel;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(int $company_id)
     {
         $this->message = "New Contact to Bag";
+        $this->channel = "sh.contact-to-bag.$company_id";
     }
 
     /**
@@ -33,6 +36,6 @@ class NewContactMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('shchannel');
+        return new Channel($this->channel);
     }
 }
