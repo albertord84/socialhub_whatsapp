@@ -580,9 +580,6 @@
         },
 
         mounted(){
-
-            // alert(this.contacts[this.selected_contact_index].id);
-
             window.Echo = new Echo({
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
@@ -593,7 +590,6 @@
                 encrypted: false,
                 disableStats: false
             });
-
 
             var attendant_id = JSON.parse(localStorage.user).id;
             window.Echo.channel('sh.message-to-attendant.' + attendant_id)
@@ -613,7 +609,6 @@
                         });
                     }                    
                 });
-
 
             var company_id = JSON.parse(localStorage.user).company_id;
             window.Echo.channel('sh.contact-to-bag.' + company_id)
@@ -845,17 +840,17 @@
     }
 
     .person_name:before {
-        content: ' \25CF';
-        font-size: 21px;
-        position: relative;
-        top: -11px;
-        left: -27px;
-        color: #63c17f;
+        // content: ' \25CF';
+        // font-size: 21px;
+        // position: relative;
+        // top: -11px;
+        // left: -27px;
+        // color: #63c17f;
     }
 
     .person_name {
-        font-size: 12px;
-        color: gray;
+        // font-size: 12px;
+        // color: gray;
     }
 
     .profile {
