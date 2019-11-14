@@ -200,7 +200,7 @@
             }
         },
 
-        methods: {  
+        methods: {
             getContacts: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
