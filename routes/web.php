@@ -12,11 +12,12 @@
  */
 
 // Route::post('storeFromRPi', 'ExtendedChatController@storeFromRPi');
-// Route::get('reciveTextMessage', function() {
+// Route::get('reciveImageMessage', function () {
 //     die("ok");
 // });
 
 // Route::group(['prefix' => 'RPI'], function ($router) {
+Route::post('reciveImageMessage', 'RPIController@reciveImageMessage');
 Route::post('reciveTextMessage', 'RPIController@reciveTextMessage');
 // Route::get('store', 'RPIController@store');
 // Route::get('index', 'ExtendedChatController@index');

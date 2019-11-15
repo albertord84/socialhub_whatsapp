@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\FileUtils;
 use App\Models\Chat;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Response;
-use stdClass;
 
 class RPIController extends Controller
 {
@@ -34,15 +34,69 @@ class RPIController extends Controller
      */
     public function reciveTextMessage(Request $request)
     {
+
+        // dd("test 2 ok");
+
         $input = $request->all();
-        // var_dump($input);
+
+        $Chat = $this->messageToChatModel($input);
+
+        $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
+        $path = base_path() . "/../socialhub_mvp_files/attendants/$Chat->attendant_id/$Chat->contact_id";
+
+        $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
+
+        $Chat->data = $file_response;
+        $Chat->save();
+
+        return $Chat->toJson();
+
+        // $input = $request->all();
+
+        // $Chat = $this->messageToChatModel($input);
+
+        // $Chat->save();
+
+        // return $Chat->toJson();
+    }
+
+    /**
+     * Recive Image Message
+     * @param Request $request
+     * @return Response
+     */
+    public function reciveImageMessage(Request $request)
+    {
+        // dd("test 3 ok");
+
+        $input = $request->all();
+
+        $Chat = $this->messageToChatModel($input);
+
+        $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
+        $path = base_path() . "/../socialhub_mvp_files/attendants/$Chat->attendant_id/$Chat->contact_id";
+
+        $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
+
+        $Chat->data = $file_response;
+        $Chat->save();
+
+        return $Chat->toJson();
+    }
+
+    /**
+     * Create a Chat model from a RPi message
+     *
+     * @param array Request $input
+     * @return Chat
+     */
+    public function messageToChatModel(array $input): Chat
+    {
         $contact_Jid = $input['Jid'];
-        // $contact_Jid = "123";
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
         if ($Contact) {
-            // dd($Contact->latestAttendantContact->attendant_id);
             $Chat = new Chat();
             if ($Contact->latestAttendantContact) {
                 $Chat->table = $Contact->latestAttendantContact->attendant_id;
@@ -55,14 +109,12 @@ class RPIController extends Controller
             $Chat->type_id = 1; // TEXT
             $Chat->status_id = 1; // Active
             $Chat->socialnetwork_id = 1; // WhatsApp
-            $Chat->save();
 
             if ($Contact->latestAttendantContact) {
                 $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
                 $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
             }
             $Chat->contact_name = $Contact->first_name;
-            return $Chat->toJson();
         } else {
             // Create Mock Contact
             $Contact = new Contact();
@@ -78,20 +130,14 @@ class RPIController extends Controller
             $Chat->type_id = 1; // TEXT
             $Chat->status_id = 1; // Active
             $Chat->socialnetwork_id = 1; // WhatsApp
-            $Chat->save();
 
             $Chat->contact_name = $Contact->first_name;
             if ($Contact->latestAttendantContact) {
                 $Chat->attendant_name = $Contact->latestAttendantContact->attendant_name;
             }
-            return $Chat->toJson();
         }
 
-        $error = new stdClass();
-        $error->code = 1;
-        $error->message = "Error Reciveing Text Message";
-        return $error->message;
-        // return Flash::error('Chat saved successfully.');
+        return $Chat;
     }
 
 }

@@ -27,4 +27,9 @@ class AppBaseController extends Controller
     {
         return Response::json(ResponseUtil::makeError($error), $code);
     }
+
+    public static function withoutEvents()
+    {
+
+    }
 }

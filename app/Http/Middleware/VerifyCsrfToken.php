@@ -20,7 +20,8 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'RPI/reciveTextMessage',
-        'reciveTextMessage'
-        //
+        'reciveTextMessage',
+        'RPI/reciveImageMessage',
+        'reciveImageMessage',
     ];
 }
