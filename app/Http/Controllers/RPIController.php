@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Business\FileUtils;
 use App\Models\Chat;
 use App\Models\Contact;
+use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
 use Response;
 
@@ -34,30 +34,28 @@ class RPIController extends Controller
      */
     public function reciveTextMessage(Request $request)
     {
-
         // dd("test 2 ok");
-
         $input = $request->all();
+        $contact_Jid = $input['Jid'];
 
-        $Chat = $this->messageToChatModel($input);
+        // TODO: Alberto
+        $company_id = 1;
+        // $company_id = $input['company_id'];
+        // $contact_Jid = "123";
 
-        $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
-        $path = base_path() . "/../socialhub_mvp_files/attendants/$Chat->attendant_id/$Chat->contact_id";
+        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
-        $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
+        $Chat = $this->messageToChatModel($input, $Contact);
 
-        $Chat->data = $file_response;
         $Chat->save();
 
+        $Chat->contact_name = $Contact->first_name;
+        if ($Contact->latestAttendantContact) {
+            $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+            $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+        }
+
         return $Chat->toJson();
-
-        // $input = $request->all();
-
-        // $Chat = $this->messageToChatModel($input);
-
-        // $Chat->save();
-
-        // return $Chat->toJson();
     }
 
     /**
@@ -69,19 +67,19 @@ class RPIController extends Controller
     {
         // dd("test 3 ok");
 
-        $input = $request->all();
+        // $input = $request->all();
 
-        $Chat = $this->messageToChatModel($input);
+        // $Chat = $this->messageToChatModel($input);
 
-        $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
-        $path = base_path() . "/../socialhub_mvp_files/attendants/$Chat->attendant_id/$Chat->contact_id";
+        // $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
+        // $path = base_path() . "/../socialhub_mvp_files/attendants/$Chat->attendant_id/$Chat->contact_id";
 
-        $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
+        // $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
 
-        $Chat->data = $file_response;
-        $Chat->save();
+        // $Chat->data = $file_response;
+        // $Chat->save();
 
-        return $Chat->toJson();
+        // return $Chat->toJson();
     }
 
     /**
@@ -90,7 +88,7 @@ class RPIController extends Controller
      * @param array Request $input
      * @return Chat
      */
-    public function messageToChatModel(array $input): Chat
+    public function messageToChatModel(array $input, Contact $Contact): Chat
     {
         $contact_Jid = $input['Jid'];
 
@@ -121,12 +119,6 @@ class RPIController extends Controller
             $Chat->type_id = 1; // TEXT
             $Chat->status_id = 1; // Active
             $Chat->socialnetwork_id = 1; // WhatsApp
-
-            if ($Contact->latestAttendantContact) {
-                $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
-            }
-            $Chat->contact_name = $Contact->first_name;
         } else {
             // TODO: Albert: Conferir com o Bruno
             $company_phone = $input['CompanyPhone'];
@@ -151,10 +143,6 @@ class RPIController extends Controller
             $Chat->status_id = 1; // Active
             $Chat->socialnetwork_id = 1; // WhatsApp
 
-            $Chat->contact_name = $Contact->first_name;
-            if ($Contact->latestAttendantContact) {
-                $Chat->attendant_name = $Contact->latestAttendantContact->attendant_name;
-            }
         }
 
         return $Chat;
