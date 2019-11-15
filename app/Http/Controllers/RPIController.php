@@ -94,8 +94,20 @@ class RPIController extends Controller
     {
         $contact_Jid = $input['Jid'];
 
+        // TODO: Alberto
+        $company_id = 1;
+        // $company_id = $input['company_id'];
+        // $contact_Jid = "123";
+
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
+        $Chat = new ExtendedChat();
+        $Chat->source = 1;
+        $Chat->message = $input['Msg'];
+        $Chat->created_at = $input['Date'];
+        $Chat->type_id = 1; // TEXT
+        $Chat->status_id = 1; // Active
+        $Chat->socialnetwork_id = 1; // WhatsApp
         if ($Contact) {
             $Chat = new Chat();
             if ($Contact->latestAttendantContact) {
@@ -116,13 +128,21 @@ class RPIController extends Controller
             }
             $Chat->contact_name = $Contact->first_name;
         } else {
+            // TODO: Albert: Conferir com o Bruno
+            $company_phone = $input['CompanyPhone'];
+            $Company = Company::where(['whatsapp_id' => $company_phone])->first();
+
             // Create Mock Contact
             $Contact = new Contact();
             $Contact->first_name = $contact_Jid;
+            $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
+
+            // TODO: Jose: Remoe it
+            $Contact->attendant_id = 4;
+
             $Contact->save();
             // Create Chat Message
-            $Chat = new Chat();
             $Chat->contact_id = $Contact->id;
             $Chat->source = 1;
             $Chat->message = $input['Msg'];

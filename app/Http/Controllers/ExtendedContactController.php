@@ -36,7 +36,8 @@ class ExtendedContactController extends ContactController
                 $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, null);
             } 
             else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-                $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, (int)$User->id);
+                $filter = $request->filter_contact;
+                $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, (int)$User->id, $filter);
             }
 
             return $Contacts->toJson();

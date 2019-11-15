@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
 use App\Models\ExtendedChat;
 use App\Repositories\ExtendedChatRepository;
@@ -11,8 +11,14 @@ use App\Repositories\ExtendedContactRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use RuntimeException;
 
+use App\Events\newMessage;
+use App\Models\UsersAttendant;
+use App\Events\NewContactMessage;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
 class TestController extends AppBaseController
@@ -33,9 +39,39 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $Collection = $this->repository->fullContacts(1, 4);
+        $User = Auth::user();
+        if (!$User) {
+            $User = User::find(4);
+            Auth::login($User, true);
+        }
+        // var_dump($User);
 
-        dd($Collection[0]['count_unread_messagess']);
+        // $data = (object) array(
+        //     "info" => "test info"
+        // );
+        // $result = $User->notify(new NewContactMessage($data));
+        // var_dump($result);
+        // die;
+        // $UsersAttendant = User::find(4);
+        // Notification::send($User, new NewContactMessage("Test New Contact Message"));
+
+        // broadcast(new newMessage("{'message':'test 77'}"));
+
+
+
+        $Chat = ExtendedChat::find(1);
+        broadcast(new MessageToAttendant($Chat));
+        
+
+
+        // broadcast(new NewContactMessage(1));
+        // broadcast(new NewContactMessage($User->company_id));
+
+
+
+        // $Collection = $this->repository->fullContacts(1, 4);
+
+        // dd($Collection[0]['count_unread_messagess']);
 
         // Bugsnag::notifyException(new RuntimeException("Test error"));
 

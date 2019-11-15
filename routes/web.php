@@ -43,7 +43,6 @@ Route::group(['prefix' => 'auth'], function ($router) {
 });
 
 Route::resource('usersStatuses', 'UsersStatusController');
-Route::resource('statuses', 'StatusController');
 Route::resource('roles', 'RoleController');
 Route::resource('users', 'UserController');
 Route::resource('usersManagers', 'UsersManagerController');
@@ -58,7 +57,6 @@ Route::resource('attendantsContacts', 'AttendantsContactController');
 
 Route::resource('companies', 'CompanyController');
 
-Route::resource('messageTypes', 'MessageTypeController');
 Route::resource('messagesStatuses', 'MessagesStatusController');
 
 Route::resource('systemConfigs', 'SystemConfigController');
@@ -68,7 +66,5 @@ Route::resource('chats', 'ExtendedChatController');
 Route::resource('test', 'TestController');
 
 Route::resource('socialnetworks', 'SocialnetworkController');
-
-Route::resource('messagesTypes', 'MessagesTypesController');
 
 Route::resource('messagesTypes', 'MessagesTypeController');
