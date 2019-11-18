@@ -59,7 +59,9 @@ class TestController extends AppBaseController
 
 
 
-        $Chat = ExtendedChat::find(1);
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $Chat = $ExtendedChat->find(1);
         broadcast(new MessageToAttendant($Chat));
         
 

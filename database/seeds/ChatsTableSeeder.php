@@ -26,7 +26,7 @@ class ChatsTableSeeder extends Seeder
         $this->command->info('Generating 30 messages for Attendant 4 and Contact 2...');
         $this->createChatMessages(4, 2, 30, 22);
         $this->command->info('Generating 100 messages for Attendant 5 and Contact 5...');
-        $this->createChatMessages(5, 5, 100);
+        $this->createChatMessages(5, 5, 40);
         
     }
     
@@ -46,7 +46,46 @@ class ChatsTableSeeder extends Seeder
                 'socialnetwork_id' => '1',
             ]);
             $this->command->info('Message '.$i.' created');
+
         }
+        $extendedChat->create([ //image file
+            'id' => $i,
+            'contact_id' => $contact_id,
+            'attendant_id' => $attendant_id,
+            'source' => $i%2, //0->me  and 1->you
+            'message' => Lorem::sentence(($i%9)+1, true),
+            'type_id' => '1',
+            'data' => '',
+            'status_id' => '1',
+            'socialnetwork_id' => '1',
+        ]);
+        $this->command->info('Message '.$i.' created');
+
+        $extendedChat->create([ //audio file
+            'id' => $i,
+            'contact_id' => $contact_id,
+            'attendant_id' => $attendant_id,
+            'source' => $i%2, //0->me  and 1->you
+            'message' => Lorem::sentence(($i%9)+1, true),
+            'type_id' => '1',
+            'data' => '',
+            'status_id' => '1',
+            'socialnetwork_id' => '1',
+        ]);
+        $this->command->info('Message '.$i.' created');
+
+        $extendedChat->create([ //video file
+            'id' => $i,
+            'contact_id' => $contact_id,
+            'attendant_id' => $attendant_id,
+            'source' => $i%2, //0->me  and 1->you
+            'message' => Lorem::sentence(($i%9)+1, true),
+            'type_id' => '1',
+            'data' => '',
+            'status_id' => '1',
+            'socialnetwork_id' => '1',
+        ]);
+        $this->command->info('Message '.$i.' created');
     }
 
     

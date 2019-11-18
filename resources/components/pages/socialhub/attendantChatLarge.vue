@@ -492,13 +492,13 @@
 
             //secundary functions
             mouseOverMessage(id){
-                document.getElementById(id).classList.remove("message-hout");
-                document.getElementById(id).classList.add("message-hover");
+                // document.getElementById(id).classList.remove("message-hout");
+                // document.getElementById(id).classList.add("message-hover");
             },
 
             mouseLeaveMessage(id){
-                document.getElementById(id).classList.add("message-hout");
-                document.getElementById(id).classList.remove("message-hover");
+                // document.getElementById(id).classList.add("message-hout");
+                // document.getElementById(id).classList.remove("message-hover");
             },
 
             fn_show_chat_right_side(){
