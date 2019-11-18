@@ -16,13 +16,11 @@
 //     die("ok");
 // });
 
-// Route::group(['prefix' => 'RPI'], function ($router) {
-Route::post('reciveImageMessage', 'RPIController@reciveImageMessage');
-Route::post('reciveTextMessage', 'RPIController@reciveTextMessage');
-Route::post('sendTextMessage', 'RPIController@sendMessage');
-// Route::get('store', 'RPIController@store');
-// Route::get('index', 'ExtendedChatController@index');
-// });
+Route::group(['prefix' => 'RPI'], function ($router) {
+    Route::post('reciveImageMessage', 'RPIController@reciveImageMessage');
+    Route::post('reciveTextMessage', 'RPIController@reciveTextMessage');
+    Route::post('sendTextMessage', 'RPIController@sendMessage');
+});
 
 Route::get('/', function () {
     return view('welcome');
