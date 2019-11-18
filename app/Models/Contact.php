@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Contact
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property \App\Models\Company company
  * @property \App\Models\ContactsStatus status
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
- * @property \Illuminate\Database\Eloquent\Collection 
+ * @property \Illuminate\Database\Eloquent\Collection
  * @property integer company_id
  * @property string first_name
  * @property string last_name
@@ -31,11 +31,9 @@ class Contact extends Model
 {
 
     public $table = 'contacts';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-
-
 
     public $fillable = [
         'company_id',
@@ -50,7 +48,7 @@ class Contact extends Model
         'facebook_id',
         'instagram_id',
         'linkedin_id',
-        'status_id'
+        'status_id',
     ];
 
     /**
@@ -72,7 +70,7 @@ class Contact extends Model
         'facebook_id' => 'string',
         'instagram_id' => 'string',
         'linkedin_id' => 'string',
-        'status_id' => 'integer'
+        'status_id' => 'integer',
     ];
 
     /**
@@ -81,7 +79,7 @@ class Contact extends Model
      * @var array
      */
     public static $rules = [
-        'id' => 'required'
+        'id' => 'required',
     ];
 
     /**
@@ -124,10 +122,16 @@ class Contact extends Model
         return $this->hasOne(\App\Models\AttendantsContact::class, 'contact_id', 'id')->latest();
 
         // $AttendantContact = $this->hasOne(\App\Models\AttendantsContact::class, 'contact_id', 'id')->latest();
-        // dd("OK");   
+        // dd("OK");
         // $Attendant = $AttendantContact->get();
         // dd($Attendant);
         // dd($AttendantContact->all()->last());
         // return UsersAttendant::with('User')->find($AttendantContact->attendant_id);
     }
+
+    public static function withoutEvents()
+    {
+
+    }
+
 }

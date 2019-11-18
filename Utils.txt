@@ -51,3 +51,9 @@ cd /var/www/html/socialhub
 
 # Atualizar cache e ficheiros
 composer dump-autoload 
+
+php artisan cache:clear
+## if error:
+mkdir storage/framework/cache/data
+
+php artisan config:clear

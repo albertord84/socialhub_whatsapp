@@ -3,7 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateChatsTable extends Migration {
+class CreateChatsTable extends Migration
+{
 
 	/**
 	 * Run the migrations.
@@ -34,15 +35,14 @@ class CreateChatsTable extends Migration {
 		});
 	}
 
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down(string $table_name = "chats")
-	{
-		Schema::connection('socialhub_mvp.chats')->drop($table_name);
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down(string $table_name = "chats")
+    {
+        Schema::connection('socialhub_mvp.chats')->drop($table_name);
+    }
 
 }
