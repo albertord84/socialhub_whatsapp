@@ -594,6 +594,7 @@
             var attendant_id = JSON.parse(localStorage.user).id;
             window.Echo.channel('sh.message-to-attendant.' + attendant_id)
                 .listen('MessageToAttendant', (e) => {
+                    console.log(e);
                     var message = JSON.parse(e.message);
                     if(this.selected_contact_index >= 0 && this.contacts[this.selected_contact_index].id == message.contact_id){
                         this.messages.push(message);

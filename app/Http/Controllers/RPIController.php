@@ -148,7 +148,7 @@ class RPIController extends Controller
         return $Chat;
     }
 
-    public function send_message(string $message, string $contact_Jid)
+    public function sendMessage(string $message, string $contact_Jid)
     {
         try {
             $client = new \GuzzleHttp\Client();

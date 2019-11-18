@@ -52,7 +52,8 @@ class ExtendedChatController extends ChatController
         $input['attendant_id'] = $User->id;
 
         $Contact = Contact::findOrFail($input['contact_id']);
-        if ($this->send_message($input['message'], $Contact->whatsapp_id)) {
+        $RPi = new RPIController();
+        if ($RPi->sendMessage($input['message'], $Contact->whatsapp_id)) {
             $chat = $this->chatRepository->createMessage($input);
             return $chat->toJson();
         }
@@ -61,59 +62,6 @@ class ExtendedChatController extends ChatController
 
         // Flash::success('Chat saved successfully.');
         // return redirect(route('chats.index'));
-    }
-
-    // /**
-    //  * Store a newly created Chat in storage.
-    //  * @param Request  $request
-    //  * @return Response
-    //  */
-    // public function store(Request $request) {
-    //     // Send text message to SH Rest API
-    //     // $User = Auth::check()? Auth::user():session('logged_user');
-    //     dd("ok");
-    //     $input = $request->all();
-    //     $contact_id = $input['Jid'];
-
-    //     // $Contact = Contact::findOrFail($contact_id);
-    //     $Contact = $this->with(['Status', 'latestAttendantContact'])->findWhere(['contact_id' => $contact_id])->get();
-    //     dd($Contact);
-    //     // $Contact = $this->with(['Status', 'latestAttendantContact'])->findWhere(['contact_id' => $contact_id])->each(function ($Contact, $key) {
-
-    //     // });
-    //     $Attendant = $Contact->latestAttendant();
-    //     if ($this->send_message($input['message'], $Contact->whatsapp_id)) {
-    //         $chat = $this->chatRepository->createMessage($input);
-    //         return $chat->toJson();
-    //     }
-
-    //     return Flash::error('Chat saved successfully.');
-
-    //     // Flash::success('Chat saved successfully.');
-    //     // return redirect(route('chats.index'));
-    // }
-
-    public function send_message(string $message, string $contact_Jid)
-    {
-        try {
-            $client = new \GuzzleHttp\Client();
-            $url = $this->APP_WP_API_URL . '/SendTextMessage';
-
-            $form_params['RemoteJid'] = $contact_Jid;
-            $form_params['Contact'] = Contact::where(['whatsapp_id' => $contact_Jid])->first();
-            $form_params['Message'] = $message;
-            $response = $client->request('POST', $url, [
-                'form_params' => [
-                    'RemoteJid' => $contact_Jid,
-                    'Message' => $message,
-                ],
-            ]);
-
-            // dd($response);
-            return $response;
-        } catch (\Throwable $th) {
-            throw $th;
-        }
     }
 
     /**
