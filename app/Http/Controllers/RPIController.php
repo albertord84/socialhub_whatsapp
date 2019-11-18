@@ -148,4 +148,26 @@ class RPIController extends Controller
         return $Chat;
     }
 
+    public function send_message(string $message, string $contact_Jid)
+    {
+        try {
+            $client = new \GuzzleHttp\Client();
+            $url = $this->APP_WP_API_URL . '/SendTextMessage';
+
+            $form_params['RemoteJid'] = $contact_Jid;
+            $form_params['Contact'] = Contact::where(['whatsapp_id' => $contact_Jid])->first();
+            $form_params['Message'] = $message;
+            $response = $client->request('POST', $url, [
+                'form_params' => [
+                    'RemoteJid' => $contact_Jid,
+                    'Message' => $message,
+                ],
+            ]);
+
+            // dd($response);
+            return $response;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
