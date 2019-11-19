@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Business\FileUtils;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
-use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
@@ -17,7 +16,8 @@ class RPIController extends Controller
 
     public function __construct()
     {
-        $this->APP_WP_API_URL = env('APP_WP_API_URL');
+        $this->APP_WP_API_URL = env('APP_WP_API_URL', '');
+        $this->APP_FILE_PATH = env('APP_FILE_PATH', 'app.socialhub.pro.files');
     }
 
     /**
@@ -44,7 +44,6 @@ class RPIController extends Controller
         // TODO: Alberto
         $company_id = 1;
         // $company_id = $input['company_id'];
-        // $contact_Jid = "123";
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
@@ -76,20 +75,33 @@ class RPIController extends Controller
      */
     public function reciveImageMessage(Request $request)
     {
-        dd("test 3 ok");
-
         $input = $request->all();
 
-        $Chat = $this->messageToChatModel($input);
+        // TODO: Alberto
+        $company_id = 1;
+        // $company_id = $input['company_id'];
+
+        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+
+        $Chat = $this->messageToChatModel($input, $Contact);
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
-        $files_path = env('APP_FILE_PATH', 'app.socialhub.pro.files');
-        $path = base_path() . "/../$files_path/attendants/$Chat->attendant_id/$Chat->contact_id";
+        $files_path = $this->APP_FILE_PATH;
+
+        $path = base_path() . "/../$files_path/$company_id/contacts/$Chat->contact_id/chat_files";
 
         $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
 
         $Chat->data = $file_response;
         $Chat->save();
+
+        if ($Contact) {
+            // Send event to attendants with new chat message
+            broadcast(new MessageToAttendant($Chat));
+        } else {
+            // Send event to all attendants with new contact
+            broadcast(new NewContactMessage($company_id));
+        }
 
         return $Chat->toJson();
     }
@@ -100,7 +112,7 @@ class RPIController extends Controller
      * @param array Request $input
      * @return Chat
      */
-    public function messageToChatModel(array $input, Contact $Contact): Chat
+    public function messageToChatModel(array $input, Contact $Contact): ExtendedChat
     {
         $contact_Jid = $input['Jid'];
 
@@ -112,7 +124,7 @@ class RPIController extends Controller
         $Chat->status_id = 1; // Active
         $Chat->socialnetwork_id = 1; // WhatsApp
         if ($Contact) {
-            $Chat = new Chat();
+            $Chat = new ExtendedChat();
             if ($Contact->latestAttendantContact) {
                 $Chat->table = $Contact->latestAttendantContact->attendant_id;
                 $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
@@ -124,7 +136,6 @@ class RPIController extends Controller
             $Chat->type_id = 1; // TEXT
             $Chat->status_id = 1; // Active
             $Chat->socialnetwork_id = 1; // WhatsApp
-
 
         } else {
             // TODO: Albert: Conferir com o Bruno
@@ -155,7 +166,7 @@ class RPIController extends Controller
         return $Chat;
     }
 
-    public function sendMessage(string $message, string $contact_Jid)
+    public function sendTextMessage(string $message, string $contact_Jid)
     {
         try {
             $client = new \GuzzleHttp\Client();
