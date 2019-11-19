@@ -23,10 +23,6 @@ class Authenticate extends Middleware
      * @var array
      */
     protected $except = [
-        'RPI/reciveTextMessage',
-        'reciveTextMessage',
-        'RPI/reciveImageMessage',
-        'reciveImageMessage',
-        //
+        'RPI/*'
     ];
 }
