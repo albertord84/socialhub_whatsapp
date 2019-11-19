@@ -2,7 +2,6 @@
 use App\Models\UsersStatus;
 use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
-use App\Models\MessagesType;
 use Illuminate\Database\Seeder;
 class StatusTableSeeder extends Seeder
 {
@@ -23,7 +22,6 @@ class StatusTableSeeder extends Seeder
         $this->CreateUsersStatus();
         $this->CreateContactsStatus();
         $this->CreateMessagesStatus();
-        $this->CreateMessageTypes();
     }
 
     function CreateMessagesStatus() {
@@ -144,20 +142,5 @@ class StatusTableSeeder extends Seeder
         $this->command->info('UsersStatus PAUSED');    
     }
 
-    function CreateMessageTypes(){
-        $this->command->info('Creating MessageTypes:');
-        MessagesType::create([
-            'id' => '1',
-            'name' => 'REMINDER',
-            'description' => 'Message was remindered by attendant',//lembrete
-        ]);
-        $this->command->info('MessageType REMINDER');
-        
-        MessagesType::create([
-            'id' => '2',
-            'name' => 'SUMMARY',
-            'description' => 'Message was remindered by attendant',//lembrete
-        ]);
-        $this->command->info('MessageType SUMMARY');
-    }
+    
 }

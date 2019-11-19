@@ -45,12 +45,25 @@ class MessagesTypesTableSeeder extends Seeder
         $this->command->info('Video message type created');
 
         MessagesType::create([
-            'id' => 4,
+            'id' => 5,
             'name' => 'Documents',
             'description' => 'Documents message type',
         ]);
         $this->command->info('Documents message type created');
-
+        
+        MessagesType::create([
+            'id' => 6,
+            'name' => 'Reminder',
+            'description' => 'Message was remindered by attendant',//lembrete
+        ]);
+        $this->command->info('Reminder message type created');
+        
+        MessagesType::create([
+            'id' => 7,
+            'name' => 'Summary',
+            'description' => 'Message was remindered by attendant',//lembrete
+        ]);
+        $this->command->info('Summary message type created');
 
 
     }
