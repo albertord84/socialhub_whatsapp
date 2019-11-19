@@ -53,7 +53,7 @@ class ExtendedChatController extends ChatController
 
         $Contact = Contact::findOrFail($input['contact_id']);
         $RPi = new RPIController();
-        if ($RPi->sendMessage($input['message'], $Contact->whatsapp_id)) {
+        if ($RPi->sendTextMessage($input['message'], $Contact->whatsapp_id)) {
             $chat = $this->chatRepository->createMessage($input);
             return $chat->toJson();
         }
