@@ -24,15 +24,17 @@ class ChatsTableSeeder extends Seeder
         $this->command->info('Generating 20 messages for Attendant 4 and Contact 1...');
         $this->createChatMessages(4, 1, 20);
         $this->command->info('Generating 30 messages for Attendant 4 and Contact 2...');
-        $this->createChatMessages(4, 2, 30, 22);
+        $this->createChatMessages(4, 2, 30, (22+3));
         $this->command->info('Generating 100 messages for Attendant 5 and Contact 5...');
         $this->createChatMessages(5, 5, 40);
         
     }
     
     public function createChatMessages(int $attendant_id, int $contact_id, int $amount, $start = 1) {
+        
         $extendedChat = new ExtendedChat();    
         $extendedChat->table = (string)$attendant_id;
+        
         for($i=$start; $i<=$start+$amount; $i++){
             $extendedChat->create([
                 'id' => $i,
@@ -48,44 +50,47 @@ class ChatsTableSeeder extends Seeder
             $this->command->info('Message '.$i.' created');
 
         }
+
         $extendedChat->create([ //image file
             'id' => $i,
             'contact_id' => $contact_id,
             'attendant_id' => $attendant_id,
             'source' => $i%2, //0->me  and 1->you
             'message' => Lorem::sentence(($i%9)+1, true),
-            'type_id' => '1',
+            'type_id' => '2',
             'data' => '',
             'status_id' => '1',
             'socialnetwork_id' => '1',
         ]);
-        $this->command->info('Message '.$i.' created');
-
+        $this->command->info('Message '.$i.' created: Type image');
+        
+        $i =$i + 1;
         $extendedChat->create([ //audio file
             'id' => $i,
             'contact_id' => $contact_id,
             'attendant_id' => $attendant_id,
             'source' => $i%2, //0->me  and 1->you
             'message' => Lorem::sentence(($i%9)+1, true),
-            'type_id' => '1',
-            'data' => '',
+            'type_id' => '3',
+            'data' => '{"url":""}',
             'status_id' => '1',
             'socialnetwork_id' => '1',
         ]);
-        $this->command->info('Message '.$i.' created');
+        $this->command->info('Message '.$i.' created: Type audio');
 
+        $i =$i + 1;
         $extendedChat->create([ //video file
             'id' => $i,
             'contact_id' => $contact_id,
             'attendant_id' => $attendant_id,
             'source' => $i%2, //0->me  and 1->you
             'message' => Lorem::sentence(($i%9)+1, true),
-            'type_id' => '1',
+            'type_id' => '4',
             'data' => '',
             'status_id' => '1',
             'socialnetwork_id' => '1',
         ]);
-        $this->command->info('Message '.$i.' created');
+        $this->command->info('Message '.$i.' created: Type video');
     }
 
     

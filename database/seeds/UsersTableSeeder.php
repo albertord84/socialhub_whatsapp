@@ -25,7 +25,7 @@ class UsersTableSeeder extends Seeder
         $this->command->info('Creating Users:');
 
         // $faker = new Faker();
-        $this->createAmins(1);
+        $this->createAdmins(1);
         $this->createSellers(2);
         $this->createManagers(3);
         $this->createAttendants(4);
@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
         
     }
 
-    public function createAmins($role_id){
+    public function createAdmins($role_id){
         User::create([
             'id' => 1,
             'company_id' => 1,
