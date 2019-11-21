@@ -1,15 +1,23 @@
 <template>
     <div class="">
+        <form v-show="action!='delete'">   
             <div class="col-lg-12 sect_header">
-                <ul class="menu">
-                    <li><a href="javascript:void(0)" @click.prevent="toggle_left('close')"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
-                    <li><p>Novo contato</p> </li>
+                <ul v-if='action=="insert"' class="menu">
+                    <li ><a  href="javascript:void(0)" @click.prevent="toggle_left('close')"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
+                    <li ><p>Novo contato</p> </li>                        
                     <ul class="menu float-right">
                         <li ><a href="javascript:void(0)" @click.prevent="toggle_left('close')"><i class="fa fa-close"></i></a></li>
                     </ul>
                 </ul>
+                <ul v-if='action=="edit"' class="menu">
+                    <li ><a href="javascript:void(0)" @click.prevent="editclose"><i class="fa fa-close"></i></a></li>
+                    <li ><p>Editar contato</p> </li>
+                    <ul class="menu float-right">
+                        <li ><a  href="javascript:void(0)" @click.prevent="editclose"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
+                    </ul>
+                </ul>
             </div>
-            <vue-form class="col-lg-12 form-horizontal form-validation" :state="formstate" @submit.prevent="addContact">
+            <form class="col-lg-12 form-horizontal form-validation" :state="formstate">
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="padding: 29px 0px 5px" class="form-group has-search">
@@ -93,10 +101,19 @@
                     </div>
                 </div>
                 <div class="col-lg-12 mt-2 text-center">
-                    <button type="submit" class="btn btn-primary btn_width">Adicionar</button>
+                    <button v-if='action=="insert"' type="button" class="btn btn-primary btn_width" :disabled='isSending' @click.prevent="addContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar</button>
+                    <button v-if='action=="edit"' type="button" class="btn btn-primary btn_width" :disabled='isSending' @click.prevent="updateContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar</button>
                     <button type="reset"  class="btn btn-effect-ripple btn-secondary btn_width reset_btn1" @click.prevent="formReset();toggle_left('close')">Cancelar</button>
                 </div>
-            </vue-form>
+            </form>
+        </form>
+        <form v-show="action=='delete'">
+            Tem certeza que deseja remover esse contato?
+            <div class="col-lg-12 mt-5 text-center">
+                <button type="button" class="btn btn-primary btn_width" @click.prevent="deleteContact">Eliminar</button>
+                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+            </div>                    
+        </form>
     </div>
 </template>
 <script>
@@ -110,6 +127,11 @@
     Vue.use(VueForm, options);
     export default {
         name: "add_user",
+        props:{
+            action:'',
+            item:{},
+        },
+
         data() {
             return {
                 //---------General properties-----------------------------
@@ -118,34 +140,25 @@
                 
                 //---------Specific properties-----------------------------
                 contact_id: "",
+                contact_atendant_id: "",
 
                 //---------New record properties-----------------------------
+                
                 model:{
-                    first_name: "Novo",
-                    last_name: "Novo",
-                    phone: "123456789",
-                    email: "novo@gmail.com",
-                    description: "nada",
-                    remember: "naada",
-                    summary: "nada",
-                    whatsapp_id: "123456789",
-                    facebook_id: "novofb",
-                    instagram_id: "novoig",
-                    linkedin_id: "novoln",
+                    first_name: "",
+                    last_name: "",
+                    phone: "",
+                    email: "",
+                    description: "",
+                    remember: "",
+                    summary: "",
+                    whatsapp_id: "",
+                    facebook_id: "",
+                    instagram_id: "",
+                    linkedin_id: "",
                 },
-                // model:{
-                //     first_name: "",
-                //     last_name: "",
-                //     phone: "",
-                //     email: "",
-                //     description: "",
-                //     remember: "",
-                //     summary: "",
-                //     whatsapp_id: "",
-                //     facebook_id: "",
-                //     instagram_id: "",
-                //     linkedin_id: "",
-                // },
+
+                isSending: false,
 
                 summary_length:0,
                 remember_length:0,
@@ -159,15 +172,18 @@
                 validationErrors:[],
             }
         },
+
         methods: {
             addContact: function () {
-                if(this.formstate.$invalid || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error(error, "Alguns dados incompletos");  
+                if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                    miniToastr.error("Confira os dados fornecidos","Alguns dados incompletos");  
                     return;
                 }
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 this.model.status_id = 1;
+                this.model.whatsapp_id += '@s.whatsapp.net';
                 this.contact_atendant_id = JSON.parse(localStorage.user).id;
+                this.isSending = true;
                 ApiService.post(this.url,this.model)
                 .then(response => {
                     if (this.contact_atendant_id) {
@@ -181,21 +197,62 @@
                             this.formReset();
                             this.toggle_left('close');
                             this.reload();
+                            this.isSending = false;
                         })
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando contato");  
+                            this.isSending = false;
                         });
                     }else{
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
                         this.formCancel();
+                        this.isSending = false;
                     }
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
+                    this.isSending = false;
                 });
+            },
+
+            editContact: function(){
+                this.model = Object.assign({}, this.item);
+                this.contact_id =  this.item.id;
+            },
+
+            updateContact: function() {
+                if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                    miniToastr.error(error, "Confira os dados fornecidos");  
+                    return;
+                }
+                ApiService.post(this.url+'/'+this.item.id, this.model)
+                .then(response => {
+                    miniToastr.success("Contato adicionado com sucesso. Procure-o na lista de contatos","Sucesso");
+                    this.formReset();
+                    this.editclose();
+                    this.reload();
+                    this.isSending = false;
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro adicionando contato");  
+                });
+            },
+
+            deleteContact(){
+                ApiService.delete(this.url+'/'+this.item.id)
+                    .then(response => {                        
+                        miniToastr.success("Contato eliminado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error);  
+                        miniToastr.error(error, "Erro eliminando o contato"); 
+                    });  
             },
 
             formReset:function(){
@@ -212,10 +269,6 @@
                 this.model.linkedin_id = "";
             },
 
-            reload(){
-                this.$emit('onreloaddatas');
-            },
-
             countLengthSumary: function(){
                 this.model.summary = this.model.summary.length > 500 ? this.model.summary.substring(0, 500) : this.model.summary;
                 this.summary_length = this.model.summary.length;                    
@@ -229,6 +282,28 @@
             toggle_left(action) {
                 this.$store.commit('leftside_bar', action);
             },
+
+            toggle_right() {
+               this.$store.commit('rightside_bar', "toggle");
+            },
+
+            formCancel(){
+                this.$emit('onclosemodal');
+            }, 
+
+            reload(){
+                this.$emit('reloadContacts');
+            },
+
+            editclose() {                
+               this.$emit('onclose');
+            },
+        },
+
+        beforeMount(){
+            if(this.action=='edit'){
+                this.editContact();
+            }
         },
 
         created() {
@@ -238,9 +313,6 @@
             miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
         },
 
-        mounted: function () {
-            
-        },
         destroyed: function () {
 
         }

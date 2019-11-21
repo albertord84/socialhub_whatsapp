@@ -1,8 +1,9 @@
 <template>
     <div class="row chat">
 
-        <right-side-bar :right_layout ="right_layout"></right-side-bar>
-        <left-side-bar  :left_layout ="left_layout" @reloadContacts='reloadContacts'></left-side-bar>
+        <left-side-bar  :left_layout ="left_layout" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        <!-- <right-side-bar :right_layout ="right_layout" :item='item' @reloadContacts='reloadContacts'></right-side-bar> -->
+
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -209,7 +210,7 @@
         </div>
 
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-right-side" v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0">
+        <div v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0">
             <div class="sect_header">
                 <ul class='menu'>
                     <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
@@ -221,19 +222,16 @@
                                         <i class="fa fa-ellipsis-v mt-3" title="Ações sobre contato" style="color:gray"></i>
                                     </template>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-exchange"></i> Transferir</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-exchange"></i> Transferir</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-bell-slash-o"></i> Silenciar</a>
-                                    </b-dropdown-item>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
+                                    </b-dropdown-item>                                    
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-ban"></i> Bloquear</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-trash-o"></i> Eliminar</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="fn_show_delete_modal()"><i class="fa fa-trash-o"></i> Eliminar</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
                             </li>                            
@@ -287,7 +285,7 @@
         </div>
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-find-right-side" v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0">
+        <div v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0">
             <div class="col-lg-12 sect_header">
                 <ul class="menu">
                     <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_find_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
@@ -331,6 +329,16 @@
             </div>
         </div>
         
+        <!-- Edit side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <div v-if="show_edit_right_side==true" class="col-lg-3 bg-white p-0">
+            <attendantCRUDContact :action='"edit"' :item='item' @onclose='fn_show_edit_right_side' @reloadContacts='reloadContacts'></attendantCRUDContact>
+        </div>
+
+        <!-- Modal to delete contact-->
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
+            <attendantCRUDContact :action='"delete"' :item='item' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+        </b-modal>
+        
     </div>
 </template>
 <script>
@@ -338,12 +346,11 @@
     import vScroll from "../../plugins/scroll/vScroll.vue";
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
-    import attendantFindMessages  from 'resources/components/pages/socialhub/attendantFindMessages'
     
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-
+    import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
 
     import Echo from 'laravel-echo';
     window.Pusher = require('pusher-js');
@@ -354,7 +361,8 @@
             vScroll,
             rightSideBar,
             leftSideBar,
-            attendantFindMessages
+
+            attendantCRUDContact
         },
 
          data() {
@@ -366,6 +374,10 @@
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
+                
+
+                item:{},
+                modalDeleteContact:false,
 
                 messages:[],
                 newMessage: {
@@ -382,6 +394,7 @@
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
+                show_edit_right_side:false,
                 right_layout:'toggle-edit-contact',
                 left_layout:'toggle-add-contact',
                 bgColor:require('img/pages/chat_background.png'),
@@ -506,11 +519,13 @@
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_right_side = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_right_side = false;
                 }
             },
@@ -520,13 +535,39 @@
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_find_right_side = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_find_right_side = false;
                 }
+            },
+
+            fn_show_edit_right_side(){
+                if(this.show_edit_right_side==false){
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    this.show_chat_right_side = false;
+                    this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = true;
+                    if(this.selected_contact_index>=0){
+                        this.item = this.contacts[this.selected_contact_index];
+                    }
+                }else{
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    this.show_chat_right_side = false;
+                    this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = false;
+                }
+            },
+
+            fn_show_delete_modal(){
+                this.item = this.contacts[this.selected_contact_index]; 
+                this.modalDeleteContact=!this.modalDeleteContact;
             },
 
             Height(val){
@@ -565,6 +606,10 @@
             reloadContacts(){
                 this.getContacts();
             },
+
+            closemodal(){
+                this.modalDeleteContact = !this.modalDeleteContact;
+            }
         },
 
         updated(){
@@ -574,7 +619,6 @@
 
         beforeMount() {
             this.getContacts();
-
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
         },

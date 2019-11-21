@@ -70,7 +70,7 @@ class ExtendedContactController extends ContactController
             $input['company_id'] = $User->company_id;
         } else
         if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-            $input['company_id'] = 1; //TODO: obtener el id de la camponhia del atendetnte
+            $input['company_id'] = 1; //TODO-Alberto: obtener el id de la camponhia del atendetnte
         } 
         $contact = $this->contactRepository->create($input);
 
@@ -92,7 +92,6 @@ class ExtendedContactController extends ContactController
      */
     public function update($id, UpdateContactRequest $request)
     {
-        dd(request);
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:
