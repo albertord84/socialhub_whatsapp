@@ -126,30 +126,34 @@ class RPIController extends Controller
     public function messageToChatModel(array $input, Contact $Contact): ExtendedChat
     {
         $contact_Jid = $input['Jid'];
+        $input['Type'] = isset($input['Type']) ? $input['Type'] : 'text';
+
+        $type_id = 1; // text
+        switch ($input['Type']) {
+            case 'image':
+                $type_id = 2;
+                break;
+            case 'audio':
+                $type_id = 3;
+                break;
+        }
 
         $Chat = new ExtendedChat();
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
         $Chat->created_at = $input['Date'];
-        $Chat->type_id = 1; // TEXT
+        $Chat->type_id = $type_id;
         $Chat->status_id = 1; // Active
         $Chat->socialnetwork_id = 1; // WhatsApp
+        $Chat->message = $input['Msg'];
+        $Chat->created_at = $input['Date'];
         if ($Contact) {
-            $Chat = new ExtendedChat();
             if ($Contact->latestAttendantContact) {
                 $Chat->table = $Contact->latestAttendantContact->attendant_id;
                 $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
             }
-            $Chat->contact_id = $Contact->id;
-            $Chat->source = 1;
-            $Chat->message = $input['Msg'];
-            $Chat->created_at = $input['Date'];
-            $Chat->type_id = 1; // TEXT
-            $Chat->status_id = 1; // Active
-            $Chat->socialnetwork_id = 1; // WhatsApp
-
         } else {
-            // TODO: Albert: Conferir com o Bruno
+            // Find Company by Phone Number
             $company_phone = $input['CompanyPhone'];
             $Company = Company::where(['whatsapp_id' => $company_phone])->first();
 
@@ -159,20 +163,11 @@ class RPIController extends Controller
             $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
 
-            // TODO: Jose: Remoe it
-            $Contact->attendant_id = 4;
-
             $Contact->save();
-            // Create Chat Message
-            $Chat->contact_id = $Contact->id;
-            $Chat->source = 1;
-            $Chat->message = $input['Msg'];
-            $Chat->created_at = $input['Date'];
-            $Chat->type_id = 1; // TEXT
-            $Chat->status_id = 1; // Active
-            $Chat->socialnetwork_id = 1; // WhatsApp
-
         }
+        
+        $Chat->contact_id = $Contact->id;
+        $Chat->save();
 
         return $Chat;
     }

@@ -172,28 +172,29 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
                                         </b-dropdown-item>
                                     </b-dropdown> -->
-                                    <span v-if='message.type_id == "1"/*texto*/' style="font-size:12px; color:#4f4e4e">
-                                        {{ message.message }}
-                                    </span>
                                     <span v-if='message.type_id == "2"/*image*/' class='mb-2'>
-                                        <!-- <img :src="pathFiles + message.data.SavedFileName" style='width:100px'/> -->
-                                        <img :src="pathFiles + message.data.SavedFileName" style='width:100px'/>
+                                        <!-- <img :src="message.path" style='width:100px'/> -->
+                                        <img :src="message.path" style='width:100px'/>
                                     </span>                               
                                     <span v-if='message.type_id == "3"/*audio*/' class='' style='text-align:center' >
                                         <br><audio controls class="mycontrolBar ">
-                                            <!-- <source :src="pathFiles + message.data.SavedFileName" type="audio/ogg"> -->
-                                            <source :src="pathFiles + message.data.SavedFileName" type="audio/mpeg">
+                                            <source :src="message.path" type="audio/ogg">
+                                            <!-- <source :src="message.path" type="audio/mp3"> -->
                                             Seu navegador não suporta o elemento de áudio.
                                         </audio>
                                     </span>
                                     <span v-if='message.type_id == "4"/*video*/' class='mb-2' style='text-align:center' >
                                         <video width="240" height="180" controls >
-                                            <source :src="pathFiles + message.data.SavedFileName" type="video/mp4">
+                                            <source :src="message.path" type="video/mp4">
                                             Seu navegador não suporta o elemento de áudio.
                                         </video>
                                     </span>
                                     <span v-if='message.type_id == "5"/*document*/' class='mb-2' style='text-align:center'  >
-                                        <a :href="pathFiles + message.data.SavedFileName" target="_blank" rel=”noopener”  ><i class="fa fa-file-text-o fa-5x"></i></a>
+                                        <a :href="message.path" target="_blank" rel=”noopener”  ><i class="fa fa-file-text-o fa-5x"></i></a>
+                                    </span>
+                                    <br>
+                                    <span style="font-size:12px; color:#4f4e4e">
+                                        {{ message.message ? message.message : "" }}
                                     </span>
                                     <br>
                                     <span class="msg_time float-right">{{message.created_at}}</span>
@@ -464,10 +465,13 @@
                         .then(response => {
                             this.messagesWhereLike = [];
                             this.searchMessageByStringInput = [];
-                            this.messages = response.data;                        
+                            this.messages = response.data; 
+                            var This = this;                       
                             this.messages.forEach(function(item, i){
-                                if(item.data && item.data.length>0)
+                                if(item.data != "" && item.data != null && item.data.length>0)
                                     item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                             });
                         })
                         .catch(function(error) {
@@ -523,6 +527,18 @@
             },
 
             //secundary functions
+
+            pathContactMessageFile(contact_id, file_name) {
+                let pathFile = process.env.MIX_FILE_PATH +'/' + 
+                            JSON.parse(localStorage.user).company_id +'/' +
+                            'contacts' +'/' +
+                            contact_id +'/' +
+                            'chat_files' +'/' +
+                            file_name;
+
+                return pathFile;
+            },
+            
             mouseOverMessage(id){
                 // document.getElementById(id).classList.remove("message-hout");
                 // document.getElementById(id).classList.add("message-hover");
@@ -610,6 +626,9 @@
                 if (ending == null) {
                     ending = '...';
                 }
+                if (str == null) {
+                    str = "";
+                }
                 if (str.length > length) {
                     return str.substring(0, length - ending.length) + ending;
                 } else {
@@ -642,13 +661,8 @@
             this.$store.commit('rightside_bar', "close");
         },
 
-        mounted(){            
-            this.pathFiles = process.env.MIX_FILE_PATH +'/' + 
-                        JSON.parse(localStorage.user).company_id +'/' +
-                        'contacts' +'/' +
-                        JSON.parse(localStorage.user).id +'/' +
-                        'chat_files' +'/';
 
+        mounted(){            
             window.Echo = new Echo({
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
