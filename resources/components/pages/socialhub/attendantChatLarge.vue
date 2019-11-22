@@ -466,7 +466,7 @@
                             this.searchMessageByStringInput = [];
                             this.messages = response.data;                        
                             this.messages.forEach(function(item, i){
-                                if(item.data.length>0)
+                                if(item.data && item.data.length>0)
                                     item.data = JSON.parse(item.data);
                             });
                         })

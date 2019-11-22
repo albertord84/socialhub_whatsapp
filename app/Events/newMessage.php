@@ -10,20 +10,18 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class newMessage implements ShouldBroadcast
+class newMessage
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $message;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(string $message)
+    public function __construct()
     {
-        $this->message = $message;
+        //
     }
 
     /**
@@ -33,7 +31,6 @@ class newMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        //return new PrivateChannel('channel-name');
-        return new Channel('shchat');  //canal de mensagens para SocialHub
+        return new PrivateChannel('channel-name');
     }
 }
