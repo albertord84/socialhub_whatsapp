@@ -17,6 +17,8 @@ class ExtendedUsersSellerController extends UsersSellerController
 
     public function __construct(ExtendedUsersSellerRepository $usersSellerRepo)
     {
+        parent::__construct($usersSellerRepo);
+
         $this->usersSellerRepository = $usersSellerRepo;
     }
 

@@ -16,6 +16,8 @@ class ExtendedUsersAttendantController extends UsersAttendantController
 {
     public function __construct(ExtendedUsersAttendantRepository $usersAttendantRepo)
     {
+        parent::__construct($usersAttendantRepo);
+
         $this->usersAttendantRepository = $usersAttendantRepo;
     }
 

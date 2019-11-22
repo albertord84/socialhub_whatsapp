@@ -133,7 +133,6 @@ class ContactController extends AppBaseController
      */
     public function destroy($id)
     {
-        dd($id);
         $contact = $this->contactRepository->findWithoutFail($id);
 
         if (empty($contact)) {

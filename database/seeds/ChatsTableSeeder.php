@@ -22,11 +22,13 @@ class ChatsTableSeeder extends Seeder
         DB::connection('socialhub_mvp.chats')->statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->command->info('Generating 20 messages for Attendant 4 and Contact 1...');
-        $this->createChatMessages(4, 1, 20);
+        $this->createChatMessages(4, 2, 20);
         $this->command->info('Generating 30 messages for Attendant 4 and Contact 2...');
-        $this->createChatMessages(4, 2, 30, (22+3));
+        $this->createChatMessages(4, 4, 30, (22+4));
         $this->command->info('Generating 100 messages for Attendant 5 and Contact 5...');
-        $this->createChatMessages(5, 5, 40);
+        $this->createChatMessages(5, 1, 40);
+        $this->command->info('Generating 100 messages for Attendant 5 and Contact 5...');
+        $this->createChatMessages(5, 5, 30, 42+4);
         
     }
     
@@ -35,6 +37,7 @@ class ChatsTableSeeder extends Seeder
         $extendedChat = new ExtendedChat();    
         $extendedChat->table = (string)$attendant_id;
         
+        // text messages
         for($i=$start; $i<=$start+$amount; $i++){
             $extendedChat->create([
                 'id' => $i,
@@ -51,42 +54,60 @@ class ChatsTableSeeder extends Seeder
 
         }
 
-        $extendedChat->create([ //image file
+        //image file message
+        $extendedChat->create([ 
             'id' => $i,
             'contact_id' => $contact_id,
             'attendant_id' => $attendant_id,
             'source' => $i%2, //0->me  and 1->you
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '2',
-            'data' => '',
+            'data' => '{"ClientOriginalName":"image_test.jpg", "ClientOriginalExtension":"jpg","ClientMimeType":"jpg","guessClientExtension":"jpg","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"image_test.jpg","SavedFilePath":""}',
             'status_id' => '1',
             'socialnetwork_id' => '1',
         ]);
         $this->command->info('Message '.$i.' created: Type image');
         
+        //audio file message
         $i =$i + 1;
-        $extendedChat->create([ //audio file
+        $extendedChat->create([ 
             'id' => $i,
             'contact_id' => $contact_id,
             'attendant_id' => $attendant_id,
             'source' => $i%2, //0->me  and 1->you
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '3',
-            'data' => '{"url":""}',
+            'data' => '{"ClientOriginalName":"audio_test.mp3", "ClientOriginalExtension":"mp3","ClientMimeType":"audio\/mp3","guessClientExtension":"mp3","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"audio_test.mp3","SavedFilePath":""}',
             'status_id' => '1',
             'socialnetwork_id' => '1',
         ]);
         $this->command->info('Message '.$i.' created: Type audio');
 
+        //video file message
         $i =$i + 1;
-        $extendedChat->create([ //video file
+        $extendedChat->create([
             'id' => $i,
             'contact_id' => $contact_id,
             'attendant_id' => $attendant_id,
             'source' => $i%2, //0->me  and 1->you
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '4',
-            'data' => '',
+            'data' => '{"ClientOriginalName":"video_test.mp4", "ClientOriginalExtension":"mp4","ClientMimeType":"video\/mp4","guessClientExtension":"mp4","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"video_test.mp4","SavedFilePath":""}',
+            'status_id' => '1',
+            'socialnetwork_id' => '1',
+        ]);
+        $this->command->info('Message '.$i.' created: Type video');
+        
+        //document file message
+        $i =$i + 1;
+        $extendedChat->create([
+            'id' => $i,
+            'contact_id' => $contact_id,
+            'attendant_id' => $attendant_id,
+            'source' => $i%2, //0->me  and 1->you
+            'message' => Lorem::sentence(($i%9)+1, true),
+            'type_id' => '5',
+            'data' => '{"ClientOriginalName":"document_test.pdf", "ClientOriginalExtension":"pdf","ClientMimeType":"text/pdf","guessClientExtension":"pdf","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"document_test.pdf","SavedFilePath":""}',
             'status_id' => '1',
             'socialnetwork_id' => '1',
         ]);

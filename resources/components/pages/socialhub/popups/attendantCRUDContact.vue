@@ -154,7 +154,7 @@
                     summary: "",
                     whatsapp_id: "",
                     facebook_id: "",
-                    instagram_id: "",
+                    instagram_id: "",   
                     linkedin_id: "",
                 },
 
@@ -228,7 +228,7 @@
                     miniToastr.error(error, "Confira os dados fornecidos");  
                     return;
                 }
-                ApiService.post(this.url+'/'+this.item.id, this.model)
+                ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
                     miniToastr.success("Contato adicionado com sucesso. Procure-o na lista de contatos","Sucesso");
                     this.formReset();
