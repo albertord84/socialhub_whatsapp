@@ -108,7 +108,7 @@
                                         </a><br>
                                         <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
-                                    <span class="mt-2 text-muted" style="font-size:10px">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
                                 </article>
                             </a>
                         </li>
@@ -172,16 +172,14 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
                                         </b-dropdown-item>
                                     </b-dropdown> -->
-                                    <span v-if='message.type_id == "1"/*texto*/' style="font-size:12px; color:#4f4e4e">
+                                    <span v-if='message.type_id == "1"/*texto*/' style="font-size:1em; color:#4f4e4e">
                                         {{ message.message }}
                                     </span>
                                     <span v-if='message.type_id == "2"/*image*/' class='mb-2'>
-                                        <!-- <img :src="pathFiles + message.data.SavedFileName" style='width:100px'/> -->
                                         <img :src="pathFiles + message.data.SavedFileName" style='width:100px'/>
                                     </span>                               
                                     <span v-if='message.type_id == "3"/*audio*/' class='' style='text-align:center' >
                                         <br><audio controls class="mycontrolBar ">
-                                            <!-- <source :src="pathFiles + message.data.SavedFileName" type="audio/ogg"> -->
                                             <source :src="pathFiles + message.data.SavedFileName" type="audio/mpeg">
                                             Seu navegador não suporta o elemento de áudio.
                                         </audio>
@@ -330,7 +328,7 @@
                         <li v-for="(message,index) in messagesWhereLike" class="chat_block p-3" :key="index">
                             <a href="javascript:void()" @click.prevent="1">
                                 <!-- <article class="media mt-1 mb-1"> -->
-                                    <span class="mt-2 text-muted" style="font-size:10px">{{get_last_message_time(message.created_at)}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{get_last_message_time(message.created_at)}}</span>
                                     <div class="media-body mb-2 mt-1 chat_content">
                                         <a class="text-muted"><span>{{ message.message}}</span></a>
                                     </div>
@@ -384,15 +382,12 @@
             return {
                 contacts_url: 'contacts',
                 chat_url: 'chats',
-
                 contacts:[],
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
-
                 item:{},
                 modalDeleteContact:false,
-
                 messages:[],
                 newMessage: {
                     'attendant_id':0,
@@ -406,7 +401,11 @@
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
 
-                pathFiles: process.env.MIX_APP_URL,
+                file:false,
+                sucessupload:false,
+                selFile :false,
+
+                pathFiles:'',
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
@@ -424,6 +423,25 @@
         methods: {            
             //primary functions
             send_message() {
+                // let formData = new FormData(); 
+                // formData.append('attendant_id', 0);
+                // formData.append('type_id', this.newcontenttype);
+                // formData.append('name', this.newcontentname);
+                // formData.append('subject', this.newcontentsubject);
+                // formData.append('description', this.newcontentdesc);
+                // if(this.newcontenttype!=4){
+                //     formData.append("file",this.file); //Add the form data we need to submit  
+                // }else{
+                //     formData.append('url', this.newselectedQuizId);
+                // }
+                // var url = "contents";
+                // var datas = {
+                //         headers: { "Content-Type": "multipart/form-data" },
+                //         onUploadProgress: function( progressEvent ) {
+                //             this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+                //         }.bind(this)
+                //     }
+
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "") {
                     this.newMessage.contact_id = this.contacts[this.selected_contact_index].id;
@@ -771,7 +789,7 @@
         &>.chat_header {
             background-color: #eaf5ff;
             padding: 4px;
-            font-size: 20px;
+            font-size: 1.8em;
             font-weight: 500;
             label{
                 width: 25px;
