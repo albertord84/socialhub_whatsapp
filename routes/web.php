@@ -49,6 +49,7 @@ Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
 Route::resource('usersSellers', 'ExtendedUsersSellerController');
 Route::resource('passwordResets', 'PasswordResetController');
 
+// Route::resource('contacts', 'ContactController');
 Route::resource('contacts', 'ExtendedContactController');
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');

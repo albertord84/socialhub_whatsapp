@@ -1,6 +1,5 @@
 <template>
     <div class="" style="margin-top:50px; width:100%">
-        <!-- <div class="col-lg-12"> -->
             <div class="col-lg-12 sect_header">
                 <ul class="menu">
                     <li><a href="javascript:void(0)" @click.prevent="toggle_right"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
@@ -14,7 +13,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- Nome ou apelido -->
                             <div style="padding: 29px 0px 5px" class="form-group has-search">
                                 <span class="fa fa-user form-control-feedback"></span>
                                 <input v-model="model.name" id="name" name="username" type="text" autofocus placeholder="Nome ou Apelido" class="form-control"/>
@@ -27,7 +25,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!--  E-mail -->
                             <div style="" class="form-group has-search">
                                 <span class="fa fa-envelope form-control-feedback"></span>
                                 <input v-model="model.email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
@@ -41,7 +38,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- Fix phone -->
                             <div style="" class="form-group has-search">
                                 <span class="fa fa-phone form-control-feedback"></span>
                                 <input v-model="model.fix_phone" id="fix_phone" name="fix_phone" type="text" placeholder="Telefone fixo" class="form-control"/>
@@ -54,7 +50,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- WhatsApp -->
                             <div style="" class="form-group has-search">
                                 <span class="fa fa-whatsapp form-control-feedback"></span>
                                 <input v-model="model.whatsapp" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
@@ -68,7 +63,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- Facebook -->
                             <div style="" class="form-group has-search">
                                 <span class="fa fa-facebook form-control-feedback"></span>
                                 <input v-model="model.facebook" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
@@ -81,7 +75,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- Instagram -->
                             <div style=" " class="form-group has-search">
                                 <span class="fa fa-instagram form-control-feedback"></span>
                                 <input v-model="model.instagram" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
@@ -94,7 +87,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- LinkedIn -->
                             <div style="" class="form-group has-search">
                                 <span class="fa fa-linkedin form-control-feedback"></span>
                                 <input v-model="model.instagram" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
@@ -107,7 +99,6 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <validate tag="div">
-                            <!-- Descição -->
                             <textarea v-model="model.decription" name="decription" id="decription" placeholder="Adicione descrição ..." class="form-control" cols="30" rows="5"></textarea>
                             <field-messages name="email" show="$invalid && $submitted" class="text-danger">
                             </field-messages>
@@ -126,7 +117,7 @@
                     </ul>
                 </div>
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button type="submit" class="btn btn-primary btn_width">Adicionar</button>
+                    <button type="submit" class="btn btn-primary btn_width" :disabled='isSending'> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar</button>
                     <button type="reset" class="btn btn-effect-ripple btn-secondary btn_width reset_btn1" @click.prevent="form_reset();toggle_right()">Cancelar</button>
                 </div>
             </vue-form>
@@ -145,6 +136,7 @@
         data() {
             return {
                 formstate: {},
+                isSending:false,
                 model: {
                     name: "",
                     email: "",

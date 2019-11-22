@@ -1,8 +1,9 @@
 <template>
     <div class="row chat">
 
-        <right-side-bar :right_layout ="right_layout"></right-side-bar>
-        <left-side-bar  :left_layout ="left_layout" @reloadContacts='reloadContacts'></left-side-bar>
+        <left-side-bar  :left_layout ="left_layout" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        <!-- <right-side-bar :right_layout ="right_layout" :item='item' @reloadContacts='reloadContacts'></right-side-bar> -->
+
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -102,7 +103,9 @@
                                     <span v-show="contact.count_unread_messagess>0" class="status-new-messages" :title='contact.count_unread_messagess+" mensagens novas"'>{{contact.count_unread_messagess}}</span>
                                     <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                        <a class="text-success" href="javascript:void(0)">{{contact.first_name + ' ' + contact.last_name}}</a><br>
+                                        <a class="text-success" href="javascript:void(0)">
+                                            {{contact.first_name }}
+                                        </a><br>
                                         <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
                                     <span class="mt-2 text-muted" style="font-size:10px">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
@@ -121,7 +124,7 @@
                     <ul class='menu'>
                         <li><span class="pl-4"><img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
-                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name + ' ' + contacts[selected_contact_index].last_name }} </p></li>                        
+                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
                             <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()/*toggle_right('toggle-find-messages')*/"><i class="fa fa-search"></i></a></li>
                             <li><a href="javascript:void()" title="Anexar imagem"><i class="fa fa-picture-o"></i><!-- <i class="fa fa-paperclip"></i>--></a></li>
@@ -169,17 +172,30 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
                                         </b-dropdown-item>
                                     </b-dropdown> -->
-                                    <span v-show='message.type_id == "1"/*image*/' class='mb-2'>
-                                        <img :src='message.src' style='width:100px'/>
-                                    </span>   <br>                                 
-                                    <span v-show='message.type_id == "2"/*audio*/' class='mb-2' style='text-align:center'>
-                                        <audio controls class="mycontrolBar">
-                                            <source :src='message.src' type="audio/ogg">
-                                            <source :src="message.src" type="audio/mpeg">
-                                            Seu navegador não suporta o elemento de áudio.
-                                        </audio> <br>
+                                    <span v-if='message.type_id == "1"/*texto*/' style="font-size:12px; color:#4f4e4e">
+                                        {{ message.message }}
                                     </span>
-                                    <span style="font-size:12px; color:#4f4e4e">{{ message.message }}</span><br>
+                                    <span v-if='message.type_id == "2"/*image*/' class='mb-2'>
+                                        <!-- <img :src="pathFiles + message.data.SavedFileName" style='width:100px'/> -->
+                                        <img :src="pathFiles + message.data.SavedFileName" style='width:100px'/>
+                                    </span>                               
+                                    <span v-if='message.type_id == "3"/*audio*/' class='' style='text-align:center' >
+                                        <br><audio controls class="mycontrolBar ">
+                                            <!-- <source :src="pathFiles + message.data.SavedFileName" type="audio/ogg"> -->
+                                            <source :src="pathFiles + message.data.SavedFileName" type="audio/mpeg">
+                                            Seu navegador não suporta o elemento de áudio.
+                                        </audio>
+                                    </span>
+                                    <span v-if='message.type_id == "4"/*video*/' class='mb-2' style='text-align:center' >
+                                        <video width="240" height="180" controls >
+                                            <source :src="pathFiles + message.data.SavedFileName" type="video/mp4">
+                                            Seu navegador não suporta o elemento de áudio.
+                                        </video>
+                                    </span>
+                                    <span v-if='message.type_id == "5"/*document*/' class='mb-2' style='text-align:center'  >
+                                        <a :href="pathFiles + message.data.SavedFileName" target="_blank" rel=”noopener”  ><i class="fa fa-file-text-o fa-5x"></i></a>
+                                    </span>
+                                    <br>
                                     <span class="msg_time float-right">{{message.created_at}}</span>
                                 </p>
                             </div>
@@ -209,7 +225,7 @@
         </div>
 
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-right-side" v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0">
+        <div v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0">
             <div class="sect_header">
                 <ul class='menu'>
                     <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
@@ -221,19 +237,16 @@
                                         <i class="fa fa-ellipsis-v mt-3" title="Ações sobre contato" style="color:gray"></i>
                                     </template>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-exchange"></i> Transferir</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-exchange"></i> Transferir</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-bell-slash-o"></i> Silenciar</a>
-                                    </b-dropdown-item>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
+                                    </b-dropdown-item>                                    
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-ban"></i> Bloquear</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="toggle_right('toggle-edit-contact')"><i class="fa fa-trash-o"></i> Eliminar</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="fn_show_delete_modal()"><i class="fa fa-trash-o"></i> Eliminar</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
                             </li>                            
@@ -245,7 +258,7 @@
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div>
                         <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture"  class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
-                        <h6 class="text-gray">{{contacts[selected_contact_index].first_name+' '+contacts[selected_contact_index].last_name}}</h6>
+                        <h6 class="text-gray">{{contacts[selected_contact_index].first_name}}</h6>
                         <!-- <p>{{contacts[selected_contact_index].status}}</p> -->
                         <p>Email: <b>{{contacts[selected_contact_index].email}}</b></p>
                         <p>Telefone: <b>{{contacts[selected_contact_index].phone}}</b></p>
@@ -287,7 +300,7 @@
         </div>
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-find-right-side" v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0">
+        <div v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0">
             <div class="col-lg-12 sect_header">
                 <ul class="menu">
                     <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_find_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
@@ -331,6 +344,16 @@
             </div>
         </div>
         
+        <!-- Edit side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
+        <div v-if="show_edit_right_side==true" class="col-lg-3 bg-white p-0">
+            <attendantCRUDContact :action='"edit"' :item='item' @onclose='fn_show_edit_right_side' @reloadContacts='reloadContacts'></attendantCRUDContact>
+        </div>
+
+        <!-- Modal to delete contact-->
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
+            <attendantCRUDContact :action='"delete"' :item='item' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+        </b-modal>
+        
     </div>
 </template>
 <script>
@@ -338,12 +361,11 @@
     import vScroll from "../../plugins/scroll/vScroll.vue";
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
-    import attendantFindMessages  from 'resources/components/pages/socialhub/attendantFindMessages'
     
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-
+    import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
 
     import Echo from 'laravel-echo';
     window.Pusher = require('pusher-js');
@@ -354,7 +376,8 @@
             vScroll,
             rightSideBar,
             leftSideBar,
-            attendantFindMessages
+
+            attendantCRUDContact
         },
 
          data() {
@@ -366,6 +389,9 @@
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
+
+                item:{},
+                modalDeleteContact:false,
 
                 messages:[],
                 newMessage: {
@@ -380,8 +406,11 @@
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
 
+                pathFiles: process.env.MIX_APP_URL,
+
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
+                show_edit_right_side:false,
                 right_layout:'toggle-edit-contact',
                 left_layout:'toggle-add-contact',
                 bgColor:require('img/pages/chat_background.png'),
@@ -392,7 +421,7 @@
             }
         },
         
-        methods: {
+        methods: {            
             //primary functions
             send_message() {
                 this.newMessage.message = this.newMessage.message.trim();
@@ -435,8 +464,11 @@
                         .then(response => {
                             this.messagesWhereLike = [];
                             this.searchMessageByStringInput = [];
-                            // this.fn_show_chat_find_right_side();
                             this.messages = response.data;                        
+                            this.messages.forEach(function(item, i){
+                                if(item.data.length>0)
+                                    item.data = JSON.parse(item.data);
+                            });
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
@@ -506,11 +538,13 @@
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_right_side = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_right_side = false;
                 }
             },
@@ -520,13 +554,39 @@
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_find_right_side = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_right_side = false;
+                    this.show_edit_right_side = false;
                     this.show_chat_find_right_side = false;
                 }
+            },
+
+            fn_show_edit_right_side(){
+                if(this.show_edit_right_side==false){
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    this.show_chat_right_side = false;
+                    this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = true;
+                    if(this.selected_contact_index>=0){
+                        this.item = this.contacts[this.selected_contact_index];
+                    }
+                }else{
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    this.show_chat_right_side = false;
+                    this.show_chat_find_right_side = false;
+                    this.show_edit_right_side = false;
+                }
+            },
+
+            fn_show_delete_modal(){
+                this.item = this.contacts[this.selected_contact_index]; 
+                this.modalDeleteContact=!this.modalDeleteContact;
             },
 
             Height(val){
@@ -565,6 +625,10 @@
             reloadContacts(){
                 this.getContacts();
             },
+
+            closemodal(){
+                this.modalDeleteContact = !this.modalDeleteContact;
+            }
         },
 
         updated(){
@@ -574,12 +638,17 @@
 
         beforeMount() {
             this.getContacts();
-
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
         },
 
-        mounted(){
+        mounted(){            
+            this.pathFiles = process.env.MIX_FILE_PATH +'/' + 
+                        JSON.parse(localStorage.user).company_id +'/' +
+                        'contacts' +'/' +
+                        JSON.parse(localStorage.user).id +'/' +
+                        'chat_files' +'/';
+
             window.Echo = new Echo({
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
@@ -594,7 +663,7 @@
             var attendant_id = JSON.parse(localStorage.user).id;
             window.Echo.channel('sh.message-to-attendant.' + attendant_id)
                 .listen('MessageToAttendant', (e) => {
-                    console.log(e);
+                    // console.log(e);
                     var message = JSON.parse(e.message);
                     if(this.selected_contact_index >= 0 && this.contacts[this.selected_contact_index].id == message.contact_id){
                         this.messages.push(message);
@@ -614,9 +683,8 @@
             var company_id = JSON.parse(localStorage.user).company_id;
             window.Echo.channel('sh.contact-to-bag.' + company_id)
                 .listen('NewContactMessage', (e) => {
-                    console.log(e);
-                });
-            
+                    // console.log(e);
+                });            
         },
 
         created() {
@@ -636,19 +704,19 @@
         computed: {
             allContacts: function() {
                 var self = this;
-                return this.contacts.filter(function(contact) {
-                    var str =   contact.name +
+                return this.contacts.filter(
+                    function(contact) {
+                        var str = contact.name +
                             ' '+contact.first_name +
-                            ' '+contact.last_name +
                             ' '+contact.email +
                             ' '+contact.phone +
                             ' '+contact.whatsapp_id +
                             ' '+contact.facebook_id +
                             ' '+contact.linkedin_id +
                             ' '+contact.instagram_id;
-                    return (                        
-                        str.toLowerCase().indexOf(self.searchContactByStringInput.toLowerCase()) >=0
-                    );
+                        return (
+                            str.toLowerCase().indexOf(self.searchContactByStringInput.toLowerCase()) >=0
+                        );
                 });
             },
             

@@ -124,6 +124,7 @@
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
                     this.model.status_id = 1;
+                this.model.whatsapp_id += '@s.whatsapp.net';
                 ApiService.post(this.url,this.model)
                 .then(response => {
                     if (this.contact_atendant_id) {

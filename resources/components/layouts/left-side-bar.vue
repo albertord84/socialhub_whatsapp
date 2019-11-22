@@ -1,27 +1,23 @@
 <template>
     <div id="left" :class="{ open: this.$store.state.left_open }">
         <div id="left-slim">
-            <!-- <slot></slot> -->
-            <attendantAddContact v-if="left_layout=='toggle-add-contact'" @onreloaddatas='reloadContacts'></attendantAddContact>
-            
-            <!-- <attendantFilterContact v-if="left_layout=='toggle-filter-contact'"></attendantFilterContact> -->
+            <attendantCRUDContact v-if="left_layout=='toggle-add-contact'" :action='"insert"' :item='item' @reloadContacts='reloadContacts'></attendantCRUDContact>
         </div>
     </div>
 </template>
 <script>
     import "../../sass/_left_side_bar.scss"
 
-    import attendantAddContact from "../pages/socialhub/attendantAddContact.vue";
-    import attendantFilterContact from "../pages/socialhub/attendantFilterContact.vue";
+    import attendantCRUDContact from "../pages/socialhub/popups/attendantCRUDContact.vue";
 
     export default {
         name: "left_side_bar",
         props:{
+            item:{},
             left_layout:''
         },
         components:{
-            attendantAddContact,
-            attendantFilterContact
+            attendantCRUDContact,
         },
         data(){
             return{

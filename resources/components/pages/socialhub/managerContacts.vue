@@ -206,14 +206,14 @@
                     .then(response => {
                         this.rows = response.data;
                         var This=this;
-                        response.data.forEach(function(item, i){
+                        response.data.forEach(function(item, i){                            
                             if(item.status)
                                 item.status_name = item.status.name;
                             var name = "";
                             item.contact_atendant_id = 0;
                             if(item.latestAttendant){
-                                item.attendant_name = item.latestAttendant.user.name;
-                                item.contact_atendant_id = item.latestAttendant.user.id;
+                                item.attendant_name = item.latestAttendant.name;
+                                item.contact_atendant_id = item.latestAttendant.id;
                             }
                         });
                     })

@@ -3,14 +3,17 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import JwtService from "./jwt.service";
 
+window.axios = require('axios');
+
 const ApiService = {
     init() {
         Vue.use(VueAxios, axios);
         Vue.axios.defaults.baseURL = '';
         // Vue.axios.defaults.baseURL = 'api/';
         Vue.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        //Jose R: Vue.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     },
-
+    
     setHeader() {
         Vue.axios.defaults.headers.common["Authorization"] = `Bearer ${JwtService.getToken()}`;
     },
