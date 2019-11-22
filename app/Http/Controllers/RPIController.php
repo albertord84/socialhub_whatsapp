@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Business\FileUtils;
-use App\Events\MessageToAttendant;
-use App\Events\NewContactMessage;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
@@ -54,10 +52,10 @@ class RPIController extends Controller
 
         if ($Contact) {
             // Send event to attendants with new chat message
-            broadcast(new MessageToAttendant($Chat));
+            // broadcast(new MessageToAttendant($Chat));
         } else {
             // Send event to all attendants with new contact
-            broadcast(new NewContactMessage($company_id));
+            // broadcast(new NewContactMessage($company_id));
         }
 
         $Chat->contact_name = $Contact->first_name;
