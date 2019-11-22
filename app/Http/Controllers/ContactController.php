@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
+
 use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
@@ -29,7 +31,7 @@ class ContactController extends AppBaseController
      */
     public function index(Request $request)
     {
-        die("Alberto: Has to use ExtendedContactController->index() intead ContactController->index()");
+        // die("Alberto: Has to use ExtendedContactController->index() intead ContactController->index()");
     }
 
     /**
@@ -51,7 +53,7 @@ class ContactController extends AppBaseController
      */
     public function store(CreateContactRequest $request)
     {
-        die("Alberto: Has to use ExtendedContactController->store() intead ContactController->store()");
+        // die("Alberto: Has to use ExtendedContactController->store() intead ContactController->store()");
     }
 
     /**
@@ -83,7 +85,7 @@ class ContactController extends AppBaseController
      */
     public function edit($id)
     {
-        $contact = $this->contactRepository->findWithoutFail($id);
+        $contact = $this->contactRepository->findWithoutFail($id); //TODO: ERROR not function porraaaaa
 
         if (empty($contact)) {
             Flash::error('Contact not found');

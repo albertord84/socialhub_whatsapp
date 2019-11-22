@@ -62,7 +62,7 @@ class ContactsTableSeeder extends Seeder
                 'first_name' => 'name_'.$i,
                 'last_name' => 'surename_'.$i,
                 'email' => 'authomatic_'.$i.'@gmail.com',
-                'whatsapp_id' => '5511970111071_'.$i,
+                'whatsapp_id' => '5511970111071_'.$i.'@s.whatsapp.net',
                 'json_data' => '{"urlProfilePicture":"images/contacts/default.png"}',
                 'status_id' => 1,
             ]);

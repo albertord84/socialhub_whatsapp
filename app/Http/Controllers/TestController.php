@@ -39,11 +39,19 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $User = Auth::user();
-        if (!$User) {
-            $User = User::find(4);
-            Auth::login($User, true);
-        }
+
+        $extContRepo = new ExtendedContactRepository(app());
+
+        $Contacts = $extContRepo->fullContacts(1, 4);
+
+        echo $Contacts->toJson();
+        // dd($Contacts->toJson());
+
+        // $User = Auth::user();
+        // if (!$User) {
+        //     $User = User::find(4);
+        //     Auth::login($User, true);
+        // }
         // var_dump($User);
 
         // $data = (object) array(
@@ -59,10 +67,10 @@ class TestController extends AppBaseController
 
 
 
-        $ExtendedChat = new ExtendedChat();
-        $ExtendedChat->table = '4';
-        $Chat = $ExtendedChat->find(1);
-        broadcast(new MessageToAttendant($Chat));
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = '4';
+        // $Chat = $ExtendedChat->find(1);
+        // broadcast(new MessageToAttendant($Chat));
         
 
 
