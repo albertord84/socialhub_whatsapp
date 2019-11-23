@@ -122,12 +122,36 @@
             <div v-if="selected_contact_index>=0" class="converstion_back">
                 <div class="sect_header">
                     <ul class='menu'>
+                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
+                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
+                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
+                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
                         <li><span class="pl-4"><img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
                             <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()/*toggle_right('toggle-find-messages')*/"><i class="fa fa-search"></i></a></li>
-                            <li><a href="javascript:void()" title="Anexar imagem"><i class="fa fa-picture-o"></i><!-- <i class="fa fa-paperclip"></i>--></a></li>
+                            <li>
+                                <form action="">
+                                    <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
+                                        <template v-slot:button-content>
+                                            <i class="fa fa-paperclip mt-3" title="Anexar arquivo"  style="color:gray; font-size:1.3em"></i>
+                                        </template>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputImage')"><i class="fa fa-file-image-o"></i> Imagem</a>                                            
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputAudio')"><i class="fa fa-file-audio-o"></i> Audio</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputVideo')"><i class="fa fa-file-movie-o"></i> Video</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputDocument')"><i class="fa fa-file-text-o"></i> Documento</a>
+                                        </b-dropdown-item>
+                                    </b-dropdown>
+                                </form>
+                            </li> 
                             <li>
                                 <!-- <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -402,10 +426,8 @@
                 messagesWhereLike:[],
 
                 file:false,
-                sucessupload:false,
-                selFile :false,
-
                 pathFiles:'',
+                referenceFileInput:null,
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
@@ -420,37 +442,32 @@
             }
         },
         
-        methods: {            
+        methods: {                
             //primary functions
             send_message() {
-                // let formData = new FormData(); 
-                // formData.append('attendant_id', 0);
-                // formData.append('type_id', this.newcontenttype);
-                // formData.append('name', this.newcontentname);
-                // formData.append('subject', this.newcontentsubject);
-                // formData.append('description', this.newcontentdesc);
-                // if(this.newcontenttype!=4){
-                //     formData.append("file",this.file); //Add the form data we need to submit  
-                // }else{
-                //     formData.append('url', this.newselectedQuizId);
-                // }
-                // var url = "contents";
-                // var datas = {
-                //         headers: { "Content-Type": "multipart/form-data" },
-                //         onUploadProgress: function( progressEvent ) {
-                //             this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
-                //         }.bind(this)
-                //     }
-
                 this.newMessage.message = this.newMessage.message.trim();
-                if (this.newMessage.message != "") {
+                if (this.newMessage.message != "" || this.file) {
                     this.newMessage.contact_id = this.contacts[this.selected_contact_index].id;
-                    ApiService.post(this.chat_url,this.newMessage)
+
+                    let formData = new FormData();
+                    formData.append('attendant_id', this.newMessage.attendant_id);
+                    formData.append('contact_id', this.newMessage.contact_id);
+                    formData.append('message', this.newMessage.message);
+                    formData.append('source', this.newMessage.source);
+                    formData.append('type_id', this.newMessage.type_id);
+                    formData.append('status_id', this.newMessage.status_id);
+                    formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
+                    if(this.newMessage.type_id>1 && this.file){
+                        formData.append("file",this.file); //Add the form data we need to submit  
+                    }
+                    
+                    ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                     .then(response => {
                         this.messages.push(response.data);
                         if(this.contacts[this.selected_contact_index].last_message)
                             this.contacts[this.selected_contact_index].last_message.message = this.newMessage.message;
                         this.newMessage.message = "";
+                        this.file = null;
                         this.$refs.message_scroller.scrolltobottom();
                     })
                     .catch(function(error) {
@@ -541,6 +558,43 @@
             },
 
             //secundary functions
+            trigger (referenceFile) {
+                switch(referenceFile){
+                    case 'fileInputImage':
+                        this.newMessage.type_id = 2; //imagem message type 
+                        this.referenceFileInput = this.$refs.fileInputImage;
+                        this.$refs.fileInputImage.click();
+                        break;
+                    case 'fileInputAudio':
+                        this.newMessage.type_id = 3; //audio message type 
+                        this.referenceFileInput = this.$refs.fileInputAudio;
+                        this.$refs.fileInputAudio.click();
+                        break;
+                    case 'fileInputVideo':
+                        this.newMessage.type_id = 4; //video message type 
+                        this.referenceFileInput = this.$refs.fileInputVideo;
+                        this.$refs.fileInputVideo.click();
+                        break;
+                    case 'fileInputDocument':
+                        this.newMessage.type_id = 5; //document message type 
+                        this.referenceFileInput = this.$refs.fileInputDocument;
+                        this.$refs.fileInputDocument.click();
+                        break;
+                }
+            },
+
+            handleFileUploadContent: function() {
+                this.file = null;
+                if(this.referenceFileInput !== undefined && this.newMessage.type_id > 1){
+                    if(this.referenceFileInput.files[0].size < 10*1024*1024) {
+                        this.file = this.referenceFileInput.files[0];
+                    } else{
+                        miniToastr.error("O arquivo deve ter tamanho inferior a 10MB", "Erro"); 
+                    }
+                }
+                console.log(this.file);
+            },
+
             mouseOverMessage(id){
                 // document.getElementById(id).classList.remove("message-hout");
                 // document.getElementById(id).classList.add("message-hover");
