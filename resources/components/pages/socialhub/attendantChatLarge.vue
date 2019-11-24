@@ -4,7 +4,6 @@
         <left-side-bar  :left_layout ="left_layout" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
         <!-- <right-side-bar :right_layout ="right_layout" :item='item' @reloadContacts='reloadContacts'></right-side-bar> -->
 
-
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
@@ -108,7 +107,7 @@
                                         </a><br>
                                         <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
                                     </div>
-                                    <span class="mt-2 text-muted" style="font-size:10px">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
                                 </article>
                             </a>
                         </li>
@@ -122,12 +121,36 @@
             <div v-if="selected_contact_index>=0" class="converstion_back">
                 <div class="sect_header">
                     <ul class='menu'>
+                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
+                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
+                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
+                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
                         <li><span class="pl-4"><img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
                             <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()/*toggle_right('toggle-find-messages')*/"><i class="fa fa-search"></i></a></li>
-                            <li><a href="javascript:void()" title="Anexar imagem"><i class="fa fa-picture-o"></i><!-- <i class="fa fa-paperclip"></i>--></a></li>
+                            <li>
+                                <form action="">
+                                    <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
+                                        <template v-slot:button-content>
+                                            <i class="fa fa-paperclip mt-3" title="Anexar arquivo"  style="color:gray; font-size:1.3em"></i>
+                                        </template>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputImage')"><i class="fa fa-file-image-o"></i> Imagem</a>                                            
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputAudio')"><i class="fa fa-file-audio-o"></i> Audio</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputVideo')"><i class="fa fa-file-movie-o"></i> Video</a>
+                                        </b-dropdown-item>
+                                        <b-dropdown-item exact class="dropdown_content">
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputDocument')"><i class="fa fa-file-text-o"></i> Documento</a>
+                                        </b-dropdown-item>
+                                    </b-dropdown>
+                                </form>
+                            </li> 
                             <li>
                                 <!-- <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -172,28 +195,34 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
                                         </b-dropdown-item>
                                     </b-dropdown> -->
-                                    <span v-if='message.type_id == "2"/*image*/' class='mb-2'>
-                                        <!-- <img :src="message.path" style='width:100px'/> -->
-                                        <img :src="message.path" style='width:100px'/>
+                                    <span v-if='message.type_id == "2"/*image*/' class='mb-2 text-center'>
+                                        <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                            <img :src="message.path" class="midia-files"/>
+                                        </a>
                                     </span>                               
-                                    <span v-if='message.type_id == "3"/*audio*/' class='' style='text-align:center' >
-                                        <br><audio controls class="mycontrolBar ">
+                                    <span v-if='message.type_id == "3"/*audio*/' class='text-center'>
+                                        <br>
+                                        <audio controls class="mycontrolBar">
                                             <source :src="message.path" type="audio/ogg">
-                                            <!-- <source :src="message.path" type="audio/mp3"> -->
+                                            <source :src="message.path" type="audio/mp3">
                                             Seu navegador não suporta o elemento de áudio.
                                         </audio>
                                     </span>
-                                    <span v-if='message.type_id == "4"/*video*/' class='mb-2' style='text-align:center' >
-                                        <video width="240" height="180" controls >
-                                            <source :src="message.path" type="video/mp4">
-                                            Seu navegador não suporta o elemento de áudio.
-                                        </video>
+                                    <span v-if='message.type_id == "4"/*video*/' class='mb-2 text-center'>
+                                        <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                            <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                <source :src="message.path+'#t=2'" type="video/mp4">
+                                                Seu navegador não suporta o elemento de vídeo.
+                                            </video>
+                                        </a>
                                     </span>
-                                    <span v-if='message.type_id == "5"/*document*/' class='mb-2' style='text-align:center'  >
-                                        <a :href="message.path" target="_blank" rel=”noopener”  ><i class="fa fa-file-text-o fa-5x"></i></a>
+                                    <span v-if='message.type_id == "5"/*document*/' class='mb-2 text-center'>
+                                        <a :href="message.path" target="_blank" rel=”noopener”  >
+                                            <img src="~img/socialhub/text-file-icon.png" alt="text-file-icon" class="midia-files-document" >
+                                        </a>
                                     </span>
                                     <br>
-                                    <span style="font-size:12px; color:#4f4e4e">
+                                    <span class="text-message">
                                         {{ message.message ? message.message : "" }}
                                     </span>
                                     <br>
@@ -331,7 +360,7 @@
                         <li v-for="(message,index) in messagesWhereLike" class="chat_block p-3" :key="index">
                             <a href="javascript:void()" @click.prevent="1">
                                 <!-- <article class="media mt-1 mb-1"> -->
-                                    <span class="mt-2 text-muted" style="font-size:10px">{{get_last_message_time(message.created_at)}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{get_last_message_time(message.created_at)}}</span>
                                     <div class="media-body mb-2 mt-1 chat_content">
                                         <a class="text-muted"><span>{{ message.message}}</span></a>
                                     </div>
@@ -353,6 +382,23 @@
         <!-- Modal to delete contact-->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
             <attendantCRUDContact :action='"delete"' :item='item' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+        </b-modal>
+
+        <!-- Modal to show image-->
+        <b-modal id="play_imagem" v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
+            <div class="embed-responsive embed-responsive-16by9">
+                <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/>
+            </div>
+        </b-modal>
+
+        <!-- Modal to show video-->
+        <b-modal id="play_imagem" v-model="modalShowVideo" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
+            <div class="embed-responsive embed-responsive-16by9">
+                 <video width="100%" height="100%" style="width:100%; height:100%" controls class="midia-files embed-responsive-item modal-body-bg">
+                    <source :src="modalShowVideoSrc" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video> 
+            </div>            
         </b-modal>
         
     </div>
@@ -385,15 +431,12 @@
             return {
                 contacts_url: 'contacts',
                 chat_url: 'chats',
-
                 contacts:[],
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
-
                 item:{},
                 modalDeleteContact:false,
-
                 messages:[],
                 newMessage: {
                     'attendant_id':0,
@@ -407,7 +450,14 @@
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
 
-                pathFiles: process.env.MIX_APP_URL,
+                file:false,
+                pathFiles:'',
+                referenceFileInput:null,
+
+                modalShowImage:false,
+                modalShowImageSrc:'',
+                modalShowVideo:false,
+                modalShowVideoSrc:'',
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
@@ -422,18 +472,32 @@
             }
         },
         
-        methods: {            
+        methods: {                
             //primary functions
             send_message() {
                 this.newMessage.message = this.newMessage.message.trim();
-                if (this.newMessage.message != "") {
+                if (this.newMessage.message != "" || this.file) {
                     this.newMessage.contact_id = this.contacts[this.selected_contact_index].id;
-                    ApiService.post(this.chat_url,this.newMessage)
+
+                    let formData = new FormData();
+                    formData.append('attendant_id', this.newMessage.attendant_id);
+                    formData.append('contact_id', this.newMessage.contact_id);
+                    formData.append('message', this.newMessage.message);
+                    formData.append('source', this.newMessage.source);
+                    formData.append('type_id', this.newMessage.type_id);
+                    formData.append('status_id', this.newMessage.status_id);
+                    formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
+                    if(this.newMessage.type_id>1 && this.file){
+                        formData.append("file",this.file); //Add the form data we need to submit  
+                    }
+                    
+                    ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                     .then(response => {
                         this.messages.push(response.data);
                         if(this.contacts[this.selected_contact_index].last_message)
                             this.contacts[this.selected_contact_index].last_message.message = this.newMessage.message;
                         this.newMessage.message = "";
+                        this.file = null;
                         this.$refs.message_scroller.scrolltobottom();
                     })
                     .catch(function(error) {
@@ -527,6 +591,42 @@
             },
 
             //secundary functions
+            trigger (referenceFile) {
+                switch(referenceFile){
+                    case 'fileInputImage':
+                        this.newMessage.type_id = 2; //imagem message type 
+                        this.referenceFileInput = this.$refs.fileInputImage;
+                        this.$refs.fileInputImage.click();
+                        break;
+                    case 'fileInputAudio':
+                        this.newMessage.type_id = 3; //audio message type 
+                        this.referenceFileInput = this.$refs.fileInputAudio;
+                        this.$refs.fileInputAudio.click();
+                        break;
+                    case 'fileInputVideo':
+                        this.newMessage.type_id = 4; //video message type 
+                        this.referenceFileInput = this.$refs.fileInputVideo;
+                        this.$refs.fileInputVideo.click();
+                        break;
+                    case 'fileInputDocument':
+                        this.newMessage.type_id = 5; //document message type 
+                        this.referenceFileInput = this.$refs.fileInputDocument;
+                        this.$refs.fileInputDocument.click();
+                        break;
+                }
+            },
+
+            handleFileUploadContent: function() {
+                this.file = null;
+                if(this.referenceFileInput !== undefined && this.newMessage.type_id > 1){
+                    if(this.referenceFileInput.files[0].size < 10*1024*1024) {
+                        this.file = this.referenceFileInput.files[0];
+                    } else{
+                        miniToastr.error("O arquivo deve ter tamanho inferior a 10MB", "Erro"); 
+                    }
+                }
+                console.log(this.file);
+            },
 
             pathContactMessageFile(contact_id, file_name) {
                 let pathFile = process.env.MIX_FILE_PATH +'/' + 
@@ -661,7 +761,6 @@
             this.$store.commit('rightside_bar', "close");
         },
 
-
         mounted(){            
             window.Echo = new Echo({
                 broadcaster: 'pusher',
@@ -677,7 +776,7 @@
             var attendant_id = JSON.parse(localStorage.user).id;
             window.Echo.channel('sh.message-to-attendant.' + attendant_id)
                 .listen('MessageToAttendant', (e) => {
-                    // console.log(e);
+                    console.log(e);
                     var message = JSON.parse(e.message);
                     if(this.selected_contact_index >= 0 && this.contacts[this.selected_contact_index].id == message.contact_id){
                         this.messages.push(message);
@@ -697,7 +796,7 @@
             var company_id = JSON.parse(localStorage.user).company_id;
             window.Echo.channel('sh.contact-to-bag.' + company_id)
                 .listen('NewContactMessage', (e) => {
-                    // console.log(e);
+                    console.log(e);
                 });            
         },
 
@@ -748,13 +847,13 @@
 
 <style scoped lang="scss">
     .desc-img {
-        height: 40px;
-        width: 40px;
+        height: 3.6em;
+        width: 3.6em;
     }
 
     .desc-img2 {
-        height: 160px;
-        width: 160px;
+        height: 13em;
+        width: 13em;
         border-radius: 50%
     }
 
@@ -784,12 +883,12 @@
         }
         &>.chat_header {
             background-color: #eaf5ff;
-            padding: 4px;
-            font-size: 20px;
+            padding: 0.3em;
+            font-size: 1.8em;
             font-weight: 500;
             label{
-                width: 25px;
-                height: 25px;
+                width: 2em;
+                height: 2em;
             }
         }
        /deep/ .ss-wrapper{
@@ -802,13 +901,13 @@
 
     .received div p,
     .sent div p {
-        max-width:400px;
-        min-width:200px;
+        max-width:26em;
+        min-width:14em;
         text-overflow:hidden;
         word-break: break-word; 
-        border-radius: 7px;
+        border-radius: 0.7em;
         display: inline-block;
-        padding: 7px 12px;
+        padding: 0.7em 1em;
         position: relative;
         border: 1px solid #d4d2d2;
     }
@@ -825,6 +924,7 @@
         border: 12px solid;
         border-color: #fff transparent transparent transparent;
     }
+
     .received div p::before{
         content: ' ';
         position: absolute;
@@ -837,6 +937,7 @@
         border: 12px solid;
         border-color: #d4d2d2 transparent transparent transparent;
     }
+
     .sent div p::before{
         content: ' ';
         position: absolute;
@@ -848,6 +949,7 @@
         border: 12px solid;
         border-color: #d4d2d2 transparent transparent transparent;
     }
+
     .sent div p::after{
         content: ' ';
         position: absolute;
@@ -864,6 +966,7 @@
         justify-content: flex-end;
         align-items: flex-end;
     }
+    
     .self .msg {
         order: 1;
         border-bottom-right-radius: 0px;
@@ -898,12 +1001,13 @@
     }
 
     .status-new-messages {
-        width: 18px;
-        height: 18px;
-        border-radius: 10px;
+        width: 2.5em;
+        height: 2.5em;
+        border-radius: 50%;
         background-color: #63c17f;
         color: white;
-        font-size: 9px;
+        padding: 0.2em;
+        font-size: 0.7em;
         text-align: center;
         position: relative;
         top: 8px;
@@ -912,9 +1016,9 @@
     }
 
     .status-not-messages {
-        width: 18px;
-        height: 18px;
-        border-radius: 10px;
+        width: 2.5em;
+        height: 2.5em;
+        border-radius: 50%;
         background-color: transparent;
         text-align: center;
         position: relative;
@@ -943,14 +1047,17 @@
         // overflow-y: auto;
         background-color: #FFFFFF;
     }
+
     .wrapper .converstion_back .ss-container{
         background-image: url("~img/pages/chat_background.png");
     }
+
     .bgcolor{
-        border:2px solid #fff;
-        height: 10px;
-        width:10px;
+        // border:2px solid #fff;
+        // height: 10px;
+        // width:10px;
     }
+
     .colors{
         line-height: 1rem;
         margin-top: 2px;
@@ -958,6 +1065,7 @@
             font-size: 10px;
         }
     }
+
     .myscrool{
         height: calc(100% - 50px);
     }
@@ -966,34 +1074,36 @@
     //-----------------------------------------------
     .search-input{
         background-color:#fffff8;
-        font-size:12px;
+        font-size:1em;
     }
+    
     .search-input:focus{
         outline: 0 !important;
         // border: none !important;
         box-shadow: none;
     }
     
-    
-    //--------------------------------------------------
     .menu{
         z-index: 100;
         list-style:none; 
         margin: 0;
         padding: 0;        
     }
+
     .menu li{
         position:relative; 
         float:left; 
     }
+
     .menu li a,p{
-        font-size: 14px;
+        font-size: 1.1em;
         display: block;
         color: gray;
         text-align: left;
         padding: 16px;
         text-decoration: none;
     }    
+
     .menu li ul{
         position:absolute; 
         top:50px; 
@@ -1002,34 +1112,39 @@
         display:none;
         box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
     }   
+
     .menu li:hover ul, 
     .menu li.over ul{
         display:block;
     }
+
     .menu li ul li{
         display:block; 
         width:100%;
     }
+
     .menu li ul li:hover{
         background-color: rgb(240, 238, 238)
     }
+
     .round_btn{
         border-radius: 50%;
         width: 50px;
         height: 50px;
     }
+
     .menu, li, a, a:active, a:focus {
         outline: none;
     }
-    //---------------------------------------------------
+   
     .sect_header{
         background-color:#eaf5ff;
         height:50px;  
         border: 1px solid #e9e9e9;
     }
+
     .sec_decription p, h4{
         text-align: center !important;
-        // margin: 0px !important;
         padding: 5px !important;
     }
 
@@ -1042,11 +1157,13 @@
         transition:height 1s;
         -webkit-transition:height 1s;
     }
+
     .transp:focus {
         outline: none !important;
         border: none !important;
         outline-width: 0 !important;
     }
+
     .pointer-hover:hover{
         cursor: pointer;
     } 
@@ -1064,9 +1181,10 @@
     }
 
     audio {
-        width: 270px;
+        width:23em;
+        // width: 270px;
         height: 25px;
-        border-radius: 90px;
+        border-radius: 3px;
         transform: scale(1.05);
     }
 
@@ -1077,6 +1195,7 @@
         border-radius:4px;
         border: none;
     }
+
     .text-input-message:focus{
         outline: 0 !important;
         border: none !important;
@@ -1084,7 +1203,7 @@
     }
 
     .message{
-        min-width:160px;
+        min-width:13em;
     }
 
     .message-hover{
@@ -1093,6 +1212,11 @@
 
     .message-hout{
         visibility:hidden;
+    }
+
+    .text-message{
+        font-size:1.2em; 
+        color:#4f4e4e;
     }
 
     .send-btn{
@@ -1113,15 +1237,23 @@
         transform: translate(-50%,-50%);
 
         img{
-            width:220px; height:220px; border-radius:125px; opacity:0.5;
+            width:18em; height:18em; border-radius:50%; opacity:0.5;
         }
     }
 
     .my-rounded-circle{
         border-radius: 50%;
-        width: 50px;
+        width: 4em;
         padding: 0px !important;
         margin: 0px !important;
     }
+
+    .midia-files{
+        width: 20em;
+    }
+
+    .midia-files-document{
+        width: 13em;
+    }    
 
 </style>
