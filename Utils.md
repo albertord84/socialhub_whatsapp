@@ -50,6 +50,7 @@ cd /var/www/html/socialhub
 
 
 # Atualizar cache e ficheiros
+rm -rf node_modules
 composer dump-autoload 
 
 php artisan cache:clear
@@ -57,3 +58,6 @@ php artisan cache:clear
 mkdir storage/framework/cache/data
 
 php artisan config:clear
+
+
+php artisan serve --host=192.168.25.6
