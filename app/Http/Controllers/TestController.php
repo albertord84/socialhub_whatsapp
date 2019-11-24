@@ -5,21 +5,11 @@ namespace App\Http\Controllers;
 use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
 use App\Models\ExtendedChat;
-use App\Repositories\ExtendedChatRepository;
-use App\Repositories\ExtendedContactRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
-use RuntimeException;
-
-use App\Events\newMessage;
-use App\Models\UsersAttendant;
-use App\Events\NewContactMessage;
+use App\Repositories\ExtendedContactRepository;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Schema;
 
 class TestController extends AppBaseController
 {
@@ -40,11 +30,11 @@ class TestController extends AppBaseController
     public function index(Request $request)
     {
 
-        $extContRepo = new ExtendedContactRepository(app());
+        // $extContRepo = new ExtendedContactRepository(app());
 
-        $Contacts = $extContRepo->fullContacts(1, 4);
+        // $Contacts = $extContRepo->fullContacts(1, 4);
 
-        echo $Contacts->toJson();
+        // echo $Contacts->toJson();
         // dd($Contacts->toJson());
 
         // $User = Auth::user();
@@ -65,19 +55,13 @@ class TestController extends AppBaseController
 
         // broadcast(new newMessage("{'message':'test 77'}"));
 
-
-
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = '4';
-        // $Chat = $ExtendedChat->find(1);
-        // broadcast(new MessageToAttendant($Chat));
-        
-
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $Chat = $ExtendedChat->find(1);
+        broadcast(new MessageToAttendant($Chat));
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));
-
-
 
         // $Collection = $this->repository->fullContacts(1, 4);
 
@@ -90,7 +74,6 @@ class TestController extends AppBaseController
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
     }
-
 
     public function getGuzzleRequest()
     {
@@ -110,17 +93,17 @@ class TestController extends AppBaseController
         $request = $client->post($url, [
             'multipart' => [
                 [
-                    'name'     => 'file_name',
-                    'contents' => fopen('/path/to/file', 'r')
+                    'name' => 'file_name',
+                    'contents' => fopen('/path/to/file', 'r'),
                 ],
                 [
-                    'name'     => 'csv_header',
+                    'name' => 'csv_header',
                     'contents' => 'First Name, Last Name, Username',
-                    'filename' => 'csv_header.csv'
-                ]
+                    'filename' => 'csv_header.csv',
+                ],
             ]]);
         $response = $request->send();
-    
+
         dd($response);
     }
 
@@ -134,12 +117,12 @@ class TestController extends AppBaseController
                 'name' => 'Test user',
                 'password' => 'testpassword',
             ],
-            'timeout' => 5
+            'timeout' => 5,
         ]);
 
         // DELETE
         $client->delete('http://www.example.com/user');
-    
+
         dd($response);
     }
 
@@ -149,7 +132,7 @@ class TestController extends AppBaseController
         $url = "http://myexample.com/api/posts/1";
         $request = $client->delete($url);
         $response = $request->send();
-    
+
         dd($response);
     }
 

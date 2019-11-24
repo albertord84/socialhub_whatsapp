@@ -6,21 +6,20 @@ use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ExtendedAttendantsContactRepository;
 use App\Repositories\ExtendedContactRepository;
-use Illuminate\Http\Request;
-use Flash;
-use Response;
 use Auth;
+use Flash;
+use Illuminate\Http\Request;
+use Response;
 
 class ExtendedContactController extends ContactController
 {
 
     public function __construct(ExtendedContactRepository $contactRepo)
-    {       
+    {
         parent::__construct($contactRepo);
 
         $this->contactRepository = $contactRepo;
     }
-
 
     /**
      * Display a listing of the Contact.
@@ -31,14 +30,13 @@ class ExtendedContactController extends ContactController
     public function index(Request $request)
     {
         try {
-            $User = Auth::check()? Auth::user():session('logged_user');
-            $Contacts = $this->contactRepository->all();;
+            $User = Auth::check() ? Auth::user() : session('logged_user');
+            $Contacts = $this->contactRepository->all();
             if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, null);
-            } 
-            else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
+                $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null);
+            } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
                 $filter = $request->filter_contact;
-                $Contacts = $this->contactRepository->fullContacts((int)$User->company_id, (int)$User->id, $filter);
+                $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter);
             }
 
             return $Contacts->toJson();
@@ -58,21 +56,20 @@ class ExtendedContactController extends ContactController
     {
         $input = $request->all();
 
-        
         //TODO-JR-ALBERTO: um contato pode ser criado por:
         //um robot: manda para sacola
         //um admin desde CVS: va para sacola
         //um atendente: deve ser inserido com o Id do atendente que esta na sessão
-        //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente: 
-        //onde devo enviar o contact_atendant_id, por url ou nos dados? 
-        
-        $User = Auth::check()? Auth::user():session('logged_user');
+        //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente:
+        //onde devo enviar o contact_atendant_id, por url ou nos dados?
+
+        $User = Auth::check() ? Auth::user() : session('logged_user');
         if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
             $input['company_id'] = $User->company_id;
         } else
         if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
             $input['company_id'] = 1; //TODO-Alberto: obtener el id de la camponhia del atendetnte
-        } 
+        }
         $contact = $this->contactRepository->create($input);
 
         // TODO: Create Contact Chat Table
@@ -96,8 +93,8 @@ class ExtendedContactController extends ContactController
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:
-            //um atendente: atualiza dados do contato, status, atendente
-            //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados? 
+        //um atendente: atualiza dados do contato, status, atendente
+        //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
 
         if (empty($contact)) {
             Flash::error('Contact not found');
@@ -110,7 +107,6 @@ class ExtendedContactController extends ContactController
 
         // return redirect(route('contacts.index'));
     }
-
 
     /**
      * Remove the specified Contact from storage.
@@ -141,5 +137,5 @@ class ExtendedContactController extends ContactController
         Flash::success('Contact deleted successfully.');
 
         // return redirect(route('contacts.index'));
-    }   
+    }
 }

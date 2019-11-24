@@ -4,10 +4,10 @@ namespace App\Events;
 
 use App\Models\ExtendedChat;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class MessageToAttendant implements ShouldBroadcast
 {
@@ -20,7 +20,7 @@ class MessageToAttendant implements ShouldBroadcast
     /**
      * Create a new event instance.
      *
-     * @return void 
+     * @return void
      */
     public function __construct(ExtendedChat $Chat)
     {
