@@ -98,6 +98,7 @@ class UsersTableSeeder extends Seeder
             'login' => 'attendant1',
             'CPF' => '00000000002',
             'role_id' => $role_id,
+            'phone' => '(21)9659 13089',
             'status_id' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('attendant1'), // password

@@ -1,351 +1,327 @@
 <template>
     <div class="row">
-        <div class="col-xl-4 col-lg-5">
-            <b-card class="bg-info-card">
+        <div class="col-xl-4 col-lg-5 mt-2">
+            <b-card class="" style="box-shadow:none">
                 <div class="profile text-center ">
-                    <img :src="this.$store.state.user.picture" alt="User Image"
-                         class="rounded-circle img-fluid profile-thumb mb-3">
-                    <h4 class="text-gray">{{name}}</h4>
-                    <p>{{this.$store.state.user.job}}</p>
-                    <div class="row">
-                        <div class="col-sm-7 text-warning user-rating">
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star-half-full" aria-hidden="true"></i>
-                        </div>
-                        <div class="col-sm-5">
-                            <i class="fa fa-heart text-danger" aria-hidden="true"></i> 2,080
-                        </div>
+                    <h3>Meu perfil</h3><br>
+                    <input id="fileUserPhoto" ref="fileUserPhoto" style="display:none"   type="file" @change.prevent="handleFileUserPhoto" accept="image/*"/>
+                    <div class="container">
+                        <a href="javascript:void()" @click.prevent="trigger()" style="outline:none !important;" alt="User Image">
+                            <img :src="user.image_path" alt="Avatar" class="rounded-circle img-fluid profile-thumb">
+                            <div class="overlay">                                
+                                <div class="text"><i class="fa fa-camera" aria-hidden="true"></i><br>Click para atualizar</div>
+                            </div>
+                        </a>
                     </div>
+
+                    <h4 class="text-gray">{{user.name}}</h4>
+                    <p>{{user.role_name}}</p>                    
                 </div>
                 <div class="profile_details">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="nav-tabs-custom">
-                                <b-tabs>
-                                    <b-tab title="Status">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <hr>
                                         <div class="row">
-                                            <div class="col-12 mt-3">
-                                                <div class="row">
-                                                    <div class="col-6 text-right mt-1">Followers :</div>
-                                                    <div class="col-6 mt-1">1,079</div>
-                                                    <div class="col-6 text-right mt-1">Online Status :</div>
-                                                    <div class="col-6 mt-1">Offline</div>
-                                                    <div class="col-6 text-right mt-1">Last seen :</div>
-                                                    <div class="col-6 mt-1">2 Days ago</div>
-                                                    <div class="col-6 text-right mt-1">Last Updated :</div>
-                                                    <div class="col-6 mt-1">A Month ago</div>
-                                                    <div class="col-6 text-right mt-1">Connections :</div>
-                                                    <div class="col-6 mt-1">2,679</div>
-                                                </div>
-                                            </div>
+                                            <div class="col-4 text-right mt-2">Email:</div>
+                                            <div class="col-8 mt-2">{{user.email}}</div>
+
+                                            <div class="col-4 text-right mt-2">Telefone:</div>
+                                            <div class="col-8 mt-2">{{user.phone}}</div>
+
+                                            <div class="col-4 text-right mt-2">C.P.F:</div>
+                                            <div class="col-8 mt-2">{{user.CPF}}</div>
+                                            
+                                            <div class="col-4 text-right mt-2">Whatsapp:</div>
+                                            <div class="col-8 mt-2">{{user.whatsapp_id}}</div>
+                                            
+                                            <div class="col-4 text-right mt-2">Facebook:</div>
+                                            <div class="col-8 mt-2">{{user.facebook_id}}</div>
+                                            
+                                            <div class="col-4 text-right mt-2">Instagram:</div>
+                                            <div class="col-8 mt-2">{{user.instagram_id}}</div>
+                                            
+                                            <div class="col-4 text-right mt-2">Linkedin:</div>
+                                            <div class="col-8 mt-2">{{user.linkedin}}</div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                            <div class="col-4 text-right mt-2">Data de criação:</div>
+                                            <div class="col-8 mt-2">{{user.created_at}}</div>
+                                            
+                                            <div class="col-4 text-right mt-2">Últ. atualização:</div>
+                                            <div class="col-8 mt-2">{{user.updated_at}}</div>
                                         </div>
-                                    </b-tab>
-                                    <b-tab title="About" active>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-4 text-right mt-2">Email :</div>
-                                                    <div class="col-8 mt-2">{{user.email}}</div>
-                                                    <div class="col-4 text-right mt-2">Contact :</div>
-                                                    <div class="col-8 nt-2">(394)-968-3152</div>
-                                                    <div class="col-4 text-right mt-2">D.O.B :</div>
-                                                    <div class="col-8 mt-2">6-4-1987</div>
-                                                    <div class="col-4 text-right mt-1">Address :</div>
-                                                    <div class="col-8 mt-1">Westwood, 12th Street,7023 Mckinley Ave,
-                                                        US.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </b-tab>
-                                </b-tabs>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </b-card>
-            <b-card header="Project Details :" header-tag="h4" class="bg-success-card">
-                <b-list-group class="project-deatails">
-                    <b-list-group-item>
-                        <a href="#" class="text-primary"> Total Projects <span class="badge badge-primary float-right">28</span></a>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <a href="#" class="text-info"> Tasks <span class=" badge badge-info float-right">7</span></a>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <a href="#" class="text-success"> Submitted Projects <span
-                                class=" badge badge-success float-right">9</span></a>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <a href="#" class="text-warning"> Submitted Projects <span
-                                class="badge badge-warning float-right">9</span></a>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <a href="#" class="text-danger">In Progress <span
-                                class=" badge badge-danger float-right"> 11</span></a>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <a href="#" class="text-success"> Upcoming <span
-                                class="badge badge-success float-right">8</span></a>
-                    </b-list-group-item>
-                </b-list-group>
-            </b-card>
+            </b-card>            
         </div>
-        <div class="col-xl-8 col-lg-7">
-            <b-card class="bg-primary-card data">
-                <!-- Nav tabs -->
-                <b-tabs>
-                    <b-tab title="Connections">
-                        <v-scroll height="740px">
-                            <div class="row">
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar2.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Ella Washington</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg2">
-                                            <strong><span class="count">14</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg2">
-                                            <strong><span class="count">60</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar3.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Quincy Hirthe</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg1">
-                                            <strong><span class="count">7</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg1">
-                                            <strong><span class="count">89</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar4.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Heath Buckridge</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg4">
-                                            <strong><span class="count">6</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg4">
-                                            <strong><span class="count">75</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar5.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Jonatan</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg3">
-                                            <strong><span class="count">8</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg3">
-                                            <strong><span class="count">93</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar6.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1"> Wilderman</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg4">
-                                            <strong><span class="count">12</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg4">
-                                            <strong><span class="count">80</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar3.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Jessyca McGlynn</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg3">
-                                            <strong><span class="count">7</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg3">
-                                            <strong><span class="count">89</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar2.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Dasia Bernhard</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg2">
-                                            <strong><span class="count">5</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg2">
-                                            <strong><span class="count">86</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar4.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Edwina West</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg3">
-                                            <strong><span class="count">16</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg3">
-                                            <strong><span class="count">94</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="connection text-center row">
-                                        <div class="connect-head">
-                                            <img src="~img/authors/avatar5.jpg" alt="User Image" class="rounded-circle">
-                                            <h5 class="text-gray mt-1">Ernestina Sporer</h5>
-                                            <p>Project Architect</p>
-                                        </div>
-                                        <div class="connect-data connect-bg2">
-                                            <strong><span class="count">9</span> <br> Posts</strong>
-                                        </div>
-                                        <div class="connect-data connect-bg2">
-                                            <strong><span class="count">69</span> <br> Followers</strong>
-                                        </div>
-                                    </div>
+
+        <div class="col-xl-8 col-lg-7 mt-2" >
+            <b-card class="data" style="box-shadow:none">                
+                <div title="Connections">
+                    <h3>Atualizar meus dados:</h3><br>
+                    <div>
+                        <form>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-2 col-form-label">Nome: </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="name" v-model="user_edit.name">
                                 </div>
                             </div>
-                        </v-scroll>
-                    </b-tab>
-                    <b-tab title="Blog">
-                        <div class="row" id="blog">
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="blog-border">
-                                    <div class="blog-heading">
-                                        <p>
-                                            <img src="~img/authors/avatar6.jpg" alt="author image"
-                                                 class="blog-image rounded-circle p-2 float-left img-fluid">
-                                            <span class="post-by p-2"><strong>Jennie</strong> shared a post from <strong>Nature's</strong></span>
-                                        </p>
-                                        <img src="~img/pages/blog1.jpeg" alt="blog image2"
-                                             class="sharedpost-image img-fluid">
-                                    </div>
-                                    <div class="blog-body p-2">
-                                        <p>Lorem Ipsum is simply dummy, vidis litro abertis.</p>
-                                    </div>
-                                </div>
-                                <div class="blog-border">
-                                    <div class="blog-heading">
-                                        <div>
-                                            <span class="blog-desc">Lorem Ipsum is simply dummy, vidis litro abertis.</span>
-                                            <img src="~img/pages/blog4.jpg" alt="blog image2"
-                                                 class="sharedpost-image img-fluid">
-                                        </div>
-                                        <div class="connect-data connect-bg1 text-center">
-                                            <i aria-hidden="true" class="fa fa-comment"></i> 65
-                                        </div>
-                                        <div class="connect-data connect-bg1 text-center">
-                                            <i aria-hidden="true" class="fa fa-heart"></i> 680
-                                        </div>
-                                    </div>
+                            <div class="form-group row">
+                                <label for="Email" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control" id="Email" v-model="user_edit.email">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="blog-border p-2">
-                                    <div class="blog-heading ">
-                                        <img src="~img/pages/blog2.png" alt="blog image2"
-                                             class="sharedpost-image img-fluid">
-                                    </div>
-                                    <div class="blog-body p-2">
-                                        <p>Lorem Ipsum is simply dummy, vidis litro abertis.</p>
-                                    </div>
-                                </div>
-                                <div class="blog-heading">
-                                    <span class="blog-desc"><u>
-                                        <a href="#">https://examples. blogspot.in</a></u><br> Lorem Ipsum is simply dummy, vidis litro abertis.</span>
-                                    <img src="~img/pages/blog5.jpg" alt="blog image2" class="posted-image img-fluid">
+                            <div class="form-group row">
+                                <label for="password" class="col-sm-2 col-form-label">Senha</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" id="password" v-model="user_edit.password">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="blog-border">
-                                    <div class="blog-heading">
-                                        <p>
-                                            <span class="post-by p-2"><strong>Jennie</strong> shared a post.</span>
-                                        </p>
-                                        <img src="~img/pages/blog3.jpeg" alt="blog image2"
-                                             class="attached-image img-fluid">
-                                    </div>
+                            <div class="form-group row">
+                                <label for="passwordRepeat" class="col-sm-2 col-form-label">Repetir senha:</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" id="passwordRepeat" v-model="user_edit.repeat_password">
                                 </div>
-                                <div class="blog-border">
-                                    <div class="blog-heading">
-                                        <p>
-                                            <img src="~img/authors/avatar4.jpg" alt="author image"
-                                                 class="blog-image rounded-circle p-2 float-left">
-                                            <span class="post-by">Post by <strong>John</strong></span>
-                                        </p>
-                                        <img src="~img/pages/profile-coverbg.jpeg" alt="blog image2"
-                                             class="sharedpost-image img-fluid">
-                                    </div>
-                                    <div class="blog-body p-2">
-                                        <p>Lorem Ipsum is simply dummy, vidis litro abertis. simply dummy, vidis litro
-                                            abertis</p>
-                                    </div>
+                            </div>                            
+                            <div class="form-group row">
+                                <label for="cpf" class="col-sm-2 col-form-label">CPF: </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="cpf" v-model="user_edit.CPF">
                                 </div>
                             </div>
-                        </div>
-                    </b-tab>
-                </b-tabs>
+                            <div class="form-group row">
+                                <label for="phone" class="col-sm-2 col-form-label">Telefone</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="phone" v-model="user_edit.phone">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="whatsapp_id" class="col-sm-2 col-form-label">Whatsapp</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="whatsapp_id" v-model="user_edit.whatsapp_id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="whatsapp_id" class="col-sm-2 col-form-label">Facebook:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="whatsapp_id" v-model="user_edit.facebook_id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="instagram_id" class="col-sm-2 col-form-label">Instagram:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="instagram_id" v-model="user_edit.instagram_id">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="linkedin_id" class="col-sm-2 col-form-label">Linkedin:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="linkedin_id" v-model="user_edit.linkedin_id">
+                                </div>
+                            </div>
+                            <div class="form-group mt-5 text-right">
+                                <button type="submit" class="btn btn-primary btn_width pl-5 pr-5" @click.prevent="updateUser">
+                                    <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </b-card>
         </div>
     </div>
 </template>
 <script>
     import vScroll from "components/plugins/scroll/vScroll.vue"
+    import ApiService from "resources/common/api.service";    
+    import miniToastr from "mini-toastr";
+    miniToastr.init();
+
     export default {
         name: "user_profile",
+
         components: {
             vScroll
         },
+
         data() {
             return {
-                user: {},
-                email: "",
-                name: ""
+                url:'users',
+                user: null,
+                user_edit: null,
+                isSending:false,
+                file:null,
             }
         },
+
+
+        methods:{
+
+            // getUser()
+
+            updateUser(){
+                if(!this.isSending && this.user_edit.password.trim() !='' && this.user_edit.password != this.user_edit.repeat_password){
+                    miniToastr.error("As senhas fornecidas não coincidem. Por favor, confira!", "Erro");  
+                    return;
+                }else{
+                    if(this.user_edit.password.trim() =='')
+                        delete this.user_edit.password;
+                    this.isSending = true;
+                    ApiService.put(this.url+'/'+this.user_edit.id, this.user_edit)
+                    .then(response => {
+                        // window.location.reload(false);
+                        this.user = response.data;
+                        window.localStorage.setItem('user', JSON.stringify(this.user));
+                        
+                        this.user_edit = Object.assign({}, this.user);
+                        this.user_edit.repeat_password = this.user_edit.password = '';
+                        miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
+                        this.isSending = false;
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro atualizando perfil");  
+                        this.isSending = false;
+                    });
+                }
+            },
+
+            updateUserPhoto(This){
+                if(!This.isSending || !This.file){
+                    return;
+                }else{
+                    This.isSending = true;
+
+                    let formData = new FormData();
+                    formData.append("file",This.file); 
+
+                    ApiService.put(
+                        This.url+'/'+This.user_edit.id+'/update_image',
+                        formData,
+                        {headers: { "Content-Type": "multipart/form-data" }}
+                    )
+                    .then(response => {
+                        This.user = window.localStorage.getItem('user');
+                        This.user = JSON.parse(This.user);
+                        This.user.image_path = response.data;
+                        window.localStorage.setItem('user', JSON.stringify(This.user));
+                        This.user = window.localStorage.getItem('user');
+                        window.location.reload(false);
+
+                        This.user = response.data;
+                        This.user_edit = Object.assign({}, This.user);
+                        This.user_edit.repeat_password = This.user_edit.password = '';
+                        miniToastr.success("Foto atualizada com sucesso.","Sucesso");
+                        This.isSending = false;
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro atualizando a foto do perfil");  
+                        This.isSending = false;
+                    });
+                }
+            },
+
+            trigger () {
+                this.$refs.fileUserPhoto.click();
+            },
+
+            handleFileUserPhoto: function() {
+                this.file = null;
+                if(this.$refs.fileUserPhoto.files[0].size < 4*1024*1024) {
+                    this.file = this.$refs.fileUserPhoto.files[0];
+                } else{
+                    miniToastr.error("A imagem deve ter tamanho inferior a 4MB", "Erro"); 
+                }
+            },
+        },
+
+
         beforeMount: function () {
-            this.user = window.localStorage.getItem('user');
-            if (this.user != null) {
-                this.name = JSON.parse(this.user)['name'];
-                this.email = JSON.parse(this.user)['email'];
+            this.user = JSON.parse(window.localStorage.getItem('user'));
+            switch(this.user.role_id){
+                case 1:
+                    this.user.role_name = "Administrador de SocialHub";
+                    break;
+                case 2:
+                    this.user.role_name = "Funcionário de SocialHub";
+                    break;
+                case 3:
+                    this.user.role_name = "Gerente de empresa";
+                    break;
+                case 4:
+                    this.user.role_name = "Funcionário Atendente";
+                    break;
+                case 5:
+                    this.user.role_name = "Convidado";
+                    break;
             }
+            this.user_edit = Object.assign({}, this.user);
+            this.user_edit.repeat_password = this.user_edit.password = '';
+            console.log( this.user);
         },
+
+        created() {
+            miniToastr.setIcon("error", "i", {class: "fa fa-times"});
+            miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
+            miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
+            miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
+        },
+
         mounted: function () {
         },
+
         destroyed: function () {
         }
     }
 </script>
 <style src="../../../css/user_profile.css" scoped></style>
+
+<style lang="scss" scoped>
+    .text {
+        color: white;
+        font-size: 1.4em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .container {
+        position: relative;
+        width: 50%;
+        height: 50%;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        transition: .5s ease;
+        background-color: rgb(11, 12, 12);        
+    }
+
+    .container:hover .overlay {
+        opacity: 0.6;
+    }
+
+    
+</style>
