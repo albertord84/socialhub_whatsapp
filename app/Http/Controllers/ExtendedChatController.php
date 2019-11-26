@@ -9,6 +9,7 @@ use App\Repositories\ExtendedChatRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Response;
 
 class ExtendedChatController extends ChatController
@@ -53,15 +54,18 @@ class ExtendedChatController extends ChatController
 
         $Contact = Contact::findOrFail($input['contact_id']);
         $RPi = new RPIController();
-        if ($RPi->sendTextMessage($input['message'], $Contact->whatsapp_id)) {
-            $chat = $this->chatRepository->createMessage($input);
-            return $chat->toJson();
+
+        if (isset($input['file'])) {
+            $response = $RPi->sendFileMessage($input['file'], $input['type_id'], $input['message'], $Contact->whatsapp_id);
+            Storage::delete($input['file']->path());
         }
+        else {
+            $response = $RPi->sendTextMessage($input['message'], $Contact->whatsapp_id);
+        }
+        $chat = $this->chatRepository->createMessage($input);
+        return $chat->toJson();
 
-        return Flash::error('Chat saved successfully.');
-
-        // Flash::success('Chat saved successfully.');
-        // return redirect(route('chats.index'));
+        return Flash::success('Chat saved successfully.');
     }
 
     /**
