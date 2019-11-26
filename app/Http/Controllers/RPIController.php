@@ -74,7 +74,7 @@ class RPIController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function reciveImageMessage(Request $request)
+    public function reciveFileMessage(Request $request)
     {
         $input = $request->all();
         $contact_Jid = $input['Jid'];
@@ -195,13 +195,34 @@ class RPIController extends Controller
         }
     }
 
-    public function sendFileMessage(File $File, string $message, string $contact_Jid)
+    public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
     {
         try {
             $client = new \GuzzleHttp\Client();
-            $url = $this->APP_WP_API_URL . '/SendFileMessage';
+            $EndPoint = '';
+            switch ($file_type) {
+                case 'image':
+                    $EndPoint = 'SendImageMessage';
+                    break;
+                
+                case 'audio':
+                    $EndPoint = 'SendAudioMessage';
+                    break;
+                
+                case 'video':
+                    $EndPoint = 'SendVideoMessage';
+                    break;
+                
+                default:
+                    $EndPoint = 'SendDocumentMessage'; 
+                    break;
+            }
 
+            $url = $this->APP_WP_API_URL . "/$EndPoint";
+
+            $form_params['RemoteJid'] = $contact_Jid;
             $form_params['Contact'] = Contact::where(['whatsapp_id' => $contact_Jid])->first();
+            $form_params['Message'] = $message;
             $response = $client->request('POST', $url, [
                 'form_params' => [
                     'RemoteJid' => $contact_Jid,
