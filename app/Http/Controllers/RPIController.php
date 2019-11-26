@@ -223,24 +223,20 @@ class RPIController extends Controller
 
             $url = $this->APP_WP_API_URL . "/$EndPoint";
 
+            // Laravel Auto gerated file name
             $filePathName = $File->hashName();
-            if ($File->storeAs("", $filePathName)) {
-                $File2 = Storage::get("$filePathName");
+            if ($File->storeAs("", $filePathName)) { // Save file to disk (public/app/..)
+                $FileAux = Storage::get("$filePathName");  // Retrive file like file_get_content(...)
                 $response = $client->request('POST', $url, [
                     'multipart' => [
                         [
                             'name'     => "$FileName",
-                            'contents' => $File2,
+                            'contents' => $FileAux,
                             'filename' => $filePathName
                         ],
                         [   'name'     => "RemoteJid", 'contents' => $contact_Jid ],
                         [   'name'     => "Message", 'contents' => $message ]
                     ],
-                    // 'form_params' => [
-                    //     'RemoteJid' => $contact_Jid,
-                    //     'Message' => $message,
-                    //     // 'Contact' => Contact::where(['whatsapp_id' => $contact_Jid])->first(),
-                    // ],
                 ]);
                 Storage::delete("$filePathName");
             }
@@ -249,43 +245,6 @@ class RPIController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
-
-        // $client = new http\Client;
-        // $request = new http\Client\Request;
-        
-        // $body = new http\Message\Body;
-        // $body->addForm(array(
-        //   'RemoteJid' => '5521976550734@s.whatsapp.net',
-        //   'Message' => 'Texto da imagem 3'
-        // ), array(
-        //   array(
-        //     'name' => 'Image',
-        //     'type' => null,
-        //     'file' => '/home/albertord/Pictures/Alberto.jpeg',
-        //     'data' => null
-        //   )
-        // ));
-        
-        // $request->setRequestUrl('http://shrpialberto.sa.ngrok.io.ngrok.io/SendImageMessage');
-        // $request->setRequestMethod('POST');
-        // $request->setBody($body);
-        
-        // $request->setHeaders(array(
-        //   'cache-control' => 'no-cache',
-        //   'Connection' => 'keep-alive',
-        //   'Content-Length' => '83940',
-        //   'Accept-Encoding' => 'gzip, deflate',
-        //   'Host' => 'shrpialberto.sa.ngrok.io.ngrok.io',
-        //   'Postman-Token' => '71eb8ccc-1d0f-4358-8a19-172fbad56314,0f13289b-c705-446f-854b-c28986feb43a',
-        //   'Cache-Control' => 'no-cache',
-        //   'Accept' => '*/*',
-        //   'User-Agent' => 'PostmanRuntime/7.19.0',
-        //   'Content-Type' => 'application/x-www-form-urlencoded'
-        // ));
-        
-        // $client->enqueue($request)->send();
-        // $response = $client->getResponse();
-        
-        // echo $response->getBody();
     }
+    
 }
