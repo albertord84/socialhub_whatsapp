@@ -162,6 +162,31 @@ class ExtendedUserController extends UserController
         // return redirect(route('users.index'));
     }
 
+    public function update_image($id, Request $request)
+    {
+        //TODO: ALberto aydua aqui
+
+        // try {
+        //     $User = User::find($id);
+
+        //     if ($file = $request->file('file')) {
+        //         $image_path = "user_files/profile_images/";
+        //         $image_name = "$id." . $file->getClientOriginalExtension();
+        //         $json_data = App(ContentController::class)->upload($request, $image_path, $image_name);
+        //         if ($json_data) {
+        //             $User->image_path = $image_path . $image_name;
+        //             $User->save();
+
+        //             return $image_path . $image_name;
+        //         }
+        //     } else {
+        //         abort(302, "Error uploading file!");
+        //     }
+        // } catch (\Throwable $th) {
+        //     throw $th;
+        // }
+    }
+
     static function withoutEvents() {
 
     }

@@ -48,10 +48,10 @@
                                     </div>
                                     <hr>
                                     <div class="row">
-                                            <div class="col-4 text-right mt-2">Data de criação:</div>
+                                            <div class="col-4 text-right mt-2">Criado em:</div>
                                             <div class="col-8 mt-2">{{user.created_at}}</div>
                                             
-                                            <div class="col-4 text-right mt-2">Últ. atualização:</div>
+                                            <div class="col-4 text-right mt-2">Atualizado em:</div>
                                             <div class="col-8 mt-2">{{user.updated_at}}</div>
                                         </div>
                                     </div>
@@ -157,6 +157,7 @@
         data() {
             return {
                 url:'users',
+                url_photo:'update_image',
                 user: null,
                 user_edit: null,
                 isSending:false,
@@ -203,10 +204,10 @@
                     This.isSending = true;
 
                     let formData = new FormData();
-                    formData.append("file",This.file); 
+                    formData.append("file",This.file);
 
                     ApiService.put(
-                        This.url+'/'+This.user_edit.id+'/update_image',
+                        This.url_photo+'/'+This.user_edit.id+'/update_image',
                         formData,
                         {headers: { "Content-Type": "multipart/form-data" }}
                     )
@@ -240,6 +241,7 @@
                 this.file = null;
                 if(this.$refs.fileUserPhoto.files[0].size < 4*1024*1024) {
                     this.file = this.$refs.fileUserPhoto.files[0];
+                    this.updateUserPhoto(this);
                 } else{
                     miniToastr.error("A imagem deve ter tamanho inferior a 4MB", "Erro"); 
                 }

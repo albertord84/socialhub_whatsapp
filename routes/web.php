@@ -43,7 +43,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
 Route::resource('usersStatuses', 'UsersStatusController');
 Route::resource('roles', 'RoleController');
-Route::resource('users', 'UserController');
+Route::resource('users', 'ExtendedUserController');
 Route::resource('usersManagers', 'UsersManagerController');
 Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
 Route::resource('usersSellers', 'ExtendedUsersSellerController');
