@@ -31,7 +31,7 @@
                     <!-- User Account: style can be found in dropdown-->
                     <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none" >
                         <template v-slot:button-content>
-                            <img src="/images/prf4.jpg" class="my-rounded-circle" alt="User Image">
+                            <img :src="pictureProfile" class="my-rounded-circle" alt="User Image">
                         </template>
                         <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/attendant/user_profile" exact class="drpodowtext">
@@ -70,6 +70,7 @@
                 name: "",
                 user: {},
                 modalShowCRUDProfile:false,
+                pictureProfile:'',
             }
         },
         methods: {
@@ -105,6 +106,7 @@
             this.user = window.localStorage.getItem('user');
             if (this.user != null) {
                 this.name = JSON.parse(this.user)['name'];
+                this.pictureProfile = JSON.parse(this.user)['image_path'];
             }
         },
     }

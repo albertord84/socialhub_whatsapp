@@ -44,6 +44,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
 Route::resource('usersStatuses', 'UsersStatusController');
 Route::resource('roles', 'RoleController');
 Route::resource('users', 'ExtendedUserController');
+Route::post('users/{id}/update_image', 'ExtendedUserController@update_image');
+
 Route::resource('usersManagers', 'UsersManagerController');
 Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
 Route::resource('usersSellers', 'ExtendedUsersSellerController');

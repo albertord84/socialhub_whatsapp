@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Business\FileUtils;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\ExtendedUserRepository;
+use App\User;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use Auth;
+
+// use App\Models\User;
 
 class ExtendedUserController extends UserController
 {
@@ -17,8 +22,9 @@ class ExtendedUserController extends UserController
     public function __construct(ExtendedUserRepository $userRepository)
     {
         parent::__construct($userRepository);
-
         $this->userRepository = $userRepository;
+        
+        $this->APP_FILE_PATH = env('APP_FILE_PATH');
     }
 
     /**
@@ -161,33 +167,39 @@ class ExtendedUserController extends UserController
 
         // return redirect(route('users.index'));
     }
+    
+    static function withoutEvents() {
+        
+    }
 
     public function update_image($id, Request $request)
     {
-        //TODO: ALberto aydua aqui
+        try {
+            $User = User::find($id);
+            if ($file = $request->file('file')) {
 
-        // try {
-        //     $User = User::find($id);
+                $company_id = $User->company_id;
+                $files_path = $this->APP_FILE_PATH;
 
-        //     if ($file = $request->file('file')) {
-        //         $image_path = "user_files/profile_images/";
-        //         $image_name = "$id." . $file->getClientOriginalExtension();
-        //         $json_data = App(ContentController::class)->upload($request, $image_path, $image_name);
-        //         if ($json_data) {
-        //             $User->image_path = $image_path . $image_name;
-        //             $User->save();
-
-        //             return $image_path . $image_name;
-        //         }
-        //     } else {
-        //         abort(302, "Error uploading file!");
-        //     }
-        // } catch (\Throwable $th) {
-        //     throw $th;
-        // }
+                $image_path = base_path() . "/public/$files_path/$company_id/users/$User->id/profile/";
+                $image_name = "$User->id";
+                
+                $json_data = FileUtils::SavePostFile($request->file, $image_path, $image_name);
+                if ($json_data) {
+                    $User->image_path = "$files_path/$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
+                    $User->save();
+                    return "$files_path/$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
+                }
+            } else {
+                abort(302, "Error uploading file!");
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
-    static function withoutEvents() {
+    
 
-    }
+
+
 }

@@ -7,7 +7,7 @@
                     <input id="fileUserPhoto" ref="fileUserPhoto" style="display:none"   type="file" @change.prevent="handleFileUserPhoto" accept="image/*"/>
                     <div class="container">
                         <a href="javascript:void()" @click.prevent="trigger()" style="outline:none !important;" alt="User Image">
-                            <img :src="user.image_path" alt="Avatar" class="rounded-circle img-fluid profile-thumb">
+                            <img :src="user.image_path" alt="Image profile" class="rounded-circle img-fluid profile-thumb">
                             <div class="overlay">                                
                                 <div class="text"><i class="fa fa-camera" aria-hidden="true"></i><br>Click para atualizar</div>
                             </div>
@@ -157,7 +157,6 @@
         data() {
             return {
                 url:'users',
-                url_photo:'update_image',
                 user: null,
                 user_edit: null,
                 isSending:false,
@@ -198,37 +197,29 @@
             },
 
             updateUserPhoto(This){
-                if(!This.isSending || !This.file){
+                if(!This.file){
                     return;
                 }else{
-                    This.isSending = true;
-
                     let formData = new FormData();
                     formData.append("file",This.file);
 
-                    ApiService.put(
-                        This.url_photo+'/'+This.user_edit.id+'/update_image',
+                    ApiService.post(
+                        This.url+'/'+This.user_edit.id+'/update_image',
                         formData,
                         {headers: { "Content-Type": "multipart/form-data" }}
                     )
                     .then(response => {
-                        This.user = window.localStorage.getItem('user');
-                        This.user = JSON.parse(This.user);
                         This.user.image_path = response.data;
                         window.localStorage.setItem('user', JSON.stringify(This.user));
-                        This.user = window.localStorage.getItem('user');
-                        window.location.reload(false);
-
-                        This.user = response.data;
+                        //TODO: relaod the header profile image
+                        
                         This.user_edit = Object.assign({}, This.user);
                         This.user_edit.repeat_password = This.user_edit.password = '';
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
-                        This.isSending = false;
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
                         miniToastr.error(error, "Erro atualizando a foto do perfil");  
-                        This.isSending = false;
                     });
                 }
             },
