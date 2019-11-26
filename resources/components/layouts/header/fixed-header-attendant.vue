@@ -8,8 +8,7 @@
 
             <!--drop downs-->
             <div class="navbar-right">
-                <div>
-                    
+                <div>                    
                     <!--fullscreen button-->
                     <div class="dropdown hidden-xs-down btn-group fullscreen" v-if="fullscreen">
                         <a href="javascript:void(0)" @click="fullscreen" title="Tela Cheia">
@@ -29,32 +28,16 @@
                         </router-link>
                     </div>
 
-                    <!--rightside toggle-->
-                    <!-- <div class="dropdown hidden-xs-down btn-group " id="right-side" @click="toggle_right">
-                        <a href="javascript:void(0)">
-                            <i class="fa fa-envelope noti-icon"></i>
-                            <div class="notifications_badge_top">
-                                <span class="badge badge-success">2
-                                </span>
-                            </div>
-                        </a>
-                    </div> -->
-
                     <!-- User Account: style can be found in dropdown-->
                     <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none" >
                         <template v-slot:button-content>
-                            <img src="/images/prf4.jpg" class="my-rounded-circle" alt="User Image">
+                            <img :src="pictureProfile" class="my-rounded-circle" alt="User Image">
                         </template>
                         <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/attendant/user_profile" exact class="drpodowtext">
                                 <i class="fa fa-user-o"></i> Perfil
                             </router-link>
                         </b-dropdown-item>
-                        <!-- <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/attendant/edit_user" exact class="drpodowtext">
-                                <i class="fa fa-cog"></i> Configuração
-                            </router-link>
-                        </b-dropdown-item> -->
                         <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/lockscreen" exact class="drpodowtext">
                                 <i class="fa fa-lock"></i> Bloquear
@@ -73,8 +56,6 @@
                 </div>
             </div>
 
-
-
         </nav>
     </header>
 </template>
@@ -83,40 +64,49 @@
 
     export default {
         name: "vueadmin_header",
+
         data() {
             return {
                 name: "",
-                user: {}
+                user: {},
+                modalShowCRUDProfile:false,
+                pictureProfile:'',
             }
         },
         methods: {
             toggle_menu() {
                 this.$store.commit('left_menu', "toggle");
             },
+
             fullscreen() {
                 if (screenfull.enabled) {
                     screenfull.toggle();
                 }
             },
+
             toggle_right() {
                 this.$store.commit('rightside_bar', "toggle");
             },
+
             logout() {
                 window.localStorage.removeItem('token')
                 window.localStorage.removeItem('user')
                 delete axios.defaults.headers.common['Authorization']
                 this.$router.push({name: "login"})
             },
+
             urlIMG: function(){            
                 // return require('../../../img/');
                 // /var/www/html/socialhub/resources/img/pages/User-01.png
                 // return require('../../../img/pages/default-matter-photo.jpg');
             },
         },
+
         beforeMount: function () {
             this.user = window.localStorage.getItem('user');
             if (this.user != null) {
                 this.name = JSON.parse(this.user)['name'];
+                this.pictureProfile = JSON.parse(this.user)['image_path'];
             }
         },
     }

@@ -1,16 +1,17 @@
 <template>
-    <div class="row chat p-0" style="background-color:#fefefe !important">
+    <div class="row chat">
 
         <left-side-bar  :left_layout ="left_layout" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        <!-- <right-side-bar :right_layout ="right_layout" :item='item' @reloadContacts='reloadContacts'></right-side-bar> -->
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
                 <div class="sect_header">
                     <ul class='menu'>
-                        <li><p class="header-title">Contatos</p></li>                    
+                        <li><p>Contatos</p></li>                    
                         <ul class='menu' style="float:right">
-                            <li><a href='javascript:void(0)' title="Novo contato" class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs " ></i></a></li>
+                            <li><a href='javascript:void(0)' title="Novo contato" class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs" ></i></a></li>
                             <!-- <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -74,44 +75,44 @@
                         </ul>
                     </ul>                    
                 </div>
-                <div class="">
-                    <div class="input-group" style="color:gray" >
+                <div class="sect_header">
+                    <div class="input-group pb-5 pr-1" style="color:gray" >
                         <div class="input-group-prepend">
-                            <div v-if="searchContactByStringInput.length==0" style="background-color:#fffff8;color:gray" class="input-group-text border-right-0 border-top-0 border-left-0 border">
+                            <div v-if="searchContactByStringInput.length==0" style="background-color:#fffff8;color:gray" class="input-group-text border-right-0 border">
                                 <i class="fa fa-search"></i>
                             </div>
-                            <div v-if="searchContactByStringInput.length>0" @click.prevent="searchContactByStringInput=''" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-right-0 border-left-0 border-top-0  border">
+                            <div v-if="searchContactByStringInput.length>0" @click="searchContactByStringInput=''" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-right-0 border">
                                 <i class="fa fa-arrow-left"></i>
                             </div>
                         </div>
-                        <input class="form-control search-input border-left-0 border-top-0 border-right-0 border" type="search" v-model="searchContactByStringInput" placeholder="Buscar contato" >
+                        <input class="form-control search-input border-left-0 border-right-0 border" type="search" v-model="searchContactByStringInput" placeholder="Buscar contato" >
                         <div v-if="searchContactByStringInput.length>0" class="input-group-prepend">
-                            <div style="background-color:#fffff8;color:gray" @click.prevent="searchContactByStringInput=''" class="input-group-text border-left-0 border-top-0 border">
+                            <div style="background-color:#fffff8;color:gray" @click="searchContactByStringInput=''" class="input-group-text border-left-0 border">
                                 <i class="fa fa-close"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-                <ul>
-                    <v-scroll :height="Height(100)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
-                            <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
-                                <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
-                                    <article class="media mt-1 mb-4">
-                                        <a class="float-left desc-img mt-3"><img :src="JSON.parse(contact.json_data).urlProfilePicture" class="my-rounded-circle"></a>
-                                        <span v-show="contact.count_unread_messagess>0" class="status-new-messages" :title='contact.count_unread_messagess+" mensagens novas"'>{{contact.count_unread_messagess}}</span>
-                                        <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
-                                        <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                            <a class="text-success" href="javascript:void(0)">
-                                                {{contact.first_name }}
-                                            </a><br>
-                                            <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
-                                        </div>
-                                        <span class="mt-2 text-muted" style="font-size:0.8em">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
-                                    </article>
-                                </a>
-                            </li>
-                    </v-scroll>
-                </ul>
+                <v-scroll :height="Height(100)"  color="#ccc" style="background-color:white" bar-width="8px">
+                    <ul>
+                        <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
+                            <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
+                                <article class="media mt-1 mb-4">
+                                    <a class="float-left desc-img mt-3"><img :src="JSON.parse(contact.json_data).urlProfilePicture" class="my-rounded-circle"></a>
+                                    <span v-show="contact.count_unread_messagess>0" class="status-new-messages" :title='contact.count_unread_messagess+" mensagens novas"'>{{contact.count_unread_messagess}}</span>
+                                    <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
+                                    <div class="media-body pl-3 mb-1 mt-3 chat_content">
+                                        <a class="text-success" href="javascript:void(0)">
+                                            {{contact.first_name }}
+                                        </a><br>
+                                        <a class="text-muted"><span>{{ (contact.last_message) ? text_truncate(contact.last_message.message,20):'' }}</span></a>
+                                    </div>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
+                                </article>
+                            </a>
+                        </li>
+                    </ul>
+                </v-scroll>
             </div>
         </div>
 
@@ -128,7 +129,7 @@
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
-                            <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()"><i class="fa fa-search"></i></a></li>
+                            <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()/*toggle_right('toggle-find-messages')*/"><i class="fa fa-search"></i></a></li>
                             <li>
                                 <form action="">
                                     <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
@@ -194,12 +195,12 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
                                         </b-dropdown-item>
                                     </b-dropdown> -->
-                                    <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                    <span v-if='message.type_id == "2"/*image*/' class='mb-2 text-center'>
                                         <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
                                             <img :src="message.path" class="midia-files"/>
                                         </a>
                                     </span>                               
-                                    <span v-if='message.type_id == "3"' class='text-center'>
+                                    <span v-if='message.type_id == "3"/*audio*/' class='text-center'>
                                         <br>
                                         <audio controls class="mycontrolBar">
                                             <source :src="message.path" type="audio/ogg">
@@ -207,7 +208,7 @@
                                             Seu navegador não suporta o elemento de áudio.
                                         </audio>
                                     </span>
-                                    <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                    <span v-if='message.type_id == "4"/*video*/' class='mb-2 text-center'>
                                         <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
                                             <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
                                                 <source :src="message.path+'#t=2'" type="video/mp4">
@@ -215,7 +216,7 @@
                                             </video>
                                         </a>
                                     </span>
-                                    <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                    <span v-if='message.type_id == "5"/*document*/' class='mb-2 text-center'>
                                         <a :href="message.path" target="_blank" rel=”noopener”  >
                                             <img src="~img/socialhub/text-file-icon.png" alt="text-file-icon" class="midia-files-document" >
                                         </a>
@@ -225,20 +226,8 @@
                                         {{ message.message ? message.message : "" }}
                                     </span>
                                     <br>
+                                    <span class="msg-time">{{message.created_at}}</span>
                                 </p>
-                                <br>
-                                <span class="msg-time" v-if='message.source==0'>
-                                    <ul class="menu">
-                                        <li><div class="thetime">{{message.created_at}}</div></li>
-                                        <li> <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" alt="" class="my-rounded-circle"></li>
-                                    </ul>
-                                </span>
-                                <span class="msg-time" v-if='message.source==1'>
-                                    <ul class="menu">
-                                        <li> <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" alt="" class="my-rounded-circle"></li>
-                                        <li> <div class="thetime">{{message.created_at}}</div></li>
-                                    </ul>
-                                </span>
                             </div>
                         </li>
                     </ul>
@@ -270,7 +259,7 @@
             <div class="sect_header">
                 <ul class='menu'>
                     <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
-                    <li><p class="header-title">Detalhes</p></li>
+                    <li><p>Detalhes</p></li>
                         <ul class='menu' style="float:right">                            
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
@@ -345,22 +334,22 @@
             <div class="col-lg-12 sect_header">
                 <ul class="menu">
                     <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_find_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
-                    <li><p class="header-title">Buscar mensagens</p></li>
+                    <li><p>Buscar mensagens</p></li>
                 </ul>
             </div>
-            <div class="col-lg-12" style="color:gray;">
+            <div class="col-lg-12 sect_header" style="color:gray;">
                 <div class="input-group" style="color:gray; width:110%; left:-5%;" >
                     <div class="input-group-prepend">
-                        <div v-if="searchMessageByStringInput.length==0" style="background-color:#fffff8;color:gray" class="input-group-text border-left-0 border-right-0 border-top-0 border">
+                        <div v-if="searchMessageByStringInput.length==0" style="background-color:#fffff8;color:gray" class="input-group-text border-right-0 border">
                             <i class="fa fa-search"></i>
                         </div>
-                        <div v-if="searchMessageByStringInput.length>0" @click="searchMessageByStringInput='';messagesWhereLike=[];" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-left-0 border-right-0 border-top-0 border">
+                        <div v-if="searchMessageByStringInput.length>0" @click="searchMessageByStringInput='';messagesWhereLike=[];" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-right-0 border">
                             <i class="fa fa-arrow-left"></i>
                         </div>
                     </div>
-                    <input class="form-control search-input border-left-0 border-right-0 border-top-0 border" ref="searchMessageByStringInputref" type="search" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" placeholder="Buscar ..." >
+                    <input class="form-control search-input border-left-0 border-right-0 border" ref="searchMessageByStringInputref" type="search" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" placeholder="Buscar..." >
                     <div v-if="searchMessageByStringInput.length>0" class="input-group-prepend">
-                        <div style="background-color:#fffff8;color:gray" @click="searchMessageByStringInput='';messagesWhereLike=[];" class="input-group-text border-left-0 border-right-0  border-top-0 border">
+                        <div style="background-color:#fffff8;color:gray" @click="searchMessageByStringInput='';messagesWhereLike=[];" class="input-group-text border-left-0 border">
                             <i class="fa fa-close"></i>
                         </div>
                     </div>
@@ -636,6 +625,7 @@
                         miniToastr.error("O arquivo deve ter tamanho inferior a 10MB", "Erro"); 
                     }
                 }
+                console.log(this.file);
             },
 
             pathContactMessageFile(contact_id, file_name) {
@@ -910,31 +900,29 @@
         }
     }
 
-    .received div p, 
-    .sent div p {
+    .received div p, .sent div p {
         max-width:26em;
         min-width:14em;
         text-overflow:hidden;
         word-break: break-word; 
-        border-radius: 1em;        
+        border-radius: 0.7em;
         display: inline-block;
         padding: 0.7em 1em;
         position: relative;
         border: 1px solid #d4d2d2;
-        margin-top: 30px;
     }
 
     .received div p::before{
-        // content: ' ';
-        // position: absolute;
-        // width: 0;
-        // height: 0;
-        // left: -120px;
-        // right: auto;
-        // top: -1px;
-        // bottom: auto;
-        // border: 12px solid;
-        // border-color: transparent transparent #d4d2d2  transparent;
+        content: ' ';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -12px;
+        right: auto;
+        top: -1px;
+        bottom: auto;
+        border: 12px solid;
+        border-color: #d4d2d2 transparent transparent transparent;
     }
 
     .received div p::after{
@@ -944,31 +932,21 @@
         height: 0;
         left: -12px;
         right: auto;
-        top: auto;  // top: 0;
-        bottom: 0; // bottom: auto;
+        top: 0px;
+        bottom: auto;
         border: 12px solid;
-        border-color:  transparent transparent #fff transparent;
-    }
+        border-color: #fff transparent transparent transparent;
+    }    
 
     .received>div {
         text-align: left;
         padding: 0 17px 0 17px;
         .msg-time{
-            position: relative;
             font-size: 0.8em;
             float: left;
-            top: -15px;
-            .thetime{
-                position: relative;
-                top:20px;
-                left:15px;
-            }
         }
         p {
             background-color: #fff;
-            border-bottom-left-radius:0px;
-            left: 55px;
-            margin-bottom: 0px;
         }
     }
 
@@ -1000,29 +978,23 @@
         text-align: right;
         padding: 0 17px 0 17px;
         .msg-time{
-            position: relative;
-            font-size: 0.8em;
             float: right;
-            top: -15px;
-            .thetime{
-                position: relative;
-                top:20px;
-                right: 15px;
-            }
+            font-size: 0.9em;
         }
         p {
             background-color: #0377FE;  // background-color: #dbf2fa;
-            border-bottom-right-radius:0px;
-            right: 55px;
-            margin-bottom: 0px;
-        }
-        .text-message{
-            color:white;
         }
     }
 
+    .sent .text-message{
+        color:white;
+    }
+    .sent .msg-time{
+        color:white;
+    }
+
     .text-message{
-        nfot-size:1.2em; 
+        font-size:1.2em; 
     }
 
 
@@ -1175,12 +1147,9 @@
     }
    
     .sect_header{
-        // background-color:#eaf5ff;
-        background-color:#fefefe;
+        background-color:#eaf5ff;
         height:70px;  
-        // border: 1px solid #e9e9e9;
-        border-bottom: 1px solid #e9e9e9;
-        padding-top:10px; 
+        border: 1px solid #e9e9e9;
     }
 
     .sec_decription p, h4{
@@ -1216,7 +1185,7 @@
 
     .mycontrolBar{
         background-color: white !important;
-        // opacity:0.5;
+        opacity:0.5;
         color:white;
     }
 
@@ -1289,9 +1258,5 @@
     .midia-files-document{
         width: 10em;
     }    
-
-    .header-title{
-        font-size: 1.3em;
-    }
 
 </style>

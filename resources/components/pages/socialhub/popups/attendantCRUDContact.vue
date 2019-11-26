@@ -4,20 +4,20 @@
             <div class="col-lg-12 sect_header">
                 <ul v-if='action=="insert"' class="menu">
                     <li ><a  href="javascript:void(0)" @click.prevent="toggle_left('close')"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
-                    <li ><p>Novo contato</p> </li>                        
+                    <li ><p class="header-title">Novo contato</p> </li>                        
                     <ul class="menu float-right">
                         <li ><a href="javascript:void(0)" @click.prevent="toggle_left('close')"><i class="fa fa-close"></i></a></li>
                     </ul>
                 </ul>
                 <ul v-if='action=="edit"' class="menu">
                     <li ><a href="javascript:void(0)" @click.prevent="editclose"><i class="fa fa-close"></i></a></li>
-                    <li ><p>Editar contato</p> </li>
+                    <li ><p class="header-title">Editar contato</p> </li>
                     <ul class="menu float-right">
                         <li ><a  href="javascript:void(0)" @click.prevent="editclose"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     </ul>
                 </ul>
             </div>
-            <form class="col-lg-12 form-horizontal form-validation" :state="formstate">
+            <form class="col-lg-12 form-horizontal form-validation" :state="formstate" style="background-color:white">
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="padding: 29px 0px 5px" class="form-group has-search">
@@ -333,9 +333,12 @@
     }
     /*-------------------------------------*/
     .sect_header{
-        background-color:#eaf5ff;
-        height:50px;  
-        border: 1px solid #e9e9e9;
+        /* background-color:#eaf5ff; */
+        background-color:white;
+        height:70px;  
+        /* border: 1px solid #e9e9e9; */
+        border-bottom: 1px solid #e9e9e9;
+        padding-top:10px 
     }
     /*-------------------------------------*/
     .menu{
@@ -404,4 +407,9 @@
         font-size: 12px;
         color: gray;
     }
+
+    .header-title{
+        font-size: 1.3em;
+    }
+
 </style>
