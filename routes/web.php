@@ -20,6 +20,8 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'RPIController@reciveFileMessage');
     Route::post('reciveTextMessage', 'RPIController@reciveTextMessage');
     Route::post('sendTextMessage', 'RPIController@sendMessage');
+
+    Route::post('update', 'RPIController@update');
 });
 
 Route::get('/', function () {
