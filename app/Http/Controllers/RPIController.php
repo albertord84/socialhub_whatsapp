@@ -33,6 +33,17 @@ class RPIController extends Controller
     }
 
     /**
+     * Display a listing of the Chat.
+     * @param Request $request
+     * @return Response
+     */
+    public function update(Request $request)
+    {
+        $timestam = 0; // time();
+        return date('c', $timestam);
+    }
+
+    /**
      * Recive Text Message
      * @param Request $request
      * @return Response
