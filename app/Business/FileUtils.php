@@ -12,7 +12,7 @@ class FileUtils extends Business
         base::__construct();
     }
 
-    public static function SavePostFile(UploadedFile $file, ?string $FilePath = '', ?string $chat_id = null): stdClass
+    public static function SavePostFile(UploadedFile $file, ?string $FilePath = '', ?string $file_name = null): stdClass
     {
         $json_data = new \StdClass();
         try {
@@ -24,19 +24,20 @@ class FileUtils extends Business
             $json_data->getSize = $file->getSize();
             $json_data->isValid = $file->isValid();
             $json_data->MaxFilesize = $file->getMaxFilesize();
-            $json_data->SavedFileName = $chat_id ? $chat_id : time();
+            $json_data->SavedFileName = $file_name ? $file_name : $file->hashName();
             $json_data->SavedFileName .= ".$json_data->ClientOriginalExtension";
             $json_data->SavedFilePath = $FilePath;
-
-            $FullPath = $json_data->SavedFilePath . $json_data->SavedFileName;
+            
+            $FullPath = "$json_data->SavedFilePath/$json_data->SavedFileName";
+            $json_data->FullPath = $FullPath;
 
             // Remove file wheter exist
-            if (Storage::exists($FullPath)) {
-                Storage::delete($FullPath);
+            if (Storage::disk('chats_files')->exists($FullPath)) {
+                Storage::disk('chats_files')->delete($FullPath);
             }
 
             // Save file indo our dir
-            if (!$file->move($json_data->SavedFilePath, $json_data->SavedFileName)) {
+            if (!$file->storeAs($json_data->SavedFilePath, $json_data->SavedFileName, 'chats_files')) {
                 $json_data->msg = "Error moving uploading file! ";
                 $json_data->error = true;
                 // Flash::success('Error movendo o arquivo.');
