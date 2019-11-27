@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 // use League\Flysystem\File;
 use Response;
+use stdClass;
 
 class RPIController extends Controller
 {
@@ -40,7 +41,12 @@ class RPIController extends Controller
     public function update(Request $request)
     {
         $timestam = 0; // time();
-        return date('c', $timestam);
+        date('c', $timestam);
+
+        $version = new stdClass;
+        $version->version = '1.0.0';
+
+        return json_encode($version);
     }
 
     /**
