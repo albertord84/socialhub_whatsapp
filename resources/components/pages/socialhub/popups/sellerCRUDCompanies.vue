@@ -2,30 +2,6 @@
     <div>
         <b-container fluid>                
             <form v-show="action!='delete'"> 
-                <div class="pb-5">
-                    <h3>Dados do manager da empresa</h3>
-                    <div class="row">
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model_manager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="model_manager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="model_manager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model_manager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
-                        </div>
-                    </div>                
-                </div> 
-                <hr>
                 <div>
                     <h3>Dados da empresa</h3>
                     <div class="row">
@@ -54,7 +30,40 @@
                         </div>                                                                         
                     </div>
                 </div>
-                
+                <hr>
+                <div class="pb-5">
+                    <h3>Dados do manager da empresa</h3>
+                    <div class="row">
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-user form-control-feedback"></span>
+                            <input v-model="model_manager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model_manager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model_manager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-phone form-control-feedback"></span>
+                            <input v-model="model_manager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                        </div>
+                    </div>                
+                    <!-- <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-whatsapp form-control-feedback"></span>
+                            <input v-model="model_manager.whatsapp_id" name="whatsapp_id" id="whatsapp_id" type="text" placeholder="Whatsapp" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-facebook form-control-feedback"></span>
+                            <input v-model="model_manager.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
+                        </div>
+                    </div>                 -->
+                </div> 
                                
                 <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addCompany">Adicionar</button>
@@ -84,8 +93,9 @@
         name: 'adminCRUDSellers',
 
         props: {
-            first_url:'',
-            url:'',
+            companies_url:'',
+            users_url:'',
+            usersManager_url:'',
             action: "",
             item:{},
         },
@@ -113,6 +123,11 @@
                     login: "",
                     CPF: "",
                     phone: "",
+                    image_path: "",
+                    whatsapp_id: "",
+                    facebook_id: "",
+                    instagram_id: "",
+                    linkedin_id: "",
                 },
             }
         },
@@ -124,17 +139,29 @@
                 this.model_manager.role_id=3;
                 this.model_manager.image_path = "images/user.jpg";
 
-                ApiService.post(this.first_url, this.model)
+                // inserindo company
+                ApiService.post(this.companies_url, this.model)
                 .then(response => {
-                    ApiService.post(this.url, { 
-                        'user_id':response.data.id,
-                        'user_manager_id':JSON.parse(localStorage.user).id
-                        })
+                    this.model_manager.company_id = response.data.id;
+                    // inserindo user
+                    ApiService.post(this.users_url, this.model_manager)
                         .then(response => {
-                            miniToastr.success("Atendente adicionado com sucesso","Sucesso");
-                            this.formReset();
-                            this.reload();
-                            this.closeModals();
+                           //inserindo userManager
+                           ApiService.post(this.usersManager_url, {'user_id':response.data.id})
+                                .then(response => {
+
+                                    console.log('userManager criado');
+
+                                    miniToastr.success("Atendente adicionado com sucesso","Sucesso");
+                                    this.formReset();
+                                    this.reload();
+                                    this.closeModals();
+                                })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error); 
+                                miniToastr.error(error, "Erro adicionando Atendente");  
+                            });
+                           
                         })
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
@@ -142,6 +169,9 @@
                     });
                 })
                 .catch(function(error) {
+
+                   // console.log(error);
+
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando usuáio");  
                 });
@@ -184,17 +214,23 @@
             },
 
             formReset:function(){
+                this.model.CNPJ = "";
                 this.model.name = "";
-                this.model.login = "";
-                this.model.email = "";
-                this.model.password = "";
-                this.model.CPF = "";
                 this.model.phone = "";
-                this.model.image_path= "";
-                this.model.whatsapp_id= "";
-                this.model.facebook_id= "";
-                this.model.instagram_id= "";
-                this.model.linkedin_id="";
+                this.model.email = "";
+                this.model.description = "";
+
+                this.model_manager.name = "";
+                this.model_manager.login = "";
+                this.model_manager.email = "";
+                this.model_manager.password = "";
+                this.model_manager.CPF = "";
+                this.model_manager.phone = "";
+                this.model_manager.image_path= "";
+                this.model_manager.whatsapp_id= "";
+                this.model_manager.facebook_id= "";
+                this.model_manager.instagram_id= "";
+                this.model_manager.linkedin_id="";
             },
 
             closeModals(){
