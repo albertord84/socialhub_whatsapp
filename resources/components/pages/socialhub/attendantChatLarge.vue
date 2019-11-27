@@ -488,9 +488,12 @@
                     
                     ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                     .then(response => {
+                        if (response.data.data) {
+                            response.data.data = JSON.parse(response.data.data);
+                            response.data.path = this.pathContactMessageFile(response.data.contact_id, response.data.data.SavedFileName);
+                        }
                         this.messages.push(response.data);
-                        if(this.contacts[this.selected_contact_index].last_message)
-                            this.contacts[this.selected_contact_index].last_message.message = this.newMessage.message;
+                        this.contacts[this.selected_contact_index].last_message = this.newMessage;
                         this.newMessage.message = "";
                         this.file = null;
                         this.$refs.message_scroller.scrolltobottom();
@@ -527,10 +530,15 @@
                             this.messages = response.data; 
                             var This = this;                       
                             this.messages.forEach(function(item, i){
-                                if(item.data != "" && item.data != null && item.data.length>0)
-                                    item.data = JSON.parse(item.data);
-                                    if (item.type_id > 1)
-                                        item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
+                                try {
+                                    if(item.data != "" && item.data != null && item.data.length>0) {
+                                        item.data = JSON.parse(item.data);
+                                        if (item.type_id > 1)
+                                            item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
+                                    }
+                                } catch (error) {
+                                    console.log(error);                                    
+                                }
                             });
                         })
                         .catch(function(error) {
@@ -771,18 +779,26 @@
             var attendant_id = JSON.parse(localStorage.user).id;
             window.Echo.channel('sh.message-to-attendant.' + attendant_id)
                 .listen('MessageToAttendant', (e) => {
-                    console.log(e);
                     var message = JSON.parse(e.message);
                     if(this.selected_contact_index >= 0 && this.contacts[this.selected_contact_index].id == message.contact_id){
+                        try {
+                            if(message.data != "" && message.data != null && message.data.length>0) {
+                                message.data = JSON.parse(message.data);
+                                if (message.type_id > 1)
+                                    message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
+                            }
+                        } catch (error) {
+                            console.log(error);                                    
+                        }
                         this.messages.push(message);
-                        this.contacts[this.selected_contact_index].last_message.message = message.message;
+                        this.contacts[this.selected_contact_index].last_message = message;
                         this.$refs.message_scroller.scrolltobottom();
                     }else{
                         var This = this;
                         This.contacts.forEach((item, index) => {
                             if(item.id == message.contact_id){
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
-                                item.last_message.message = message.message;
+                                item.last_message = message;
                             }
                         });
                     }                    

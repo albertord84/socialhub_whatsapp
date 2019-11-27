@@ -67,9 +67,6 @@ class ExtendedUserController extends UserController
         $input['company_id'] = $User->company_id;
         $input['role_id'] = ExtendedContactsStatusController::ATTENDANT;
 
-        // $this->withoutEvents();
-        // $User->withoutEvents();
-
         $user = $this->userRepository->create($input);
 
         Flash::success('User saved successfully.');
@@ -168,10 +165,6 @@ class ExtendedUserController extends UserController
         // return redirect(route('users.index'));
     }
     
-    static function withoutEvents() {
-        
-    }
-
     public function update_image($id, Request $request)
     {
         try {

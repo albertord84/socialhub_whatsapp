@@ -8,8 +8,7 @@ use App\Events\NewContactMessage;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-
+use Illuminate\Support\Facades\Log;
 // use League\Flysystem\File;
 use Response;
 
@@ -81,21 +80,19 @@ class RPIController extends Controller
         $input = $request->all();
         $contact_Jid = $input['Jid'];
 
-        // TODO: Alberto
-        $company_id = 1;
-        // $company_id = $input['company_id'];
-
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+        Log::debug('reciveFileMessage: ', [$input]);
 
+        
         $Chat = $this->messageToChatModel($input, $Contact);
-
+        
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
-        $files_path = $this->APP_FILE_PATH;
-
-        $path = base_path() . "/$files_path/$company_id/contacts/$Chat->contact_id/chat_files";
-        // dd($path);
-
-        $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
+        
+        $filePath = "$Contact->company_id/contacts/$Contact->id/chat_files";
+        // Log::debug('reciveFileMessage: ', [$filePath]);
+        
+        $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
+        // Log::debug('reciveFileMessage: ', [$file_response]);
 
         $Chat->data = json_encode($file_response);
         $Chat->save();
@@ -143,12 +140,11 @@ class RPIController extends Controller
         $Chat = new ExtendedChat();
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
-        $Chat->created_at = $input['Date'];
         $Chat->type_id = $type_id;
         $Chat->status_id = 1; // Active
         $Chat->socialnetwork_id = 1; // WhatsApp
         $Chat->message = $input['Msg'];
-        $Chat->created_at = $input['Date'];
+        // $Chat->created_at = $input['Date'];
         if ($Contact) {
             if ($Contact->latestAttendantContact) {
                 $Chat->table = $Contact->latestAttendantContact->attendant_id;

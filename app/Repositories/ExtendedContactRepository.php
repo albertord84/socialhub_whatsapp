@@ -33,7 +33,7 @@ class ExtendedContactRepository extends ContactRepository
             //     $Contacts[$key]['last_message'] = $lastMesssage;
             //     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
             // }
-            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id]);
+            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->orderBy('updated_at', 'desc')->findWhere(['company_id' => $company_id]);
             foreach ($Contacts as $key => $Contact) {
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status

@@ -763,3 +763,4 @@ Stack trace:
 #1 {main}
   thrown in /var/www/html/socialhub/public/index.php on line 5
 [Thu Oct 31 22:44:28 2019] 127.0.0.1:56380 [200]: /favicon.ico
+    Laravel development server started: <http://192.168.25.6:8000>
