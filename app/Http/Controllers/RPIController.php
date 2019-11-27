@@ -40,9 +40,6 @@ class RPIController extends Controller
      */
     public function update(Request $request)
     {
-        $timestam = 0; // time();
-        date('c', $timestam);
-
         $version = new stdClass;
         $version->version = '1.0.0';
 
