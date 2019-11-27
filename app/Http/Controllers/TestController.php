@@ -30,6 +30,7 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
+        dd('siiiiiiiiiii');
 
         // $extContRepo = new ExtendedContactRepository(app());
 

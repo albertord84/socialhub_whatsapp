@@ -763,4 +763,43 @@ Stack trace:
 #1 {main}
   thrown in /var/www/html/socialhub/public/index.php on line 5
 [Thu Oct 31 22:44:28 2019] 127.0.0.1:56380 [200]: /favicon.ico
+<<<<<<< HEAD
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+    Laravel development server started: <http://127.0.0.1:8000>
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37250 [200]: /manifest.js
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37252 [200]: /vendor.js
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37256 [200]: /main.js
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37260 [200]: /js/17.js
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37266 [200]: /fonts/vendor/font-awesome/fontawesome-webfont.woff2?af7ae505a9eed503f8b8e6982036873e
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37270 [200]: /images/background2.jpg?30d138e688b75bd3279927d7c70fa69d
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37272 [200]: /images/logo-social-hub.png?c69764408bd2af21c29270fd081a7155
+[Tue Nov 26 10:15:32 2019] 127.0.0.1:37274 [200]: /images/login.png?e639d73382016ce6d50862e345db6270
+[Tue Nov 26 10:15:33 2019] 127.0.0.1:37276 [200]: /favicon.ico
+[Tue Nov 26 10:24:36 2019] 127.0.0.1:37310 [200]: /manifest.js
+[Tue Nov 26 10:24:36 2019] 127.0.0.1:37312 [200]: /vendor.js
+[Tue Nov 26 10:24:36 2019] 127.0.0.1:37318 [200]: /main.js
+[Tue Nov 26 10:24:37 2019] 127.0.0.1:37320 [200]: /js/17.js
+[Tue Nov 26 10:24:37 2019] 127.0.0.1:37324 [200]: /images/logo-social-hub.png?c69764408bd2af21c29270fd081a7155
+[Tue Nov 26 10:24:37 2019] 127.0.0.1:37326 [200]: /images/login.png?e639d73382016ce6d50862e345db6270
+[Tue Nov 26 10:24:37 2019] 127.0.0.1:37328 [200]: /images/background2.jpg?30d138e688b75bd3279927d7c70fa69d
+[Tue Nov 26 10:31:37 2019] 127.0.0.1:37384 Invalid request (Connection reset by peer)
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+    Laravel development server started: <http://127.0.0.1:8000>
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+[Tue Nov 26 10:59:51 2019] Failed to listen on 127.0.0.1:8000 (reason: Address already in use)
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+    Laravel development server started: <http://127.0.0.1:8000>
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+[Tue Nov 26 11:01:03 2019] Failed to listen on 127.0.0.1:8000 (reason: Address already in use)
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+    Laravel development server started: <http://127.0.0.1:8000>
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+[Tue Nov 26 11:01:11 2019] Failed to listen on 127.0.0.1:8000 (reason: Address already in use)
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+    Laravel development server started: <http://127.0.0.1:8000>
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: _zval_ptr_dtor
+[Tue Nov 26 11:01:32 2019] Failed to listen on 127.0.0.1:8000 (reason: Address already in use)
+=======
     Laravel development server started: <http://192.168.25.6:8000>
+>>>>>>> ebeda03d101a04a2226efb79ceaf8699d3705e68

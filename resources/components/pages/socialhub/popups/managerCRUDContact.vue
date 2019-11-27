@@ -156,7 +156,14 @@
             
             editContact: function() { //U
                 this.model = Object.assign({}, this.item);
-                this.contact_atendant_id =  this.item.contact_atendant_id;
+
+                delete this.model.latest_attendant;
+                delete this.model.latest_attendant_contact;
+                delete this.model.latestAttendant;
+                delete this.model.status;
+                delete this.model.updated_at;
+
+                this.contact_atendant_id =  this.model.contact_atendant_id;
                 this.modalEditContact = !this.modalEditContact;
             },
 
@@ -165,46 +172,35 @@
                     miniToastr.error(error, "Erro adicionando contato");  
                     return;
                 }
-                ApiService.post(this.url+'/'+this.item.id, this.model)
+
+                ApiService.put(this.url+'/'+this.model.id, this.model)//ecr this.item.contact_id
                 .then(response => {
-                    // if (this.contact_atendant_id) {
-                    //     ApiService.post(this.secondUrl,{
-                    //         // 'id':1, //TODO: el id debe ser autoincremental, no devo estar mandandolo
-                    //         'contact_id':this.item.id,
-                    //         'attendant_id':this.contact_atendant_id,
-                    //     })
-                    //     .then(response => {
-                    //         miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                    //         this.reload();
-                    //         this.formCancel();
-                    //     })
-                    //     .catch(function(error) {
-                    //         ApiService.process_request_error(error); 
-                    //         miniToastr.error(error, "Erro adicionando contato");  
-                    //     });    
-                    // }else{
-                    //     miniToastr.success("Contato adicionado com sucesso","Sucesso");
-                    //     this.reload();
-                    //     this.formCancel();
-                    // }
+                    if (this.contact_atendant_id && this.contact_atendant_id != this.item.contact_atendant_id) {
+                        ApiService.post(this.secondUrl,{
+                            'id':0,
+                            'contact_id':this.model.id,
+                            'attendant_id':this.contact_atendant_id,
+                            
+                        })
+                        .then(response => {
+                            miniToastr.success("Contato atualizado com sucesso","Sucesso");
+                            this.reload();
+                            this.formCancel();
+                        })
+                        .catch(function(error) {
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro atualizando contato");  
+                        });    
+                    }else{
+                        miniToastr.success("Contato atualizado com sucesso","Sucesso");
+                        this.reload();
+                        this.formCancel();
+                    }
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });
-                
-                
-                
-                ApiService.post(+'/'+this.contact_atendant_id,this.model)
-                .then(response => {                
-                    miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                    this.reload();
-                    this.formCancel();
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error);  
-                    miniToastr.error(error, "Erro atualizando contato"); 
-                });
+                });    
             },
 
             deleteContact: function() { //D
@@ -254,8 +250,11 @@
             },
         },
 
+        beforeUpdate(){
+            },
+
         mounted(){
-            this.editContact();
+            this.editContact();            
         },
 
         created() {

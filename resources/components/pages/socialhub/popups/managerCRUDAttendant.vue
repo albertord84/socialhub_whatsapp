@@ -144,7 +144,7 @@
                 delete model_cpy.created_at;
                 delete model_cpy.updated_at;
                 delete model_cpy.deleted_at;
-                ApiService.post(this.first_url+'/'+this.attendant_id, model_cpy)
+                ApiService.put(this.first_url+'/'+this.attendant_id, model_cpy)
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");
                             this.reload();
@@ -160,16 +160,16 @@
                 ApiService.delete(this.url+'/'+this.item.id)
                     .then(response => {
                         //TODO-JR: eliminar un atendente elimina en cascada?
-                        // ApiService.delete(this.first_url+'/'+this.item.id)
-                        //     .then(response => {
+                        ApiService.delete(this.first_url+'/'+this.item.id)
+                            .then(response => {
                                 miniToastr.success("Atendente eliminado com sucesso","Sucesso");
                                 this.reload();
                                 this.closeModals();
-                            // })
-                            // .catch(function(error) {
-                            //     ApiService.process_request_error(error);  
-                            //     miniToastr.error(error, "Erro eliminando Atendente"); 
-                            // });
+                            })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error);  
+                                miniToastr.error(error, "Erro eliminando Atendente"); 
+                            });
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
