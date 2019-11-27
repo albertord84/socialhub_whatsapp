@@ -9,7 +9,7 @@ use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+
 // use League\Flysystem\File;
 use Response;
 
@@ -195,7 +195,7 @@ class RPIController extends Controller
     }
 
     // public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
-    public function sendFileMessage(UploadedFile &$File, string $file_type, ?string $message, string $contact_Jid)
+    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, string $contact_Jid)
     {
         try {
             $client = new \GuzzleHttp\Client();
@@ -222,24 +222,19 @@ class RPIController extends Controller
             }
 
             $url = $this->APP_WP_API_URL . "/$EndPoint";
-
-            // Laravel Auto gerated file name
-            $filePathName = $File->hashName();
-            if ($File->storeAs("", $filePathName)) { // Save file to disk (public/app/..)
-                $FileAux = Storage::get("$filePathName");  // Retrive file like file_get_content(...)
-                $response = $client->request('POST', $url, [
-                    'multipart' => [
-                        [
-                            'name'     => "$FileName",
-                            'contents' => $FileAux,
-                            'filename' => $filePathName
-                        ],
-                        [   'name'     => "RemoteJid", 'contents' => $contact_Jid ],
-                        [   'name'     => "Message", 'contents' => $message ]
+            $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
+            $response = $client->request('POST', $url, [
+                'multipart' => [
+                    [
+                        'name'     => "$FileName",
+                        'contents' => $File,
+                        'filename' => "$file_name"
                     ],
-                ]);
-                Storage::delete("$filePathName");
-            }
+                    [   'name'     => "RemoteJid", 'contents' => $contact_Jid ],
+                    [   'name'     => "Contact", 'contents' => $Contact, ],
+                    [   'name'     => "Message", 'contents' => $message ]
+                ],
+            ]);
 
             return $response;
         } catch (\Throwable $th) {

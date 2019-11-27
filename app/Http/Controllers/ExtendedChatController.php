@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\FileUtils;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Contact;
@@ -55,17 +56,31 @@ class ExtendedChatController extends ChatController
         $Contact = Contact::findOrFail($input['contact_id']);
         $RPi = new RPIController();
 
+        $chat = $this->chatRepository->createMessage($input);
+        
         if (isset($input['file'])) {
-            $response = $RPi->sendFileMessage($input['file'], $input['type_id'], $input['message'], $Contact->whatsapp_id);
-            Storage::delete($input['file']->path());
-        }
-        else {
+            $filePathName = $chat->id; // Laravel Auto gerated file name
+            $filePath = "$Contact->company_id/contacts/$Contact->id/chat_files";
+            $json_data = FileUtils::SavePostFile($request->file, $filePath, $filePathName);
+            if ($json_data) { // Save file to disk (public/app/..)
+                $fileContent = Storage::disk('chats_files')->get("$json_data->FullPath"); // Retrive file like file_get_content(...) 
+                $response = $RPi->sendFileMessage(
+                    $fileContent, $json_data->SavedFileName, $input['type_id'], 
+                    $input['message'], $Contact->whatsapp_id
+                );
+                
+                $chat->data = json_encode($json_data);
+
+                $chat->save();
+                // $chat = $this->chatRepository->updateMessage($input, $chat->id);
+            }
+        } else {
             $response = $RPi->sendTextMessage($input['message'], $Contact->whatsapp_id);
         }
-        $chat = $this->chatRepository->createMessage($input);
-        return $chat->toJson();
 
-        return Flash::success('Chat saved successfully.');
+        Flash::success('Chat saved successfully.');
+
+        return $chat->toJson();
     }
 
     /**
