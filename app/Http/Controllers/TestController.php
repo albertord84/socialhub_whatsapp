@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Contact;
 use App\Models\ExtendedChat;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -34,7 +35,9 @@ class TestController extends AppBaseController
 
         // $Contacts = $extContRepo->fullContacts(1, 4);
 
-        // echo $Contacts->toJson();
+        $contact_Jid = "5521965536174@s.whatsapp.net";
+        $Contacts = Contact::where(['whatsapp_id' => $contact_Jid])->first();
+        echo $Contacts->toJson();
         // dd($Contacts->toJson());
 
         // $User = Auth::user();
@@ -55,10 +58,10 @@ class TestController extends AppBaseController
 
         // broadcast(new newMessage("{'message':'test 77'}"));
 
-        $ExtendedChat = new ExtendedChat();
-        $ExtendedChat->table = '4';
-        $Chat = $ExtendedChat->find(1);
-        broadcast(new MessageToAttendant($Chat));
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = '4';
+        // $Chat = $ExtendedChat->find(1);
+        // broadcast(new MessageToAttendant($Chat));
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));
