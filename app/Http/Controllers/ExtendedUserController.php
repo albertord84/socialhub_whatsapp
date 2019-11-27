@@ -67,9 +67,6 @@ class ExtendedUserController extends UserController
         $input['company_id'] = $User->company_id;
         $input['role_id'] = ExtendedContactsStatusController::ATTENDANT;
 
-        // $this->withoutEvents();
-        // $User->withoutEvents();
-
         $user = $this->userRepository->create($input);
 
         Flash::success('User saved successfully.');
@@ -168,10 +165,6 @@ class ExtendedUserController extends UserController
         // return redirect(route('users.index'));
     }
     
-    static function withoutEvents() {
-        
-    }
-
     public function update_image($id, Request $request)
     {
         try {
@@ -181,12 +174,12 @@ class ExtendedUserController extends UserController
                 $company_id = $User->company_id;
                 $files_path = $this->APP_FILE_PATH;
 
-                $image_path = base_path() . "/public/$files_path/$company_id/users/$User->id/profile/";
+                $image_path = "$company_id/users/$User->id/profile/";
                 $image_name = "$User->id";
                 
                 $json_data = FileUtils::SavePostFile($request->file, $image_path, $image_name);
                 if ($json_data) {
-                    $User->image_path = "$files_path/$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
+                    $User->image_path = "$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
                     $User->save();
                     return "$files_path/$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
                 }

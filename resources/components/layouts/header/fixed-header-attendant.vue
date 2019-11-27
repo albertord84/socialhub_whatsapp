@@ -3,7 +3,7 @@
         <nav>
             <!--SocualHUB logo-->
             <router-link to="../attendant/" class="logo">
-                <img src="~img/socialhub/logo-social-hub.png" alt="logo"/>
+                <img src="~img/socialhub/Logo branca.png" alt="logo"/>
             </router-link>
 
             <!--drop downs-->
@@ -16,15 +16,15 @@
                         </a>
                     </div>
                     <!--Dashboard acess toggle-->
-                    <div class="dropdown hidden-xs-down btn-group">
+                    <!-- <div class="dropdown hidden-xs-down btn-group">
                         <router-link to="../attendant/" title="Dashboard">
                             <i class="fa fa-tachometer text-white" aria-hidden="true"></i>                            
                         </router-link>
-                    </div>
+                    </div> -->
                     <!--Chat acess toggle-->
                     <div class="dropdown hidden-xs-down btn-group">
                         <router-link to="/attendant/chat" title="Chat">
-                            <i class="fa fa-weixin text-white" aria-hidden="true"></i>                            
+                            <i class="fa fa-commenting-o text-white" aria-hidden="true"></i>                            
                         </router-link>
                     </div>
 

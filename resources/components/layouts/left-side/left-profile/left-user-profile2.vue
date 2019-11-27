@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="img-wrapper">
-                        <img :src="this.$store.state.user.picture" alt="user not found" class="rounded-circle" />
+                        <img :src="pictureProfile" style="width:80px; height:80px" alt="user not found" class="rounded-circle" />
                     </div>
                     <p class="mt-2 mb-1 user_name_max text-center">{{name}}</p>
                 </div>
@@ -38,7 +38,8 @@ export default {
       user: {},
       email: "",
       name: "",
-      link:''
+      link:'',
+      pictureProfile:'',
     };
   },
 
@@ -56,6 +57,7 @@ export default {
     if (this.user != null) {
       this.name = JSON.parse(this.user)["name"];
       this.email = JSON.parse(this.user)["email"];
+      this.pictureProfile = JSON.parse(this.user)['image_path'];
     }
   },
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\FileUtils;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Contact;
@@ -9,6 +10,7 @@ use App\Repositories\ExtendedChatRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Response;
 
 class ExtendedChatController extends ChatController
@@ -53,15 +55,32 @@ class ExtendedChatController extends ChatController
 
         $Contact = Contact::findOrFail($input['contact_id']);
         $RPi = new RPIController();
-        if ($RPi->sendTextMessage($input['message'], $Contact->whatsapp_id)) {
-            $chat = $this->chatRepository->createMessage($input);
-            return $chat->toJson();
+
+        $chat = $this->chatRepository->createMessage($input);
+        
+        if (isset($input['file'])) {
+            $fileName = $chat->id; // Laravel Auto gerated file name
+            $filePath = "$Contact->company_id/contacts/$Contact->id/chat_files";
+            $json_data = FileUtils::SavePostFile($request->file, $filePath, $fileName);
+            if ($json_data) { // Save file to disk (public/app/..)
+                $fileContent = Storage::disk('chats_files')->get("$json_data->FullPath"); // Retrive file like file_get_content(...) 
+                $response = $RPi->sendFileMessage(
+                    $fileContent, $json_data->SavedFileName, $input['type_id'], 
+                    $input['message'], $Contact->whatsapp_id
+                );
+                
+                $chat->data = json_encode($json_data);
+
+                $chat->save();
+                // $chat = $this->chatRepository->updateMessage($input, $chat->id);
+            }
+        } else {
+            $response = $RPi->sendTextMessage($input['message'], $Contact->whatsapp_id);
         }
 
-        return Flash::error('Chat saved successfully.');
+        Flash::success('Chat saved successfully.');
 
-        // Flash::success('Chat saved successfully.');
-        // return redirect(route('chats.index'));
+        return $chat->toJson();
     }
 
     /**

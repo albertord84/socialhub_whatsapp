@@ -129,9 +129,4 @@ class Contact extends Model
         // return UsersAttendant::with('User')->find($AttendantContact->attendant_id);
     }
 
-    // public static function withoutEvents()
-    // {
-
-    // }
-
 }

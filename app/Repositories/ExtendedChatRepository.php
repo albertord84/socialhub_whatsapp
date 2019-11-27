@@ -30,6 +30,15 @@ class ExtendedChatRepository extends ChatRepository
         return $chatModel->create($attributes);
     }
 
+    public function updateMessage(array $attributes, int $id)
+    {   
+        $attendant_id = $attributes['attendant_id'];
+        $chatModel = new $this->model();
+        $chatModel->table = (string)$attendant_id;
+        $chatModel->findOrFail($id);
+        return $chatModel->save($attributes);
+    }
+
     /**
      * Configure the Model
      **/

@@ -8,7 +8,8 @@ use App\Events\NewContactMessage;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
-use League\Flysystem\File;
+use Illuminate\Support\Facades\Log;
+// use League\Flysystem\File;
 use Response;
 
 class RPIController extends Controller
@@ -79,21 +80,19 @@ class RPIController extends Controller
         $input = $request->all();
         $contact_Jid = $input['Jid'];
 
-        // TODO: Alberto
-        $company_id = 1;
-        // $company_id = $input['company_id'];
-
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+        Log::debug('reciveFileMessage: ', [$input]);
 
+        
         $Chat = $this->messageToChatModel($input, $Contact);
-
+        
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
-        $files_path = $this->APP_FILE_PATH;
-
-        $path = base_path() . "/$files_path/$company_id/contacts/$Chat->contact_id/chat_files";
-        // dd($path);
-
-        $file_response = FileUtils::SavePostFile($request->file('File'), $path, $Chat->id);
+        
+        $filePath = "$Contact->company_id/contacts/$Contact->id/chat_files";
+        // Log::debug('reciveFileMessage: ', [$filePath]);
+        
+        $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
+        // Log::debug('reciveFileMessage: ', [$file_response]);
 
         $Chat->data = json_encode($file_response);
         $Chat->save();
@@ -141,12 +140,11 @@ class RPIController extends Controller
         $Chat = new ExtendedChat();
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
-        $Chat->created_at = $input['Date'];
         $Chat->type_id = $type_id;
         $Chat->status_id = 1; // Active
         $Chat->socialnetwork_id = 1; // WhatsApp
         $Chat->message = $input['Msg'];
-        $Chat->created_at = $input['Date'];
+        // $Chat->created_at = $input['Date'];
         if ($Contact) {
             if ($Contact->latestAttendantContact) {
                 $Chat->table = $Contact->latestAttendantContact->attendant_id;
@@ -165,7 +163,7 @@ class RPIController extends Controller
 
             $Contact->save();
         }
-        
+
         $Chat->contact_id = $Contact->id;
         $Chat->save();
 
@@ -178,63 +176,66 @@ class RPIController extends Controller
             $client = new \GuzzleHttp\Client();
             $url = $this->APP_WP_API_URL . '/SendTextMessage';
 
-            $form_params['RemoteJid'] = $contact_Jid;
-            $form_params['Contact'] = Contact::where(['whatsapp_id' => $contact_Jid])->first();
-            $form_params['Message'] = $message;
             $response = $client->request('POST', $url, [
                 'form_params' => [
                     'RemoteJid' => $contact_Jid,
                     'Message' => $message,
+                    'Contact' => Contact::where(['whatsapp_id' => $contact_Jid])->first(),
                 ],
             ]);
 
-            // dd($response);
             return $response;
         } catch (\Throwable $th) {
             throw $th;
         }
     }
 
-    public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
+    // public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
+    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, string $contact_Jid)
     {
         try {
             $client = new \GuzzleHttp\Client();
-            $EndPoint = '';
+            $EndPoint = 'SendDocumentMessage';
+            $FileName = 'Document';
             switch ($file_type) {
-                case 'image':
+                // case 'image':
+                case '2':
                     $EndPoint = 'SendImageMessage';
+                    $FileName = 'Image';
                     break;
-                
-                case 'audio':
+
+                // case 'audio':
+                case '3':
                     $EndPoint = 'SendAudioMessage';
+                    $FileName = 'Audio';
                     break;
-                
-                case 'video':
+
+                // case 'video':
+                case '4':
                     $EndPoint = 'SendVideoMessage';
-                    break;
-                
-                default:
-                    $EndPoint = 'SendDocumentMessage'; 
+                    $FileName = 'Video';
                     break;
             }
 
             $url = $this->APP_WP_API_URL . "/$EndPoint";
-
-            $form_params['RemoteJid'] = $contact_Jid;
-            $form_params['Contact'] = Contact::where(['whatsapp_id' => $contact_Jid])->first();
-            $form_params['Message'] = $message;
+            $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
             $response = $client->request('POST', $url, [
-                'form_params' => [
-                    'RemoteJid' => $contact_Jid,
-                    'Message' => $message,
-                    'File' => $File,
+                'multipart' => [
+                    [
+                        'name'     => "$FileName",
+                        'contents' => $File,
+                        'filename' => "$file_name"
+                    ],
+                    [   'name'     => "RemoteJid", 'contents' => $contact_Jid ],
+                    [   'name'     => "Contact", 'contents' => $Contact, ],
+                    [   'name'     => "Message", 'contents' => $message ]
                 ],
             ]);
 
-            // dd($response);
             return $response;
         } catch (\Throwable $th) {
             throw $th;
         }
     }
+    
 }

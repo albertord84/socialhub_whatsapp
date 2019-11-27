@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+
         <div class="col-xl-4 col-lg-5 mt-2">
             <b-card class="" style="box-shadow:none">
                 <div class="profile text-center ">
@@ -167,8 +168,6 @@
 
         methods:{
 
-            // getUser()
-
             updateUser(){
                 if(!this.isSending && this.user_edit.password.trim() !='' && this.user_edit.password != this.user_edit.repeat_password){
                     miniToastr.error("As senhas fornecidas não coincidem. Por favor, confira!", "Erro");  
@@ -211,11 +210,12 @@
                     .then(response => {
                         This.user.image_path = response.data;
                         window.localStorage.setItem('user', JSON.stringify(This.user));
-                        //TODO: relaod the header profile image
                         
                         This.user_edit = Object.assign({}, This.user);
                         This.user_edit.repeat_password = This.user_edit.password = '';
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
+
+                        window.location.reload(false);
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
@@ -295,8 +295,8 @@
 
     .container {
         position: relative;
-        width: 50%;
-        height: 50%;
+        width: 200px;
+        height: 200px;
     }
 
     .overlay {
@@ -305,8 +305,10 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: 100%;
-        width: 100%;
+        // height: 100%;
+        // width: 100%;
+        width: 200px;
+        height: 150px;
         opacity: 0;
         transition: .5s ease;
         background-color: rgb(11, 12, 12);        

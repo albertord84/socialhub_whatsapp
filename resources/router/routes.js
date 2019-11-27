@@ -37,13 +37,13 @@ const routes = [{
         }
     },
     /*{
-    path: '/register',
-    name: 'register',
-    component: resolve => require(['pages/register'], resolve),
-    meta: {
-        title: "register",
-    }
-}*/
+        path: '/register',
+        name: 'register',
+        component: resolve => require(['pages/register'], resolve),
+        meta: {
+            title: "register",
+        }
+    }*/
     , {
         path: '/forgotpassword',
         name: 'forgotpassword',

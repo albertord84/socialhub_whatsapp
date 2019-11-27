@@ -3,7 +3,7 @@
         <nav>
             <!--SocualHUB logo-->
             <router-link to="../admin/" class="logo">
-                <img src="~img/socialhub/logo-social-hub.png" alt="logo"/>
+                <img src="~img/socialhub/Logo branca.png" alt="logo"/>
             </router-link>
 
              <!-- Sidebar toggle button-->
@@ -50,10 +50,10 @@
                     <!-- User Account: style can be found in dropdown-->
                     <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none" >
                         <template v-slot:button-content>
-                            <img src="/images/prf4.jpg" class="my-rounded-circle" alt="User Image">
+                            <img :src="pictureProfile" class="my-rounded-circle" alt="User Image">
                         </template>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/user_profile" exact class="drpodowtext">
+                            <router-link to="admin/user_profile" exact class="drpodowtext">
                                 <i class="fa fa-user-o"></i> Perfil
                             </router-link>
                         </b-dropdown-item>
@@ -90,40 +90,49 @@
 
     export default {
         name: "vueadmin_header",
+
         data() {
             return {
                 name: "",
-                user: {}
+                user: {},
+                pictureProfile:'',
             }
         },
+
         methods: {
             toggle_menu() {
                 this.$store.commit('left_menu', "toggle");
             },
+
             fullscreen() {
                 if (screenfull.enabled) {
                     screenfull.toggle();
                 }
             },
+
             toggle_right() {
                 this.$store.commit('rightside_bar', "toggle");
             },
+
             logout() {
                 window.localStorage.removeItem('token')
                 window.localStorage.removeItem('user')
                 delete axios.defaults.headers.common['Authorization']
                 this.$router.push({name: "login"})
             },
+
             urlIMG: function(){
                 // return require('../../../img/');
                 // /var/www/html/socialhub/resources/img/pages/User-01.png
                 // return require('../../../img/pages/default-matter-photo.jpg');
             },
         },
+
         beforeMount: function () {
             this.user = window.localStorage.getItem('user');
             if (this.user != null) {
                 this.name = JSON.parse(this.user)['name'];
+                this.pictureProfile = JSON.parse(this.user)['image_path'];
             }
         },
     }

@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-sm-12 mt-4">
                         <h2 class="text-center">
-                            <img width="200px" src="~img/socialhub/logo-social-hub.png" alt="Logo">
+                            <img width="200px" src="~img/socialhub/Logo roxo.png" alt="Logo">
                         </h2>
                     </div>
                     <div class="col-sm-12 mt-4">

@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-sm-12 mt-3">
                         <h2 class="text-center">
-                            <img width="200px" src="~img/socialhub/logo-social-hub.png" alt="Logo">
+                            <img width="200px" src="~img/socialhub/Logo roxo.png" alt="Logo">
                         </h2>
                     </div>
                 </div>
@@ -16,11 +16,10 @@
                         </div>
                     </div>
                 </div>
-                <vue-form :state="formstate" @submit.prevent="onSubmit">
+                <vue-form :state="formstate" >
                     <div class="row mx-1 mb-3">
                         <div class="col-sm-12 mt-3 ">
                             <p v-show="show_error" class="text-danger">Email ou senha inválido</p>
-
                             <div class="form-group">
                                 <validate tag="div">
                                     <label for="email">Email</label>
@@ -37,14 +36,9 @@
                                     </field-messages>
                                 </validate>
                             </div>
-
-
-
                         </div>
 
                         <div class="col-sm-12">
-
-
                             <div class="form-group">
                                 <validate tag="div">
                                     <label for="password"> Senha</label>
@@ -52,16 +46,13 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                         </div>
-                                        <input v-model="model.password" name="password" id="password" type="password"
-                                               required placeholder="Senha" class="form-control" minlength="4"
-                                               maxlength="10"/>
+                                        <input v-model="model.password" name="password" id="password" type="password" required placeholder="Senha" class="form-control" minlength="4" maxlength="10"/>
                                     </div>
-                                        <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                                            <div slot="required">A senha é obrigatória</div>
-                                            <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
-                                            <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
-                                        </field-messages>
-
+                                    <field-messages name="password" show="$invalid && $submitted" class="text-danger">
+                                        <div slot="required">A senha é obrigatória</div>
+                                        <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
+                                        <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
+                                    </field-messages>
                                 </validate>
                             </div>
                         </div>
@@ -83,7 +74,9 @@
 
                         <div class="col-lg-12 text-right">
                             <div class="form-group">
-                                <input type="submit" value="Entrar" class="btn btn-primary btn-block"/>
+                                <button type="submit" class="btn btn-primary btn-block" @click.prevent="onSubmit">
+                                    <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
+                                </button>
                             </div>
                         </div>
                         <br>
@@ -121,7 +114,8 @@
                 model: {
                     email: "",
                     password: ""
-                }
+                },
+                isSending: false,
             }
         },
         methods: {
@@ -129,6 +123,7 @@
                 if (this.formstate.$invalid) {
                     return;
                 } else {
+                    this.isSending = true;
                     ApiService.post('auth/login', this.model)
                         .then(data => {
                             this.$store.dispatch('login', data);
@@ -154,9 +149,11 @@
                                 default:
                                     link = "login";
                             } 
+                            this.isSending = false;
                             this.$router.push({name: link});
                         })
                         .catch(error => {
+                            this.isSending = false;
                             this.show_error = true;
                         })
 
