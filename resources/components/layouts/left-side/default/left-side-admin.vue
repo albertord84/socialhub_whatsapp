@@ -26,76 +26,88 @@
     </aside>
 </template>
 <script>
-import {
-    vmenu,
-    vmenuItem,
-    vsubMenu
-} from './menu';
-import profile from "../left-profile/left-user-profile2.vue"
-import menu_items from "../../../../menu_admin.js";
-export default {
-    name: "left-side",
-    components: {
+    import {
         vmenu,
-        vsubMenu,
         vmenuItem,
-        profile
-    },
-    data() {
-        return {
-            menuitems: menu_items
-        }
+        vsubMenu
+    } from './menu';
+    import profile from "../left-profile/left-user-profile2.vue"
+    import menu_items from "../../../../menu_admin.js";
+
+    export default {
+
+        name: "left-side",
+
+        components: {
+            vmenu,
+            vsubMenu,
+            vmenuItem,
+            profile
+        },
+
+        data() {
+            return {
+                menuitems: menu_items,
+                pictureProfile:'',
+            }
+        },
+
+        methods:{
+
+
+        },
+
+        
     }
-}
 </script>
 <style scoped lang="scss">
-@import "../../css/customvariables";
-.left-aside {
-    width: $left_menu_width;
-    background: $leftmenu_color;
-    background-repeat: repeat-y;
-}
+    @import "../../css/customvariables";
+    .left-aside {
+        width: $left_menu_width;
+        background: $leftmenu_color;
+        background-repeat: repeat-y;
+    }
 
-.navigation {
-    padding: 0;
-}
+    .navigation {
+        padding: 0;
+    }
 
-.divider {
-    margin-top: 10px;
-    list-style-type: none;
-    border-bottom:1px solid #ececec;
-    padding-bottom: 6px;
-}
+    .divider {
+        margin-top: 10px;
+        list-style-type: none;
+        border-bottom:1px solid #ececec;
+        padding-bottom: 6px;
+    }
 
-.divider span {
-    font-size: 15px;
-    font-weight: 700;
-    color: $divider-leftheader;
-    margin: 20px 20px -15px 20px;
-}
+    .divider span {
+        font-size: 15px;
+        font-weight: 700;
+        color: $divider-leftheader;
+        margin: 20px 20px -15px 20px;
+    }
 
-.sidebar {
-    display: block;
-    font-size: 14px;
-    letter-spacing: 1px;
-}
+    .sidebar {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
 
-.content {
-    display: block;
-    width: auto;
-    overflow-x: hidden;
-    padding: 0 15px;
-}
+    .content {
+        display: block;
+        width: auto;
+        overflow-x: hidden;
+        padding: 0 15px;
+    }
 
-.badge-success {
-    background-color: #22d69d;
-}
+    .badge-success {
+        background-color: #22d69d;
+    }
 
-.badge {
-    padding: 0.60em 0.7em;
-    border-radius: 0.75rem;
-}
-.nav_profile{
-    border-bottom:1px solid #eee;
-}
+    .badge {
+        padding: 0.60em 0.7em;
+        border-radius: 0.75rem;
+    }
+    .nav_profile{
+        border-bottom:1px solid #eee;
+    }
 </style>
