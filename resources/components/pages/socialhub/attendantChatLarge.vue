@@ -6,7 +6,6 @@
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
-
                 <div class="sect_header">
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
@@ -14,13 +13,12 @@
                                 <img :src="user.image_path" width="50px" height="50px" class="profile-picture" alt="User Image">
                             </a>
                         </li>
-                        <ul class='menu' style="float:right; margin-right:10px">
-                            <li><a href='javascript:void(0)' title="Buscar contato" class="round_btn" @click.prevent="isSearchContact=!isSearchContact"><i class="fa fa-search" ></i></a></li>
-                            <!-- <li><a href='javascript:void(0)' title="Novo contato" class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs " ></i></a></li> -->
+                        <ul class='menu' style="float:right; margin-right:5px">
+                            <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
                             <li>
-                                <b-dropdown class="dropdown hidden-xs-down btn-group pr-1" variant="link" toggle-class="text-decoration-none"  right="">
+                                <b-dropdown class="dropdown hidden-xs-down btn-group " variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
-                                        <i class="fa fa-ellipsis-h mt-3" title="Mensagens" style="color:#949aa2;"></i>
+                                        <i class="fa fa-ellipsis-h icons-action" title="Mensagens"  aria-hidden="false"></i>
                                     </template>
                                     <b-dropdown-item title="Obter novo contato" exact class="dropdown_content">
                                         <a href='javascript:void(0)' class="round_btn"><i class="fa fa-users" ></i> Obter contato</a>
@@ -51,16 +49,14 @@
                         <li><a href='javascript:void(0)' class="round_btn" @click.prevent="isSearchContact=!isSearchContact"><i class="fa fa-arrow-left" ></i></a></li>
                         <li><input class="form-control search-input border-0 mt-3" style="width:120%: left:-10px" type="search" v-model="searchContactByStringInput" placeholder="Buscar contato" ></li>
                         <ul class='menu' style="float:right; margin-right:10px">
-                            <li><a href='javascript:void(0)' class="round_btn" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact"><i class="fa fa-close" ></i></a></li>
+                            <li><i class="fa fa-close icons-action mt-1" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact"></i></li>
                         </ul>                        
                     </ul>
                 </div>
                 <div class="sect_header" style="background-color:#fafafa;">
                     <div class="text-center">
-                        <!-- <a href="javascript:void()"> -->
-                            <img src="~img/socialhub/chats.jpg" width="50px" alt="">
-                            <span>Chats</span>
-                        <!-- </a> -->
+                        <img src="~img/socialhub/chats.jpg" width="50px" alt="">
+                        <span>Chats</span>
                     </div>                        
                 </div>
                 <v-scroll :height="Height(100)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
@@ -272,7 +268,7 @@
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div>
                         <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture"  class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
-                        <h6 class="text-#949aa2;">{{contacts[selected_contact_index].first_name}}</h6>
+                        <h6 class="text-muted;">{{contacts[selected_contact_index].first_name}}</h6>
                         <!-- <p>{{contacts[selected_contact_index].status}}</p> -->
                         <p>Email: <b>{{contacts[selected_contact_index].email}}</b></p>
                         <p>Telefone: <b>{{contacts[selected_contact_index].phone}}</b></p>
@@ -321,8 +317,8 @@
                     <li><p class="header-title">Buscar mensagens</p></li>
                 </ul>
             </div>
-            <div class="col-lg-12" style="color:#949aa2;;">
-                <div class="input-group" style="color:#949aa2;; width:110%; left:-5%;" >
+            <div class="col-lg-12" style="color:#949aa2;">
+                <div class="input-group" style="color:#949aa2; width:110%; left:-5%;" >
                     <div class="input-group-prepend">
                         <div v-if="searchMessageByStringInput.length==0" style="background-color:#fffff8;color:#949aa2;" class="input-group-text border-left-0 border-right-0 border-top-0 border">
                             <i class="fa fa-search"></i>
@@ -386,8 +382,8 @@
         </b-modal>
 
         <!-- Modal to show user datas-->
-        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" :hide-header="true">
-            <userCRUDDatas :user='user' :contacts='contacts'></userCRUDDatas>
+        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" >
+            <userCRUDDatas :contacts='contacts'></userCRUDDatas>
         </b-modal>
         
     </div>
@@ -1313,6 +1309,19 @@
 
     .header-title{
         font-size: 1.3em;
+    }
+
+    .icons-action{
+        color:#949aa2;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+    }
+
+    .icons-action:hover{
+        background-color: #f1f0f0;
+        border-radius: 50%;
+        cursor: pointer;
     }
 
 </style>

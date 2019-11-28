@@ -126,6 +126,7 @@ class ExtendedUserController extends UserController
      */
     public function update($id, UpdateUserRequest $request)
     {
+        $request['password'] = bcrypt($request['password']);
         $user = $this->userRepository->findWithoutFail($id);
         if (empty($user)) {
             Flash::error('User not found');

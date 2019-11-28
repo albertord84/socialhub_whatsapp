@@ -103,6 +103,10 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => bcrypt('attendant1'), // password
             'remember_token' => Str::random(10),
+            'whatsapp_id' => '(21)965913089',
+            'facebook_id' => 'facebook@attendant1',
+            'instagram_id' => 'instagram@attendant1',
+            'linkedin_id' => 'linkedin@attendant1',
         ]);
         UsersAttendant::create([
             'user_id' => 4,
