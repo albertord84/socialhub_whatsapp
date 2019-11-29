@@ -213,7 +213,7 @@
                 </v-scroll> 
                 
                 <div class="p-3">
-                    <div class="input-group pb-5 pr-1" style="color:gray" >
+                    <div class="input-group pb-5 pr-1" style="color:gray">
 
                         <div class="input-group-prepend">
                             <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
@@ -221,8 +221,8 @@
                                 <i v-if="isSending==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
-                        <textarea @keyup.enter.exact="send_message"  v-model="newMessage.message" placeholder="Nova mensagem"                                 
-                                class="form-control border border-left-0 border-right-0 text-input-message"
+                        <textarea @keyup.enter.exact="send_message"  v-model="newMessage.message" placeholder=""                                 
+                                class="form-control border border-left-0 border-right-0 text-input-message srcollbar"
                                 ref="inputTextAreaMessage">
                         </textarea>
 
@@ -232,17 +232,17 @@
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputImage')" title="Adjuntar imagem">
+                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputImage')" title="Anexar imagem">
                                 <i class="fa fa-file-image-o icons-action-message"></i>
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputAudio')" title="Adjuntar áudio">
+                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputAudio')" title="Anexar áudio">
                                 <i class="fa fa-file-audio-o icons-action-message"></i>
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="trigger('fileInputDocument')" title="Adjuntar documento">
+                            <div class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="trigger('fileInputDocument')" title="Anexar documento">
                                 <i class="fa fa-file-text-o icons-action-message"></i>
                             </div>
                         </div>
@@ -255,7 +255,6 @@
                         <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
                         <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
                         <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
-                        
                     </div>
                 </div>
             </div>
@@ -286,12 +285,12 @@
                                     <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <!-- <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-exchange"></i> Transferir</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
-                                    </b-dropdown-item>                                    
+                                    </b-dropdown-item>                                     -->
                                     <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="fn_show_delete_modal()"><i class="fa fa-trash-o"></i> Eliminar</a>
                                     </b-dropdown-item>
@@ -301,25 +300,42 @@
                 </ul> 
             </div>
             <label></label>
-            <div v-if="selected_contact_index>=0" class="profile sec_decription bg-white text-center">
+            <div v-if="selected_contact_index>=0" class="profile sec_decription bg-white">
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
-                    <div>
-                        <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture"  class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
-                        <h6 class="text-muted;">{{contacts[selected_contact_index].first_name}}</h6>
-                        <!-- <p>{{contacts[selected_contact_index].status}}</p> -->
-                        <p>Email: <b>{{contacts[selected_contact_index].email}}</b></p>
-                        <p>Telefone: <b>{{contacts[selected_contact_index].phone}}</b></p>
-                        <p>Resumo: <b>{{contacts[selected_contact_index].summary}}</b></p>
-                        <p>Lembretes: <b>{{contacts[selected_contact_index].remember}}</b></p>
+                    <div class="text-center">
+                        <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
+                        <h4 class="profile-decription-name">{{contacts[selected_contact_index].first_name}}</h4>
+                        <div style="position:relative; margin-left:28%">
+                            <ul  class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].whatsapp_id)"><i class="mdi mdi-whatsapp fa-1_5x text-muted social-network"></i></li>
+                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].facebook_id)"><i class="mdi mdi-facebook fa-1_5x text-muted social-network"></i></li>
+                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].instagram_id)"><i class="mdi mdi-instagram fa-1_5x text-muted social-network"></i></li>
+                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].linkedin_id)"><i class="mdi mdi-linkedin fa-1_5x text-muted social-network"></i></li>
+                            </ul>
+                        </div>
+                        <!-- <p v-show="selectedSocialNetwork!=''">{{selectedSocialNetwork}}</p> -->
+                        
                         <hr>
-                        <h5>Redes sociais</h5>
-                        <p>WhatsApp: <b>{{contacts[selected_contact_index].whatsapp_id}}</b></p>
-                        <p>Facebook: <b>{{contacts[selected_contact_index].facebook_id}}</b></p>
-                        <p>Instagram: <b>{{contacts[selected_contact_index].instagram_id}}</b></p>
-                        <p>Linkedin: <b>{{contacts[selected_contact_index].linkedin_id}}</b></p>
-                        <hr>
+                        
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
+                            <li style="margin-top:1em !important"><span >{{contacts[selected_contact_index].email}}</span></li>
+                        </ul>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-cellphone-android fa-1_5x text-muted"></i></li>
+                            <li style="margin-top:1em !important"><span class="mt-1">{{contacts[selected_contact_index].phone}}</span></li>
+                        </ul>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item border-0" title="Resumo"><i class="mdi mdi-account-details fa-1_5x text-muted"></i></li>
+                            <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].summary}}</span></li>
+                        </ul>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item border-0" title="Lembrete"><i class="mdi mdi-reminder fa-1_5x text-muted"></i></li>
+                            <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].remember}}</span></li>
+                        </ul>
+
                         <div class="attachments  p-4">
-                            <h5>Attachments</h5>
+                            <h5>Últimos anexos</h5>
                             <div class="row">
                                 <div class="col-4 mt-2">
                                     <img src="~img/pages/14.jpg" alt="" class="img-fluid">
@@ -519,7 +535,10 @@
                 window: {
                     width: 0,
                     height: 0
-                }
+                },
+
+                selectedSocialNetwork:'',
+                
             }
         },
         
@@ -823,6 +842,18 @@
                 element.target.style.height = "5px";
                 element.target.style.height = (element.target.scrollHeight)+"px";
             },
+
+            showSocialNetwork(socialNetwork){
+                if(this.selectedSocialNetwork==''){                    
+                    this.selectedSocialNetwork = socialNetwork;
+                } else{
+                    if(this.selectedSocialNetwork == socialNetwork){
+                        this.selectedSocialNetwork = '';
+                    }else{
+                        this.selectedSocialNetwork = socialNetwork;
+                    }
+                }
+            },
         },
 
         updated(){
@@ -886,6 +917,8 @@
             // var contact = this.contacts[0];
             // console.log(this.contacts);
             // this.getContactChat(contact);
+
+            this.$ref.inputTextAreaMessage.focus();
         },
 
         created() {
@@ -949,9 +982,8 @@
     }
 
     .desc-img2 {
-        height: 13em;
-        width: 13em;
-        border-radius: 50%
+        height: 10rem;
+        width: 10rem;
     }
 
     .chat_block {
@@ -1402,6 +1434,7 @@
         -moz-box-shadow: none;
         box-shadow: none;
         resize: none;
+        scrollbar-color: rebeccapurple green;
     }
 
     .text-input-message:focus{
@@ -1409,6 +1442,17 @@
         // border: none !important;
         box-shadow: none !important;
     }
+
+    // .srcollbar{
+    //     width: 4em !important;
+        // scrollbar-face-color: #ff8c00;
+        // scrollbar-track-color: #fff8dc;
+        // scrollbar-arrow-color: #ffffff;
+        // scrollbar-highlight-color: #fff8dc;
+        // scrollbar-shadow-color: #d2691e;
+        // scrollbar-3dlight-color: #ffebcd;
+        // scrollbar-darkshadow-color: #8b0000;
+    // }
 
     .icons-action-send{
         color:white;
@@ -1488,5 +1532,24 @@
     .icons-selected-file:hover{
         cursor: pointer;
     }
+
+    .profile-decription-name{
+        font-weight: 600;
+    }
+
+    .fa-1_5x{
+        font-size: 1.5em;
+    }
+
+    .social-network{
+        
+    }
+
+    .social-network:hover{
+        cursor: pointer;
+        color:#007bff !important;
+    }
+
+    
 
 </style>

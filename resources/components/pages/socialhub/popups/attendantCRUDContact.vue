@@ -29,7 +29,7 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
-                            <span class="fa fa-envelope form-control-feedback"></span>
+                            <span class="mdi mdi-email-outline form-control-feedback"></span>
                             <input v-model="model.email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                         </div>
                     </div>
@@ -230,7 +230,7 @@
                 }
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
-                    miniToastr.success("Contato adicionado com sucesso. Procure-o na lista de contatos","Sucesso");
+                    miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                     this.formReset();
                     this.editclose();
                     this.reload();
