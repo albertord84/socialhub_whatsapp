@@ -1,7 +1,7 @@
 <template>
     <div>
         <preloader v-show="this.$store.state.preloader"></preloader>
-        <vueadmin_header></vueadmin_header>
+        <!-- <vueadmin_header></vueadmin_header> -->
         <div class="wrapper row-offcanvas">
             <center_side class="">
                 <router-view></router-view>

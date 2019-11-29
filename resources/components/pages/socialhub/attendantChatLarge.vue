@@ -16,7 +16,7 @@
                         <ul class='menu' style="float:right; margin-right:5px">
                             <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
                             <li>
-                                <b-dropdown class="dropdown hidden-xs-down btn-group " variant="link" toggle-class="text-decoration-none"  right="">
+                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-h icons-action" title="Mensagens"  aria-hidden="false"></i>
                                     </template>
@@ -59,7 +59,7 @@
                         <span>Chats</span>
                     </div>                        
                 </div>
-                <v-scroll :height="Height(100)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
+                <v-scroll :height="Height(0)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
                             <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
@@ -88,18 +88,14 @@
         <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
             <div v-if="selected_contact_index>=0" class="converstion_back">
                 <div class="sect_header">
-                    <ul class='menu'>
-                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
-                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
-                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
-                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
+                    <ul class='menu'>                        
                         <li><span class="pl-4"><img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
                             <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()"><i class="fa fa-search"></i></a></li>
                             <li>
-                                <form action="">
+                                <!-- <form action="">
                                     <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                         <template v-slot:button-content>
                                             <i class="fa fa-paperclip mt-3" title="Anexar arquivo"  style="color:#949aa2;; font-size:1.3em"></i>
@@ -117,7 +113,7 @@
                                             <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputDocument')"><i class="fa fa-file-text-o"></i> Documento</a>
                                         </b-dropdown-item>
                                     </b-dropdown>
-                                </form>
+                                </form> -->
                             </li> 
                             <li>
                                 <!-- <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
@@ -141,7 +137,7 @@
                         </ul>
                     </ul> 
                 </div>
-                <v-scroll :height="Height(220)" color="#ccc" bar-width="8px" ref="message_scroller" class="bgcolor">    <!-- :style="{ backgroundImage: 'url('+bgColor+')'}" -->
+                <v-scroll :height="Height(160)" color="#ccc" bar-width="8px" ref="message_scroller">    <!-- :style="{ backgroundImage: 'url('+bgColor+')'}" -->
                     <ul >
                         <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
                             <div class="" >
@@ -167,6 +163,7 @@
                                         <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
                                             <img :src="message.path" class="midia-files"/>
                                         </a>
+                                        <br>
                                     </span>                               
                                     <span v-if='message.type_id == "3"' class='text-center'>
                                         <br>
@@ -175,6 +172,7 @@
                                             <source :src="message.path" type="audio/mp3">
                                             Seu navegador não suporta o elemento de áudio.
                                         </audio>
+                                        <br>
                                     </span>
                                     <span v-if='message.type_id == "4"' class='mb-2 text-center'>
                                         <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
@@ -183,13 +181,14 @@
                                                 Seu navegador não suporta o elemento de vídeo.
                                             </video>
                                         </a>
+                                        <br>
                                     </span>
                                     <span v-if='message.type_id == "5"' class='mb-2 text-center'>
                                         <a :href="message.path" target="_blank" rel=”noopener”  >
                                             <img src="~img/socialhub/text-file-icon.png" alt="text-file-icon" class="midia-files-document" >
                                         </a>
+                                        <br>
                                     </span>
-                                    <br>
                                     <span class="text-message">
                                         {{ message.message ? message.message : "" }}
                                     </span>
@@ -211,15 +210,53 @@
                             </div>
                         </li>
                     </ul>
-                </v-scroll>                
-                <div class="input-group p-3" style="background-color:#ebf2f6">
-                    <!-- <input type="text" @keyup.enter="send_message" v-model="newMessage.message" placeholder="Nova mensagem" class="form-control text-input-message" ref="input"> -->
-                    <textarea type="text" @keyup.enter.exact="send_message" v-model="newMessage.message" placeholder="Nova mensagem" rows="3" class="form-control text-input-message" ref="input"></textarea>
-                    <!-- <div class="input-group-append">
-                        <button class="btn btn-success send-btn" type="submit" @click="send_message">
-                            <i class="fa fa-paper-plane-o text-white" aria-hidden="true"></i>
-                        </button>
-                    </div> -->
+                </v-scroll> 
+                
+                <div class="p-3">
+                    <div class="input-group pb-5 pr-1" style="color:gray" >
+
+                        <div class="input-group-prepend">
+                            <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
+                                <i v-if="isSending==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
+                                <i v-if="isSending==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
+                            </div>
+                        </div>
+                        <textarea @keyup.enter.exact="send_message"  v-model="newMessage.message" placeholder="Nova mensagem"                                 
+                                class="form-control border border-left-0 border-right-0 text-input-message"
+                                ref="inputTextAreaMessage">
+                        </textarea>
+
+                        <div class="input-group-prepend">
+                            <div v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
+                                <i class="fa fa-clipboard icons-selected-file"></i>
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputImage')" title="Adjuntar imagem">
+                                <i class="fa fa-file-image-o icons-action-message"></i>
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputAudio')" title="Adjuntar áudio">
+                                <i class="fa fa-file-audio-o icons-action-message"></i>
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="trigger('fileInputDocument')" title="Adjuntar documento">
+                                <i class="fa fa-file-text-o icons-action-message"></i>
+                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="send_message">
+                                <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
+                            </div>
+                        </div>
+                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
+                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
+                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
+                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
+                        
+                    </div>
                 </div>
             </div>
             <div v-else class="non_converstion_back">
@@ -385,9 +422,25 @@
         <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" >
             <userCRUDDatas :contacts='contacts'></userCRUDDatas>
         </b-modal>
+
+        <!-- Modal to remove the selected file-->
+        <b-modal v-model="modalRemoveSelectedFile" :hide-footer="true" title="Verificação">
+            Tem certeza que deseja remover o arquivo selecionado?
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="file=null; modalRemoveSelectedFile=!modalRemoveSelectedFile">Remover</button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalRemoveSelectedFile=!modalRemoveSelectedFile">Cancelar</button>
+                </div>
+        </b-modal>
+
+        <!-- Modal to send message files-->
+        <b-modal v-model="modalSendMessageFiles" :hide-footer="true" body-class="p-0" :hide-header="false">
+            <sendMessageFiles :file='file'></sendMessageFiles>
+        </b-modal>
         
     </div>
 </template>
+
+
 <script>
     import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";
@@ -399,6 +452,7 @@
     import ApiService from "../../../common/api.service";
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
+    import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
 
     import Echo from 'laravel-echo';
     window.Pusher = require('pusher-js');
@@ -410,7 +464,8 @@
             rightSideBar,
             leftSideBar,
             userCRUDDatas,
-            attendantCRUDContact
+            attendantCRUDContact,
+            sendMessageFiles
         },
 
         data() {
@@ -437,11 +492,16 @@
                     'status_id':1, //text //TODO criar tabela
                     'socialnetwork_id':1, //Whatsapp
                 },
+                isSending:false,
+
+                modalRemoveSelectedFile:false,
+                modalSendMessageFiles:false,
+
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
 
 
-                file:false,
+                file:null,
                 pathFiles:'',
                 referenceFileInput:null,
 
@@ -455,7 +515,7 @@
                 show_edit_right_side:false,
                 right_layout:'toggle-edit-contact',
                 left_layout:'toggle-add-contact',
-                bgColor:require('img/pages/chat_background.png'),
+
                 window: {
                     width: 0,
                     height: 0
@@ -463,12 +523,15 @@
             }
         },
         
-        methods: {                
+        methods: {    
             //primary functions
             send_message() {
+                var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
                     this.newMessage.contact_id = this.contacts[this.selected_contact_index].id;
+
+                    this.isSending = true;
 
                     let formData = new FormData();
                     formData.append('attendant_id', this.newMessage.attendant_id);
@@ -478,25 +541,33 @@
                     formData.append('type_id', this.newMessage.type_id);
                     formData.append('status_id', this.newMessage.status_id);
                     formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
+                    
                     if(this.newMessage.type_id>1 && this.file){
                         formData.append("file",this.file); //Add the form data we need to submit  
                     }
-                    
-                    ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
-                    .then(response => {
-                        if (response.data.data) {
-                            response.data.data = JSON.parse(response.data.data);
-                            response.data.path = this.pathContactMessageFile(response.data.contact_id, response.data.data.SavedFileName);
-                        }
-                        this.messages.push(response.data);
-                        this.contacts[this.selected_contact_index].last_message = this.newMessage;
-                        this.newMessage.message = "";
-                        this.file = null;
-                        this.$refs.message_scroller.scrolltobottom();
-                    })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error enviando mensagem");   
-                    });
+                    try {
+                        ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
+                        .then(response => {
+                            if (response.data.data) {
+                                response.data.data = JSON.parse(response.data.data);
+                                response.data.path = this.pathContactMessageFile(response.data.contact_id, response.data.data.SavedFileName);
+                            }
+                            this.messages.push(response.data);
+                            this.contacts[this.selected_contact_index].last_message = this.newMessage;
+                            this.newMessage.message = "";
+                            this.file = null;
+                            this.$refs.message_scroller.scrolltobottom();
+                            this.isSending = false;
+                        })
+                        .catch(function(error) {
+                            This.isSending = false;
+                            This.newMessage.message = "";
+                            miniToastr.error(error, "Error enviando mensagem");   
+                        });                        
+                    } catch (error) {
+                        This.newMessage.message = "";
+                        This.isSending = false;                        
+                    }
                 }
             },
 
@@ -541,9 +612,9 @@
                             miniToastr.error(error, "Error carregando os contatos");   
                         });
     
-                    setTimeout(() => {
-                        this.$refs.input.focus();
-                    }, 20);
+                    // setTimeout(() => {
+                    //     this.$refs.input.focus();
+                    // }, 20);
                 }
             },
             
@@ -620,6 +691,7 @@
                 if(this.referenceFileInput !== undefined && this.newMessage.type_id > 1){
                     if(this.referenceFileInput.files[0].size < 10*1024*1024) {
                         this.file = this.referenceFileInput.files[0];
+                        // this.modalSendMessageFiles = true;
                     } else{
                         miniToastr.error("O arquivo deve ter tamanho inferior a 10MB", "Erro"); 
                     }
@@ -745,7 +817,12 @@
 
             closemodal(){
                 this.modalDeleteContact = !this.modalDeleteContact;
-            }
+            },
+
+            auto_grow(element) {
+                element.target.style.height = "5px";
+                element.target.style.height = (element.target.scrollHeight)+"px";
+            },
         },
 
         updated(){
@@ -804,7 +881,11 @@
             window.Echo.channel('sh.contact-to-bag.' + company_id)
                 .listen('NewContactMessage', (e) => {
                     console.log(e);
-                });            
+                });
+                
+            // var contact = this.contacts[0];
+            // console.log(this.contacts);
+            // this.getContactChat(contact);
         },
 
         created() {
@@ -845,6 +926,14 @@
         watch:{
             filterContactToken: function(){
                 this.getContacts();
+            },
+
+            isSending: function(value){
+                if(value){
+                    //disable new message, and upload and send buttons
+                }else{
+                    //enable new message, and upload and send buttons
+                }
             }
         }
 
@@ -871,7 +960,9 @@
 
     .chatalign {
         background-color: #fff !important;
-        height: calc(100% - 70px);        
+        height:100%;        
+        // height: calc(100%);        
+        // height: calc(100% - 170px);        
         ul {
             padding: 0;
         }
@@ -881,7 +972,9 @@
     }
 
     .converstion_back {        
-        height: calc(100% - 70px);
+        height:100%;
+        
+        // height: calc(100% - 170px);
         overflow: hidden;
         background: #fff !important;
         border: 1px solid #d8d6d6;
@@ -917,7 +1010,7 @@
         display: inline-block;
         padding: 0.7em 1em;
         position: relative;
-        border: 1px solid #d4d2d2;
+        // border: 1px solid #d4d2d2;
         margin-top: 30px;
     }
 
@@ -1083,13 +1176,15 @@
     .profile {
         padding-bottom: 15px;
         // border: none;
-        height: calc(100% - 70px);
+        height: calc(100%);
+        // height: calc(100% - 70px);
         // overflow-y: auto;
         background-color: #FFFFFF;
     }
 
     .wrapper .converstion_back .ss-container{
-        background-image: url("~img/pages/chat_background.png");
+        // background-image: url("~img/pages/chat_background.png");
+        background-color: #eaedf2;
     }
 
     .colors{
@@ -1101,7 +1196,8 @@
     }
 
     .myscrool{
-        height: calc(100% - 70px);
+        // height: calc(100% - 70px);
+        height: calc(100hv);
     }
 
     //added here
@@ -1206,8 +1302,10 @@
     } 
 
     .chat {
-        min-height: calc(100vh - 70px);
-        height: calc(100vh - 70px);
+        min-height: calc(100vh);
+        // min-height: calc(100vh - 70px);
+        height: calc(100vh);
+        // height: calc(100vh - 70px);
         overflow: hidden;
     }  
 
@@ -1223,20 +1321,6 @@
         height: 25px;
         border-radius: 3px;
         transform: scale(1.05);
-    }
-
-    .text-input-message{
-        background-color:#fffff8;
-        // padding:22px 30px 22px 30px;
-        font-size:17px;
-        border-radius:4px;
-        border: none;
-    }
-
-    .text-input-message:focus{
-        outline: 0 !important;
-        border: none !important;
-        box-shadow: none;
     }
 
     .message{
@@ -1311,7 +1395,43 @@
         font-size: 1.3em;
     }
 
+    .text-input-message{
+        background-color:#fffff8;
+        font-size:1em;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        resize: none;
+    }
+
+    .text-input-message:focus{
+        outline: 0 !important;
+        // border: none !important;
+        box-shadow: none !important;
+    }
+
+    .icons-action-send{
+        color:white;
+        background: #007bff;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        padding: 5px;
+    }
+
+    .icons-action-send:hover{
+        cursor: pointer;
+    }
+
     .icons-action{
+        color:#949aa2;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+    }
+
+    .icons-no-action{
+        font-size: 1.2rem;
         color:#949aa2;
         width: 40px;
         height: 40px;
@@ -1321,6 +1441,51 @@
     .icons-action:hover{
         background-color: #f1f0f0;
         border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .container-icons-action-message{
+        background-color:#fffff8;
+        padding: 0px;
+    }
+
+    .icons-action-message{
+        font-size: 1.2rem;
+        color:#949aa2;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+    }
+
+    .icons-action-message:hover{
+        background-color: #f1f0f0;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .border-left-message{
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+    }
+
+    .border-right-message{
+        border-top-right-radius: 30px !important;
+        border-bottom-right-radius: 30px !important;
+    }
+
+    .cl-blue{
+        color: #007bff;
+    }
+
+    .icons-selected-file{
+        font-size: 1.8rem;
+        color:#2471d6;
+        width: 60px;
+        height: 60px;
+        padding: 25px;
+    }
+
+    .icons-selected-file:hover{
         cursor: pointer;
     }
 
