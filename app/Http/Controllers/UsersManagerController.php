@@ -32,8 +32,10 @@ class UsersManagerController extends AppBaseController
         $this->usersManagerRepository->pushCriteria(new RequestCriteria($request));
         $usersManagers = $this->usersManagerRepository->all();
 
-        return view('users_managers.index')
-            ->with('usersManagers', $usersManagers);
+        return $usersManagers->toJson();
+
+        // return view('users_managers.index')
+        //     ->with('usersManagers', $usersManagers);
     }
 
     /**
@@ -61,7 +63,9 @@ class UsersManagerController extends AppBaseController
 
         Flash::success('Users Manager saved successfully.');
 
-        return redirect(route('usersManagers.index'));
+        return $usersManager->toJson();
+
+        // return redirect(route('usersManagers.index'));
     }
 
     /**
@@ -126,7 +130,9 @@ class UsersManagerController extends AppBaseController
 
         Flash::success('Users Manager updated successfully.');
 
-        return redirect(route('usersManagers.index'));
+        return $usersManager->toJson();
+
+        // return redirect(route('usersManagers.index'));
     }
 
     /**

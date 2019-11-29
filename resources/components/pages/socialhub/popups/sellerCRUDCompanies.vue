@@ -7,26 +7,26 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model.CNPJ" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ" class="form-control"/>
+                            <input v-model="modelCompany.CNPJ" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="model.name" id="name" name="name" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
+                            <input v-model="modelCompany.name" id="name" name="name" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model.phone" name="phone" id="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" name="phone" id="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="model.email" id="email" name="email" type="email" required placeholder="Email" class="form-control"/>                            
+                            <input v-model="modelCompany.email" id="email" name="email" type="email" required placeholder="Email" class="form-control"/>                            
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-12 form-group has-search">
-                            <textarea v-model="model.description" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
+                            <textarea v-model="modelCompany.description" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
                         </div>                                                                         
                     </div>
                 </div>
@@ -36,31 +36,31 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model_manager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                            <input v-model="modelManager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="model_manager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
+                            <input v-model="modelManager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="model_manager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                            <input v-model="modelManager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model_manager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelManager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                     </div>                
                     <!-- <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="model_manager.whatsapp_id" name="whatsapp_id" id="whatsapp_id" type="text" placeholder="Whatsapp" class="form-control"/>
+                            <input v-model="modelManager.whatsapp_id" name="whatsapp_id" id="whatsapp_id" type="text" placeholder="Whatsapp" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="model_manager.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
+                            <input v-model="modelManager.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
                         </div>
                     </div>                 -->
                 </div> 
@@ -97,7 +97,8 @@
             users_url:'',
             usersManager_url:'',
             action: "",
-            item:{},
+            model_company:{},
+            model_manager:{},
         },
 
         components:{
@@ -105,18 +106,14 @@
 
         data(){
             return{
-                company_id: "",
-                manager_id: "",
-
-                model:{ //dados da empresa
+                modelCompany:{ //dados da empresa
                     CNPJ: "",
                     name: "",
                     phone: "",
                     email: "",
                     description: "",
                 },
-                
-                model_manager:{ //manager da empresa
+                modelManager:{ //manager da empresa
                     name: "",
                     role_id: "",
                     email: "",
@@ -129,29 +126,27 @@
                     instagram_id: "",
                     linkedin_id: "",
                 },
+                logued_user:null
             }
         },
 
         methods:{
             addCompany: function() { //C
-                this.model.id=1;
-                this.model_manager.id=1;
-                this.model_manager.role_id=3;
-                this.model_manager.image_path = "images/user.jpg";
-
+                this.modelCompany.id=1;
+                this.modelCompany.user_seller_id=this.logued_user.id;
+                this.modelManager.id=1;
+                this.modelManager.role_id=3;
+                this.modelManager.image_path = "images/user.jpg";
                 // inserindo company
-                ApiService.post(this.companies_url, this.model)
+                ApiService.post(this.companies_url, this.modelCompany)
                 .then(response => {
-                    this.model_manager.company_id = response.data.id;
+                    this.modelManager.company_id = response.data.id;
                     // inserindo user
-                    ApiService.post(this.users_url, this.model_manager)
+                    ApiService.post(this.users_url, this.modelManager)
                         .then(response => {
                            //inserindo userManager
                            ApiService.post(this.usersManager_url, {'user_id':response.data.id})
                                 .then(response => {
-
-                                    console.log('userManager criado');
-
                                     miniToastr.success("Atendente adicionado com sucesso","Sucesso");
                                     this.formReset();
                                     this.reload();
@@ -169,68 +164,104 @@
                     });
                 })
                 .catch(function(error) {
-
-                   // console.log(error);
-
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando usuáio");  
                 });
             },
             
             editCompany: function() { //U
-                this.Company_id = this.item.id;
-                this.model = Object.assign({}, this.item);
-                this.closeModals();
+                this.modelManager = Object.assign({}, this.model_manager);
+                this.modelCompany = Object.assign({}, this.model_company);
             },
 
-            updateCompany: function() { //U
-                var model_cpy = JSON.parse(JSON.stringify(this.model));
+            updateCompany: function() { 
                 delete model_cpy.created_at;
                 delete model_cpy.updated_at;
                 delete model_cpy.deleted_at;
-                ApiService.post(this.first_url+'/'+this.Company_id, model_cpy)
+                ApiService.post(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
-                        miniToastr.success("Atendente atualizado com sucesso","Sucesso");
-                            this.reload();
-                            this.closeModals();
+
+                        ApiService.post(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                            .then(response => {
+
+                                ApiService.post(this.usersManager_url+'/'+this.modelManager.user_id, {'user_id':response.data.id})
+                                        .then(response => {
+                                            miniToastr.success("Manager atualizado com sucesso","Sucesso");
+                                                this.reload();
+                                                this.closeModals();
+                                        })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error);  
+                                            miniToastr.error(error, "Erro atualizando Manager"); 
+                                        });
+                                                                
+                                miniToastr.success("Manager atualizado com sucesso","Sucesso");
+                                    this.reload();
+                                    this.closeModals();
+                            })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error);  
+                                miniToastr.error(error, "Erro atualizando Manager"); 
+                            });
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando Atendente"); 
+                        miniToastr.error(error, "Erro atualizando companhia"); 
                     });
             },
 
             deleteCompany: function(){
-                ApiService.delete(this.url+'/'+this.item.id)
+                ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
                     .then(response => {
-                        miniToastr.success("Atendente eliminado com sucesso","Sucesso");
+
+
+                        miniToastr.success("Companhia eliminada com sucesso","Sucesso");
                         this.reload();
                         this.closeModals();
+
+                        ApiService.delete(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                            .then(response => {
+                                // eliminar un manager en cascada!
+                                ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id, {'user_id':response.data.id} )
+                                    .then(response => {
+                                        miniToastr.success("Manager eliminado com sucesso","Sucesso");
+                                        this.reload();
+                                        this.closeModals();
+                                    })
+                                    .catch(function(error) {
+                                        ApiService.process_request_error(error);  
+                                        miniToastr.error(error, "Erro eliminando Manager"); 
+                                    });
+                            })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error);  
+                                miniToastr.error(error, "Erro eliminando Manager"); 
+                            });
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Atendente"); 
+                        miniToastr.error(error, "Erro eliminando Companhia"); 
                     });
             },
 
             formReset:function(){
-                this.model.CNPJ = "";
-                this.model.name = "";
-                this.model.phone = "";
-                this.model.email = "";
-                this.model.description = "";
+                this.modelCompany.CNPJ = "";
+                this.modelCompany.name = "";
+                this.modelCompany.phone = "";
+                this.modelCompany.email = "";
+                this.modelCompany.description = "";
 
-                this.model_manager.name = "";
-                this.model_manager.login = "";
-                this.model_manager.email = "";
-                this.model_manager.password = "";
-                this.model_manager.CPF = "";
-                this.model_manager.phone = "";
-                this.model_manager.image_path= "";
-                this.model_manager.whatsapp_id= "";
-                this.model_manager.facebook_id= "";
-                this.model_manager.instagram_id= "";
-                this.model_manager.linkedin_id="";
+                this.modelManager.name = "";
+                this.modelManager.login = "";
+                this.modelManager.email = "";
+                this.modelManager.password = "";
+                this.modelManager.CPF = "";
+                this.modelManager.phone = "";
+                this.modelManager.image_path= "";
+                this.modelManager.whatsapp_id= "";
+                this.modelManager.facebook_id= "";
+                this.modelManager.instagram_id= "";
+                this.modelManager.linkedin_id="";
             },
 
             closeModals(){
@@ -244,7 +275,10 @@
         },
 
         mounted(){
-            this.editCompany();
+            if(this.action!='insert')
+                this.editCompany();
+            this.logued_user = JSON.parse(window.localStorage.getItem('user'));
+            
         },
 
         created() {

@@ -62,17 +62,11 @@ class ExtendedUserController extends UserController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
-
-        $User = Auth::check()? Auth::user():session('logged_user');
-        $input['company_id'] = $User->company_id;
-        $input['role_id'] = ExtendedContactsStatusController::ATTENDANT;
-
+        
         $user = $this->userRepository->create($input);
 
         Flash::success('User saved successfully.');
 
-        //TODO-Alberto: retornar el usuario creado para coger el id y poder insertar un atendente
-        // return redirect(route('users.index'));
         return $user->toJson();
     }
 
