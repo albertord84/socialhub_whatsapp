@@ -63,7 +63,8 @@ class CompanyController extends AppBaseController
 
         Flash::success('Company saved successfully.');
 
-        return redirect(route('companies.index'));
+        return $company->toJson();
+        // return redirect(route('companies.index'));
     }
 
     /**

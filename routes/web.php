@@ -48,7 +48,9 @@ Route::resource('roles', 'RoleController');
 Route::resource('users', 'ExtendedUserController');
 Route::post('users/{id}/update_image', 'ExtendedUserController@update_image');
 
-Route::resource('usersManagers', 'UsersManagerController');
+Route::resource('usersManagers', 'ExtendedUsersManagerController');
+Route::post('usersManagers/{company_id}/getManager', 'ExtendedUsersManagerController@getManager');
+
 Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
 Route::resource('usersSellers', 'ExtendedUsersSellerController');
 Route::resource('passwordResets', 'PasswordResetController');

@@ -37,7 +37,7 @@
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
                                 <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-ban text-danger'  ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -81,12 +81,12 @@
 
         <!-- Edit Companies Modal -->
         <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa">
-            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
+            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
         <!-- Delete Companies Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteCompanies" :hide-footer="true" title="Verificação de cancelamento">
-            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
+            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"delete"' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
         </b-modal>
 
     </div>
@@ -134,10 +134,10 @@
                 users_url:'users',  //route to controller
                 usersManager_url:'usersManagers',  //route to controller
                 
-                // model:{},
                 //---------Specific properties-----------------------------
                 companies_id: "",
-                model:{},
+                model_company:'',
+                model_manager:'',
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -232,20 +232,42 @@
             },
 
             actionSeeCompanies: function(value){
-                this.model = value;
+                this.model_company = value;
             },
 
             actionEditCompanies: function(value){
-                this.model = value;
-                this.companies_id = value.id;
-                this.modalEditCompanies = !this.modalEditCompanies;
+                this.model_company = Object.assign({}, value);
+                this.companies_id = value.id; 
+                ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
+                    .then(response => {
+                        var This = this;
+                        for(let item of response.data){
+                            if(item.user){
+                                This.model_manager = item; 
+                                break;
+                            }
+                        }
+                        // response.data.forEach(function (item, index) {
+                        //     if(item.user)
+                        //         This.model_manager = item;                                
+                        // });
+                        console.log(this.model_company);
+                        console.log(this.model_manager);
+                        this.modalEditCompanies = !this.modalEditCompanies;
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Erro obtendo Manager");   
+                    });
             },
 
             actionDeleteCompanies: function(value){
-                this.model = value;
+                this.model_company = value;
+                this.model_manager = this.getUserManager(this.model_company.id);
                 this.companies_id = value.id;
                 this.modalDeleteCompanies = !this.modalDeleteCompanies;
             },
+
+
 
             //------ Specific DataTable methods------------
             nextPage() {

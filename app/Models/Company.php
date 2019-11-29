@@ -34,7 +34,8 @@ class Company extends Model
         'name',
         'phone',
         'email',
-        'description'
+        'description',
+        // 'user_seller_id'
     ];
 
     /**
@@ -48,7 +49,8 @@ class Company extends Model
         'name' => 'string',
         'phone' => 'string',
         'email' => 'string',
-        'description' => 'string'
+        'description' => 'string',
+        ///'user_seller_id'
     ];
 
     /**

@@ -9,7 +9,6 @@
         </div>
         <!-- <div class="background-overlay" @click="right_close"></div>
         <div class="background-overlay2" @click="left_close"></div> -->
-
     </div>
 </template>
 <script>
