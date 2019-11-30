@@ -26,6 +26,7 @@ class StatusTableSeeder extends Seeder
 
     function CreateMessagesStatus() {
         $this->command->info('Creating Users MessagesStatus:');
+
         MessagesStatus::create([
             'id' => '1',
             'name' => 'ROUTED',
@@ -57,6 +58,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'Message was deleted',
         ]);
         $this->command->info('MessagesStatus DELETED');
+
+        MessagesStatus::create([
+            'id' => '6',
+            'name' => 'UNREADED',
+            'description' => 'Message not readed by me, i.e., new incomming messages',
+        ]);
+        $this->command->info('MessagesStatus UNREADED');
     }
 
     function CreateContactsStatus() {

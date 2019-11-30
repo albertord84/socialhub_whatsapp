@@ -26,6 +26,13 @@
                                     <b-dropdown-item title="Inserir novo contato" exact class="dropdown_content">
                                         <a href='javascript:void(0)' class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs " ></i> Inserir contato</a>
                                     </b-dropdown-item>
+                                    <b-dropdown-item title="Encerrar sessão" exact class="dropdown_content">
+                                        <router-link to="/" class="drpodowtext">
+                                            <div v-on:click="logout">
+                                                <i class="fa fa-sign-out"></i> Sair
+                                            </div>
+                                        </router-link>
+                                    </b-dropdown-item>
                                     <!-- <b-dropdown-item title="Contatos com mensagens favoritas" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByFavorites'" ><i class="fa fa-star-o"></i> Favoritas</a>
                                     </b-dropdown-item>
@@ -543,7 +550,6 @@
         },
         
         methods: {    
-            //primary functions
             send_message() {
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
@@ -625,7 +631,7 @@
                                 } catch (error) {
                                     console.log(error);                                    
                                 }
-                            });
+                            });                            
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
@@ -679,7 +685,6 @@
                 }
             },
 
-            //secundary functions
             trigger (referenceFile) {
                 switch(referenceFile){
                     case 'fileInputImage':
@@ -854,6 +859,13 @@
                     }
                 }
             },
+
+            logout() {
+                window.localStorage.removeItem('token')
+                window.localStorage.removeItem('user')
+                delete axios.defaults.headers.common['Authorization']
+                this.$router.push({name: "login"})
+            },
         },
 
         updated(){
@@ -863,6 +875,8 @@
 
         beforeMount() {
             this.user = JSON.parse(window.localStorage.getItem('user'));
+            console.log('ddddddddddddddddddddddddddddddd');
+            console.log(this.user);
             this.getContacts();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
@@ -914,11 +928,6 @@
                     console.log(e);
                 });
                 
-            // var contact = this.contacts[0];
-            // console.log(this.contacts);
-            // this.getContactChat(contact);
-
-            this.$ref.inputTextAreaMessage.focus();
         },
 
         created() {
@@ -1166,12 +1175,12 @@
     }
 
     .status-new-messages {
-        // width: 2.5em;
-        // height: 2.5em;
-        border-radius: 50%;
+        min-width: 3em;
+        height: 2.5em;
+        border-radius: 2em;
         background-color: #0377FE;
         color: white;
-        padding: 0.4em;
+        padding: 0.5em 1em 2em 1em;
         font-size: 0.7em;
         text-align: center;
         position: relative;

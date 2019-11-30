@@ -174,7 +174,7 @@ class ExtendedUserController extends UserController
                 
                 $json_data = FileUtils::SavePostFile($request->file, $image_path, $image_name);
                 if ($json_data) {
-                    $User->image_path = "$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
+                    $User->image_path = env('APP_FILE_PATH')."$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
                     $User->save();
                     return "$files_path/$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
                 }

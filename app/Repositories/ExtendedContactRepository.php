@@ -46,7 +46,7 @@ class ExtendedContactRepository extends ContactRepository
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                     ->where('contact_id', $Contact->id)
-                    ->where('status_id', 1)
+                    ->where('status_id', 6) //UNREADED message for me
                     ->count();
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
