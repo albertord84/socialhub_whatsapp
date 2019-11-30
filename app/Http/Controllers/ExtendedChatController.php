@@ -37,7 +37,9 @@ class ExtendedChatController extends ChatController
         $contact_id = (int) $request['contact_id'];
         $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
+        
         $chats = $this->chatRepository->contactChat($User->id, $contact_id, $page, $searchMessageByStringInput);
+
         return $chats->toJson();
     }
 
@@ -54,7 +56,7 @@ class ExtendedChatController extends ChatController
         $input['attendant_id'] = $User->id;
 
         $Contact = Contact::findOrFail($input['contact_id']);
-        $RPi = new RPIController();
+        $RPi = new ExternalRPIController();
 
         $chat = $this->chatRepository->createMessage($input);
         

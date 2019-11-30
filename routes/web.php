@@ -17,11 +17,13 @@
 // });
 
 Route::group(['prefix' => 'RPI'], function ($router) {
-    Route::post('reciveFileMessage', 'RPIController@reciveFileMessage');
-    Route::post('reciveTextMessage', 'RPIController@reciveTextMessage');
-    Route::post('sendTextMessage', 'RPIController@sendMessage');
+    Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
+    Route::post('reciveTextMessage', 'ExternalRPIController@reciveTextMessage');
+    Route::post('sendTextMessage', 'ExternalRPIController@sendMessage');
+    Route::get('getContactInfo', 'ExternalRPIController@getContactInfo');
+    Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
 
-    Route::post('update', 'RPIController@update');
+    Route::post('update', 'ExternalRPIController@update');
 });
 
 Route::get('/', function () {

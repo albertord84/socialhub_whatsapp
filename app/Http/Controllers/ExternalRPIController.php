@@ -9,11 +9,9 @@ use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-// use League\Flysystem\File;
-use Response;
 use stdClass;
 
-class RPIController extends Controller
+class ExternalRPIController extends Controller
 {
     private $APP_WP_API_URL;
 
@@ -44,6 +42,27 @@ class RPIController extends Controller
         $version->version = '1.0.0';
 
         return json_encode($version);
+    }
+
+    /**
+     * Get Contact Info
+     */
+    public function getContactInfo(string $contact_id = '5521965536174')//: stdClass
+    {
+        $contactInfo = new stdClass();
+        try {
+            $client = new \GuzzleHttp\Client();
+            $url = $this->APP_WP_API_URL . '/GetContact';
+
+            $contactInfo = $client->request('GET', $url, [
+                'form_params' => [
+                    'RemoteJid' => $contact_id,
+                ],
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        return $contactInfo;
     }
 
     /**
@@ -97,14 +116,13 @@ class RPIController extends Controller
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
         Log::debug('reciveFileMessage: ', [$input]);
 
-        
         $Chat = $this->messageToChatModel($input, $Contact);
-        
+
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
-        
+
         $filePath = "$Contact->company_id/contacts/$Contact->id/chat_files";
         // Log::debug('reciveFileMessage: ', [$filePath]);
-        
+
         $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
         // Log::debug('reciveFileMessage: ', [$file_response]);
 
@@ -155,7 +173,7 @@ class RPIController extends Controller
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
         $Chat->type_id = $type_id;
-        $Chat->status_id = 1; // Active
+        $Chat->status_id = MessagesStatusController::UNREADED; // Active
         $Chat->socialnetwork_id = 1; // WhatsApp
         $Chat->message = $input['Msg'];
         // $Chat->created_at = $input['Date'];
@@ -236,13 +254,13 @@ class RPIController extends Controller
             $response = $client->request('POST', $url, [
                 'multipart' => [
                     [
-                        'name'     => "$FileName",
+                        'name' => "$FileName",
                         'contents' => $File,
-                        'filename' => "$file_name"
+                        'filename' => "$file_name",
                     ],
-                    [   'name'     => "RemoteJid", 'contents' => $contact_Jid ],
-                    [   'name'     => "Contact", 'contents' => $Contact, ],
-                    [   'name'     => "Message", 'contents' => $message ]
+                    ['name' => "RemoteJid", 'contents' => $contact_Jid],
+                    ['name' => "Contact", 'contents' => $Contact],
+                    ['name' => "Message", 'contents' => $message],
                 ],
             ]);
 
@@ -251,5 +269,5 @@ class RPIController extends Controller
             throw $th;
         }
     }
-    
+
 }
