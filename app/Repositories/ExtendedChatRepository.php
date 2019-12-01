@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Repositories;
+
+use App\Http\Controllers\MessagesStatusController;
 use App\Models\ExtendedChat;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -12,6 +14,9 @@ class ExtendedChatRepository extends ChatRepository
         $chatModel->table = (string)$attendant_id;
         if($searchMessageByStringInput ==''){
             $Chat = $chatModel->where('contact_id', $contact_id)->get();
+            $chatModel->where('contact_id', $contact_id)
+                      ->where('status_id', MessagesStatusController::UNREADED)
+                      ->update(['status_id' => MessagesStatusController::READED]);
         }else{
             $Chat = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
         }
