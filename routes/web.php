@@ -74,3 +74,6 @@ Route::resource('test', 'TestController');
 Route::resource('socialnetworks', 'SocialnetworkController');
 
 Route::resource('messagesTypes', 'MessagesTypeController');
+
+
+Route::resource('rpis', 'RpiController');
