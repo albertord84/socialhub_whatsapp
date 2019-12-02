@@ -1,7 +1,7 @@
 <template>
     <div class="row chat p-0" style="background-color:#fefefe !important">
 
-        <left-side-bar  :left_layout ="left_layout" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        <left-side-bar  :left_layout ="left_layout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -9,7 +9,7 @@
                 <div class="sect_header">
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
-                            <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" style="padding:0 !important">
+                            <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
                                 <img :src="user.image_path" width="50px" height="50px" class="profile-picture" alt="User Image">
                             </a>
                         </li>
@@ -18,11 +18,9 @@
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
-                                        <i class="fa fa-ellipsis-h icons-action" title="Mensagens"  aria-hidden="false"></i>
+                                        <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
                                     </template>
-                                    <b-dropdown-item title="Obter novo contato" exact class="dropdown_content">
-                                        <a href='javascript:void(0)' class="round_btn"><i class="fa fa-users" ></i> Obter contato</a>
-                                    </b-dropdown-item>
+                                    
                                     <b-dropdown-item title="Inserir novo contato" exact class="dropdown_content">
                                         <a href='javascript:void(0)' class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs " ></i> Inserir contato</a>
                                     </b-dropdown-item>
@@ -62,8 +60,20 @@
                 </div>
                 <div class="sect_header" style="background-color:#fafafa;">
                     <div class="text-center">
-                        <img src="~img/socialhub/chats.jpg" width="50px" alt="">
-                        <span>Chats</span>
+                        <ul style="margin-left:30%" class="list-group list-group-horizontal">
+                            <li class="list-group-item border-0 m-0 p-0  bg-transparent">
+                                <a href="javascript:void()">
+                                    <span class="mdi mdi-message-text fa-3x cl-blue"></span><br>
+                                    <span style="position:relative; top:-1.1em" class="principal-icons">Chats</span>
+                                </a>
+                            </li>
+                            <li class="list-group-item border-0 bg-transparent" style="margin-left:2em">
+                                <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag" >
+                                    <span class="fa fa-shopping-basket fa-3x cl-blue" title="Adicionar contato"></span><br>
+                                    <span style="position:relative; top:-0.3em; left:1em" class="principal-icons">Cesta</span><span title="Contatos a serem adicionados" class="principal-icons-basket-contact">25</span>
+                                </a>
+                            </li>                     
+                        </ul>
                     </div>                        
                 </div>
                 <v-scroll :height="Height(0)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
@@ -147,7 +157,12 @@
                 <v-scroll :height="Height(160)" color="#ccc" bar-width="8px" ref="message_scroller">    <!-- :style="{ backgroundImage: 'url('+bgColor+')'}" -->
                     <ul >
                         <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
-                            <div class="" >
+                            
+                            <div v-if="message.type_id=='date_separator'" class="pt-5 pb-5">
+                                <h6 class="message-time-separator mt-5"><span>{{message.time.date}}</span></h6>
+                            </div>
+
+                            <div v-if="message.type_id!='date_separator'" >
                                 <p class="message" @mouseover='mouseOverMessage("message-dropdown-"+index)' @mouseleave='mouseLeaveMessage("message-dropdown-"+index)'> 
                                     <!-- <b-dropdown class="dropdown hidden-xs-down btn-group float-right message-hout" :id='"message-dropdown-"+index' variant="link" toggle-class="text-decoration-none"  right="">
                                         <template v-slot:button-content>
@@ -192,11 +207,11 @@
                                     </span>
                                     <span v-if='message.type_id == "5"' class='mb-2 text-center'>
                                         <a :href="message.path" target="_blank" rel=”noopener”  >
-                                            <img src="~img/socialhub/text-file-icon.png" alt="text-file-icon" class="midia-files-document" >
-                                        </a>
-                                        <br>
+                                            <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                        </a>  
+                                        <br>                                      
                                     </span>
-                                    <span class="text-message">
+                                    <span v-if="message.message && message.message !=''" class="text-message">
                                         {{ message.message ? message.message : "" }}
                                     </span>
                                     <br>
@@ -204,14 +219,14 @@
                                 <br>
                                 <span class="msg-time" v-if='message.source==0'>
                                     <ul class="menu">
-                                        <li><div class="thetime">{{message.created_at}}</div></li>
+                                        <li><div class="thetime">{{message.time.hour}}</div></li>
                                         <li> <img :src="user.image_path" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
                                     </ul>
                                 </span>
                                 <span class="msg-time" v-if='message.source==1'>
                                     <ul class="menu">
                                         <li> <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
-                                        <li> <div class="thetime">{{message.created_at}}</div></li>
+                                        <li> <div class="thetime">{{message.time.hour}}</div></li>
                                     </ul>
                                 </span>
                             </div>
@@ -228,7 +243,7 @@
                                 <i v-if="isSending==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
-                        <textarea @keyup.enter.exact="send_message"  v-model="newMessage.message" placeholder=""                                 
+                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
                                 class="form-control border border-left-0 border-right-0 text-input-message srcollbar"
                                 ref="inputTextAreaMessage">
                         </textarea>
@@ -254,7 +269,7 @@
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="send_message">
+                            <div class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="sendMessage">
                                 <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
                             </div>
                         </div>
@@ -460,6 +475,14 @@
             <sendMessageFiles :file='file'></sendMessageFiles>
         </b-modal>
         
+        <!-- Modal to get new contact from bag-->
+        <b-modal v-model="modalNewContactFromBag" :hide-footer="true" title="Informação">
+            Você adicionará um novo contato automático na sua lista de contatos.
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">Adicionar</button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
+                </div>
+        </b-modal>
     </div>
 </template>
 
@@ -494,44 +517,47 @@
         data() {
             return {
                 user:{},
-                isSearchContact:false,
-                modalUserCRUDDatas:false,
+                isSearchContact:false,                
 
                 contacts_url: 'contacts',
+                contacts_bag_url: 'contactsFromBag',
                 chat_url: 'chats',
                 contacts:[],
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
                 item:{},
-                modalDeleteContact:false,
+                
+                isSending:false,
                 messages:[],
                 newMessage: {
                     'attendant_id':0,
                     'contact_id':0,
                     'message':'',
                     'source':0,
-                    'type_id':1, //text //TODO criar tabela
-                    'status_id':1, //text //TODO criar tabela
+                    'type_id':1,
+                    'status_id':1,
                     'socialnetwork_id':1, //Whatsapp
                 },
-                isSending:false,
-
-                modalRemoveSelectedFile:false,
-                modalSendMessageFiles:false,
 
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
 
+                messageTimeDelimeter:'',
 
                 file:null,
                 pathFiles:'',
                 referenceFileInput:null,
 
+                modalRemoveSelectedFile:false,
+                modalSendMessageFiles:false,
+                modalDeleteContact:false,
                 modalShowImage:false,
                 modalShowImageSrc:'',
                 modalShowVideo:false,
                 modalShowVideoSrc:'',
+                modalNewContactFromBag:false,
+                modalUserCRUDDatas:false,
 
                 show_chat_right_side:false,
                 show_chat_find_right_side:false,
@@ -539,10 +565,7 @@
                 right_layout:'toggle-edit-contact',
                 left_layout:'toggle-add-contact',
 
-                window: {
-                    width: 0,
-                    height: 0
-                },
+                window: {width: 0,height: 0},
 
                 selectedSocialNetwork:'',
                 
@@ -550,7 +573,7 @@
         },
         
         methods: {    
-            send_message() {
+            sendMessage() {
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
@@ -610,28 +633,58 @@
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
                     });
+            },
+
+            getNewContactFromBag: function() { //R
+                ApiService.get(this.contacts_bag_url)
+                    .then(response => {
+                        response.data.index = this.contacts.length;
+                        this.contacts.push(response.data);                        
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
+                    });
             }, 
 
             getContactChat: function(contact) {
+                this.messageTimeDelimeter = '';
                 if(this.selected_contact_index!=contact.index){
                     this.selected_contact_index = contact.index;
                     ApiService.get(this.chat_url,{'contact_id':contact.id, 'page':0})
                         .then(response => {
+                            this.contacts[this.selected_contact_index].count_unread_messagess =0;
                             this.messagesWhereLike = [];
                             this.searchMessageByStringInput = [];
                             this.messages = response.data; 
-                            var This = this;                       
+                            this.messages_copy=[];
+                            var This = this;
+
                             this.messages.forEach(function(item, i){
                                 try {
+                                    item.time = This.get_message_time(item.created_at);
+
+                                    if(item.time.date!=This.messageTimeDelimeter){
+                                        This.messages_copy.push({
+                                            'type_id': 'date_separator',
+                                            'time':{'date':item.time.date}
+                                        });
+                                        This.messageTimeDelimeter = item.time.date;
+                                    }
+                                
                                     if(item.data != "" && item.data != null && item.data.length>0) {
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
                                             item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
+                                    This.messages_copy.push(item);
+
                                 } catch (error) {
-                                    console.log(error);                                    
+                                    console.log(error);
                                 }
-                            });                            
+                            });
+                            This.messages = Object.assign({}, This.messages_copy);
+                            console.log(This.messages);
+
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
@@ -672,16 +725,46 @@
                 if(Difference_In_Days < 1){ //menos de 24 horas retornar a hora
                     var timeString =date_format.getHours().toString().padStart(2, '0') + ':' + date_format.getMinutes().toString().padStart(2, '0');
                     return timeString;
-                } else //mais de 24 horas e até 7 dias atrás retornar "x dias"
+                } else //entre 1 e 2 dias retornar "Ontem"
                 if(Difference_In_Days >= 1 && Difference_In_Days < 2){
                     return 'Ontem';
-                } else
+                } else //entre 2 e até 7 dias atrás retornar "Dia da semana"
                 if(Difference_In_Days >= 2 && Difference_In_Days <= 7){
                     var timeString = weekDays[date_format.getDay()];
                     return timeString;
-                } else{ //mais de 7 dias atrás retornar o mes
+                } else{ //mais de 7 dias atrás retornar "dia/mes/ano"
                     var timeString =date_format.getDate().toString().padStart(2, '0') + '/' + (date_format.getMonth()+1).toString().padStart(2, '0')+ '/' + date_format.getFullYear().toString().padStart(4, '0');
                     return timeString;
+                }
+            },
+
+            get_message_time: function(time){
+                var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+                var date_format = new Date(time);
+                var date1 = Date.parse(time); //to timestamp
+                var date2 = Date.now(); //to timestamp
+                var Difference_In_Time = date2 - date1; 
+                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                
+                var timeString =date_format.getHours().toString().padStart(2, '0') + ':' + date_format.getMinutes().toString().padStart(2, '0');
+                
+                //menos de 24 horas retornar "a hora"
+                if(Difference_In_Days < 1){
+                    return {'hour':timeString,'date':'Hoje'};
+                } else
+                
+                //entre 1 e 2 dias retornar "Ontem"
+                if(Difference_In_Days >= 1 && Difference_In_Days < 2){
+                    return {'hour':timeString,'date':'Ontem'};
+                } else
+                
+                //entre 2 e até 7 dias atrás retornar "Dia da semana"
+                if(Difference_In_Days >= 2 && Difference_In_Days <= 7){
+                    return {'hour':timeString,'date':weekDays[date_format.getDay()]};
+                } else{
+                    
+                    //mais de 7 dias atrás retornar "dia/mes/ano"
+                    return {'hour':timeString,'date':date_format.getDate().toString().padStart(2, '0') + '/' + (date_format.getMonth()+1).toString().padStart(2, '0')+ '/' + date_format.getFullYear().toString().padStart(4, '0')};
                 }
             },
 
@@ -875,8 +958,6 @@
 
         beforeMount() {
             this.user = JSON.parse(window.localStorage.getItem('user'));
-            console.log('ddddddddddddddddddddddddddddddd');
-            console.log(this.user);
             this.getContacts();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
@@ -1093,6 +1174,7 @@
                 position: relative;
                 top:20px;
                 left:15px;
+                color: #a4beda;
             }
         }
         p {
@@ -1139,6 +1221,7 @@
                 position: relative;
                 top:20px;
                 right: 15px;
+                color: #90a8c2;
             }
         }
         p {
@@ -1309,10 +1392,9 @@
     }
    
     .sect_header{
-        // background-color:#eaf5ff;
         background-color:#fefefe;
-        height:70px;  
-        // border: 1px solid #e9e9e9;
+        // height:70px;
+        height:6.5rem;
         border-bottom: 1px solid #e9e9e9;
         padding-top:10px; 
     }
@@ -1560,6 +1642,52 @@
         color:#007bff !important;
     }
 
-    
+    .document_sent{
+        color:white;
+    }
+
+    .document_received{
+        color: #007bff;
+    }
+
+
+    .message-time-separator {
+        color:gray;
+        font-size: 1em;
+        margin-left: 5%;
+        width: 90%; 
+        text-align: center !important; 
+        border-bottom: 1px solid #d6d4d4 !important; 
+        line-height: 0.01em;
+    } 
+
+
+    .message-time-separator span { 
+        background-color:#eaedf2 !important; 
+        border-radius: 10px;
+        padding: 1.2em;
+        // padding:0 10px; 
+    }
+    .message-time-separator span:hover { 
+        background-color:#d8d6d6 ; 
+    }
+
+    .principal-icons{
+        width: 2em !important;
+        height: 2em !important;
+    }
+
+    .principal-icons-basket-contact{
+        color: white;
+        background-color:#25d345;
+        border-radius: 50%;
+        padding:7px;
+        position:relative; top:-40px;
+    }
+
+    .clickable:hover{
+        cursor: pointer;
+    }
+
 
 </style>

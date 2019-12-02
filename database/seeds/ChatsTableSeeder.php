@@ -47,7 +47,7 @@ class ChatsTableSeeder extends Seeder
                 'message' => Lorem::sentence(($i%9)+1, true),
                 'type_id' => '1',
                 'data' => '',
-                'status_id' => '1',
+                'status_id' => '6',
                 'socialnetwork_id' => '1',
             ]);
             $this->command->info('Message '.$i.' created');
@@ -63,7 +63,7 @@ class ChatsTableSeeder extends Seeder
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '2',
             'data' => '{"ClientOriginalName":"image_test.jpg", "ClientOriginalExtension":"jpg","ClientMimeType":"jpg","guessClientExtension":"jpg","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"image_test.jpg","SavedFilePath":""}',
-            'status_id' => '1',
+            'status_id' => '6',
             'socialnetwork_id' => '1',
         ]);
         $this->command->info('Message '.$i.' created: Type image');
@@ -78,7 +78,7 @@ class ChatsTableSeeder extends Seeder
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '3',
             'data' => '{"ClientOriginalName":"audio_test.mp3", "ClientOriginalExtension":"mp3","ClientMimeType":"audio\/mp3","guessClientExtension":"mp3","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"audio_test.mp3","SavedFilePath":""}',
-            'status_id' => '1',
+            'status_id' => '6',
             'socialnetwork_id' => '1',
         ]);
         $this->command->info('Message '.$i.' created: Type audio');
@@ -93,7 +93,7 @@ class ChatsTableSeeder extends Seeder
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '4',
             'data' => '{"ClientOriginalName":"video_test.mp4", "ClientOriginalExtension":"mp4","ClientMimeType":"video\/mp4","guessClientExtension":"mp4","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"video_test.mp4","SavedFilePath":""}',
-            'status_id' => '1',
+            'status_id' => '6',
             'socialnetwork_id' => '1',
         ]);
         $this->command->info('Message '.$i.' created: Type video');
@@ -108,7 +108,7 @@ class ChatsTableSeeder extends Seeder
             'message' => Lorem::sentence(($i%9)+1, true),
             'type_id' => '5',
             'data' => '{"ClientOriginalName":"document_test.pdf", "ClientOriginalExtension":"pdf","ClientMimeType":"text/pdf","guessClientExtension":"pdf","getSize":3136420,"isValid":true,"MaxFilesize":209715200,"SavedFileName":"document_test.pdf","SavedFilePath":""}',
-            'status_id' => '1',
+            'status_id' => '6',
             'socialnetwork_id' => '1',
         ]);
         $this->command->info('Message '.$i.' created: Type video');

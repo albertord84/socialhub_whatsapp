@@ -335,7 +335,8 @@
     .sect_header{
         /* background-color:#eaf5ff; */
         background-color:white;
-        height:70px;  
+        /* height:70px;   */
+        height:6.5rem;  
         /* border: 1px solid #e9e9e9; */
         border-bottom: 1px solid #e9e9e9;
         padding-top:10px 
