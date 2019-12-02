@@ -2,16 +2,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card" id="printableArea">
-                <!-- <div class="card-header">
-                    <h4><img src="~img/vue-w_logo1.png" alt="Company logo"/></h4>
-                    <span class="float-right">
-                        <strong> Invoice</strong>
-                    </span>
-                </div> -->
-
                 <div class="card-block">
                     <div class="row">
-
                         <div class="col-8 col-md-8 invoice_address">
                             <h4><Strong>Para usar WhatsApp em SocialHub:</Strong></h4>
                             <ol class="terms_conditions_ol">
@@ -24,7 +16,7 @@
                                 <address>
                                     <video width="400" height="340" controls>
                                         <source src="https://web.whatsapp.com/whatsapp-webclient-login_a0f99e8cbba9eaa747ec23ffb30d63fe.mp4#t=0,7" type="video/mp4">
-                                        Your browser does not support the video tag.
+                                        Seu navegador não suporta a tag de vídeo.
                                     </video> 
                                 </address>
                             </div>
@@ -36,38 +28,65 @@
                                 </ul>
                             </div>
                         </div>
-
                         <div class="col-3 col-md-3 text-right invoice_address">
                             <h4><img src="~img/pages/invoice_code.jpg" class="qrcode" alt="invoice QR Code"/></h4>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address"></div>
-                        
-                        
                     </div>
-
-                    
-
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+
 <script>
-export default {
-    name: "Invoice",
-    mounted: function() {
 
-    },
-    destroyed: function() {
+    import miniToastr from "mini-toastr";
+    miniToastr.init();
+    import ApiService from "../../../common/api.service";
 
-    },
-    methods: {
-        printDiv() {
-            window.print();
-        }
+    export default {
+        name: "Invoice",
+
+        data() {
+            return {
+                url:'rpis',
+                rpi:{},
+            }
+        },
+
+        methods: {
+            getTunnel() {
+                ApiService.get(this.url)
+                    .then(response => {
+                        this.rpi = response.data;
+                        console.log(this.rpi);
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
+                });
+            }
+        },
+
+        beforeMount: function() {
+            this.getTunnel();
+        },
+
+        created: function() {
+            miniToastr.setIcon("error", "i", {class: "fa fa-times"});
+            miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
+            miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
+            miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
+        },
+
+        destroyed: function() {
+
+        },
     }
-}
 </script>
+
+
 <style scoped>
     #printableArea {
         border: 1px solid #ccc;

@@ -78,4 +78,4 @@ Route::resource('socialnetworks', 'SocialnetworkController');
 Route::resource('messagesTypes', 'MessagesTypeController');
 
 
-Route::resource('rpis', 'RpiController');
+Route::resource('rpis', 'ExtendedRpiController');
