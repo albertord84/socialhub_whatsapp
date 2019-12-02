@@ -12,13 +12,21 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedContactRepository extends ContactRepository
 {
 
-    function getAttendants(): Collection
+    /**
+     * Get All Contact Attendants Last Firts
+     *
+     * @param integer $contact_id
+     * @return Collection
+     */
+    function getAttendants(int $contact_id): Collection
     {
         $Collection = new Collection();
         try {
-            $Attendants = $this->with('attendantsContacts', function($query) {
-                $query->where('contact_id', 1);
-            })->get();
+            $Contact = $this->find($contact_id);
+            $Attendants = $Contact->attendantsContacts()->orderBy('created_at', 'asc')->get();
+            // $Attendants = $this->with(['attendantsContacts' => function($query) {
+            //     $query->where('contact_id', 1);
+            // }])->get();
             $Collection = $Attendants;
         } catch (\Throwable $th) {
             throw $th;

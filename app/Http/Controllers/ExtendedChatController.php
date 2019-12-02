@@ -31,16 +31,29 @@ class ExtendedChatController extends ChatController
      * @param Request $request
      * @return Response
      */
+    public function getBagContact(Request $request)
+    {
+        $attendant_id = (int) $request['attendant_id'];
+        
+        $Contact = $this->chatRepository->getBagContact($attendant_id);
+
+        return $Contact->toJson();
+    }
+
+    /**
+     * Display a listing of the Chat.
+     * @param Request $request
+     * @return Response
+     */
     public function index2(Request $request)
     {
-        $User = Auth::check() ? Auth::user() : session('logged_user');
-        $contact_id = (int) $request['contact_id'];
+        $attendant_id = (int) $request['contact_id'];
         $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         
-        $chats = $this->chatRepository->contactChat($User->id, $contact_id, $page, $searchMessageByStringInput);
+        $Contact = $this->chatRepository->contactChatAllAttendants($attendant_id, $page, $searchMessageByStringInput);
 
-        return $chats->toJson();
+        return $Contact->toJson();
     }
 
     /**
@@ -51,13 +64,13 @@ class ExtendedChatController extends ChatController
     public function index(Request $request)
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
-        $contact_id = (int) $request['contact_id'];
+        $attendant_id = (int) $request['contact_id'];
         $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         
-        $chats = $this->chatRepository->contactChat($User->id, $contact_id, $page, $searchMessageByStringInput);
+        $Contact = $this->chatRepository->contactChat($User->id, $attendant_id, $page, $searchMessageByStringInput);
 
-        return $chats->toJson();
+        return $Contact->toJson();
     }
 
     /**

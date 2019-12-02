@@ -6,6 +6,7 @@ use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Repositories\ExtendedChatRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
@@ -31,10 +32,20 @@ class TestController extends AppBaseController
     public function index(Request $request)
     {
         // TEST WITH REPOSITORY
-        $extContRepo = new ExtendedContactRepository(app());
+        // $extContRepo = new ExtendedContactRepository(app());
         // $Contacts = $extContRepo->fullContacts(1, 4);
-        $Attendants = $extContRepo->getAttendants();
-        dd($Attendants);
+        // $Attendants = $extContRepo->getAttendants(1);
+        // dd($Attendants);
+        
+        // $extChatRepo = new ExtendedChatRepository(app());
+        // $ContactChats = $extChatRepo->contactChatAllAttendants(1);
+
+        // dd($ContactChats);
+
+        $extChatRepo = new ExtendedChatRepository(app());
+        $Contact = $extChatRepo->getBagContact(4);
+
+        dd($Contact);
 
 
 
