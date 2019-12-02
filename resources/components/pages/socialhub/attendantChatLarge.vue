@@ -1382,7 +1382,8 @@
     }
 
     .non_converstion_back{
-        background-image: url("~img/pages/chat_background.png");
+        // background-image: url("~img/pages/chat_background.png");
+        background-color: #eaedf2;
         height: 100%;
         width: 100%;
     }
