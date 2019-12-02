@@ -6,6 +6,7 @@ use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Repositories\ExtendedChatRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
@@ -30,17 +31,33 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        dd('siiiiiiiiiii');
-
+        // TEST WITH REPOSITORY
         // $extContRepo = new ExtendedContactRepository(app());
-
         // $Contacts = $extContRepo->fullContacts(1, 4);
+        // $Attendants = $extContRepo->getAttendants(1);
+        // dd($Attendants);
+        
+        // $extChatRepo = new ExtendedChatRepository(app());
+        // $ContactChats = $extChatRepo->contactChatAllAttendants(1);
 
-        $contact_Jid = "5521965536174@s.whatsapp.net";
-        $Contacts = Contact::where(['whatsapp_id' => $contact_Jid])->first();
-        echo $Contacts->toJson();
+        // dd($ContactChats);
+
+        $extChatRepo = new ExtendedChatRepository(app());
+        $Contact = $extChatRepo->getBagContact(4);
+
+        dd($Contact);
+
+
+
+        // FIND CONTACT BY NUMBER
+        // $contact_Jid = "5521965536174@s.whatsapp.net";
+        // $Contacts = Contact::where(['whatsapp_id' => $contact_Jid])->first();
+        // echo $Contacts->toJson();
         // dd($Contacts->toJson());
 
+
+
+        // LOGIN TEST
         // $User = Auth::user();
         // if (!$User) {
         //     $User = User::find(4);
@@ -48,6 +65,9 @@ class TestController extends AppBaseController
         // }
         // var_dump($User);
 
+
+
+        // NOTIFICATIONS TEST
         // $data = (object) array(
         //     "info" => "test info"
         // );
@@ -57,6 +77,9 @@ class TestController extends AppBaseController
         // $UsersAttendant = User::find(4);
         // Notification::send($User, new NewContactMessage("Test New Contact Message"));
 
+
+
+        // BROAD CAST TESTS
         // broadcast(new newMessage("{'message':'test 77'}"));
 
         // $ExtendedChat = new ExtendedChat();
@@ -66,15 +89,12 @@ class TestController extends AppBaseController
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));
-
-        // $Collection = $this->repository->fullContacts(1, 4);
-
-        // dd($Collection[0]['count_unread_messagess']);
-
         // Bugsnag::notifyException(new RuntimeException("Test error"));
+        
 
+
+        // TEST CONTROLLERS
         // $Controller = new ExtendedUsersSellerController($this->repository);
-
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
     }
