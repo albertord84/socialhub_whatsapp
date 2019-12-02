@@ -60,23 +60,30 @@
                 </div>
                 <div class="sect_header" style="background-color:#fafafa;">
                     <div class="text-center">
-                        <ul style="margin-left:30%" class="list-group list-group-horizontal">
+                        <ul style="margin-left:25%" class="list-group list-group-horizontal">
                             <li class="list-group-item border-0 m-0 p-0  bg-transparent">
                                 <a href="javascript:void()">
-                                    <span class="mdi mdi-message-text fa-3x cl-blue"></span><br>
-                                    <span style="position:relative; top:-1.1em" class="principal-icons">Chats</span>
+                                    <span class="mdi mdi-message-text fa-2x cl-blue"></span><br>
+                                    <span style="position:relative; top:-0.8em" class="principal-icons">Chats</span>
                                 </a>
                             </li>
-                            <li class="list-group-item border-0 bg-transparent" style="margin-left:2em">
-                                <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag" >
-                                    <span class="fa fa-shopping-basket fa-3x cl-blue" title="Adicionar contato"></span><br>
-                                    <span style="position:relative; top:-0.3em; left:1em" class="principal-icons">Cesta</span><span title="Contatos a serem adicionados" class="principal-icons-basket-contact">25</span>
+                            <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
+                                <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">
+                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adicionar contato"></span><br>
+                                    <span style="position:relative; top:-0.8em; left:0.5em" class="principal-icons">Contatos</span>
+                                    <span title="contatos novos disponíveis" class="principal-icons-basket-contact cl-blue">25</span>
                                 </a>
-                            </li>                     
+                            </li>
+                            <!-- <li class="list-group-item border-0 bg-transparent" style="margin-left:2em">
+                                <a href="javascript:void()"  >
+                                    <span class="mdi mdi-account-box-outline fa-3x cl-blue " ></span><br>
+                                    <span style="position:relative; top:-0.3em; left:1em">Cesta</span>
+                                </a>
+                            </li>                      -->
                         </ul>
                     </div>                        
                 </div>
-                <v-scroll :height="Height(0)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
+                <v-scroll :height="Height(170)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
                             <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
@@ -154,7 +161,7 @@
                         </ul>
                     </ul> 
                 </div>
-                <v-scroll :height="Height(160)" color="#ccc" bar-width="8px" ref="message_scroller">    <!-- :style="{ backgroundImage: 'url('+bgColor+')'}" -->
+                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller">    <!-- :style="{ backgroundImage: 'url('+bgColor+')'}" -->
                     <ul >
                         <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
                             
@@ -247,10 +254,10 @@
                                 class="form-control border border-left-0 border-right-0 text-input-message srcollbar"
                                 ref="inputTextAreaMessage">
                         </textarea>
-
                         <div class="input-group-prepend">
                             <div v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
                                 <i class="fa fa-clipboard icons-selected-file"></i>
+                                <i style="background-color:withe; color:red; position: relative; height:1.5em; width1.5em; top:-0.25em; left:-1.7em; border-radius:20px;" class="fa fa-window-close"></i>
                             </div>
                         </div>
                         <div class="input-group-prepend">
@@ -1677,12 +1684,20 @@
         height: 2em !important;
     }
 
+    .basket{
+        font-size: 2.4em;
+    }
+
     .principal-icons-basket-contact{
         color: white;
-        background-color:#25d345;
+        font-size: 0.7em;
+        // background-color:#25d345;
+        background-color:#6adaa5; //007bff
         border-radius: 50%;
-        padding:7px;
-        position:relative; top:-40px;
+        padding:4px;
+        position:relative; 
+        top:-40px;
+        left: -20px;
     }
 
     .clickable:hover{
