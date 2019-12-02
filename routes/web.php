@@ -70,6 +70,7 @@ Route::resource('messagesStatuses', 'MessagesStatusController');
 Route::resource('systemConfigs', 'SystemConfigController');
 
 Route::resource('chats', 'ExtendedChatController');
+Route::get('getBagContact', 'ExtendedChatController@getBagContact');
 
 Route::resource('test', 'TestController');
 

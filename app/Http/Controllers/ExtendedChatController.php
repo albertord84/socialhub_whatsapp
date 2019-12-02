@@ -19,7 +19,7 @@ class ExtendedChatController extends ChatController
 
     public function __construct(ExtendedChatRepository $chatRepo)
     {
-        // $this->middleware('guest');
+        parent::__construct($chatRepo);
 
         $this->chatRepository = $chatRepo;
 
@@ -33,7 +33,8 @@ class ExtendedChatController extends ChatController
      */
     public function getBagContact(Request $request)
     {
-        $attendant_id = (int) $request['attendant_id'];
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $attendant_id = $User->id;
         
         $Contact = $this->chatRepository->getBagContact($attendant_id);
 
@@ -45,13 +46,15 @@ class ExtendedChatController extends ChatController
      * @param Request $request
      * @return Response
      */
-    public function index2(Request $request)
+    public function index(Request $request) //
     {
-        $attendant_id = (int) $request['contact_id'];
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $contact_id = (int) $request['contact_id'];
+
         $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         
-        $Contact = $this->chatRepository->contactChatAllAttendants($attendant_id, $page, $searchMessageByStringInput);
+        $Contact = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput);
 
         return $Contact->toJson();
     }
@@ -61,14 +64,14 @@ class ExtendedChatController extends ChatController
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function indexORG(Request $request)
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
-        $attendant_id = (int) $request['contact_id'];
+        $contact_id = (int) $request['contact_id'];
         $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         
-        $Contact = $this->chatRepository->contactChat($User->id, $attendant_id, $page, $searchMessageByStringInput);
+        $Contact = $this->chatRepository->contactChat($User->id, $contact_id, $page, $searchMessageByStringInput);
 
         return $Contact->toJson();
     }

@@ -68,18 +68,13 @@
                                 </a>
                             </li>
                             <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
-                                <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">
+                                <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag && amountContactsInBag>0">
                                     <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adicionar contato"></span><br>
                                     <span style="position:relative; top:-0.8em; left:0.5em" class="principal-icons">Contatos</span>
-                                    <span title="contatos novos disponíveis" class="principal-icons-basket-contact cl-blue">25</span>
+                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="principal-icons-basket-contact cl-blue">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag==0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="principal-icons-basket-contact cl-gray">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
-                            <!-- <li class="list-group-item border-0 bg-transparent" style="margin-left:2em">
-                                <a href="javascript:void()"  >
-                                    <span class="mdi mdi-account-box-outline fa-3x cl-blue " ></span><br>
-                                    <span style="position:relative; top:-0.3em; left:1em">Cesta</span>
-                                </a>
-                            </li>                      -->
                         </ul>
                     </div>                        
                 </div>
@@ -98,7 +93,7 @@
                                         <a class="text-muted"><span style="font-size:1em" :title='(contact.last_message) ? contact.last_message.message :""'>{{ (contact.last_message) ? text_truncate(contact.last_message.message,22):'' }}</span></a>
                                     </div>
                                     <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
-                                    <div v-show="contact.count_unread_messagess>0" class="status-new-messages mt-4" :title='contact.count_unread_messagess+" mensagens novas"'><b>{{contact.count_unread_messagess}}</b></div>
+                                    <div v-show="contact.count_unread_messagess>0" class="status-new-messages mt-4" :title='contact.count_unread_messagess + " mensagens novas"'><b>{{contact.count_unread_messagess}}</b></div>
                                     <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
                                 </article>
                             </a>
@@ -527,9 +522,10 @@
                 isSearchContact:false,                
 
                 contacts_url: 'contacts',
-                contacts_bag_url: 'contactsFromBag',
+                contacts_bag_url: 'getBagContact',
                 chat_url: 'chats',
                 contacts:[],
+                amountContactsInBag:0,
                 selected_contact_index: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
@@ -645,11 +641,14 @@
             getNewContactFromBag: function() { //R
                 ApiService.get(this.contacts_bag_url)
                     .then(response => {
-                        response.data.index = this.contacts.length;
-                        this.contacts.push(response.data);                        
+                        this.modalNewContactFromBag = !this.modalNewContactFromBag;
+                        var newContact = response.data;
+                        newContact.index = this.contacts.length;
+                        this.contacts.push(newContact);
+                        miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                        miniToastr.error(error, "Erro adicionando o contato");   
                     });
             }, 
 
@@ -1013,6 +1012,8 @@
             var company_id = JSON.parse(localStorage.user).company_id;
             window.Echo.channel('sh.contact-to-bag.' + company_id)
                 .listen('NewContactMessage', (e) => {
+                    //recibir la cantidad actual de contactos en la sacola y actualizar visual                    
+                    this.amountContactsInBag = JSON.parse(e.message).amountContactsInBag;
                     console.log(e);
                 });
                 
@@ -1268,15 +1269,15 @@
         min-width: 3em;
         height: 2.5em;
         border-radius: 2em;
-        background-color: #0377FE;
-        color: white;
         padding: 0.5em 1em 2em 1em;
         font-size: 0.7em;
+        border: 2px solid #fff;
+        background-color: #0377FE;
+        color: white;
         text-align: center;
         position: relative;
         top: 8px;
         left: -25px;
-        border: 2px solid #fff;
     }
 
     .status-not-messages {
@@ -1690,19 +1691,24 @@
 
     .principal-icons-basket-contact{
         color: white;
+        
+        min-width: 3em;
+        height: 2.5em;
+        border-radius: 2em;
+        padding: 0.5em 0.7em 0.5em 0.7em;
         font-size: 0.7em;
-        // background-color:#25d345;
+        border: 2px solid #fff;
+
         background-color:#6adaa5; //007bff
         border-radius: 50%;
-        padding:4px;
+        // padding:4px;
         position:relative; 
         top:-40px;
         left: -20px;
     }
 
-    .clickable:hover{
-        cursor: pointer;
+    .cl-gray{
+        background-color: silver;
     }
-
 
 </style>
