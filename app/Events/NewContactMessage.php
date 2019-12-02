@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
 class NewContactMessage implements ShouldBroadcast
 {
@@ -21,9 +22,9 @@ class NewContactMessage implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(int $company_id)
+    public function __construct(int $company_id, ?int $new_contacts_count)
     {
-        $this->message = "New Contact to Bag";
+        $this->message = $new_contacts_count;
         $this->channel = "sh.contact-to-bag.$company_id";
     }
 

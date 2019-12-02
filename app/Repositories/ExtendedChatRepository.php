@@ -3,10 +3,12 @@
 namespace App\Repositories;
 
 use App\Http\Controllers\MessagesStatusController;
+use App\Models\AttendantsContact;
 use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 
 class ExtendedChatRepository extends ChatRepository
 {    
@@ -49,12 +51,24 @@ class ExtendedChatRepository extends ChatRepository
                 }
         
                 $Contact = Contact::find($firstBagChat->contact_id);
+                $Contact->update_as = Carbon::now();
+                $Contact->save();
+                
+                $AttendantsContact = new AttendantsContact();
+                $AttendantsContact->contact_id = $Contact->id;
+                $AttendantsContact->attendant_id = $attendant_id;
+                $AttendantsContact->save();
             }
             
             return $Contact;
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function getBagContactsCount(): int{
+        $count = $this->model()::select('*')->distinct()->count();
+        return $count;
     }
 
     public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{

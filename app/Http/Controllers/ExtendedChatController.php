@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business\FileUtils;
+use App\Events\NewContactMessage;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Contact;
@@ -37,6 +38,11 @@ class ExtendedChatController extends ChatController
         $attendant_id = $User->id;
         
         $Contact = $this->chatRepository->getBagContact($attendant_id);
+
+        $newContactsCount = $this->chatRepository->getBagContactsCount();
+
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        broadcast(new NewContactMessage($User->company_id, $newContactsCount));
 
         return $Contact->toJson();
     }

@@ -44,6 +44,9 @@ class TestController extends AppBaseController
 
         $extChatRepo = new ExtendedChatRepository(app());
         $Contact = $extChatRepo->getBagContact(4);
+        $Count = $extChatRepo->getBagContactsCount();
+        dd($Count);
+
 
         dd($Contact);
 
