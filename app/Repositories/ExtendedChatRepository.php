@@ -9,6 +9,18 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedChatRepository extends ChatRepository
 {    
 
+    public function contactChatAllAttendants(Collection $attendants, int $contact_id, int $page, string $searchMessageByStringInput): Collection{
+        $Collection = new Collection();
+        try {
+            $extAttContRepo = new ExtendedContactRepository(app()); 
+            
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        return $Collection;
+    }
+
     public function contactChat(int $attendant_id, int $contact_id, int $page, string $searchMessageByStringInput): Collection{
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;

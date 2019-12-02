@@ -12,6 +12,21 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedContactRepository extends ContactRepository
 {
 
+    function getAttendants(): Collection
+    {
+        $Collection = new Collection();
+        try {
+            $Attendants = $this->with('attendantsContacts', function($query) {
+                $query->where('contact_id', 1);
+            })->get();
+            $Collection = $Attendants;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        return $Collection;
+    }
+
     public function fullContacts(int $company_id, ?int $attendant_id): Collection
     {
         $Collection = new Collection();
