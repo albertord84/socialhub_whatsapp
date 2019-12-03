@@ -29,7 +29,11 @@
                             </div>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address">
-                            <h4><img src="~img/pages/invoice_code.jpg" class="qrcode" alt="invoice QR Code"/></h4>
+                            <h4><div v-if="qrcodebase64==''" ref="imgQRCode" class="qrcode-spinner">
+                                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                                </div>
+                            </h4>
+                            <h4><img v-if="qrcodebase64!=''" :src="qrcodebase64" ref="imgQRCode" class="qrcode" alt="invoice QR Code"/></h4>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address"></div>
                     </div>
@@ -53,27 +57,20 @@
             return {
                 url:'rpis',
                 rpi:{},
+                qrcodebase64:'',
             }
         },
 
         methods: {
-            getTunnel() {
+            getTunnel() {                
                 ApiService.get(this.url)
                     .then(response => {
                         this.rpi = response.data;
-                        console.log(this.rpi.tunnel);
-                        ApiService.get(this.rpi.tunnel+'/qrcode')
-                            .then(response => {
-                                // console.log(response.data);
-                                console.log(response);
-                            })
-                            .catch(function(error) {
-                                miniToastr.error(error, "Error carregando os contatos");   
-                        });
-
+                        this.qrcodebase64 = JSON.parse(this.rpi.QRCode).qrcodebase64;
+                        console.log(this.qrcodebase64);
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                        miniToastr.error(error, "");   
                 });
             }
         },
@@ -182,7 +179,14 @@
     .qrcode{
         width: 10em;
         height: 10em;
+    }
 
+    .qrcode-spinner{
+        width: 10em;
+        height: 10em;
+        position: relative;
+        padding: 4em 4em 4em 4em;
+        border: 3px solid silver;
     }
 
 </style>
