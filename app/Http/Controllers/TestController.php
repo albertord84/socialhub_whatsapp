@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\ChatsBusiness;
 use App\Events\MessageToAttendant;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Contact;
@@ -42,13 +43,15 @@ class TestController extends AppBaseController
 
         // dd($ContactChats);
 
-        $extChatRepo = new ExtendedChatRepository(app());
+        // $extChatRepo = new ExtendedChatRepository(app());
         // $Contact = $extChatRepo->getBagContact(4);
-        $Count = $extChatRepo->getBagContactsCount();
-        dd($Count);
+        // $Count = $extChatRepo->getBagContactsCount();
+        // dd($Count);
+        // dd($Contact);
 
+        $ChatsBussines = new ChatsBusiness();
+        return $ChatsBussines->getBagContactsCount();
 
-        dd($Contact);
 
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\ChatsBusiness;
 use App\Business\FileUtils;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
@@ -93,13 +94,10 @@ class ExternalRPIController extends Controller
      */
     public function reciveTextMessage(Request $request)
     {
-        // dd("test 2 ok");
         $input = $request->all();
         $contact_Jid = $input['Jid'];
 
-        // TODO: Alberto
-        $company_id = 1;
-        // $company_id = $input['company_id'];
+        $company_id = $input['company_id'];
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
@@ -111,8 +109,9 @@ class ExternalRPIController extends Controller
             // Send event to attendants with new chat message
             broadcast(new MessageToAttendant($Chat));
         } else {
-            // Send event to all attendants with new contact
-            broadcast(new NewContactMessage($company_id));
+            // Send event to all attendants with new bag contact count
+            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($company_id);
+            broadcast(new NewContactMessage($company_id, $bagContactsCount));
         }
 
         $Chat->contact_name = $Contact->first_name;
@@ -133,6 +132,7 @@ class ExternalRPIController extends Controller
     {
         $input = $request->all();
         $contact_Jid = $input['Jid'];
+        $company_id = $input['company_id'];
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
         Log::debug('reciveFileMessage: ', [$input]);
@@ -150,20 +150,13 @@ class ExternalRPIController extends Controller
         $Chat->data = json_encode($file_response);
         $Chat->save();
 
-        // TODO: Move File to Chat->id file name
-        // dd($file_response->SavedFilePath . $file_response->SavedFileName);
-        // $path = "$Chat->company_id/contacs/$Chat->contact_id/chat_files/";
-        // $file_path = $path . $file_response->SavedFileName;
-        // var_dump($file_path);
-        // $new_file_path = $path . $Chat->id . $file_response->ClientOriginalExtension;
-        // Storage::disk('chats_files')->move($file_path, $new_file_path);
-
         if ($Contact) {
             // Send event to attendants with new chat message
             broadcast(new MessageToAttendant($Chat));
         } else {
             // Send event to all attendants with new contact
-            broadcast(new NewContactMessage($company_id));
+            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($company_id);
+            broadcast(new NewContactMessage($company_id, $bagContactsCount));
         }
 
         return $Chat->toJson();
