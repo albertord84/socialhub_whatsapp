@@ -6,7 +6,7 @@
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
-                <div class="sect_header">
+                <div class="sect_header">                    
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
                             <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
@@ -15,6 +15,7 @@
                         </li>
                         <ul class='menu' style="float:right; margin-right:5px">
                             <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
+                            <li><i class="fa fa-bell-o icons-action mt-1" title="Buscar contato" @click.prevent="triggerNewMessageSound"></i></li>
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -105,8 +106,11 @@
 
         <!-- Center side of chat-->
         <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
+            <audio ref="newMessageSound" controls style="display:none" class="mycontrolBar">
+                <source src="audio/newMessage.ogg#t=1" type="audio/ogg">
+            </audio>
             <div v-if="selected_contact_index>=0" class="converstion_back">
-                <div class="sect_header">
+                <div class="sect_header">                    
                     <ul class='menu'>                        
                         <li><span class="pl-4"><img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
@@ -279,6 +283,7 @@
                         <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
                         <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
                         <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
+
                     </div>
                 </div>
             </div>
@@ -358,7 +363,7 @@
                             <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].remember}}</span></li>
                         </ul>
 
-                        <div class="attachments  p-4">
+                        <!-- <div class="attachments  p-4">
                             <h5>Últimos anexos</h5>
                             <div class="row">
                                 <div class="col-4 mt-2">
@@ -380,7 +385,7 @@
                                     <img src="~img/pages/20.jpg" alt="" class="img-fluid">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </v-scroll>
             </div>
@@ -787,6 +792,10 @@
                 }
             },
 
+            triggerNewMessageSound(){
+                this.$refs.newMessageSound.play();
+            },
+
             trigger (referenceFile) {
                 switch(referenceFile){
                     case 'fileInputImage':
@@ -1020,7 +1029,8 @@
                                 item.last_message = message;
                             }
                         });
-                    }                    
+                    }
+                    this.triggerNewMessageSound();
                 });
 
             var company_id = JSON.parse(localStorage.user).company_id;
