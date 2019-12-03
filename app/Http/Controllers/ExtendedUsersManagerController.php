@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUsersManagerRequest;
 use App\Http\Requests\UpdateUsersManagerRequest;
+use App\Models\UsersManager;
 use App\Repositories\ExtendedUsersManagerRepository;
 use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
-
+use Laracasts\Flash\Flash;
 class ExtendedUsersManagerController extends UsersManagerController
 {
     
@@ -36,8 +37,7 @@ class ExtendedUsersManagerController extends UsersManagerController
 
     public function update($id, UpdateUsersManagerRequest $request)
     {
-        dd($id);
-        
+                
         $usersManager = $this->usersManagerRepository->findWithoutFail($id);
 
         if (empty($usersManager)) {
@@ -55,5 +55,22 @@ class ExtendedUsersManagerController extends UsersManagerController
         // return redirect(route('usersManagers.index'));
     }
 
+    public function destroy($id)
+    {
+        $usersManager = $this->usersManagerRepository->findWithoutFail($id);
+        // dd($usersManager);
+    
+        if (empty($usersManager)) {
+            Flash::error('Users Manager not found');
+
+            // return redirect(route('usersManagers.index'));
+        }
+
+        $this->usersManagerRepository->delete($id);
+
+        Flash::success('Users Manager deleted successfully.');
+
+        // return redirect(route('usersManagers.index'));
+    }
     
 }

@@ -178,23 +178,20 @@
             updateCompany: function() { 
                 delete this.modelCompany.created_at;
                 delete this.modelCompany.updated_at;
-
                 delete this.modelManager.created_at;
                 delete this.modelManager.updated_at;
-
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
-
-                        // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                        //     .then(response => {
+                        ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                            .then(response => {
                                 miniToastr.success("Manager atualizado com sucesso","Sucesso");
-                        //         this.reload();
-                        //         this.closeModals();
-                        //     })
-                        //     .catch(function(error) {
-                        //         ApiService.process_request_error(error);  
-                        //         miniToastr.error(error, "Erro atualizando Manager"); 
-                        //     });
+                                this.reload();
+                                this.closeModals();
+                            })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error);  
+                                miniToastr.error(error, "Erro atualizando Manager"); 
+                            });
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
@@ -203,26 +200,20 @@
             },
 
             deleteCompany: function(){
-                ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
+                ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
                     .then(response => {
-
-
-                        miniToastr.success("Companhia eliminada com sucesso","Sucesso");
-                        this.reload();
-                        this.closeModals();
-
-                        ApiService.delete(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                        
+                        ApiService.delete(this.users_url+'/'+this.modelManager.id)
                             .then(response => {
-                                // eliminar un manager en cascada!
-                                ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id, {'user_id':response.data.id} )
+                                ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
                                     .then(response => {
-                                        miniToastr.success("Manager eliminado com sucesso","Sucesso");
+                                        miniToastr.success("Companhia eliminada com sucesso","Sucesso");
                                         this.reload();
                                         this.closeModals();
                                     })
                                     .catch(function(error) {
                                         ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Manager"); 
+                                        miniToastr.error(error, "Erro eliminando Companhia"); 
                                     });
                             })
                             .catch(function(error) {
@@ -232,7 +223,7 @@
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Companhia"); 
+                        miniToastr.error(error, "Erro eliminando Manager"); 
                     });
             },
 

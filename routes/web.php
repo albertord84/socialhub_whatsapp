@@ -64,7 +64,7 @@ Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
 Route::resource('attendantsContacts', 'AttendantsContactController');
 
-Route::resource('companies', 'CompanyController');
+Route::resource('companies', 'ExtendedCompanyController');
 
 Route::resource('messagesStatuses', 'MessagesStatusController');
 

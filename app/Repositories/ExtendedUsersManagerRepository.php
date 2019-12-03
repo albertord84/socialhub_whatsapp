@@ -35,6 +35,7 @@ class ExtendedUsersManagerRepository extends UsersManagerRepository
 
     public function model()
     {
+        // return UsersManager::class;
         return ExtendedUsersManager::class;
     }
 
