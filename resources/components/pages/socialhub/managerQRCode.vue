@@ -61,7 +61,16 @@
                 ApiService.get(this.url)
                     .then(response => {
                         this.rpi = response.data;
-                        console.log(this.rpi);
+                        console.log(this.rpi.tunnel);
+                        ApiService.get(this.rpi.tunnel+'/qrcode')
+                            .then(response => {
+                                // console.log(response.data);
+                                console.log(response);
+                            })
+                            .catch(function(error) {
+                                miniToastr.error(error, "Error carregando os contatos");   
+                        });
+
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   

@@ -621,7 +621,7 @@
                     }
                 }
             },
-
+            
             getContacts: function() { //R
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken
@@ -638,13 +638,26 @@
                     });
             },
 
+            getAmountContactsInBag: function() { //R
+                ApiService.get('getBagContactsCount')
+                    .then(response => {
+                        this.amountContactsInBag = response.data;                        
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
+                    });
+            },
+
             getNewContactFromBag: function() { //R
                 ApiService.get(this.contacts_bag_url)
                     .then(response => {
                         this.modalNewContactFromBag = !this.modalNewContactFromBag;
                         var newContact = response.data;
                         newContact.index = this.contacts.length;
-                        this.contacts.push(newContact);
+                        var arr=[];
+                        arr.push(newContact);
+                        arr.push(this.contacts);
+                        tihs.contacts = Object.assign({}, arr);
                         miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                     })
                     .catch(function(error) {
@@ -965,6 +978,7 @@
         beforeMount() {
             this.user = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
+            this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
         },
@@ -1012,8 +1026,8 @@
             var company_id = JSON.parse(localStorage.user).company_id;
             window.Echo.channel('sh.contact-to-bag.' + company_id)
                 .listen('NewContactMessage', (e) => {
-                    //recibir la cantidad actual de contactos en la sacola y actualizar visual                    
-                    this.amountContactsInBag = JSON.parse(e.message).amountContactsInBag;
+                    // this.amountContactsInBag = JSON.parse(e.message).amountContactsInBag;
+                    this.amountContactsInBag = e.message;
                     console.log(e);
                 });
                 

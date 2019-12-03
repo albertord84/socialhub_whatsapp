@@ -22,6 +22,7 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('sendTextMessage', 'ExternalRPIController@sendMessage');
     Route::get('getContactInfo', 'ExternalRPIController@getContactInfo');
     Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
+    Route::get('getQRCode', 'ExternalRPIController@getQRCode');
 
     Route::post('update', 'ExternalRPIController@update');
 });
@@ -71,6 +72,7 @@ Route::resource('systemConfigs', 'SystemConfigController');
 
 Route::resource('chats', 'ExtendedChatController');
 Route::get('getBagContact', 'ExtendedChatController@getBagContact');
+Route::get('getBagContactsCount', 'ExtendedChatController@getBagContactsCount');
 
 Route::resource('test', 'TestController');
 

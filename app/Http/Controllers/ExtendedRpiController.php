@@ -28,8 +28,9 @@ class ExtendedRpiController extends RpiController
         if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
             $rpis = $this->rpiRepository->rpiOfCompany((int) $User->company_id);            
         }else{            
-            $this->rpiRepository->pushCriteria(new RequestCriteria($request));
-            $rpis = $this->rpiRepository->all();
+            // $this->rpiRepository->pushCriteria(new RequestCriteria($request));
+            // $rpis = $this->rpiRepository->all();
+            $rpis = null;
         }
         return $rpis->toJson();
     }

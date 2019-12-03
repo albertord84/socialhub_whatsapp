@@ -39,7 +39,7 @@ class ExtendedChatController extends ChatController
         
         $Contact = $this->chatRepository->getBagContact($attendant_id);
 
-        $newContactsCount = $this->chatRepository->getBagContactsCount();
+        $newContactsCount = $this->chatRepository->getBagContactsCount($User->company_id);
 
         $User = Auth::check() ? Auth::user() : session('logged_user');
         broadcast(new NewContactMessage($User->company_id, $newContactsCount));
@@ -64,6 +64,20 @@ class ExtendedChatController extends ChatController
 
         return $Contact->toJson();
     }
+    
+    public function getBagContactsCount(Request $request) //
+    {
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $newContactsCount = $this->chatRepository->getBagContactsCount($User->company_id);
+        return $newContactsCount;
+    }
+
+    /**
+     * Display a listing of the Chat.
+     * @param Request $request
+     * @return Response
+     */
+    
 
     /**
      * Display a listing of the Chat.
@@ -168,4 +182,6 @@ class ExtendedChatController extends ChatController
 
         return redirect(route('chats.index'));
     }
+
+
 }
