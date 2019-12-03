@@ -66,9 +66,12 @@ class ExtendedChatRepository extends ChatRepository
         }
     }
 
+    // public function getBagContactsCount(){
     public function getBagContactsCount(): int{
-        $count = $this->model()::select('*')->distinct()->count();
-        return $count;
+        // $count = $this->model()::select('contact_id')->groupBy('contact_id')->get();
+        $count = $this->model()::select('contact_id')->distinct()->get();
+
+        return $count->count();
     }
 
     public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
