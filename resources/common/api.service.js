@@ -29,7 +29,7 @@ const ApiService = {
         } else {
         }
         let params = '';
-        if (!_.isNaN(slug)) {
+        if (!_.isNaN(slug) && slug) {
             params = '?' + slug;
         }
         if (_.isObject(slug)) {

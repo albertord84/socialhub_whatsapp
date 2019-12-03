@@ -51,7 +51,7 @@ class ExtendedChatRepository extends ChatRepository
                 }
         
                 $Contact = Contact::find($firstBagChat->contact_id);
-                $Contact->update_as = Carbon::now();
+                $Contact->updated_at = Carbon::now();
                 $Contact->save();
                 
                 $AttendantsContact = new AttendantsContact();
@@ -66,9 +66,8 @@ class ExtendedChatRepository extends ChatRepository
         }
     }
 
-    // public function getBagContactsCount(){
+    // 
     public function getBagContactsCount(): int{
-        // $count = $this->model()::select('contact_id')->groupBy('contact_id')->get();
         $count = $this->model()::select('contact_id')->distinct()->get();
 
         return $count->count();

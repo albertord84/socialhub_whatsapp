@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Models\Rpi;
 use Illuminate\Database\Eloquent\Collection;
 
+use function React\Promise\Stream\first;
+
 /**
  * Class RpiRepository
  * @package App\Repositories
@@ -17,9 +19,9 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedRpiRepository extends RpiRepository
 {
     
-    public function rpiOfCompany(int $company_id): Collection
+    public function rpiOfCompany(int $company_id): Rpi
     {
-        $pri = $this->findWhere(['company_id' => $company_id]);
+        $pri = $this->findWhere(['company_id' => $company_id])->first();
 
         return $pri;
     }

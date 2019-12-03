@@ -7,6 +7,7 @@ use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Models\Rpi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use stdClass;
@@ -42,6 +43,27 @@ class ExternalRPIController extends Controller
         $version->version = '1.0.0';
 
         return json_encode($version);
+    }
+
+    /**
+     * Get QRCode
+     */
+    static public function getQRCode(Rpi $Rpi = null)//: stdClass
+    {
+        // $Rpi = new stdClass();
+        // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
+        $QRCode = new stdClass();
+        try {
+            $client = new \GuzzleHttp\Client();
+            $url = $Rpi->tunnel . '/qrcode';
+
+            $QRCode = $client->request('GET', $url);
+            $QRCode = $QRCode->getBody()->getContents();
+            $QRCode = json_decode($QRCode);
+            return $QRCode;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
