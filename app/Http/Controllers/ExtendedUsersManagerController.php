@@ -6,16 +6,11 @@ use App\Http\Requests\CreateUsersManagerRequest;
 use App\Http\Requests\UpdateUsersManagerRequest;
 use App\Repositories\ExtendedUsersManagerRepository;
 use Illuminate\Http\Request;
-use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Response;
-use Auth;
 
 class ExtendedUsersManagerController extends UsersManagerController
 {
-    /** @var  UsersManagerRepository */
-    private $usersManagerRepository;
-
+    
     public function __construct(ExtendedUsersManagerRepository $usersManagerRepo)
     {
         parent::__construct($usersManagerRepo);
@@ -37,6 +32,27 @@ class ExtendedUsersManagerController extends UsersManagerController
         $this->usersManagerRepository->pushCriteria(new RequestCriteria($request));
         $usersManagers = $this->usersManagerRepository->Managers_User($company_id);
         return $usersManagers->toJson();
+    }
+
+    public function update($id, UpdateUsersManagerRequest $request)
+    {
+        dd($id);
+        
+        $usersManager = $this->usersManagerRepository->findWithoutFail($id);
+
+        if (empty($usersManager)) {
+            // Flash::error('Users Manager not found');
+
+            // return redirect(route('usersManagers.index'));
+        }
+
+        $usersManager = $this->usersManagerRepository->update($request->all(), $id);
+
+        // Flash::success('Users Manager updated successfully.');
+
+        return $usersManager->toJson();
+
+        // return redirect(route('usersManagers.index'));
     }
 
     

@@ -118,17 +118,19 @@ class UsersManagerController extends AppBaseController
      */
     public function update($id, UpdateUsersManagerRequest $request)
     {
+        
+        
         $usersManager = $this->usersManagerRepository->findWithoutFail($id);
 
         if (empty($usersManager)) {
-            Flash::error('Users Manager not found');
+            // Flash::error('Users Manager not found');
 
-            return redirect(route('usersManagers.index'));
+            // return redirect(route('usersManagers.index'));
         }
 
         $usersManager = $this->usersManagerRepository->update($request->all(), $id);
 
-        Flash::success('Users Manager updated successfully.');
+        // Flash::success('Users Manager updated successfully.');
 
         return $usersManager->toJson();
 

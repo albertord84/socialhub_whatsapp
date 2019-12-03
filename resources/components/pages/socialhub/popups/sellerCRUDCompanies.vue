@@ -90,7 +90,8 @@
     miniToastr.init();
     
     export default {
-        name: 'adminCRUDSellers',
+        // name: 'adminCRUDSellers',
+        name: 'sellersCRUDCompanies',
 
         props: {
             companies_url:'',
@@ -175,34 +176,25 @@
             },
 
             updateCompany: function() { 
-                delete model_cpy.created_at;
-                delete model_cpy.updated_at;
-                delete model_cpy.deleted_at;
-                ApiService.post(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
+                delete this.modelCompany.created_at;
+                delete this.modelCompany.updated_at;
+
+                delete this.modelManager.created_at;
+                delete this.modelManager.updated_at;
+
+                ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
 
-                        ApiService.post(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                            .then(response => {
-
-                                ApiService.post(this.usersManager_url+'/'+this.modelManager.user_id, {'user_id':response.data.id})
-                                        .then(response => {
-                                            miniToastr.success("Manager atualizado com sucesso","Sucesso");
-                                                this.reload();
-                                                this.closeModals();
-                                        })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error);  
-                                            miniToastr.error(error, "Erro atualizando Manager"); 
-                                        });
-                                                                
+                        // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                        //     .then(response => {
                                 miniToastr.success("Manager atualizado com sucesso","Sucesso");
-                                    this.reload();
-                                    this.closeModals();
-                            })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro atualizando Manager"); 
-                            });
+                        //         this.reload();
+                        //         this.closeModals();
+                        //     })
+                        //     .catch(function(error) {
+                        //         ApiService.process_request_error(error);  
+                        //         miniToastr.error(error, "Erro atualizando Manager"); 
+                        //     });
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
