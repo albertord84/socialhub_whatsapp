@@ -12,6 +12,10 @@ const menu_items = [
         link: '/manager/attendant',
         icon: ' fa fa-headphones'
      }, {
+        name: 'Código QR',
+        link: '/manager/qrcode',
+        icon: ' fa fa-headphones'
+     }, {
          name: 'Empresa',
          link: '/manager/company',
          icon: ' fa fa-building-o'

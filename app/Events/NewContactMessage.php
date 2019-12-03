@@ -21,9 +21,9 @@ class NewContactMessage implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(int $company_id)
+    public function __construct(int $company_id, ?int $new_contacts_count)
     {
-        $this->message = "New Contact to Bag";
+        $this->message = $new_contacts_count;
         $this->channel = "sh.contact-to-bag.$company_id";
     }
 

@@ -12,6 +12,29 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedContactRepository extends ContactRepository
 {
 
+    /**
+     * Get All Contact Attendants Last Firts
+     *
+     * @param integer $contact_id
+     * @return Collection
+     */
+    function getAttendants(int $contact_id): Collection
+    {
+        $Collection = new Collection();
+        try {
+            $Contact = $this->find($contact_id);
+            $Attendants = $Contact->attendantsContacts()->orderBy('created_at', 'asc')->get();
+            // $Attendants = $this->with(['attendantsContacts' => function($query) {
+            //     $query->where('contact_id', 1);
+            // }])->get();
+            $Collection = $Attendants;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        return $Collection;
+    }
+
     public function fullContacts(int $company_id, ?int $attendant_id): Collection
     {
         $Collection = new Collection();
@@ -46,7 +69,7 @@ class ExtendedContactRepository extends ContactRepository
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                     ->where('contact_id', $Contact->id)
-                    ->where('status_id', 1)
+                    ->where('status_id', 6) //UNREADED message for me
                     ->count();
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 

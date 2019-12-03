@@ -9,7 +9,7 @@ class FileUtils extends Business
 {
     public function __construct()
     {
-        base::__construct();
+        parent::__construct();
     }
 
     public static function SavePostFile(UploadedFile $file, ?string $FilePath = '', ?string $file_name = null): stdClass

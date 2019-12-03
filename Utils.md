@@ -61,3 +61,6 @@ php artisan config:clear
 
 
 php artisan serve --host=192.168.25.6
+
+# Advanced Elloquent Querys
+https://m.dotdev.co/writing-advanced-eloquent-search-query-filters-de8b6c2598db

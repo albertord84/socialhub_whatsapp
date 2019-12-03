@@ -19,6 +19,12 @@ const layout = [
         title: "Chat",
     }
 },{
+    path: '/manager/qrcode',
+    component: resolve => require(['pages/socialhub/managerQRCode'], resolve),
+    meta: {
+        title: "QR Code",
+    }
+},{
     path: '/manager/company',
     component: resolve => require(['pages/socialhub/managerCompany'], resolve),
     meta: {

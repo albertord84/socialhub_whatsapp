@@ -32,6 +32,7 @@ class Chat extends Model
     public $fillable = [
         'contact_id',
         'attendant_id',
+        'company_id',
         'source',
         'message',
         'type_id',
@@ -49,6 +50,7 @@ class Chat extends Model
         'id' => 'integer',
         'contact_id' => 'integer',
         'attendant_id' => 'integer',
+        'company_id' => 'integer',
         'source' => 'integer',
         'message' => 'string',
         'type_id' => 'integer',

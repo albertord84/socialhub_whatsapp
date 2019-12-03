@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <validate tag="div">
                             <div style="" class="form-group has-search">
-                                <span class="fa fa-envelope form-control-feedback"></span>
+                                <span class="mdi mdi-email-outline form-control-feedback"></span>
                                 <input v-model="model.email" name="email" id="email" type="email" placeholder="E-mail" class="form-control"/>
                             </div>
                             <field-messages name="email" show="$invalid && $submitted" class="text-danger">

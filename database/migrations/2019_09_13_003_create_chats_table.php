@@ -23,6 +23,7 @@ class CreateChatsTable extends Migration
 			$table->integer('id', true);
 			$table->integer('contact_id')->nullable()->index('fk_chats_contact');
 			$table->integer('attendant_id')->nullable()->index('fk_chats_attendant');
+			$table->integer('company_id')->nullable();
 			$table->integer('source')->nullable();
 			$table->integer('response_to')->nullable(); //pointer for indicate the message thar has been answered
 			$table->text('message', 65535)->nullable();
