@@ -4,18 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUsersManagerRequest;
 use App\Http\Requests\UpdateUsersManagerRequest;
+use App\Models\UsersManager;
 use App\Repositories\ExtendedUsersManagerRepository;
 use Illuminate\Http\Request;
-use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Response;
-use Auth;
-
+use Laracasts\Flash\Flash;
 class ExtendedUsersManagerController extends UsersManagerController
 {
-    /** @var  UsersManagerRepository */
-    private $usersManagerRepository;
-
+    
     public function __construct(ExtendedUsersManagerRepository $usersManagerRepo)
     {
         parent::__construct($usersManagerRepo);
@@ -39,5 +35,42 @@ class ExtendedUsersManagerController extends UsersManagerController
         return $usersManagers->toJson();
     }
 
+    public function update($id, UpdateUsersManagerRequest $request)
+    {
+                
+        $usersManager = $this->usersManagerRepository->findWithoutFail($id);
+
+        if (empty($usersManager)) {
+            // Flash::error('Users Manager not found');
+
+            // return redirect(route('usersManagers.index'));
+        }
+
+        $usersManager = $this->usersManagerRepository->update($request->all(), $id);
+
+        // Flash::success('Users Manager updated successfully.');
+
+        return $usersManager->toJson();
+
+        // return redirect(route('usersManagers.index'));
+    }
+
+    public function destroy($id)
+    {
+        $usersManager = $this->usersManagerRepository->findWithoutFail($id);
+        // dd($usersManager);
+    
+        if (empty($usersManager)) {
+            Flash::error('Users Manager not found');
+
+            // return redirect(route('usersManagers.index'));
+        }
+
+        $this->usersManagerRepository->delete($id);
+
+        Flash::success('Users Manager deleted successfully.');
+
+        // return redirect(route('usersManagers.index'));
+    }
     
 }

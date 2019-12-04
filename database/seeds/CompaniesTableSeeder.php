@@ -25,5 +25,7 @@ class CompaniesTableSeeder extends Seeder
             'description' => 'Companie Social Hub',
         ]);
         $this->command->info('Companie Social Hub');
+
+        
     }
 }

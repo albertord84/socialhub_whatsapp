@@ -21,18 +21,21 @@ use Illuminate\Database\Eloquent\Collection;
 class ExtendedUsersManagerRepository extends UsersManagerRepository
 {
     
-    public function Managers_User(int $company_id): Collection
+    public function Managers_User(int $company_id)
     {
+        
         $role_id = 3;
-        $Manager = $this->with(['user' => function($q) use ($company_id, $role_id) {
-            $q->where(['company_id', '=', $company_id, 'role_id', '=', $role_id]);
-        }])->get();
+
+        $Manager = $this->with('user')->whereHas('user', function($q) use ($company_id, $role_id) {
+            $q->where(['company_id' => $company_id, 'role_id' => $role_id]);
+        })->get();  
 
         return $Manager;
     }
 
     public function model()
     {
+        // return UsersManager::class;
         return ExtendedUsersManager::class;
     }
 

@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\ExtendedUserRepository;
 use App\User;
 use Illuminate\Http\Request;
-use Flash;
+use Laracasts\Flash\Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use Auth;
@@ -150,7 +150,7 @@ class ExtendedUserController extends UserController
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('users.index'));
+            // return redirect(route('users.index'));
         }
 
         $this->userRepository->delete($id);

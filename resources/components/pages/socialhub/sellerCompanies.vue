@@ -178,11 +178,6 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Manager',
-                        field: 'manager_name',
-                        numeric: false,
-                        html: false,
-                    }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -240,20 +235,17 @@
                 this.companies_id = value.id; 
                 ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
                     .then(response => {
-                        var This = this;
-                        for(let item of response.data){
-                            if(item.user){
-                                This.model_manager = item; 
-                                break;
+                        try {
+                            this.model_manager  = response.data[0];
+                            for (var key in this.model_manager.user) {
+                                this.model_manager[key] = this.model_manager.user[key];
                             }
+                            delete this.model_manager.user;
+                            this.modalEditCompanies = !this.modalEditCompanies;
+                            
+                        } catch (error) {
+                            console.log(error);
                         }
-                        // response.data.forEach(function (item, index) {
-                        //     if(item.user)
-                        //         This.model_manager = item;                                
-                        // });
-                        console.log(this.model_company);
-                        console.log(this.model_manager);
-                        this.modalEditCompanies = !this.modalEditCompanies;
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Erro obtendo Manager");   
@@ -261,10 +253,25 @@
             },
 
             actionDeleteCompanies: function(value){
-                this.model_company = value;
-                this.model_manager = this.getUserManager(this.model_company.id);
-                this.companies_id = value.id;
-                this.modalDeleteCompanies = !this.modalDeleteCompanies;
+                this.model_company = Object.assign({}, value);
+                this.companies_id = value.id; 
+                
+                ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
+                    .then(response => {
+                        try {
+                            this.model_manager  = response.data[0];
+                            for (var key in this.model_manager.user) {
+                                this.model_manager[key] = this.model_manager.user[key];
+                            }
+                            delete this.model_manager.user;
+                            this.modalDeleteCompanies = !this.modalDeleteCompanies;
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Erro obtendo Manager");   
+                    });
             },
 
 
