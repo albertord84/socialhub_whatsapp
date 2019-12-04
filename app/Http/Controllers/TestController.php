@@ -50,7 +50,7 @@ class TestController extends AppBaseController
         // dd($Contact);
 
         $ChatsBussines = new ChatsBusiness();
-        return $ChatsBussines->getBagContactsCount();
+        return $ChatsBussines->getBagContactsCount(1);
 
 
 

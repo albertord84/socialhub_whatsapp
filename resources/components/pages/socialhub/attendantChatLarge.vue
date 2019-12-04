@@ -2,6 +2,13 @@
     <div class="row chat p-0" style="background-color:#fefefe !important">
 
         <left-side-bar  :left_layout ="left_layout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        
+        <audio ref="newMessageSound" controls autoplay style="display:none" class="mycontrolBar">
+            <source src="audio/newMessage.ogg#t=1" type="audio/ogg">
+        </audio>
+        <audio ref="newContactInBag" controls autoplay style="display:none" class="mycontrolBar">
+            <source src="audio/newContactInBag.ogg" type="audio/ogg">
+        </audio>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -15,7 +22,7 @@
                         </li>
                         <ul class='menu' style="float:right; margin-right:5px">
                             <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
-                            <li><i class="fa fa-bell-o icons-action mt-1" title="Buscar contato" @click.prevent="triggerNewMessageSound"></i></li>
+                            <!-- <li><i class="fa fa-bell-o icons-action mt-1" title="Buscar contato" @click.prevent="triggerNewMessageSound"></i></li> -->
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -105,10 +112,7 @@
         </div>
 
         <!-- Center side of chat-->
-        <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->
-            <audio ref="newMessageSound" controls style="display:none" class="mycontrolBar">
-                <source src="audio/newMessage.ogg#t=1" type="audio/ogg">
-            </audio>
+        <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
             <div v-if="selected_contact_index>=0" class="converstion_back">
                 <div class="sect_header">                    
                     <ul class='menu'>                        
@@ -604,12 +608,15 @@
                     try {
                         ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                         .then(response => {
-                            if (response.data.data) {
-                                response.data.data = JSON.parse(response.data.data);
-                                response.data.path = this.pathContactMessageFile(response.data.contact_id, response.data.data.SavedFileName);
+                            var message = response.data;
+                            if (message.data) {
+                                message.data = JSON.parse(message.data);
+                                message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
-                            this.messages.push(response.data);
-                            this.contacts[this.selected_contact_index].last_message = this.newMessage;
+                            message.time = this.get_message_time(message.created_at)
+                            this.messages[this.messages.length]=message;
+                            this.contacts[this.selected_contact_index].last_message = message;
+                            // this.messages.push(message);
                             this.newMessage.message = "";
                             this.file = null;
                             this.$refs.message_scroller.scrolltobottom();
@@ -659,10 +666,7 @@
                         this.modalNewContactFromBag = !this.modalNewContactFromBag;
                         var newContact = response.data;
                         newContact.index = this.contacts.length;
-                        var arr=[];
-                        arr.push(newContact);
-                        arr.push(this.contacts);
-                        tihs.contacts = Object.assign({}, arr);
+                        this.contacts.unshift(newContact);
                         miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                     })
                     .catch(function(error) {
@@ -707,8 +711,6 @@
                                 }
                             });
                             This.messages = Object.assign({}, This.messages_copy);
-                            console.log(This.messages);
-
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
@@ -790,10 +792,6 @@
                     //mais de 7 dias atrás retornar "dia/mes/ano"
                     return {'hour':timeString,'date':date_format.getDate().toString().padStart(2, '0') + '/' + (date_format.getMonth()+1).toString().padStart(2, '0')+ '/' + date_format.getFullYear().toString().padStart(4, '0')};
                 }
-            },
-
-            triggerNewMessageSound(){
-                this.$refs.newMessageSound.play();
             },
 
             trigger (referenceFile) {
@@ -1016,9 +1014,11 @@
                                     message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
                         } catch (error) {
-                            console.log(error);                                    
+                            console.log(error);
                         }
-                        this.messages.push(message);
+
+                        message.time = this.get_message_time(message.created_at)
+                        this.messages[this.messages.length]=message;
                         this.contacts[this.selected_contact_index].last_message = message;
                         this.$refs.message_scroller.scrolltobottom();
                     }else{
@@ -1030,15 +1030,16 @@
                             }
                         });
                     }
-                    this.triggerNewMessageSound();
+                    this.$refs.newMessageSound.play();
                 });
 
             var company_id = JSON.parse(localStorage.user).company_id;
             window.Echo.channel('sh.contact-to-bag.' + company_id)
                 .listen('NewContactMessage', (e) => {
-                    // this.amountContactsInBag = JSON.parse(e.message).amountContactsInBag;
-                    this.amountContactsInBag = e.message;
+                    if(this.amountContactsInBag<e.message)
+                        this.$refs.newContactInBag.play();
                     console.log(e);
+                    this.amountContactsInBag = e.message;
                 });
                 
         },
