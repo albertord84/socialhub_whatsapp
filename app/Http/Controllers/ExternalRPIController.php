@@ -174,7 +174,7 @@ class ExternalRPIController extends Controller
      */
     public function messageToChatModel(array $input, ?Contact $Contact): ExtendedChat
     {
-        if (strpos("@g.us", $input['Msg']) !== false) return null;
+        // if (strpos("@g.us", $input['Msg']) !== false) return null;
 
         $contact_Jid = $input['Jid'];
         $input['Type'] = isset($input['Type']) ? $input['Type'] : 'text';
