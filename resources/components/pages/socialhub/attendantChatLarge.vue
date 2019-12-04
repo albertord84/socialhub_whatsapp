@@ -616,7 +616,6 @@
                             message.time = this.get_message_time(message.created_at)
                             this.messages[this.messages.length]=message;
                             this.contacts[this.selected_contact_index].last_message = message;
-                            // this.messages.push(message);
                             this.newMessage.message = "";
                             this.file = null;
                             this.$refs.message_scroller.scrolltobottom();
@@ -667,6 +666,10 @@
                         var newContact = response.data;
                         newContact.index = this.contacts.length;
                         this.contacts.unshift(newContact);
+                        var i = 0;
+                        this.contacts.forEach(function(item, i){
+                            item.index = i++;
+                        });
                         miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                     })
                     .catch(function(error) {
