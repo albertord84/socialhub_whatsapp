@@ -12,8 +12,8 @@
                 <i class="fa fa-camera icons-action" @click.prevent="trigger()" title="Trocar imagem" style="position:relative; top:-40px; left:-30px"></i>
             </span>
             <div class="card-block mt-1">
-                <hr>
-                <div class="tweet-details">
+                <div v-if="contacts!=null" class="tweet-details">
+                    <hr>
                     <div class="row text-center">
                         <div class="col-6">
                             <p class="count">{{contacts.length}}</p>
@@ -24,8 +24,8 @@
                             <p>Mensagens novas</p>
                         </div>
                     </div>
+                    <hr>
                 </div>
-                <hr>
                 <div class="row">
                     <div class="col-12 ml-3">
                         <p class="text-muted font-weight-bold">INFORMAÇÃO PESSOAL</p>
@@ -37,7 +37,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.CPF}}</span>
-                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" class="border-0 font-italic">
+                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -49,7 +49,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.phone}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.phone" class="border-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.phone" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -61,7 +61,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.whatsapp_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" class="border-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -73,7 +73,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.facebook_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.facebook_id" class="border-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.facebook_id" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -85,7 +85,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.instagram_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.instagram_id" class="border-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.instagram_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -97,7 +97,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.linkedin_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.linkedin_id" class="border-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.linkedin_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -109,8 +109,8 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Senha</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <input v-show="!watchPassword" type="text" v-model="password" class="border-0" placeholder="Nova senha">
-                                    <input v-show="watchPassword" ref="password" type="password" v-model="password" class="border-0 font-italic">
+                                    <input v-show="!watchPassword" type="text" v-model="password" class="border border-top-0 border-left-0 border-right-0 " placeholder="Nova senha">
+                                    <input v-show="watchPassword" ref="password" type="password" v-model="password" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -121,8 +121,8 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Repetir senha</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <input v-show="!watchRepeatPassword" type="text" v-model="repeat_password" class="border-0" placeholder="Repetir senha">
-                                    <input v-show="watchRepeatPassword" ref="repeat_password" type="password" v-model="repeat_password" class="border-0 font-italic">
+                                    <input v-show="!watchRepeatPassword" type="text" v-model="repeat_password" class="border border-top-0 border-left-0 border-right-0 " placeholder="Repetir senha">
+                                    <input v-show="watchRepeatPassword" ref="repeat_password" type="password" v-model="repeat_password" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -182,10 +182,12 @@
                     miniToastr.error("As senhas fornecidas não coincidem. Por favor, confira!", "Erro");  
                     return;
                 }
-                if(this.password.trim() =='')
+                if(this.password.trim() ==''){
                     delete this.model.password;
-                else
+                }
+                else{
                     this.model.password = this.password;
+                }
                 this.isSending = true;
                 ApiService.put(this.url+'/'+this.model.id, this.model)
                 .then(response => {

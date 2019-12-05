@@ -15,7 +15,6 @@
                         </li>
                         <ul class='menu' style="float:right; margin-right:5px">
                             <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
-                            <li><i class="fa fa-bell-o icons-action mt-1" title="Buscar contato" @click.prevent="triggerNewMessageSound"></i></li>
                             <li>
                                 <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
@@ -332,36 +331,55 @@
             <div v-if="selected_contact_index>=0" class="profile sec_decription bg-white">
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
+
                         <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
+                        
                         <h4 class="profile-decription-name">{{contacts[selected_contact_index].first_name}}</h4>
-                        <div style="position:relative; margin-left:28%">
-                            <ul  class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].whatsapp_id)"><i class="mdi mdi-whatsapp fa-1_5x text-muted social-network"></i></li>
-                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].facebook_id)"><i class="mdi mdi-facebook fa-1_5x text-muted social-network"></i></li>
-                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].instagram_id)"><i class="mdi mdi-instagram fa-1_5x text-muted social-network"></i></li>
-                                <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].linkedin_id)"><i class="mdi mdi-linkedin fa-1_5x text-muted social-network"></i></li>
+                        
+                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                            <div class="row" >
+                                <div class="col-lg-1 p-2 ml-3">
+                                    <i class="fa fa-user-o text-muted" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-8 p-1" style="text-align:left">
+                                    <span class="text-muted" style="font-size:1.1em">Informação</span>
+                                </div>
+                                <div class="col-lg-1 p-2" >
+                                    <i v-show="contactInformation" class="fa fa-pencil text-muted" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-1 p-2" >
+                                    <i v-show="!contactInformation" class="fa fa-plus text-muted" aria-hidden="true" @click.prevent="contactInformation=!contactInformation"></i>
+                                    <i v-show="contactInformation" class="fa fa-minus text-muted" aria-hidden="true" @click.prevent="contactInformation=!contactInformation"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="contactInformation" class="border p-1 mr-2 fadeIn">
+                            <!-- <div style="position:relative; margin-left:28%">
+                                <ul  class="list-group list-group-horizontal">
+                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].whatsapp_id)"><i class="mdi mdi-whatsapp fa-1_5x text-muted social-network"></i></li>
+                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].facebook_id)"><i class="mdi mdi-facebook fa-1_5x text-muted social-network"></i></li>
+                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].instagram_id)"><i class="mdi mdi-instagram fa-1_5x text-muted social-network"></i></li>
+                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].linkedin_id)"><i class="mdi mdi-linkedin fa-1_5x text-muted social-network"></i></li>
+                                </ul>
+                            </div>
+                            <p v-show="selectedSocialNetwork!=''">{{selectedSocialNetwork}}</p> -->
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important"><span >{{contacts[selected_contact_index].email}}</span></li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-cellphone-android fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important"><span class="mt-1">{{contacts[selected_contact_index].phone}}</span></li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Resumo"><i class="mdi mdi-account-details fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].summary}}</span></li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Lembrete"><i class="mdi mdi-reminder fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].remember}}</span></li>
                             </ul>
                         </div>
-                        <!-- <p v-show="selectedSocialNetwork!=''">{{selectedSocialNetwork}}</p> -->
-                        
-                        <hr>
-                        
-                        <ul class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
-                            <li style="margin-top:1em !important"><span >{{contacts[selected_contact_index].email}}</span></li>
-                        </ul>
-                        <ul class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-cellphone-android fa-1_5x text-muted"></i></li>
-                            <li style="margin-top:1em !important"><span class="mt-1">{{contacts[selected_contact_index].phone}}</span></li>
-                        </ul>
-                        <ul class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0" title="Resumo"><i class="mdi mdi-account-details fa-1_5x text-muted"></i></li>
-                            <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].summary}}</span></li>
-                        </ul>
-                        <ul class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0" title="Lembrete"><i class="mdi mdi-reminder fa-1_5x text-muted"></i></li>
-                            <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].remember}}</span></li>
-                        </ul>
 
                         <!-- <div class="attachments  p-4">
                             <h5>Últimos anexos</h5>
@@ -550,6 +568,10 @@
 
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
+                
+                
+                contactInformation:false,
+
 
                 messageTimeDelimeter:'',
 
@@ -1631,6 +1653,20 @@
         cursor: pointer;
     }
 
+    .icons-action-2{
+        color:#949aa2;
+        background-color:#fcf8f8;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+        border-radius:50px
+    }
+
+    .icons-action-2:hover{
+        background-color: #f1f0f0;
+        cursor: pointer;
+    }
+
     .border-left-message{
         border-top-left-radius: 30px;
         border-bottom-left-radius: 30px;
@@ -1733,6 +1769,49 @@
 
     .cl-gray{
         background-color: silver;
+    }
+
+    .cursor-pointer:hover{
+        cursor: pointer;
+    }
+
+
+
+    .fadeIn {
+        -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+        -moz-animation: fadein 1s; /* Firefox < 16 */
+            -ms-animation: fadein 1s; /* Internet Explorer */
+            -o-animation: fadein 1s; /* Opera < 12.1 */
+                animation: fadein 1s;
+    }
+
+    @keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Firefox < 16 */
+    @-moz-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Safari, Chrome and Opera > 12.1 */
+    @-webkit-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Internet Explorer */
+    @-ms-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Opera < 12.1 */
+    @-o-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
     }
 
 </style>

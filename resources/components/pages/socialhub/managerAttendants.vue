@@ -87,7 +87,7 @@
 
         <!-- Delete Attendant Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
+            <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
         </b-modal>
 
     </div>
@@ -131,6 +131,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
                 first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
                 

@@ -22,6 +22,8 @@ class ExtendedCompanyRepository extends CompanyRepository
         'name',
         'phone',
         'email',
+        'whatsapp',
+        'ngrok_url',
         'description',
         'user_seller_id'
     ];

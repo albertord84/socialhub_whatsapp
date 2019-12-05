@@ -77,6 +77,7 @@
         name: 'managerCRUDAttendant',
 
         props: {
+            attendant_contact_url: '', // attendantsContacts controller url 
             first_url:'', //user controller url 
             url:'', //userAttendant controller url 
             action: "",
@@ -157,14 +158,22 @@
             },
 
             deleteAttendant: function(){
-                ApiService.delete(this.url+'/'+this.item.id)
+                ApiService.delete(this.attendant_contact_url+'/'+this.item.id)
                     .then(response => {
-                        //TODO-JR: eliminar un atendente elimina en cascada?
-                        ApiService.delete(this.first_url+'/'+this.item.id)
+                        
+                        ApiService.delete(this.url+'/'+this.item.id)
                             .then(response => {
-                                miniToastr.success("Atendente eliminado com sucesso","Sucesso");
-                                this.reload();
-                                this.closeModals();
+                                //TODO-JR: eliminar un atendente elimina en cascada?
+                                ApiService.delete(this.first_url+'/'+this.item.id)
+                                    .then(response => {
+                                        miniToastr.success("Atendente eliminado com sucesso","Sucesso");
+                                        this.reload();
+                                        this.closeModals();
+                                    })
+                                    .catch(function(error) {
+                                        ApiService.process_request_error(error);  
+                                        miniToastr.error(error, "Erro eliminando Atendente"); 
+                                    });
                             })
                             .catch(function(error) {
                                 ApiService.process_request_error(error);  
