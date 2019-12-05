@@ -41,6 +41,7 @@ class ExternalRPIController extends Controller
      */
     public function update(Request $request)
     {
+        $rpiMAC = ''; // $request->MAC;
         $version = new stdClass;
         $version->version = '1.0.0';
 
