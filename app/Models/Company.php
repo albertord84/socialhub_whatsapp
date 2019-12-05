@@ -34,6 +34,8 @@ class Company extends Model
         'name',
         'phone',
         'email',
+        'whatsapp',
+        'ngrok_url',
         'description',
         // 'user_seller_id'
     ];
@@ -49,6 +51,8 @@ class Company extends Model
         'name' => 'string',
         'phone' => 'string',
         'email' => 'string',
+        //'whatsapp'=> 'string',
+        //'ngrok_url' => 'string',
         'description' => 'string',
         ///'user_seller_id'
     ];

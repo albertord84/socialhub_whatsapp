@@ -6,17 +6,17 @@
                     <h3>Dados da empresa</h3>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-user form-control-feedback"></span>
+                            <span class="fa fa-id-card form-control-feedback"></span>
                             <input v-model="modelCompany.CNPJ" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-envelope form-control-feedback"></span>
+                            <span class="fa fa-building-o form-control-feedback"></span>
                             <input v-model="modelCompany.name" id="name" name="name" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-user form-control-feedback"></span>
+                            <span class="fa fa-phone form-control-feedback"></span>
                             <input v-model="modelCompany.phone" name="phone" id="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
@@ -24,6 +24,18 @@
                             <input v-model="modelCompany.email" id="email" name="email" type="email" required placeholder="Email" class="form-control"/>                            
                         </div>                                                      
                     </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-whatsapp form-control-feedback"></span>
+                            <input v-model="modelCompany.whatsapp" name="whatsapp" id="whatsapp" type="text" required placeholder="whatsapp (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelCompany.ngrok_url" id="ngrok_url" name="ngrok_url" type="text" required placeholder="URL" class="form-control"/>                            
+                        </div>                                                      
+                    </div>
+
                     <div class="row">
                         <div class="col-lg-12 form-group has-search">
                             <textarea v-model="modelCompany.description" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
@@ -39,7 +51,7 @@
                             <input v-model="modelManager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <span class="fa fa-envelope form-control-feedback"></span>
                             <input v-model="modelManager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
                         </div>
                     </div>
@@ -112,7 +124,10 @@
                     name: "",
                     phone: "",
                     email: "",
+                    whatsapp: "",
+                    ngrok_url: "",
                     description: "",
+
                 },
                 modelManager:{ //manager da empresa
                     name: "",
@@ -233,6 +248,8 @@
                 this.modelCompany.phone = "";
                 this.modelCompany.email = "";
                 this.modelCompany.description = "";
+                this.modelCompany.whatsapp = "";
+                this.modelCompany.ngrok_url = "";
 
                 this.modelManager.name = "";
                 this.modelManager.login = "";

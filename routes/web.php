@@ -62,7 +62,8 @@ Route::resource('passwordResets', 'PasswordResetController');
 Route::resource('contacts', 'ExtendedContactController');
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
-Route::resource('attendantsContacts', 'AttendantsContactController');
+//Route::resource('attendantsContacts', 'AttendantsContactController');
+Route::resource('attendantsContacts', 'ExtendedAttendantsContactController'); //ECR
 
 Route::resource('companies', 'ExtendedCompanyController');
 

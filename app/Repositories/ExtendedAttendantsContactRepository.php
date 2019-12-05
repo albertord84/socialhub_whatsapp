@@ -35,5 +35,6 @@ class ExtendedAttendantsContactRepository extends AttendantsContactRepository
     public function deleteAllByContanct(int $contact_id)
     {
         ExtendedAttendantsContact::where("contact_id", $contact_id)->delete();
+        
     }
 }

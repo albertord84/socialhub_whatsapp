@@ -53,9 +53,12 @@
                             <img :src="pictureProfile" class="my-rounded-circle" alt="User Image">
                         </template>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="admin/user_profile" exact class="drpodowtext">
+                            <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" exact class="drpodowtext">
                                 <i class="fa fa-user-o"></i> Perfil
-                            </router-link>
+                            </a>
+                            <!-- <router-link to="admin/user_profile" exact class="drpodowtext">
+                                <i class="fa fa-user-o"></i> Perfil
+                            </router-link> -->
                         </b-dropdown-item>
                         <!-- <b-dropdown-item exact class="dropdown_content">
                             <router-link to="/admin/edit_user" exact class="drpodowtext">
@@ -83,19 +86,33 @@
 
 
         </nav>
+        <!-- Modal to show user datas-->
+        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" >
+            <userCRUDDatas :contacts='contacts'></userCRUDDatas>
+        </b-modal>
     </header>
 </template>
 <script>
-    import screenfull from "screenfull"
+    import Vue from 'vue';
+    import screenfull from "screenfull";
+    import miniToastr from "mini-toastr";
+    miniToastr.init();
+    import ApiService from "src/common/api.service";
+    import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
 
     export default {
         name: "vueadmin_header",
+        components:{
+            userCRUDDatas
+        },
 
         data() {
             return {
                 name: "",
                 user: {},
                 pictureProfile:'',
+                modalUserCRUDDatas:false,
+                contacts:null,
             }
         },
 
@@ -134,6 +151,13 @@
                 this.name = JSON.parse(this.user)['name'];
                 this.pictureProfile = JSON.parse(this.user)['image_path'];
             }
+        },
+
+        created() {
+            miniToastr.setIcon("error", "i", {class: "fa fa-times"});
+            miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
+            miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
+            miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
         },
     }
 </script>
