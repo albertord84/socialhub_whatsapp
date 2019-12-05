@@ -21,10 +21,18 @@ class CompaniesTableSeeder extends Seeder
         Company::create([
             'id' => '1',
             'name' => 'Social Hub',
-            'phone' => '5521965536174@c.us',
+            'phone' => '5511970111071@c.us',
+            'rpi_id' => '1',
             'description' => 'Companie Social Hub',
         ]);
-        $this->command->info('Companie Social Hub');
+        Company::create([
+            'id' => '2',
+            'name' => 'Alberto Develop',
+            'phone' => '5521965536174@c.us',
+            'rpi_id' => '2',
+            'description' => 'Companie Alberto Develop',
+        ]);
+        $this->command->info('Companie Alberto Develop');
 
         
     }

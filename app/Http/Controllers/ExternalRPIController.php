@@ -35,23 +35,45 @@ class ExternalRPIController extends Controller
     }
 
     /**
-     * Display a listing of the Chat.
+     * Update or Register RPi.
      * @param Request $request
      * @return Response
      */
     public function update(Request $request)
     {
         $rpiMAC = ''; // $request->MAC;
-        $version = new stdClass;
-        $version->version = '1.0.0';
+        $rpiUser = 'socialhub'; // $request->user;
+        $rpiPass = 'socialhub'; // $request->password;
 
-        return json_encode($version);
+        $RPI = new stdClass;
+        if ($rpiMAC) {
+            // Response
+            $RPI->software_version = '0.1.0';
+            $RPI->software_download_url = env('SOFTWARE_DOWNLOAD_URL', 'http://app.sociahub.pro/storage/RPI/bin/shwhatsapp/main0.1.0');
+    
+            $RPI->api_tunnel = 'http://shrpisocialhub.sa.ngrok.io.ngrok.io';
+            $RPI->api_user = 'socialhub';
+            $RPI->api_pass = 'socialhub'; // bcrypt('socialhub');
+    
+            $RPI->tcp_tunnel = '1.tcp.ngrok.io';
+            $RPI->tcp_port = '29426';
+            $RPI->root_user = 'socialhub';
+            $RPI->root_password = 'socialhub'; // bcrypt('socialhub');
+    
+            $RPI->company = Company::where(['mac' => $rpiMAC])->first();
+        }
+        else {
+            $this.registerNewRPI($rpiMAC);
+        }
+
+        return json_encode($RPI);
     }
 
     /**
      * Get QRCode
      */
-    static public function getQRCode(Rpi $Rpi = null)//: stdClass
+    public static function getQRCode(Rpi $Rpi = null) //: stdClass
+
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -73,7 +95,8 @@ class ExternalRPIController extends Controller
      * Get Contact Info
      */
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
-    public function getContactInfo(string $contact_id = '5521976550734')//: stdClass
+    public function getContactInfo(string $contact_id = '5521976550734') //: stdClass
+
     {
         $contactInfo = new stdClass();
         try {
@@ -81,7 +104,7 @@ class ExternalRPIController extends Controller
             $url = $this->APP_WP_API_URL . '/GetContact';
 
             $contactInfo = $client->request('GET', $url, [
-                'query' => ['RemoteJid' => $contact_id]
+                'query' => ['RemoteJid' => $contact_id],
             ]);
         } catch (\Throwable $th) {
             throw $th;
@@ -104,7 +127,9 @@ class ExternalRPIController extends Controller
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
         $Chat = $this->messageToChatModel($input, $Contact);
-        if (!$Chat) return "Ignored group message!";
+        if (!$Chat) {
+            return "Ignored group message!";
+        }
 
         $Chat->save();
 
@@ -142,7 +167,9 @@ class ExternalRPIController extends Controller
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
         $Chat = $this->messageToChatModel($input, $Contact);
-        if (!$Chat) return "Ignored group message!";
+        if (!$Chat) {
+            return "Ignored group message!";
+        }
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
@@ -207,16 +234,16 @@ class ExternalRPIController extends Controller
             // Find Company by Phone Number
             $company_phone = $input['CompanyPhone'];
             $Company = Company::where(['phone' => $company_phone])->first();
-            
+
             // Create Mock Contact
             $Contact = new Contact();
             $Contact->first_name = $contact_Jid;
             $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
-            
+
             $Contact->save();
         }
-        
+
         $Chat->contact_id = $Contact->id;
         $Chat->company_id = $Contact->company_id;
         $Chat->save();
