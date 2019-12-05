@@ -86,7 +86,7 @@ class ExtendedChatController extends ChatController
      * @param Request $request
      * @return Response
      */
-    public function indexORG(Request $request)
+    public function indexOld(Request $request)
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $contact_id = (int) $request['contact_id'];

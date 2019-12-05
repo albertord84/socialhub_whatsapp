@@ -21,6 +21,7 @@ class CompaniesTableSeeder extends Seeder
         Company::create([
             'id' => '1',
             'name' => 'Social Hub',
+            'phone' => '5521965536174@c.us',
             'description' => 'Companie Social Hub',
         ]);
         $this->command->info('Companie Social Hub');

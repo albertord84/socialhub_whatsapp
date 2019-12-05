@@ -6,6 +6,7 @@ use App\Business\ChatsBusiness;
 use App\Business\FileUtils;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Rpi;
@@ -97,27 +98,28 @@ class ExternalRPIController extends Controller
         $input = $request->all();
         $contact_Jid = $input['Jid'];
 
-        $company_id = $input['company_id'];
+        $company_phone = $input['CompanyPhone'];
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
         $Chat = $this->messageToChatModel($input, $Contact);
+        if (!$Chat) return "Ignored group message!";
 
         $Chat->save();
 
         if ($Contact) {
+            $Chat->contact_name = $Contact->first_name;
+            if ($Contact->latestAttendantContact) {
+                $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+                $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+            }
             // Send event to attendants with new chat message
             broadcast(new MessageToAttendant($Chat));
         } else {
             // Send event to all attendants with new bag contact count
-            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($company_id);
-            broadcast(new NewContactMessage($company_id, $bagContactsCount));
-        }
-
-        $Chat->contact_name = $Contact->first_name;
-        if ($Contact->latestAttendantContact) {
-            $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-            $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+            $Company = Company::where(['phone' => $company_phone])->first();
+            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
+            broadcast(new NewContactMessage($Company->id, $bagContactsCount));
         }
 
         return $Chat->toJson();
@@ -132,16 +134,18 @@ class ExternalRPIController extends Controller
     {
         $input = $request->all();
         $contact_Jid = $input['Jid'];
-        $company_id = $input['company_id'];
+        $company_phone = $input['CompanyPhone'];
+        $Company = Company::where(['phone' => $company_phone])->first();
 
-        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
         Log::debug('reciveFileMessage: ', [$input]);
+        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
         $Chat = $this->messageToChatModel($input, $Contact);
+        if (!$Chat) return "Ignored group message!";
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
-        $filePath = "$Contact->company_id/contacts/$Contact->id/chat_files";
+        $filePath = "$Company->id/contacts/$Chat->contact_id/chat_files";
         // Log::debug('reciveFileMessage: ', [$filePath]);
 
         $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
@@ -155,8 +159,8 @@ class ExternalRPIController extends Controller
             broadcast(new MessageToAttendant($Chat));
         } else {
             // Send event to all attendants with new contact
-            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($company_id);
-            broadcast(new NewContactMessage($company_id, $bagContactsCount));
+            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
+            broadcast(new NewContactMessage($Company->id, $bagContactsCount));
         }
 
         return $Chat->toJson();
@@ -168,8 +172,10 @@ class ExternalRPIController extends Controller
      * @param array Request $input
      * @return Chat
      */
-    public function messageToChatModel(array $input, Contact $Contact): ExtendedChat
+    public function messageToChatModel(array $input, ?Contact $Contact): ExtendedChat
     {
+        // if (strpos("@g.us", $input['Msg']) !== false) return null;
+
         $contact_Jid = $input['Jid'];
         $input['Type'] = isset($input['Type']) ? $input['Type'] : 'text';
 
@@ -199,18 +205,19 @@ class ExternalRPIController extends Controller
         } else {
             // Find Company by Phone Number
             $company_phone = $input['CompanyPhone'];
-            $Company = Company::where(['whatsapp_id' => $company_phone])->first();
-
+            $Company = Company::where(['phone' => $company_phone])->first();
+            
             // Create Mock Contact
             $Contact = new Contact();
             $Contact->first_name = $contact_Jid;
             $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
-
+            
             $Contact->save();
         }
-
+        
         $Chat->contact_id = $Contact->id;
+        $Chat->company_id = $Contact->company_id;
         $Chat->save();
 
         return $Chat;
