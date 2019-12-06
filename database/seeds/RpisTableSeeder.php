@@ -17,18 +17,48 @@ class RpisTableSeeder extends Seeder
 
         $this->createRpis();
     }
-    
-    public function createRpis(){
+
+    public function createRpis()
+    {
         Rpi::create([
             'id' => 1,
-            'company_id' => 1,            
-            // 'mac' => 'string',
-            'tunnel' => 'ngrok',
-            'ip' => '192.168.25.91',
-            'password' => bcrypt('ajmsocialhub'),
-            'soft_version' => '0.0.1',
+            'company_id' => 1,
+
+            'mac' => 'b8:27:eb:23:74:14',
+
+            'api_tunnel' => 'http://shrpisocialhub.sa.ngrok.io.ngrok.io',
+            'api_user' => 'socialhub',
+            'api_password' => bcrypt('socialhub'),
+            
+            'ip' => '',
+            'tcp_tunnel' => '1.tcp.ngrok.io',
+            'tcp_port' => '29426',
+            'root_user' => 'socialhub',
+            'root_password' => bcrypt('socialhub'),
+
+            'soft_version' => '0.1.0',
             'soft_version_date' => '30/11/2019',
         ]);
-        $this->command->info('Admin created: [user: admin@socialhub.pro, pass: admin]');
+        $this->command->info('RPi created: company 1 (Socialhub Bruno)');
+        Rpi::create([
+            'id' => 2,
+            'company_id' => 2,
+
+            'mac' => 'b8:27:eb:49:2a:84',
+
+            'api_tunnel' => 'http://shrpialberto.sa.ngrok.io.ngrok.io',
+            'api_user' => 'socialhub',
+            'api_password' => 'socialhub', // bcrypt('socialhub'),
+
+            'ip' => '192.168.25.91',
+            'tcp_tunnel' => '1.tcp.ngrok.io',
+            'tcp_port' => '29426',
+            'root_user' => 'socialhub',
+            'root_password' => 'socialhub', // bcrypt('socialhub'),
+
+            'soft_version' => '0.1.0',
+            'soft_version_date' => '30/11/2019',
+        ]);
+        $this->command->info('RPi created: company 2 (Alberto Developing)');
     }
 }

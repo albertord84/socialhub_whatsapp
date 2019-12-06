@@ -17,10 +17,18 @@ class CreateRpisTable extends Migration {
 			// $table->integer('user_seller_id')->nullable()->index('fk_companies_users_seller');
 			$table->integer('id', true);
 			$table->integer('company_id')->nullable();
-			$table->string('mac', 45)->nullable();
-			$table->string('tunnel', 200)->nullable();
+			$table->string('mac', 30)->nullable();
+
+			$table->string('api_tunnel', 200)->nullable();
+			$table->string('api_user', 100)->nullable();
+			$table->string('api_password', 100)->nullable();
+
+			$table->string('tcp_tunnel', 200)->nullable();
+			$table->string('tcp_port', 10)->nullable();
+			$table->string('root_user', 100)->nullable();
+			$table->string('root_password', 100)->nullable();
+
 			$table->string('ip', 30)->nullable();
-			$table->string('password', 100)->nullable();
 			$table->string('data', 10000)->nullable();
 			$table->string('soft_version', 100)->nullable();
 			$table->string('soft_version_date', 100)->nullable();
