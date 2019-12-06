@@ -17,7 +17,7 @@ class CreateRpisTable extends Migration {
 			// $table->integer('user_seller_id')->nullable()->index('fk_companies_users_seller');
 			$table->integer('id', true);
 			$table->integer('company_id')->nullable();
-			$table->string('mac', 30)->nullable();
+			$table->string('mac', 30)->unique();
 
 			$table->string('api_tunnel', 200)->nullable();
 			$table->string('api_user', 100)->nullable();
