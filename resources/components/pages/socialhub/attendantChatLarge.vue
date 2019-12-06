@@ -2,13 +2,8 @@
     <div class="row chat p-0" style="background-color:#fefefe !important">
 
         <left-side-bar  :left_layout ="left_layout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
-        
-        <audio ref="newMessageSound" controls autoplay style="display:none" class="mycontrolBar">
-            <source src="audio/newMessage.ogg#t=1" type="audio/ogg">
-        </audio>
-        <audio ref="newContactInBag" controls autoplay style="display:none" class="mycontrolBar">
-            <source src="audio/newContactInBag.ogg" type="audio/ogg">
-        </audio>
+        <audio ref="newMessageSound" controls autoplay style="display:none" class="mycontrolBar"><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
+        <audio ref="newContactInBag" controls autoplay style="display:none" class="mycontrolBar"><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -68,16 +63,16 @@
                 <div class="sect_header" style="background-color:#fafafa;">
                     <div class="text-center">
                         <ul style="margin-left:25%" class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0 m-0 p-0  bg-transparent">
+                            <!-- <li class="list-group-item border-0 m-0 p-0  bg-transparent">
                                 <a href="javascript:void()">
                                     <span class="mdi mdi-message-text fa-2x cl-blue"></span><br>
                                     <span style="position:relative; top:-0.8em" class="principal-icons">Chats</span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
                                 <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag && amountContactsInBag>0">
-                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adicionar contato"></span><br>
-                                    <span style="position:relative; top:-0.8em; left:0.5em" class="principal-icons">Contatos</span>
+                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" @click.prevent="getNewContactFromBag" title="Adherir novo contato"></span><br>
+                                    <span style="position:relative; top:-0.8em; left:0.5em" @click.prevent="getNewContactFromBag" title="Adherir novo contato" class="principal-icons">Contatos</span>
                                     <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="principal-icons-basket-contact cl-blue">{{amountContactsInBag}}</span>
                                     <span v-if="amountContactsInBag==0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="principal-icons-basket-contact cl-gray">{{amountContactsInBag}}</span>
                                 </a>
@@ -97,9 +92,9 @@
                                         <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
                                             {{contact.first_name }}
                                         </a><br>
-                                        <a class="text-muted"><span style="font-size:1em" :title='(contact.last_message) ? contact.last_message.message :""'>{{ (contact.last_message) ? text_truncate(contact.last_message.message,22):'' }}</span></a>
+                                        <a class="text-muted"><span style="font-size:1em" :title='(contact.last_message) ? contact.last_message.message :""'>{{ (contact.last_message) ? textTruncate(contact.last_message.message,22):'' }}</span></a>
                                     </div>
-                                    <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? get_last_message_time(contact.last_message.created_at) : ''}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : ''}}</span>
                                     <div v-show="contact.count_unread_messagess>0" class="status-new-messages mt-4" :title='contact.count_unread_messagess + " mensagens novas"'><b>{{contact.count_unread_messagess}}</b></div>
                                     <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
                                 </article>
@@ -127,16 +122,16 @@
                                             <i class="fa fa-paperclip mt-3" title="Anexar arquivo"  style="color:#949aa2;; font-size:1.3em"></i>
                                         </template>
                                         <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputImage')"><i class="fa fa-file-image-o"></i> Imagem</a>                                            
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="triggerEvent('fileInputImage')"><i class="fa fa-file-image-o"></i> Imagem</a>                                            
                                         </b-dropdown-item>
                                         <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputAudio')"><i class="fa fa-file-audio-o"></i> Audio</a>
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="triggerEvent('fileInputAudio')"><i class="fa fa-file-audio-o"></i> Audio</a>
                                         </b-dropdown-item>
                                         <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputVideo')"><i class="fa fa-file-movie-o"></i> Video</a>
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="triggerEvent('fileInputVideo')"><i class="fa fa-file-movie-o"></i> Video</a>
                                         </b-dropdown-item>
                                         <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="trigger('fileInputDocument')"><i class="fa fa-file-text-o"></i> Documento</a>
+                                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="triggerEvent('fileInputDocument')"><i class="fa fa-file-text-o"></i> Documento</a>
                                         </b-dropdown-item>
                                     </b-dropdown>
                                 </form> -->
@@ -263,17 +258,17 @@
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputImage')" title="Anexar imagem">
+                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
                                 <i class="fa fa-file-image-o icons-action-message"></i>
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="trigger('fileInputAudio')" title="Anexar áudio">
+                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputAudio')" title="Anexar áudio">
                                 <i class="fa fa-file-audio-o icons-action-message"></i>
                             </div>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="trigger('fileInputDocument')" title="Anexar documento">
+                            <div class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="triggerEvent('fileInputDocument')" title="Anexar documento">
                                 <i class="fa fa-file-text-o icons-action-message"></i>
                             </div>
                         </div>
@@ -343,7 +338,7 @@
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="row" >
                                 <div class="col-lg-1 p-2 ml-3">
-                                    <i class="fa fa-user-o text-muted" aria-hidden="true"></i>
+                                    <i class="mdi mdi-account text-muted" aria-hidden="true"></i>
                                 </div>
                                 <div class="col-lg-8 p-1" style="text-align:left">
                                     <span class="text-muted" style="font-size:1.1em">Informação</span>
@@ -366,7 +361,7 @@
                                     <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].linkedin_id)"><i class="mdi mdi-linkedin fa-1_5x text-muted social-network"></i></li>
                                 </ul>
                             </div>
-                            <p v-show="selectedSocialNetwork!=''">{{selectedSocialNetwork}}</p> -->
+                             -->
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important"><span >{{contacts[selected_contact_index].email}}</span></li>
@@ -444,7 +439,7 @@
                         <li v-for="(message,index) in messagesWhereLike" class="chat_block p-3" :key="index">
                             <a href="javascript:void()" @click.prevent="1">
                                 <!-- <article class="media mt-1 mb-1"> -->
-                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{get_last_message_time(message.created_at)}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{getLastMessageTime(message.created_at)}}</span>
                                     <div class="media-body mb-2 mt-1 chat_content">
                                         <a class="text-muted"><span>{{ message.message}}</span></a>
                                     </div>
@@ -601,8 +596,6 @@
 
                 window: {width: 0,height: 0},
 
-                selectedSocialNetwork:'',
-                
             }
         },
         
@@ -635,7 +628,7 @@
                                 message.data = JSON.parse(message.data);
                                 message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
-                            message.time = this.get_message_time(message.created_at)
+                            message.time = this.getMessageTime(message.created_at)
                             this.messages[this.messages.length]=message;
                             this.contacts[this.selected_contact_index].last_message = message;
                             this.newMessage.message = "";
@@ -682,6 +675,10 @@
             },
 
             getNewContactFromBag: function() { //R
+                if(this.amountContactsInBag==0){
+                    miniToastr.info("Informação", "Não existem novos contatos para adicionar a sua lista");  
+                    return;
+                }
                 ApiService.get(this.contacts_bag_url)
                     .then(response => {
                         this.modalNewContactFromBag = !this.modalNewContactFromBag;
@@ -714,7 +711,7 @@
 
                             this.messages.forEach(function(item, i){
                                 try {
-                                    item.time = This.get_message_time(item.created_at);
+                                    item.time = This.getMessageTime(item.created_at);
 
                                     if(item.time.date!=This.messageTimeDelimeter){
                                         This.messages_copy.push({
@@ -766,7 +763,7 @@
                 }
             },
 
-            get_last_message_time: function(time){
+            getLastMessageTime: function(time){
                 var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
                 var date_format = new Date(time);
                 var date1 = Date.parse(time); //to timestamp
@@ -789,7 +786,7 @@
                 }
             },
 
-            get_message_time: function(time){
+            getMessageTime: function(time){
                 var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
                 var date_format = new Date(time);
                 var date1 = Date.parse(time); //to timestamp
@@ -819,7 +816,7 @@
                 }
             },
 
-            trigger (referenceFile) {
+            triggerEvent (referenceFile) {
                 switch(referenceFile){
                     case 'fileInputImage':
                         this.newMessage.type_id = 2; //imagem message type 
@@ -885,8 +882,8 @@
                     this.show_edit_right_side = false;
                     this.show_chat_right_side = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_find_right_side = false;
                     this.show_edit_right_side = false;
                     this.show_chat_right_side = false;
@@ -901,8 +898,8 @@
                     this.show_edit_right_side = false;
                     this.show_chat_find_right_side = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_right_side = false;
                     this.show_edit_right_side = false;
                     this.show_chat_find_right_side = false;
@@ -920,8 +917,8 @@
                         this.item = this.contacts[this.selected_contact_index];
                     }
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
+                    document.getElementById("chat-center-side").classList.add("col-lg-6");
                     this.show_chat_right_side = false;
                     this.show_chat_find_right_side = false;
                     this.show_edit_right_side = false;
@@ -947,7 +944,7 @@
                 this.$store.commit('leftside_bar', "toggle");
             },
 
-            text_truncate (str, length, ending) {
+            textTruncate (str, length, ending) {
                 if (length == null) {
                     length = 100;
                 }
@@ -976,24 +973,7 @@
             closemodal(){
                 this.modalDeleteContact = !this.modalDeleteContact;
             },
-
-            auto_grow(element) {
-                element.target.style.height = "5px";
-                element.target.style.height = (element.target.scrollHeight)+"px";
-            },
-
-            showSocialNetwork(socialNetwork){
-                if(this.selectedSocialNetwork==''){                    
-                    this.selectedSocialNetwork = socialNetwork;
-                } else{
-                    if(this.selectedSocialNetwork == socialNetwork){
-                        this.selectedSocialNetwork = '';
-                    }else{
-                        this.selectedSocialNetwork = socialNetwork;
-                    }
-                }
-            },
-
+           
             logout() {
                 window.localStorage.removeItem('token')
                 window.localStorage.removeItem('user')
@@ -1042,7 +1022,7 @@
                             console.log(error);
                         }
 
-                        message.time = this.get_message_time(message.created_at)
+                        message.time = this.getMessageTime(message.created_at)
                         this.messages[this.messages.length]=message;
                         this.contacts[this.selected_contact_index].last_message = message;
                         this.$refs.message_scroller.scrolltobottom();
