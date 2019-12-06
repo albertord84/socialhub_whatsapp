@@ -1,19 +1,10 @@
 <template>
-    <div >
-        <button class="button red-button">
-            <i class="record icon"></i> Start / Stop recording
-        </button>
-        <button class="button green-button">
-            <i class="play icon"></i> Play recording
-        </button>
-        <button class="remove-recording">
-            <i class="remove icon"></i> Delete recording
-        </button>
-        <button class="button green-button">
-            <i class="send icon"></i> Send recording
-        </button>
-        <audio id="audio" preload="auto"></audio>
+    <div>
+        <p>Audio record by JR</p>
+        <label for="">Press button to record</label>
+        <button class="btn btn-primary" @mousedown="startRecord" @mouseup="stopRecord"><i class="fa fa-microphone"> Record</i></button>
     </div>
+        
 </template>
 
 <script>
@@ -21,8 +12,13 @@
     import ApiService from "resources/common/api.service";    
     import miniToastr from "mini-toastr";
     miniToastr.init();
+    
+    import MicRecorder from "mic-recorder-to-mp3";
+    const recorder = new MicRecorder({
+        bitRate: 128
+    });
 
-     export default {
+    export default {
         name: "handleRecordAudio",
 
         props:{
@@ -30,46 +26,55 @@
         },
 
         components: {
-            vScroll
         },
 
         data() {
             return {
-                
+                isRecording: false,
+                audioRecorder: null,
+                recordingData: [],
+                dataUrl: ''
             }
         },
 
+
         methods: {
-            updateUser(){
-                if(this.isSending) 
-                    return;
-                if(this.password != this.repeat_password){
-                    miniToastr.error("As senhas fornecidas não coincidem. Por favor, confira!", "Erro");  
-                    return;
-                }
-                if(this.password.trim() ==''){
-                    delete this.model.password;
-                }
-                else{
-                    this.model.password = this.password;
-                }
-                this.isSending = true;
-                ApiService.put(this.url+'/'+this.model.id, this.model)
-                .then(response => {
-                    // window.location.reload(false);
-                    this.user = response.data;
-                    window.localStorage.setItem('user', JSON.stringify(response.data));                        
-                    miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
-                    this.isSending = false;
-                    this.editMode = false;
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro atualizando perfil");  
-                    this.isSending = false;
-                });
-                
+            startRecord: function() {
+                recorder.start()
+                    .then(() => {
+                        // fazer coisas como piscar o microfone duranta 
+                        // a gravação, ou botar em Gravando
+                    }).catch((e) => {
+                        console.error(e);
+                    });             
             },
+
+            stopRecord: function() {
+                recorder.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        // do what ever you want with buffer and blob---|
+                        //                                              |
+                        // Example: Create a mp3 file and play    <-----|
+                        const file = new File(buffer, 'me-at-thevoice.mp3', {
+                            type: blob.type,
+                            lastModified: Date.now()
+                        });                        
+                        const player = new Audio(URL.createObjectURL(file));
+                        player.play();
+                        
+                    }).catch((e) => {
+                        alert('We could not retrieve your message');
+                        console.log(e);
+                    });
+            },
+
+            startPlay: function() {
+
+            },
+
+            submitRecord: function() {
+                
+            }
         },
 
         beforeMount(){
@@ -80,6 +85,8 @@
             miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
             miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
             miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
+
+            console.log(recorder);
         },
 
         computed:{

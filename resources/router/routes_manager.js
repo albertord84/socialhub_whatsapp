@@ -18,6 +18,12 @@ const layout = [
     meta: {
         title: "QR Code",
     }
+},{
+    path: '/manager/audio',
+    component: resolve => require(['pages/socialhub/popups/handleRecordAudio'], resolve),
+    meta: {
+        title: "Audio test",
+    }
 },/*{
     path: '/manager/company',
     component: resolve => require(['pages/socialhub/managerCompany'], resolve),

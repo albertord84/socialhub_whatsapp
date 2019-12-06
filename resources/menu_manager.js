@@ -11,6 +11,10 @@ const menu_items = [
         name: 'Código QR',
         link: '/manager/qrcode',
         icon: ' fa fa-headphones'
+     }, {
+        name: 'Audio test',
+        link: '/manager/audio',
+        icon: 'mdi mdi-audiobook'
      }, 
      
 
