@@ -41,7 +41,7 @@
                                 {{ collect(row,column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a>
+                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
                                 <a class="text-18" href="javascript:void(0)" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
                                 <a class="text-18" href="javascript:void(0)" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
@@ -186,7 +186,7 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Ação',
+                        label: 'Ações',
                         field: 'button',
                         numeric: false,
                         html: true,

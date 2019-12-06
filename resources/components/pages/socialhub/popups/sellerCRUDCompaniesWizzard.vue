@@ -1,9 +1,14 @@
 <template>
     <div>
-        <b-container fluid>                
-            <form v-show="action!='delete'"> 
-                <div>
-                    <h3>Dados da empresa</h3>
+        <form-wizard    color="#20a0ff" 
+                        title='' 
+                        subtitle='' 
+                        nextButtonText='Seguinte' 
+                        finishButtonText:=Finalizar 
+                        stepSize='lg'
+                        style="min-height:500px"
+                    >
+            <tab-content title="Dados da empresa" icon='fa fa-building-o' >
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
@@ -39,10 +44,8 @@
                             <textarea v-model="modelCompany.description" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
                         </div>                                                                         
                     </div>
-                </div>
-                <hr>
-                <div class="pb-5">
-                    <h3>Dados do manager da empresa</h3>
+            </tab-content>
+            <tab-content title="Dados do manager" icon='fa fa-user-o' >
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
@@ -62,24 +65,44 @@
                             <span class="fa fa-phone form-control-feedback"></span>
                             <input v-model="modelManager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
-                    </div>                                   
-                </div> 
-                               
-                <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addCompany">Adicionar</button>
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateCompany">Atualizar</button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    </div>  
+            </tab-content>
+            <tab-content title="Dados do Raspberry" icon='fa fa-hdd-o' >
+                    <div class="row">
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-user form-control-feedback"></span>
+                            <input v-model="modelManager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-envelope form-control-feedback"></span>
+                            <input v-model="modelManager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="modelManager.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-phone form-control-feedback"></span>
+                            <input v-model="modelManager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                        </div>
+                    </div>
+            </tab-content>
+            <tab-content title="Fim do cadastro" icon='fa fa-smile-o'>
+                <div class="mt-5 mb-5 pt-5 pb-5 text-center">
+                    <h5 v-if="action=='insert'">Empresa cadastrada com sucesso</h5> 
+                    <h5 v-if="action=='edit'">Empresa atualizada com sucesso</h5> 
                 </div>
-            </form>
-            <form v-show="action=='delete'">
-                Tem certeza que deseja cancelar o contrato dessa Empresa?
-                <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="deleteCompany">Eliminar</button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
-                </div>                    
-            </form>
-
-        </b-container>
+            </tab-content>
+             <!-- <div class="wizard-footer-left">
+                <wizard-button  v-if="props.activeTabIndex > 0 && !props.isLastStep" @click.native="props.prevTab()" :style="props.fillButtonStyle">Previous</wizard-button>
+            </div>
+            <div class="wizard-footer-right">
+                <wizard-button v-if="!props.isLastStep" @click.native="props.nextTab()" class="wizard-footer-right" :style="props.fillButtonStyle">Next</wizard-button>
+                <wizard-button v-else @click.native="alert('Done')" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{props.isLastStep ? 'Done' : 'Next'}}</wizard-button>
+            </div> -->
+        </form-wizard>
     </div>
 </template>
 
@@ -89,11 +112,10 @@
     import miniToastr from "mini-toastr";
     miniToastr.init();
 
-    import VueFormWizard from 'vue-form-wizard'
+    import {FormWizard, TabContent} from 'vue-form-wizard'
     import 'vue-form-wizard/dist/vue-form-wizard.min.css'
     
     export default {
-        // name: 'adminCRUDSellers',
         name: 'sellersCRUDCompanies',
 
         props: {
@@ -106,6 +128,8 @@
         },
 
         components:{
+            FormWizard,
+            TabContent
         },
 
         data(){
@@ -138,7 +162,21 @@
         },
 
         methods:{
-            addCompany: function() { //C
+            addCompany:function(){
+                console.log(addCompany);
+                return true;
+            },
+
+            addManager:function(){
+                console.log(addManager);
+            },
+
+            addRPI:function(){
+                console.log(addRPI);
+            },
+
+
+            addCompanyOld: function() { //C
                 this.modelCompany.id=1;
                 this.modelCompany.user_seller_id=this.logued_user.id;
                 this.modelManager.id=1;

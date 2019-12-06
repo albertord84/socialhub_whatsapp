@@ -97,6 +97,7 @@
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import sellerCRUDCompanies from "./popups/sellerCRUDCompanies";
+    // import sellerCRUDCompanies from "./popups/sellerCRUDCompaniesWizzard";
 
     export default {
         props: {

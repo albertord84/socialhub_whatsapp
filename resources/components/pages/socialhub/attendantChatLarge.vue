@@ -8,6 +8,25 @@
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
+                <div class="sect_header">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            Dropdown
+                        </button>
+                        <div style="z-index:10000" class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Link 1</a>
+                            <a class="dropdown-item" href="#">Link 2</a>
+                            <a class="dropdown-item" href="#">Link 3</a>
+                        </div>
+                    </div> 
+                    <!-- <nav class="navbar navbar-light justify-content-between"> -->
+                        <!-- <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
+                            <img :src="user.image_path" width="50px" height="50px" class="profile-picture" alt="User Image">
+                        </a>
+                        <a href="javascript:void()"><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></a> -->
+                        
+                    <!-- </nav> -->
+                </div>
                 <div class="sect_header">                    
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
@@ -18,21 +37,25 @@
                         <ul class='menu' style="float:right; margin-right:5px">
                             <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
                             <li>
-                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
+                                <b-dropdown class="dropdown btn-group" variant="link" toggle-class="text-decoration-none" size="lg"  right="">
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
                                     </template>
-                                    
-                                    <b-dropdown-item title="Inserir novo contato" exact class="dropdown_content">
-                                        <a href='javascript:void(0)' class="round_btn" @click="toggle_left('toggle-add-contact')"><i class="fa fa-user-plus fa-xs " ></i> Inserir contato</a>
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
+                                        <a href='javascript:void(0)' exact class="round_btn" @click="toggle_left('toggle-add-contact')">
+                                            <i class="fa fa-user-plus fa-xs " ></i> 
+                                            Inserir contato
+                                        </a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item title="Encerrar sessão" exact class="dropdown_content">
-                                        <router-link to="/" class="drpodowtext">
+                                    <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
+                                        <router-link to="/" exact class="drpodowtext">
                                             <div v-on:click="logout">
-                                                <i class="fa fa-sign-out"></i> Sair
+                                                <i class="fa fa-sign-out"></i> 
+                                                Sair
                                             </div>
                                         </router-link>
                                     </b-dropdown-item>
+
                                     <!-- <b-dropdown-item title="Contatos com mensagens favoritas" exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByFavorites'" ><i class="fa fa-star-o"></i> Favoritas</a>
                                     </b-dropdown-item>
@@ -882,8 +905,8 @@
                     this.show_edit_right_side = false;
                     this.show_chat_right_side = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_find_right_side = false;
                     this.show_edit_right_side = false;
                     this.show_chat_right_side = false;
@@ -898,8 +921,8 @@
                     this.show_edit_right_side = false;
                     this.show_chat_find_right_side = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_right_side = false;
                     this.show_edit_right_side = false;
                     this.show_chat_find_right_side = false;
@@ -917,8 +940,8 @@
                         this.item = this.contacts[this.selected_contact_index];
                     }
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
+                    document.getElementById("chat-center-side").classList.add("col-lg-9");
                     this.show_chat_right_side = false;
                     this.show_chat_find_right_side = false;
                     this.show_edit_right_side = false;
