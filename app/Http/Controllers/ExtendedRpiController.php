@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateRpiRequest;
-use App\Http\Requests\UpdateRpiRequest;
 use App\Repositories\ExtendedRpiRepository;
 use Illuminate\Http\Request;
-use Auth;
-use Flash;
+use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Response;
 
 class ExtendedRpiController extends RpiController
 {
