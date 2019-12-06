@@ -41,32 +41,31 @@ class ExternalRPIController extends Controller
      */
     public function update(Request $request)
     {
-        $rpiMAC = ''; // $request->MAC;
-        $rpiUser = 'socialhub'; // $request->user;
-        $rpiPass = 'socialhub'; // $request->password;
+        $rpiMAC = $request->MAC;
+        $rpiUser = $request->user;
+        $rpiPass = $request->password;
 
         $RPI = new stdClass;
-        if ($rpiMAC) {
-            // Response
-            $RPI->software_version = '0.1.0';
-            $RPI->software_download_url = env('SOFTWARE_DOWNLOAD_URL', 'http://app.sociahub.pro/storage/RPI/bin/shwhatsapp/main0.1.0');
-    
-            $RPI->api_tunnel = 'http://shrpisocialhub.sa.ngrok.io.ngrok.io';
-            $RPI->api_user = 'socialhub';
-            $RPI->api_pass = 'socialhub'; // bcrypt('socialhub');
-    
-            $RPI->tcp_tunnel = '1.tcp.ngrok.io';
-            $RPI->tcp_port = '29426';
-            $RPI->root_user = 'socialhub';
-            $RPI->root_password = 'socialhub'; // bcrypt('socialhub');
-    
-            $RPI->company = Company::where(['mac' => $rpiMAC])->first();
-        }
-        else {
-            $this.registerNewRPI($rpiMAC);
+        $RPI = Rpi::with('company')->whereHas('company', function($query) use ($rpiMAC) {
+            $query->where(['mac' => $rpiMAC]);
+        })->first();
+
+        if (!$RPI) {  // Whether not found RPI associated to a company
+            $this->registerNewRPI($rpiMAC);
         }
 
         return json_encode($RPI);
+    }
+
+    public function registerNewRPI(string $MAC = null): bool
+    {
+        $RPI = new Rpi();
+        try {
+            $RPI->mac = $MAC;
+            return $RPI->save();
+        } catch (\Throwable $th) {
+            // throw $th;
+        }
     }
 
     /**
@@ -240,6 +239,8 @@ class ExternalRPIController extends Controller
             $Contact->first_name = $contact_Jid;
             $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
+
+            // TODO Alberto: Get contact info photo
 
             $Contact->save();
         }
