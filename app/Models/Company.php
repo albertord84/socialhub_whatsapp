@@ -36,6 +36,7 @@ class Company extends Model
         'email',
         'whatsapp',
         'ngrok_url',
+        'rpi_id',
         'description',
         // 'user_seller_id'
     ];
@@ -47,12 +48,13 @@ class Company extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'rpi_id' => 'integer',
         'CNPJ' => 'string',
         'name' => 'string',
         'phone' => 'string',
         'email' => 'string',
-        //'whatsapp'=> 'string',
-        //'ngrok_url' => 'string',
+        'whatsapp'=> 'string',
+        'ngrok_url' => 'string',
         'description' => 'string',
         ///'user_seller_id'
     ];

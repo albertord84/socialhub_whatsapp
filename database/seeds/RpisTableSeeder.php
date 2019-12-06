@@ -24,7 +24,7 @@ class RpisTableSeeder extends Seeder
             'id' => 1,
             'company_id' => 1,
 
-            'mac' => 'b8:27:eb:23:74:14',
+            'mac' => 'b8:27:eb:76:21:41',
 
             'api_tunnel' => 'http://shrpisocialhub.sa.ngrok.io.ngrok.io',
             'api_user' => 'socialhub',
