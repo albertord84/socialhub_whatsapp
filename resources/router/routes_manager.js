@@ -10,7 +10,7 @@ const layout = [
     path: '/manager/attendant',
     component: resolve => require(['pages/socialhub/managerAttendants'], resolve),
     meta: {
-        title: "Chat",
+        title: "Atendentes",
     }
 },{
     path: '/manager/qrcode',

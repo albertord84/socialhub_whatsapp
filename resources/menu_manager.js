@@ -10,7 +10,7 @@ const menu_items = [
      }, {
         name: 'Código QR',
         link: '/manager/qrcode',
-        icon: ' fa fa-headphones'
+        icon: ' fa fa-qrcode'
      }, 
      
 

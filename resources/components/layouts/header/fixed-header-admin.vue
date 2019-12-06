@@ -2,9 +2,13 @@
     <header class="header fixed-top">
         <nav>
             <!--SocualHUB logo-->
-            <router-link to="../admin/" class="logo">
+            <div class="logo">
                 <img src="~img/socialhub/Logo branca.png" alt="logo"/>
-            </router-link>
+            </div>
+
+            <!-- <router-link to="../admin/" class="logo">
+                <img src="~img/socialhub/Logo branca.png" alt="logo"/>
+            </router-link> -->
 
              <!-- Sidebar toggle button-->
             <div class="float-left">
