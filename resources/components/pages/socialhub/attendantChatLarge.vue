@@ -1,48 +1,28 @@
 <template>
     <div class="row chat p-0" style="background-color:#fefefe !important">
-
-        <left-side-bar  :left_layout ="left_layout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
-        <audio ref="newMessageSound" controls autoplay style="display:none" class="mycontrolBar"><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
-        <audio ref="newContactInBag" controls autoplay style="display:none" class="mycontrolBar"><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
+        <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        <audio ref="newMessageSound" controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
+        <audio ref="newContactInBag" controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
-                <div class="sect_header">
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            Dropdown
-                        </button>
-                        <div style="z-index:10000" class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Link 1</a>
-                            <a class="dropdown-item" href="#">Link 2</a>
-                            <a class="dropdown-item" href="#">Link 3</a>
-                        </div>
-                    </div> 
-                    <!-- <nav class="navbar navbar-light justify-content-between"> -->
-                        <!-- <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                            <img :src="user.image_path" width="50px" height="50px" class="profile-picture" alt="User Image">
-                        </a>
-                        <a href="javascript:void()"><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></a> -->
-                        
-                    <!-- </nav> -->
-                </div>
                 <div class="sect_header">                    
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
                             <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                <img :src="user.image_path" width="50px" height="50px" class="profile-picture" alt="User Image">
+                                <img :src="loggedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
                             </a>
                         </li>
                         <ul class='menu' style="float:right; margin-right:5px">
-                            <li><i class="fa fa-search icons-action mt-1" title="Buscar contato" @click.prevent="isSearchContact=!isSearchContact"></i></li>
-                            <li>
-                                <b-dropdown class="dropdown btn-group" variant="link" toggle-class="text-decoration-none" size="lg"  right="">
+                            <li><i class="fa fa-search icons-action mt-1" title="Buscar contato ..." @click.prevent="isSearchContact=!isSearchContact"></i></li>
+                            <!-- <li> -->
+                                <b-dropdown class="dropdown btn-group" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
                                     </template>
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
-                                        <a href='javascript:void(0)' exact class="round_btn" @click="toggle_left('toggle-add-contact')">
+                                        <a href='javascript:void(0)' exact class="round_btn" @click="toggleLeft('toggle-add-contact')">
                                             <i class="fa fa-user-plus fa-xs " ></i> 
                                             Inserir contato
                                         </a>
@@ -72,11 +52,11 @@
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByUnrearedMsg'"><i class="fa fa-envelope-o"></i> Não lidas</a>
                                     </b-dropdown-item> -->
                                 </b-dropdown>
-                            </li>
+                            <!-- </li> -->
                         </ul>
                     </ul>
                     <ul v-if="isSearchContact==true" class='menu'>
-                        <li><a href='javascript:void(0)' class="round_btn" @click.prevent="isSearchContact=!isSearchContact"><i class="fa fa-arrow-left" ></i></a></li>
+                        <li><i class="fa fa-arrow-left icons-action mt-1" @click.prevent="isSearchContact=!isSearchContact"></i></li>
                         <li><input class="form-control search-input border-0 mt-3" style="width:120%: left:-10px" type="search" v-model="searchContactByStringInput" placeholder="Buscar contato" ></li>
                         <ul class='menu' style="float:right; margin-right:10px">
                             <li><i class="fa fa-close icons-action mt-1" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact"></i></li>
@@ -130,14 +110,14 @@
 
         <!-- Center side of chat-->
         <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
-            <div v-if="selected_contact_index>=0" class="converstion_back">
+            <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">                    
                     <ul class='menu'>                        
-                        <li><span class="pl-4"><img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
-                        <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="fn_show_chat_right_side()"></span></li>
-                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="fn_show_chat_right_side()">{{ contacts[selected_contact_index].first_name }} </p></li>                        
+                        <li><span class="pl-4"><img :src="JSON.parse(contacts[selectedContactIndex].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
+                        <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
+                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ contacts[selectedContactIndex].first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
-                            <li><a href="javascript:void()" title="Buscar mensagens" @click="fn_show_chat_find_right_side()"><i class="fa fa-search"></i></a></li>
+                            <li><a href="javascript:void()" title="Buscar mensagens" @click.prevent="displayChatFindMessage()"><i class="fa fa-search"></i></a></li>
                             <li>
                                 <!-- <form action="">
                                     <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
@@ -181,33 +161,125 @@
                         </ul>
                     </ul> 
                 </div>
-                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller">    <!-- :style="{ backgroundImage: 'url('+bgColor+')'}" -->
-                    <ul >
-                        <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
-                            
+                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @onscrolling="chatMessageScroling">                       
+                    <ul>
+                        <li v-for='(message,index) in messages' :key="index">
+
+                            <!-- Date separator message-->
                             <div v-if="message.type_id=='date_separator'" class="pt-5 pb-5">
                                 <h6 class="message-time-separator mt-5"><span>{{message.time.date}}</span></h6>
                             </div>
 
+                            <!-- Messages -->
+                            <div v-if="message.type_id!='date_separator'" >
+                                <div v-if="message.source==1" class="row mt-2">
+                                    <div  class="col-lg-1"></div>
+                                    <div class="col-lg-11">
+                                        <p style="float:left" class="receivedMessageText">
+                                                <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                    <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                        <img :src="message.path" class="midia-files"/>
+                                                    </a>
+                                                    <br>
+                                                </span>                               
+                                                <span v-if='message.type_id == "3"' class='text-center'>
+                                                    <br>
+                                                    <audio controls class="mycontrolBar m-2">
+                                                        <source :src="message.path" type="audio/ogg">
+                                                        <source :src="message.path" type="audio/mp3">
+                                                        Seu navegador não suporta o elemento de áudio.
+                                                    </audio>
+                                                    <br>
+                                                </span>
+                                                <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                    <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                        <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                            <source :src="message.path+'#t=2'" type="video/mp4">
+                                                            Seu navegador não suporta o elemento de vídeo.
+                                                        </video>
+                                                    </a>
+                                                    <br>
+                                                </span>
+                                                <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                    <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                        <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                    </a>  
+                                                    <br>                                      
+                                                </span>
+                                                <span v-if="message.message && message.message !=''" >
+                                                    {{ message.message ? message.message : "" }}
+                                                </span>
+                                                <br>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture"  alt="" class="my-rounded-circle receivedMessageImg">
+                                    </div>
+                                    <div class="col-lg-11">
+                                        <div style="float:left" class="thetime">{{message.time.hour}}</div>
+                                    </div>
+                                </div>
+
+                                <div v-if="message.source==0" class="row mt-2">
+                                    <div class="col-lg-11">
+                                        <p style="float:right" class="sendedMessageText">
+                                                <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                    <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                        <img :src="message.path" class="midia-files"/>
+                                                    </a>
+                                                    <br>
+                                                </span>                               
+                                                <span v-if='message.type_id == "3"' class='text-center'>
+                                                    <br>
+                                                    <audio controls class="mycontrolBar m-2">
+                                                        <source :src="message.path" type="audio/ogg">
+                                                        <source :src="message.path" type="audio/mp3">
+                                                        Seu navegador não suporta o elemento de áudio.
+                                                    </audio>
+                                                    <br>
+                                                </span>
+                                                <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                    <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                        <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                            <source :src="message.path+'#t=2'" type="video/mp4">
+                                                            Seu navegador não suporta o elemento de vídeo.
+                                                        </video>
+                                                    </a>
+                                                    <br>
+                                                </span>
+                                                <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                    <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                        <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                    </a>  
+                                                    <br>                                      
+                                                </span>
+                                                <span v-if="message.message && message.message !=''" >
+                                                    {{ message.message ? message.message : "" }}
+                                                </span>
+                                                <br>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    
+                                    <div class="col-lg-11">
+                                        <div style="float:right" class="thetime">{{message.time.hour}}</div>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <img :src="loggedAttendant.image_path" alt="" class="my-rounded-circle sendedMessageImg">
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                    <!-- <ul >
+                        <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
+                            <div v-if="message.type_id=='date_separator'" class="pt-5 pb-5">
+                                <h6 class="message-time-separator mt-5"><span>{{message.time.date}}</span></h6>
+                            </div>
                             <div v-if="message.type_id!='date_separator'" >
                                 <p class="message" @mouseover='mouseOverMessage("message-dropdown-"+index)' @mouseleave='mouseLeaveMessage("message-dropdown-"+index)'> 
-                                    <!-- <b-dropdown class="dropdown hidden-xs-down btn-group float-right message-hout" :id='"message-dropdown-"+index' variant="link" toggle-class="text-decoration-none"  right="">
-                                        <template v-slot:button-content>
-                                            <i class="fa fa-angle-down fa-lg mb-1" title="Opcões"  style="color:#949aa2;"></i>
-                                        </template>
-                                        <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-reply"></i> Responder</a>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-database"></i> Arquivar</a>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-star-o"></i> Favoritar</a>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact class="dropdown_content">
-                                            <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-bell-o"></i> Lembrar</a>
-                                        </b-dropdown-item>
-                                    </b-dropdown> -->
                                     <span v-if='message.type_id == "2"' class='mb-2 text-center'>
                                         <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
                                             <img :src="message.path" class="midia-files"/>
@@ -216,7 +288,7 @@
                                     </span>                               
                                     <span v-if='message.type_id == "3"' class='text-center'>
                                         <br>
-                                        <audio controls class="mycontrolBar">
+                                        <audio controls class="mycontrolBar ml-2">
                                             <source :src="message.path" type="audio/ogg">
                                             <source :src="message.path" type="audio/mp3">
                                             Seu navegador não suporta o elemento de áudio.
@@ -244,23 +316,21 @@
                                     <br>
                                 </p>
                                 <br>
-                                <span class="msg-time" v-if='message.source==0'>
-                                    <ul class="menu">
+                                <span class="msg-time" >
+                                    <ul v-if='message.source==0' class="menu">
                                         <li><div class="thetime">{{message.time.hour}}</div></li>
-                                        <li> <img :src="user.image_path" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
+                                        <li> <img :src="loggedAttendant.image_path" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
                                     </ul>
-                                </span>
-                                <span class="msg-time" v-if='message.source==1'>
-                                    <ul class="menu">
-                                        <li> <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
+                                    <ul v-if='message.source==1' class="menu" >
+                                        <li> <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
                                         <li> <div class="thetime">{{message.time.hour}}</div></li>
                                     </ul>
                                 </span>
                             </div>
                         </li>
-                    </ul>
+                    </ul> -->
+
                 </v-scroll> 
-                
                 <div class="p-3">
                     <div class="input-group pb-5 pr-1" style="color:gray">
 
@@ -321,10 +391,10 @@
         </div>
 
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div v-show="show_chat_right_side==true" class="col-lg-3 bg-white p-0">
+        <div v-show="showChatRightSide==true" class="col-lg-3 bg-white p-0">
             <div class="sect_header">
                 <ul class='menu'>
-                    <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
+                    <li><a href="javascript:void(0)" @click.prevent="displayChatRightSide()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
                     <li><p class="header-title">Detalhes</p></li>
                         <ul class='menu' style="float:right">                            
                             <li>
@@ -332,9 +402,9 @@
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-v mt-3" title="Ações sobre contato" style="color:#949aa2;"></i>
                                     </template>
-                                    <b-dropdown-item exact class="dropdown_content">
+                                    <!-- <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
-                                    </b-dropdown-item>
+                                    </b-dropdown-item> -->
                                     <!-- <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-exchange"></i> Transferir</a>
                                     </b-dropdown-item>
@@ -342,148 +412,216 @@
                                         <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
                                     </b-dropdown-item>                                     -->
                                     <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="fn_show_delete_modal()"><i class="fa fa-trash-o"></i> Eliminar</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="displayDeleteContact()"><i class="fa fa-trash-o"></i> Eliminar</a>
                                     </b-dropdown-item>
                                 </b-dropdown>
                             </li>                            
                         </ul>
                 </ul> 
             </div>
-            <label></label>
-            <div v-if="selected_contact_index>=0" class="profile sec_decription bg-white">
+            <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white">
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-
-                        <img :src="JSON.parse(contacts[selected_contact_index].json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="User Image">
+                        <img :src="JSON.parse(contacts[selectedContactIndex].json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <h4 class="profile-decription-name">{{contacts[selectedContactIndex].first_name}}</h4>
                         
-                        <h4 class="profile-decription-name">{{contacts[selected_contact_index].first_name}}</h4>
-                        
+                        <!-- Informação -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="row" >
                                 <div class="col-lg-1 p-2 ml-3">
-                                    <i class="mdi mdi-account text-muted" aria-hidden="true"></i>
+                                    <i class="mdi mdi-account-box-outline text-muted" aria-hidden="true"></i>
                                 </div>
                                 <div class="col-lg-8 p-1" style="text-align:left">
                                     <span class="text-muted" style="font-size:1.1em">Informação</span>
                                 </div>
                                 <div class="col-lg-1 p-2" >
-                                    <i v-show="contactInformation" class="fa fa-pencil text-muted" aria-hidden="true"></i>
+                                    <i v-show="showContactInformation" style="" @click.prevent="copyContact; isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
                                 </div>
                                 <div class="col-lg-1 p-2" >
-                                    <i v-show="!contactInformation" class="fa fa-plus text-muted" aria-hidden="true" @click.prevent="contactInformation=!contactInformation"></i>
-                                    <i v-show="contactInformation" class="fa fa-minus text-muted" aria-hidden="true" @click.prevent="contactInformation=!contactInformation"></i>
+                                    <i v-show="!showContactInformation" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
+                                    <i v-show="showContactInformation"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
                                 </div>
                             </div>
                         </div>
-                        <div v-if="contactInformation" class="border p-1 mr-2 fadeIn">
-                            <!-- <div style="position:relative; margin-left:28%">
-                                <ul  class="list-group list-group-horizontal">
-                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].whatsapp_id)"><i class="mdi mdi-whatsapp fa-1_5x text-muted social-network"></i></li>
-                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].facebook_id)"><i class="mdi mdi-facebook fa-1_5x text-muted social-network"></i></li>
-                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].instagram_id)"><i class="mdi mdi-instagram fa-1_5x text-muted social-network"></i></li>
-                                    <li class="list-group-item border-0 p-2" @click.prevent="showSocialNetwork(contacts[selected_contact_index].linkedin_id)"><i class="mdi mdi-linkedin fa-1_5x text-muted social-network"></i></li>
-                                </ul>
+                        <div v-if="showContactInformation" class="border border-top-0 p-1 mr-2 fadeIn">
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-box-outline fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact">{{contacts[selectedContactIndex].first_name}}</span>
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Email"><i class="mdi mdi-contact-mail-outline fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span  v-show="!isEditingContact">{{contacts[selectedContactIndex].email}}</span>
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>                            
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" style="word-break: break-word;">{{contacts[selectedContactIndex].whatsapp_id}}</span>
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-contact-phone-outline fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].phone}}</span>
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.phone" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <div v-show="isEditingContact">
+                                <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                    <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
+                                </button>
                             </div>
-                             -->
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important"><span >{{contacts[selected_contact_index].email}}</span></li>
-                            </ul>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-cellphone-android fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important"><span class="mt-1">{{contacts[selected_contact_index].phone}}</span></li>
-                            </ul>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Resumo"><i class="mdi mdi-account-details fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].summary}}</span></li>
-                            </ul>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Lembrete"><i class="mdi mdi-reminder fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important"><span class="mt-1 text-center">{{contacts[selected_contact_index].remember}}</span></li>
-                            </ul>
                         </div>
 
-                        <!-- <div class="attachments  p-4">
-                            <h5>Últimos anexos</h5>
-                            <div class="row">
-                                <div class="col-4 mt-2">
-                                    <img src="~img/pages/14.jpg" alt="" class="img-fluid">
+                        <!-- Nota resumo -->
+                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                            <div class="row" >
+                                <div class="col-lg-1 p-2 ml-3">
+                                    <i class="mdi mdi-account-badge-horizontal-outline text-muted" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-4 mt-2">
-                                    <img src="~img/pages/15.jpg" alt="" class="img-fluid">
+                                <div class="col-lg-8 p-1" style="text-align:left">
+                                    <span class="text-muted" style="font-size:1.1em">Nota resumo</span>
                                 </div>
-                                <div class="col-4 mt-2">
-                                    <img src="~img/pages/16.jpg" alt="" class="img-fluid">
+                                <div class="col-lg-1 p-2" >
+                                    <i v-show="showContactSummary" style="" @click.prevent="copyContact; isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-4 mt-2">
-                                    <img src="~img/pages/17.jpg" alt="" class="img-fluid">
-                                </div>
-                                <div class="col-4 mt-2">
-                                    <img src="~img/pages/18.jpg" alt="" class="img-fluid">
-                                </div>
-                                <div class="col-4 mt-2">
-                                    <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+                                <div class="col-lg-1 p-2" >
+                                    <i v-show="!showContactSummary" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
+                                    <i v-show="showContactSummary"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
+                        <div v-if="showContactSummary" class="border border-top-0 p-1 mr-2 fadeIn">
+                            <div class="attachments  p-2" style="min-height:40px">
+                                <p v-show="!isEditingContactSummary" style="word-break: break-word; text-align:justify">{{contacts[selectedContactIndex].summary}}</p>
+                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
+                            </div>
+                            <div v-show="isEditingContactSummary">
+                                <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                    <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Imagens e mídias -->
+                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                            <div class="row" >
+                                <div class="col-lg-1 p-2 ml-3">
+                                    <i class="mdi mdi-camera-enhance-outline text-muted" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-9 p-1" style="text-align:left">
+                                    <span class="text-muted" style="font-size:1.1em">Imagens e mídias</span>
+                                </div>
+                                <div class="col-lg-1 p-2" >
+                                    <i v-show="!showContactMedia" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
+                                    <i v-show="showContactMedia"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="showContactMedia" class="border border-top-0 p-1 mr-2 fadeIn">
+                            <div class="attachments  p-4">
+                                <!-- <div class="row">
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/14.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/15.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/16.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/17.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/18.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <!-- Arquivos e documentos -->
+                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                            <div class="row" >
+                                <div class="col-lg-1 p-2 ml-3">
+                                    <i class="mdi mdi-file-document-outline text-muted" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-lg-9 p-1" style="text-align:left">
+                                    <span class="text-muted" style="font-size:1.1em">Arquivos e documentos</span>
+                                </div>
+                                <div class="col-lg-1 p-2" >
+                                    <i v-show="!showContacDocuments" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
+                                    <i v-show="showContacDocuments"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="showContacDocuments" class="border border-top-0 p-1 mr-2 fadeIn">
+                            <div class="attachments  p-4">
+                                <!-- <div class="row">
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/14.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/15.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/16.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/17.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/18.jpg" alt="" class="img-fluid">
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <img src="~img/pages/20.jpg" alt="" class="img-fluid">
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+
                     </div>
                 </v-scroll>
             </div>
         </div>
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div v-show="show_chat_find_right_side==true" class="col-lg-3 bg-white p-0">
+        <div v-show="showChatFindMessages==true" class="col-lg-3 bg-white p-0">
             <div class="col-lg-12 sect_header">
-                <ul class="menu">
-                    <li><a href="javascript:void(0)" @click.prevent="fn_show_chat_find_right_side()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
-                    <li><p class="header-title">Buscar mensagens</p></li>
+                <ul class='menu'>
+                    <li><i class="fa fa-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i></li>
+                    <li><input class="form-control search-input border-0 mt-3" style="width:120%: left:-20px; top:-10px" type="search" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" ref="searchMessageByStringInputref" placeholder="Buscar mensagem ..." ></li>
+                    <ul class='menu' style="float:right; margin-right:10px">
+                        <li><i class="fa fa-arrow-right icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i></li>
+                    </ul>                         
                 </ul>
             </div>
-            <div class="col-lg-12" style="color:#949aa2;">
-                <div class="input-group" style="color:#949aa2; width:110%; left:-5%;" >
-                    <div class="input-group-prepend">
-                        <div v-if="searchMessageByStringInput.length==0" style="background-color:#fffff8;color:#949aa2;" class="input-group-text border-left-0 border-right-0 border-top-0 border">
-                            <i class="fa fa-search"></i>
-                        </div>
-                        <div v-if="searchMessageByStringInput.length>0" @click="searchMessageByStringInput='';messagesWhereLike=[];" style="background-color:#fffff8;color:#6beda6" class="input-group-text border-left-0 border-right-0 border-top-0 border">
-                            <i class="fa fa-arrow-left"></i>
-                        </div>
-                    </div>
-                    <input class="form-control search-input border-left-0 border-right-0 border-top-0 border" ref="searchMessageByStringInputref" type="search" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" placeholder="Buscar ..." >
-                    <div v-if="searchMessageByStringInput.length>0" class="input-group-prepend">
-                        <div style="background-color:#fffff8;color:#949aa2;" @click="searchMessageByStringInput='';messagesWhereLike=[];" class="input-group-text border-left-0 border-right-0  border-top-0 border">
-                            <i class="fa fa-close"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                <v-scroll :height="Height(100)"  color="#ccc" style="background-color:white" bar-width="8px">
-                    <ul style="margin-left:-35px">
-                        <li v-for="(message,index) in messagesWhereLike" class="chat_block p-3" :key="index">
-                            <a href="javascript:void()" @click.prevent="1">
-                                <!-- <article class="media mt-1 mb-1"> -->
-                                    <span class="mt-2 text-muted" style="font-size:0.8em">{{getLastMessageTime(message.created_at)}}</span>
-                                    <div class="media-body mb-2 mt-1 chat_content">
-                                        <a class="text-muted"><span>{{ message.message}}</span></a>
-                                    </div>
-                                <!-- </article> -->
-                            </a>
-                            <!-- <hr> -->
-                        </li>
-                    </ul>
-                </v-scroll>
-            <div>
-            </div>
+            <v-scroll :height="Height(100)" class="pl-0" color="#ccc" style="background-color:white" bar-width="8px">
+                <ul style="margin-left:-35px">
+                    <li v-for="(message,index) in messagesWhereLike" class="chat_block pt-3 pb-3 founded-messages" :key="index">
+                        <a href="javascript:void()" @click.prevent="findAroundMessageId;">
+                            <div class="">
+                                <span class="mt-2 text-muted" style="font-size:0.8em">{{getLastMessageTime(message.created_at)}}</span>
+                                <div class="media-body mb-2 mt-1 chat_content"><span class="text-muted">{{ message.message}}</span></div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </v-scroll>
         </div>
         
-        <!-- Edit side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div v-if="show_edit_right_side==true" class="col-lg-3 bg-white p-0">
-            <attendantCRUDContact :action='"edit"' :item='item' @onclose='fn_show_edit_right_side' @reloadContacts='reloadContacts'></attendantCRUDContact>
-        </div>
-
         <!-- Modal to delete contact-->
         <b-modal v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
-            <attendantCRUDContact :action='"delete"' :item='item' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+            <attendantCRUDContact :action='"delete"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
         </b-modal>
 
         <!-- Modal to show image-->
@@ -539,17 +677,13 @@
     import vScroll from "../../plugins/scroll/vScroll.vue";
     import rightSideBar from '../../layouts/right-side-bar'
     import leftSideBar  from '../../layouts/left-side-bar'
-    
-    import miniToastr from "mini-toastr";
-    miniToastr.init();
-    import ApiService from "../../../common/api.service";
+    import miniToastr from "mini-toastr"; miniToastr.init();
+    import ApiService from "src/common/api.service";
+    import validation from "src/common/validation.service";
+    import Echo from 'laravel-echo'; window.Pusher = require('pusher-js');
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
-
-    import Echo from 'laravel-echo';
-    window.Pusher = require('pusher-js');
-    
 
     export default {
         components: {
@@ -563,21 +697,29 @@
 
         data() {
             return {
-                user:{},
-                isSearchContact:false,                
+                loggedAttendant:{},                
 
                 contacts_url: 'contacts',
                 contacts_bag_url: 'getBagContact',
                 chat_url: 'chats',
+
                 contacts:[],
+                selectedContact:{},
+                selectedContactToEdit:{},
                 amountContactsInBag:0,
-                selected_contact_index: -1,
+                selectedContactIndex: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
-                item:{},
                 
-                isSending:false,
                 messages:[],
+                searchMessageByStringInput:'',
+                messagesWhereLike:[],
+                findAroundMessageId:null,
+                pageNumber:0,
+                messageTimeDelimeter:'',
+                file:null,
+                pathFiles:'',
+                referenceFileInput:null,
                 newMessage: {
                     'attendant_id':0,
                     'contact_id':0,
@@ -588,18 +730,18 @@
                     'socialnetwork_id':1, //Whatsapp
                 },
 
-                searchMessageByStringInput:'',
-                messagesWhereLike:[],
-                
-                
-                contactInformation:false,
+                showContactInformation:false,
+                showContactSummary:false,
+                showContactMedia:false,
+                showContacDocuments:false,
+                showChatRightSide:false,
+                showChatFindMessages:false,
 
-
-                messageTimeDelimeter:'',
-
-                file:null,
-                pathFiles:'',
-                referenceFileInput:null,
+                isSearchContact:false,
+                isEditingContact:false,
+                isEditingContactSummary:false,
+                isSending:false,
+                isUpdatingContact:false,
 
                 modalRemoveSelectedFile:false,
                 modalSendMessageFiles:false,
@@ -610,12 +752,9 @@
                 modalShowVideoSrc:'',
                 modalNewContactFromBag:false,
                 modalUserCRUDDatas:false,
-
-                show_chat_right_side:false,
-                show_chat_find_right_side:false,
-                show_edit_right_side:false,
-                right_layout:'toggle-edit-contact',
-                left_layout:'toggle-add-contact',
+                
+                rightLayout:'toggle-edit-contact',
+                leftLayout:'toggle-add-contact',
 
                 window: {width: 0,height: 0},
 
@@ -627,7 +766,7 @@
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
-                    this.newMessage.contact_id = this.contacts[this.selected_contact_index].id;
+                    this.newMessage.contact_id = this.contacts[this.selectedContactIndex].id;
 
                     this.isSending = true;
 
@@ -653,7 +792,7 @@
                             }
                             message.time = this.getMessageTime(message.created_at)
                             this.messages[this.messages.length]=message;
-                            this.contacts[this.selected_contact_index].last_message = message;
+                            this.contacts[this.selectedContactIndex].last_message = message;
                             this.newMessage.message = "";
                             this.file = null;
                             this.$refs.message_scroller.scrolltobottom();
@@ -720,12 +859,19 @@
             }, 
 
             getContactChat: function(contact) {
+                if(this.showChatRightSide) this.displayChatRightSide();
+                if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
-                if(this.selected_contact_index!=contact.index){
-                    this.selected_contact_index = contact.index;
-                    ApiService.get(this.chat_url,{'contact_id':contact.id, 'page':0})
+                if(this.selectedContactIndex!=contact.index){                    
+                    this.selectedContactIndex = contact.index;
+                    ApiService.get(this.chat_url,{
+                        'contact_id':contact.id,
+                        'message_id': this.findAroundMessageId,
+                        'page':this.pageNumber
+                    })
                         .then(response => {
-                            this.contacts[this.selected_contact_index].count_unread_messagess =0;
+                            this.findAroundMessageId = null;
+                            this.contacts[this.selectedContactIndex].count_unread_messagess =0;
                             this.messagesWhereLike = [];
                             this.searchMessageByStringInput = [];
                             this.messages = response.data; 
@@ -756,6 +902,8 @@
                                 }
                             });
                             This.messages = Object.assign({}, This.messages_copy);
+                            This.selectedContact = This.contacts[This.selectedContactIndex];
+                            This.selectedContactToEdit = Object.assign({}, This.selectedContact);
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error carregando os contatos");   
@@ -771,7 +919,7 @@
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
                 if (this.searchMessageByStringInput.length > 1){
                     ApiService.get(this.chat_url,{
-                            'contact_id': this.contacts[this.selected_contact_index].id,
+                            'contact_id': this.contacts[this.selectedContactIndex].id,
                             'searchMessageByStringInput': this.searchMessageByStringInput,
                             'page': 1
                         })
@@ -783,6 +931,37 @@
                         });
                 } else{
                     this.messagesWhereLike = [];
+                }
+            },
+
+            updateContact: function() {
+                if(!this.selectedContactToEdit.whatsapp_id || this.selectedContactToEdit.whatsapp_id.trim() =='' || this.selectedContactToEdit.first_name.trim() ==''){
+                    miniToastr.error(error, "Confira os dados fornecidos");
+                    return;
+                }
+                if(!this.selectedContactToEdit.whatsapp_id.includes('@s.whatsapp.net'))
+                    this.selectedContactToEdit.whatsapp_id+='@s.whatsapp.net';
+                this.isUpdatingContact = true;
+                ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
+                .then(response => {
+                    miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                    this.getContacts();
+                    this.isUpdatingContact = false;
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro adicionando contato");  
+                });
+            },
+
+            chatMessageScroling: function(value){
+                if(value<10){
+                    this.pageNumber --;
+                    //get new page of messages
+                }else
+                if(value>90){
+                    this.pageNumber ++;
+                    //get new page of messages
                 }
             },
 
@@ -878,7 +1057,7 @@
 
             pathContactMessageFile(contact_id, file_name) {
                 let pathFile = process.env.MIX_FILE_PATH +'/' + 
-                            JSON.parse(localStorage.user).company_id +'/' +
+                            this.loggedAttendant.company_id +'/' +
                             'contacts' +'/' +
                             contact_id +'/' +
                             'chat_files' +'/' +
@@ -897,59 +1076,40 @@
                 // document.getElementById(id).classList.remove("message-hover");
             },
 
-            fn_show_chat_right_side(){
-                if(this.show_chat_right_side==false){
+            displayChatRightSide(){
+                if(this.showChatRightSide==false){
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
-                    this.show_chat_find_right_side = false;
-                    this.show_edit_right_side = false;
-                    this.show_chat_right_side = true;
+                    this.showChatFindMessages = false;
+                    this.showChatRightSide = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
-                    this.show_chat_find_right_side = false;
-                    this.show_edit_right_side = false;
-                    this.show_chat_right_side = false;
+                    this.showChatFindMessages = false;
+                    this.showChatRightSide = false;
                 }
+                this.showContactInformation=true;
+                this.showContactSummary=false;
+                this.showContactMedia=false;
+                this.showContacDocuments=false;
             },
 
-            fn_show_chat_find_right_side(){
-                if(this.show_chat_find_right_side==false){
+            displayChatFindMessage(){
+                if(this.showChatFindMessages==false){
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
-                    this.show_chat_right_side = false;
-                    this.show_edit_right_side = false;
-                    this.show_chat_find_right_side = true;
+                    this.showChatRightSide = false;
+                    this.showChatFindMessages = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
-                    this.show_chat_right_side = false;
-                    this.show_edit_right_side = false;
-                    this.show_chat_find_right_side = false;
+                    this.showChatRightSide = false;
+                    this.showChatFindMessages = false;
                 }
             },
 
-            fn_show_edit_right_side(){
-                if(this.show_edit_right_side==false){
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
-                    this.show_chat_right_side = false;
-                    this.show_chat_find_right_side = false;
-                    this.show_edit_right_side = true;
-                    if(this.selected_contact_index>=0){
-                        this.item = this.contacts[this.selected_contact_index];
-                    }
-                }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
-                    this.show_chat_right_side = false;
-                    this.show_chat_find_right_side = false;
-                    this.show_edit_right_side = false;
-                }
-            },
-
-            fn_show_delete_modal(){
-                this.item = this.contacts[this.selected_contact_index]; 
+            displayDeleteContact(){
+                this.item = this.contacts[this.selectedContactIndex]; 
                 this.modalDeleteContact=!this.modalDeleteContact;
             },
 
@@ -957,13 +1117,8 @@
                 return (this.window.height-val)+'px';
             },
 
-            toggle_right(val) {
-                this.right_layout = val;
-                this.$store.commit('rightside_bar', "toggle");
-            },
-
-            toggle_left(val) {
-                this.left_layout = val;
+            toggleLeft(val) {
+                this.leftLayout = val;
                 this.$store.commit('leftside_bar', "toggle");
             },
 
@@ -1003,22 +1158,26 @@
                 delete axios.defaults.headers.common['Authorization']
                 this.$router.push({name: "login"})
             },
+
+            copyContact(){
+                this.item= Object.assign({}, this.contacts[this.selectedContactIndex]);
+            }
         },
 
         updated(){
-            if(this.selected_contact_index>=0)
+            if(this.selectedContactIndex>=0)
                 this.$refs.message_scroller.scrolltobottom();
         },
 
         beforeMount() {
-            this.user = JSON.parse(window.localStorage.getItem('user'));
+            this.loggedAttendant = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
         },
 
-        mounted(){            
+        mounted(){
             window.Echo = new Echo({
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
@@ -1030,11 +1189,10 @@
                 disableStats: false
             });
 
-            var attendant_id = JSON.parse(localStorage.user).id;
-            window.Echo.channel('sh.message-to-attendant.' + attendant_id)
+            window.Echo.channel('sh.message-to-attendant.' + this.loggedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
                     var message = JSON.parse(e.message);
-                    if(this.selected_contact_index >= 0 && this.contacts[this.selected_contact_index].id == message.contact_id){
+                    if(this.selectedContactIndex >= 0 && this.contacts[this.selectedContactIndex].id == message.contact_id){
                         try {
                             if(message.data != "" && message.data != null && message.data.length>0) {
                                 message.data = JSON.parse(message.data);
@@ -1047,7 +1205,7 @@
 
                         message.time = this.getMessageTime(message.created_at)
                         this.messages[this.messages.length]=message;
-                        this.contacts[this.selected_contact_index].last_message = message;
+                        this.contacts[this.selectedContactIndex].last_message = message;
                         this.$refs.message_scroller.scrolltobottom();
                     }else{
                         var This = this;
@@ -1059,16 +1217,15 @@
                         });
                     }
                     this.$refs.newMessageSound.play();
-                });
+            });
 
-            var company_id = JSON.parse(localStorage.user).company_id;
-            window.Echo.channel('sh.contact-to-bag.' + company_id)
+            window.Echo.channel('sh.contact-to-bag.' + this.loggedAttendant.company_id)
                 .listen('NewContactMessage', (e) => {
                     if(this.amountContactsInBag<e.message)
                         this.$refs.newContactInBag.play();
                     console.log(e);
                     this.amountContactsInBag = e.message;
-                });
+            });
                 
         },
 
@@ -1126,7 +1283,6 @@
 
 
 <style scoped lang="scss">
-
     .desc-img {
         height: 3.6em;
         width: 3.6em;
@@ -1156,7 +1312,6 @@
 
     .converstion_back {        
         height:100%;
-        
         // height: calc(100% - 170px);
         overflow: hidden;
         background: #fff !important;
@@ -1175,7 +1330,7 @@
                 height: 2em;
             }
         }
-       /deep/ .ss-wrapper{
+    /deep/ .ss-wrapper{
             background-color: transparent;
             top: 0%;
             height: 96%;
@@ -1241,8 +1396,11 @@
         p {
             background-color: #fff;
             border-bottom-left-radius:0px;
-            left: 55px;
+            margin-left: 55px !important;
             margin-bottom: 0px;
+        }
+        .text-message{
+            font-size:1.2em; 
         }
     }
 
@@ -1257,7 +1415,7 @@
         // border: 12px solid;
         // border-color: #d4d2d2 transparent transparent transparent;
     }
-    
+
     .sent div p::after{
         // content: ' ';
         // position: absolute;
@@ -1288,25 +1446,20 @@
         p {
             background-color: #0377FE;  // background-color: #dbf2fa;
             border-bottom-right-radius:0px;
-            right: 55px;
+            right: 55px !important;
             margin-bottom: 0px;
         }
         .text-message{
             color:white;
+            font-size:1.2em; 
         }
     }
-
-    .text-message{
-        nfot-size:1.2em; 
-    }
-
-
 
     .self {
         justify-content: flex-end;
         align-items: flex-end;
     }
-    
+
     .self .msg {
         order: 1;
         border-bottom-right-radius: 0px;
@@ -1391,13 +1544,13 @@
         background-color:#fffff8;
         font-size:1em;
     }
-    
+
     .search-input:focus{
         outline: 0 !important;
         // border: none !important;
         box-shadow: none;
     }
-    
+
     .menu{
         z-index: 100;
         list-style:none; 
@@ -1451,7 +1604,7 @@
     .menu, li, a, a:active, a:focus {
         outline: none;
     }
-   
+
     .sect_header{
         background-color:#fefefe;
         // height:70px;
@@ -1493,15 +1646,13 @@
         overflow: hidden;
     }  
 
-    .mycontrolBar{
+    .mycontrolBar ml-2{
         background-color: white !important;
-        // opacity:0.5;
         color:white;
     }
 
     audio {
         width:23em;
-        // width: 270px;
         height: 25px;
         border-radius: 3px;
         transform: scale(1.05);
@@ -1587,7 +1738,7 @@
         -moz-box-shadow: none;
         box-shadow: none;
         resize: none;
-        scrollbar-color: rebeccapurple green;
+        scrollbar-color: rgba(0, 0, 0, 0.3) white;
     }
 
     .text-input-message:focus{
@@ -1747,6 +1898,11 @@
         background-color:#d8d6d6 ; 
     }
 
+    .founded-messages:hover{
+        background-color:#fafafa !important;
+        cursor: pointer;
+    }
+
     .principal-icons{
         width: 2em !important;
         height: 2em !important;
@@ -1821,4 +1977,49 @@
         to   { opacity: 1; }
     }
 
+    .action-icons-fade{
+        height:2em;width:2em; padding-top:0.5em; 
+    }
+
+    .action-icons-fade:hover{
+        cursor: pointer;
+    }
+
+    .receivedMessageText{
+        color: black;
+        background-color:white; 
+        padding:1em; max-width:30em; 
+        border-top-left-radius:1em; 
+        border-top-right-radius:1em; 
+        border-bottom-right-radius:1em;
+        min-width: 15em;
+        max-width: 40em;
+    }
+    
+    .receivedMessageImg{
+        width:40px;
+        height:40px;
+        position:relative; 
+        top:-1.6em; 
+        right:-1em
+    }
+
+    .sendedMessageText{
+        color: white;
+        background-color: #0377FE;
+        padding:1em; max-width:30em; 
+        border-top-left-radius:1em; 
+        border-top-right-radius:1em; 
+        border-bottom-left-radius:1em;
+        min-width: 15em;
+        max-width: 40em;
+    }
+    .sendedMessageImg{
+        width:40px;
+        height:40px;
+        position:relative; 
+        top:-1.6em; 
+        right:1.4em
+    }
+   
 </style>
