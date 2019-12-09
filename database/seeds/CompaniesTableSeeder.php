@@ -36,7 +36,7 @@ class CompaniesTableSeeder extends Seeder
         Company::create([
             'id' => '3',
             'name' => 'Social Hub Bruno',
-            'phone' => '551199723-9998@c.us',
+            'phone' => '5511997239998@c.us',
             'rpi_id' => '2',
             'description' => 'Companie Social Hub Bruno',
         ]);
