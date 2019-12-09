@@ -29,10 +29,7 @@
                             <span class="fa fa-whatsapp form-control-feedback"></span>
                             <input v-model="modelCompany.whatsapp" name="whatsapp" id="whatsapp" type="text" required placeholder="whatsapp (*)" class="form-control"/>
                         </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelCompany.ngrok_url" id="ngrok_url" name="ngrok_url" type="text" required placeholder="URL " class="form-control"/>                            
-                        </div>                                                      
+
                     </div>
                     <div class="row">
                         <div class="col-lg-12 form-group has-search">
@@ -161,6 +158,7 @@
             companies_url:'',
             users_url:'',
             usersManager_url:'',
+            rpi_url:'',
             action: "",
             model_company:{},
             model_manager:{},
@@ -178,7 +176,6 @@
                     phone: "",
                     email: "",
                     whatsapp: "",
-                    ngrok_url: "",
                     description: "",
                 },
 
@@ -219,35 +216,48 @@
                 this.modelManager.id=1;
                 this.modelManager.role_id=3;
                 this.modelManager.image_path = "images/user.jpg";
-                // inserindo company
-                ApiService.post(this.companies_url, this.modelCompany)
-                .then(response => {
-                    this.modelManager.company_id = response.data.id;
-                    // inserindo user
-                    ApiService.post(this.users_url, this.modelManager)
+
+                //inserindo canal de comunicação.
+                ApiService.post(this.rpi_url, this.modelRpi)
                         .then(response => {
-                           //inserindo userManager
-                           ApiService.post(this.usersManager_url, {'user_id':response.data.id})
-                                .then(response => {
-                                    miniToastr.success("Atendente adicionado com sucesso","Sucesso");
-                                    this.formReset();
-                                    this.reload();
-                                    this.closeModals();
+                            this.modelCompany.rpi_id = response.data.id;
+                            // inserindo company
+                                ApiService.post(this.companies_url, this.modelCompany)
+                                    .then(response => {
+                                        this.modelManager.company_id = response.data.id;
+                                        this.modelRpi.company_id = response.data.id;
+                                        // inserindo user
+                                        ApiService.post(this.users_url, this.modelManager)
+                                                .then(response => {
+                                                //inserindo userManager
+                                                ApiService.post(this.usersManager_url, {'user_id':response.data.id})
+                                                        .then(response => {
+                                                            miniToastr.success("Empresa adicionada com sucesso","Sucesso");
+                                                            this.formReset();
+                                                            this.reload();
+                                                            this.closeModals();
+                                                        })
+                                                        .catch(function(error) {
+                                                            ApiService.process_request_error(error); 
+                                                            miniToastr.error(error, "Erro adicionando Manager");  
+                                                        });
+                                                
+                                                })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error); 
+                                            miniToastr.error(error, "Erro adicionando Manager");  
+                                        });
+
                                 })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error); 
-                                miniToastr.error(error, "Erro adicionando Atendente");  
-                            });
-                           
-                        })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando Atendente");  
-                    });
+                                .catch(function(error) {
+                                    ApiService.process_request_error(error); 
+                                    miniToastr.error(error, "Erro adicionando Empresa");  
+                                });
+
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
+                    miniToastr.error(error, "Erro adicionando canal de comunicação");  
                 });
             },
             
@@ -263,51 +273,75 @@
                 delete this.modelCompany.updated_at;
                 delete this.modelManager.created_at;
                 delete this.modelManager.updated_at;
-                ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
-                    .then(response => {
-                        ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                            .then(response => {
-                                miniToastr.success("Manager atualizado com sucesso","Sucesso");
-                                this.reload();
-                                this.closeModals();
-                            })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro atualizando Manager"); 
-                            });
-                    })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando companhia"); 
-                    });
+                delete this.modelRpi.created_at;
+                delete this.modelRpi.updated_at;
+
+                ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                        .then(response => {
+
+                            ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
+                                .then(response => {
+                                    ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                                        .then(response => {
+                                            miniToastr.success("Manager atualizado com sucesso","Sucesso");
+                                            this.reload();
+                                            this.closeModals();
+                                        })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error);  
+                                            miniToastr.error(error, "Erro atualizando Manager"); 
+                                        });
+                                })
+                                .catch(function(error) {
+                                    ApiService.process_request_error(error);  
+                                    miniToastr.error(error, "Erro atualizando companhia"); 
+                                });
+
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro atualizando canal de comunicação");  
+                });
             },
 
+
             deleteCompany: function(){
-                ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
-                    .then(response => {
-                        
-                        ApiService.delete(this.users_url+'/'+this.modelManager.id)
-                            .then(response => {
-                                ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
-                                    .then(response => {
-                                        miniToastr.success("Companhia eliminada com sucesso","Sucesso");
-                                        this.reload();
-                                        this.closeModals();
-                                    })
-                                    .catch(function(error) {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Companhia"); 
-                                    });
-                            })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando Manager"); 
-                            });
-                    })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Manager"); 
-                    });
+
+                ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
+                        .then(response => {
+
+                            ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
+                                .then(response => {
+                                    
+                                    ApiService.delete(this.users_url+'/'+this.modelManager.id)
+                                        .then(response => {
+                                            ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
+                                                .then(response => {
+                                                    miniToastr.success("Companhia eliminada com sucesso","Sucesso");
+                                                    this.reload();
+                                                    this.closeModals();
+                                                })
+                                                .catch(function(error) {
+                                                    ApiService.process_request_error(error);  
+                                                    miniToastr.error(error, "Erro eliminando Companhia"); 
+                                                });
+                                        })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error);  
+                                            miniToastr.error(error, "Erro eliminando Manager"); 
+                                        });
+                                })
+                                .catch(function(error) {
+                                    ApiService.process_request_error(error);  
+                                    miniToastr.error(error, "Erro eliminando Manager"); 
+                                });
+
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro eliminando canal de comunicação");  
+                });
+
             },
 
             formReset:function(){
@@ -317,8 +351,7 @@
                 this.modelCompany.email = "";
                 this.modelCompany.description = "";
                 this.modelCompany.whatsapp = "";
-                this.modelCompany.ngrok_url = "";
-
+                
                 this.modelManager.name = "";
                 this.modelManager.login = "";
                 this.modelManager.email = "";

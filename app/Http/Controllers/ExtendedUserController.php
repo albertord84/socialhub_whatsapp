@@ -62,7 +62,9 @@ class ExtendedUserController extends UserController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
-        
+
+        $input['password'] = bcrypt('123456');
+
         $user = $this->userRepository->create($input);
 
         Flash::success('User saved successfully.');
@@ -120,11 +122,10 @@ class ExtendedUserController extends UserController
      */
     public function update($id, UpdateUserRequest $request)
     {
-        if(isset($request->password) )
-            $request->password = bcrypt($request->password);
+        if(isset($request['password']))
+            $request['password'] = bcrypt($request['password']);
         else 
-            unset($request->password);
-
+            unset($request['password']);
         $user = $this->userRepository->findWithoutFail($id);
         if (empty($user)) {
             Flash::error('User not found');

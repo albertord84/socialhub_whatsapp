@@ -61,7 +61,9 @@ class RpiController extends AppBaseController
 
         Flash::success('Rpi saved successfully.');
 
-        return redirect(route('rpis.index'));
+        // return redirect(route('rpis.index'));
+        return $rpi->toJson();
+
     }
 
     /**
@@ -81,7 +83,8 @@ class RpiController extends AppBaseController
             return redirect(route('rpis.index'));
         }
 
-        return view('rpis.show')->with('rpi', $rpi);
+        // return view('rpis.show')->with('rpi', $rpi);
+        return $rpi->toJson();
     }
 
     /**
@@ -101,7 +104,8 @@ class RpiController extends AppBaseController
             return redirect(route('rpis.index'));
         }
 
-        return view('rpis.edit')->with('rpi', $rpi);
+        // return view('rpis.edit')->with('rpi', $rpi);
+        return $rpi->toJson();
     }
 
     /**
@@ -126,7 +130,9 @@ class RpiController extends AppBaseController
 
         Flash::success('Rpi updated successfully.');
 
-        return redirect(route('rpis.index'));
+        // return redirect(route('rpis.index'));
+        return $rpi->toJson();
+
     }
 
     /**
@@ -150,6 +156,7 @@ class RpiController extends AppBaseController
 
         Flash::success('Rpi deleted successfully.');
 
-        return redirect(route('rpis.index'));
+        // return redirect(route('rpis.index'));
+        return $rpi->toJson();
     }
 }
