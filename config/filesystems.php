@@ -43,6 +43,12 @@ return [
 
     'disks' => [
 
+        'chats_files_1' => [
+            'driver' => 'local',
+            // 'root' => storage_path('app/public/' . env('APP_FILE_PATH')),
+            'root' => base_path() . '/public/' . env('APP_FILE_PATH_1'),
+        ],
+
         'chats_files' => [
             'driver' => 'local',
             // 'root' => storage_path('app/public/' . env('APP_FILE_PATH')),
