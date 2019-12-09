@@ -24,7 +24,6 @@
                             <input v-model="modelCompany.email" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
                         </div>                                                      
                     </div>
-
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
@@ -35,7 +34,6 @@
                             <input v-model="modelCompany.ngrok_url" id="ngrok_url" name="ngrok_url" type="text" required placeholder="URL " class="form-control"/>                            
                         </div>                                                      
                     </div>
-
                     <div class="row">
                         <div class="col-lg-12 form-group has-search">
                             <textarea v-model="modelCompany.description" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
@@ -125,17 +123,7 @@
                             <span class="fa fa-phone form-control-feedback"></span>
                             <input v-model="modelManager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
-                    </div>                
-                    <!-- <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" name="whatsapp_id" id="whatsapp_id" type="text" placeholder="Whatsapp" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="modelManager.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
-                        </div>
-                    </div>                 -->
+                    </div>                                   
                 </div> 
                                
                 <div class="col-lg-12 m-t-25 text-center">
@@ -161,6 +149,9 @@
     import ApiService from "../../../../common/api.service";
     import miniToastr from "mini-toastr";
     miniToastr.init();
+
+    import VueFormWizard from 'vue-form-wizard'
+    import 'vue-form-wizard/dist/vue-form-wizard.min.css'
     
     export default {
         // name: 'adminCRUDSellers',

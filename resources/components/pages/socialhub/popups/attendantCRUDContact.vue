@@ -25,12 +25,12 @@
                             <input v-model="model.first_name" id="first_name" name="first_name" type="text" autofocus placeholder="Nome completo" class="form-control"/>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="mdi mdi-email-outline form-control-feedback"></span>
-                            <input v-model="model.email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                            <input v-model="model.email" name="email" id="email" type="text" placeholder="Email" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -42,15 +42,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <div class="form-group">
+                <!-- <div class="col-lg-12"> -->
+                    <!-- <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
                             <input v-model="model.whatsapp_id" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                         </div>
+                    </div> -->
+
+                <!-- </div> -->
+                <div class="col-lg-12 input-group mb-5">
+                    <div class="input-group-prepend">
+                        <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2" required placeholder="WhatsApp (*)" style="background-color:white"></span>
+                    </div>
+                    <input type="text" v-model="model.whatsapp_id" class="form-control border-left-0" placeholder="Whatsapp (*)" >
+                    <div class="input-group-append">
+                        <span class="fa fa-check btn btn-info input-group-text text-muted border-right-0 pt-2" @click.prevent="checkWhatsappNumber"></span>
                     </div>
                 </div>
-                <div class="col-lg-12">
+                
+                <!-- <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-facebook form-control-feedback"></span>
@@ -73,9 +84,9 @@
                             <input v-model="model.linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
-                <div  class="col-lg-12">
+                <div  class="col-lg-12 mt-5">
                     <ul class="list-inline">
                         <li class="list-inline-item">
                             <a href="javascript:void(0)" @click.prevent="show_sumary=!show_sumary" v-show="show_sumary==false" class="box"><i class="fa fa-angle-double-down"></i> Resumo</a>
@@ -87,7 +98,6 @@
                         </li>
                     </ul>
                 </div>
-
                 <div  class="col-lg-12">
                     <div v-show="show_sumary==true" class="form-group">
                         <textarea v-model="model.summary" @keyup="countLengthSumary" name="summary" id="summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="3"></textarea>
@@ -100,8 +110,9 @@
                         <label class="form-group has-search-color" for="form-group">{{remember_length}}/500</label>
                     </div>
                 </div>
+
                 <div class="col-lg-12 mt-2 text-center">
-                    <button v-if='action=="insert"' type="button" class="btn btn-primary btn_width" :disabled='isSending' @click.prevent="addContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar</button>
+                    <button v-if='action=="insert"' type="button" class="btn btn-primary btn_width" :disabled='isSending || !whatssapChecked' @click.prevent="addContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar</button>
                     <button v-if='action=="edit"' type="button" class="btn btn-primary btn_width" :disabled='isSending' @click.prevent="updateContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar</button>
                     <button type="reset"  class="btn btn-effect-ripple btn-secondary btn_width reset_btn1" @click.prevent="formReset();toggle_left('close')">Cancelar</button>
                 </div>
@@ -123,6 +134,8 @@
     import ApiService from "resources/common/api.service";    
     import miniToastr from "mini-toastr";
     miniToastr.init();
+
+    import validation from "src/common/validation.service";
 
     Vue.use(VueForm, options);
     export default {
@@ -159,6 +172,8 @@
                 },
 
                 isSending: false,
+                whatssapChecked: true,                
+                // whatssapChecked: false,                
 
                 summary_length:0,
                 remember_length:0,
@@ -175,6 +190,10 @@
 
         methods: {
             addContact: function () {
+                if(!this.whatssapChecked){
+                    miniToastr.warn("Atenção","Precisa informar e conferir o número de Whatsapp");  
+                    return;
+                }
                 if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
                     miniToastr.error("Confira os dados fornecidos","Alguns dados incompletos");  
                     return;
@@ -228,6 +247,9 @@
                     miniToastr.error(error, "Confira os dados fornecidos");  
                     return;
                 }
+                if(!this.modal.whatsapp_id.includes('@s.whatsapp.net'))
+                    this.modal.whatsapp_id+='@s.whatsapp.net';
+                this.isSending = true;
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -253,6 +275,19 @@
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro eliminando o contato"); 
                     });  
+            },
+
+            checkWhatsappNumber:function(){
+                ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
+                    .then(response => {
+                        console.log(response.data);
+                        this.whatssapChecked = true;
+                        miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error);  
+                        miniToastr.error(error, "Número de Whatsapp incorreto ou não existe"); 
+                    }); 
             },
 
             formReset:function(){
@@ -386,6 +421,19 @@
     }
     .has-search .form-control-feedback {
         position: absolute;
+        z-index: 2;
+        display: block;
+        width: 2.375rem;
+        height: 2.375rem;
+        line-height: 2.375rem;
+        text-align: center;
+        pointer-events: none;
+        color: #aaa;
+    }  
+
+    .has-search .form-control-feedback-2 {
+        position: absolute;
+        right: 0px;
         z-index: 2;
         display: block;
         width: 2.375rem;
