@@ -16,7 +16,9 @@ export default {
         maxHeight: null,
         color: null,
         barWidth: null,
-        alwaysvisible: Boolean
+        alwaysvisible: Boolean,
+
+        seeSrolling:false,
     },
     mounted() {
         this.dragDealer();
@@ -62,10 +64,15 @@ export default {
             var totalHeight = content.scrollHeight,
                 ownHeight = content.clientHeight;
             this.scrollRatio = ownHeight / totalHeight;
+
             // Hide scrollbar if no scrolling is possible
             if (this.scrollRatio >= 1) {
                 bar.classList.add('ss-hidden');
             } else {
+                if(this.seeSrolling){
+                    var value = parseInt((content.scrollTop / totalHeight) * 100);
+                    this.$emit('onscrolling',value);
+                }
                 bar.classList.remove('ss-hidden');
                 bar.style.cssText = 'height:' + (this.scrollRatio) * 100 + '%; top:' + (content.scrollTop / totalHeight) * 100 + '%;right:-' + (this.$refs.vscroll.clientWidth - bar.clientWidth) + 'px;background-color:' + this.color + ';width:' + this.barWidth;
             }
@@ -81,6 +88,7 @@ export default {
     }
 }
 </script>
+
 <style>
     .ss-wrapper {
         overflow: hidden;

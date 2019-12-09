@@ -24,7 +24,6 @@
                             <input v-model="modelCompany.email" id="email" name="email" type="email" required placeholder="Email" class="form-control"/>                            
                         </div>                                                      
                     </div>
-
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
@@ -32,10 +31,9 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelCompany.ngrok_url" id="ngrok_url" name="ngrok_url" type="text" required placeholder="URL" class="form-control"/>                            
+                            <input v-model="modelCompany.ngrok_url" id="ngrok_url" name="ngrok_url" type="text" required placeholder="URL do canal de comunicação" class="form-control"/>                            
                         </div>                                                      
                     </div>
-
                     <div class="row">
                         <div class="col-lg-12 form-group has-search">
                             <textarea v-model="modelCompany.description" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
@@ -43,6 +41,67 @@
                     </div>
                 </div>
                 <hr>
+
+                <div>
+                    <h3>Dados do canal de comunicação</h3>
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="modelRpi.api_user" name="api_user" id="api_user" type="text" required placeholder="Usuario da API (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-key form-control-feedback"></span>
+                            <input v-model="modelRpi.api_password" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API (*)" class="form-control"/>
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="modelRpi.root_user" name="root_user" id="root_user" type="text" required placeholder="Usuario Root (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-key form-control-feedback"></span>
+                            <input v-model="modelRpi.root_password" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root (*)" class="form-control"/>
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.tcp_tunnel" name="tcp_tunnel" id="tcp_tunnel" type="text" required placeholder="Tunnel TCP (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.tcp_port" id="tcp_port" name="tcp_port" type="text" required placeholder="Porto TCP (*)" class="form-control"/>
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.mac" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.api_tunnel" id="api_tunnel" name="api_tunnel" type="text" required placeholder="Tunnel da API (*)" class="form-control"/>                            
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-cog form-control-feedback"></span>
+                            <input v-model="modelRpi.soft_version" name="soft_version" id="soft_version" type="text" required placeholder="Versão do Software (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-cog form-control-feedback"></span>
+                            <input v-model="modelRpi.soft_version_date" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software (*)" class="form-control"/>                            
+                        </div>                                                      
+                    </div>
+
+                </div>
+                <hr>
+
                 <div class="pb-5">
                     <h3>Dados do manager da empresa</h3>
                     <div class="row">
@@ -64,17 +123,7 @@
                             <span class="fa fa-phone form-control-feedback"></span>
                             <input v-model="modelManager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
-                    </div>                
-                    <!-- <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" name="whatsapp_id" id="whatsapp_id" type="text" placeholder="Whatsapp" class="form-control"/>
-                        </div>
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-facebook form-control-feedback"></span>
-                            <input v-model="modelManager.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
-                        </div>
-                    </div>                 -->
+                    </div>                                   
                 </div> 
                                
                 <div class="col-lg-12 m-t-25 text-center">
@@ -100,6 +149,9 @@
     import ApiService from "../../../../common/api.service";
     import miniToastr from "mini-toastr";
     miniToastr.init();
+
+    import VueFormWizard from 'vue-form-wizard'
+    import 'vue-form-wizard/dist/vue-form-wizard.min.css'
     
     export default {
         // name: 'adminCRUDSellers',
@@ -112,6 +164,7 @@
             action: "",
             model_company:{},
             model_manager:{},
+            model_rpi:{},
         },
 
         components:{
@@ -127,8 +180,21 @@
                     whatsapp: "",
                     ngrok_url: "",
                     description: "",
-
                 },
+
+                modelRpi:{ //dados do canal de comunicação
+                    api_user: "",
+                    api_password: "",
+                    root_user: "",
+                    root_password: "",
+                    tcp_tunnel: "",
+                    tcp_port: "",
+                    mac: "",
+                    api_tunnel: "",
+                    soft_version: "",
+                    soft_version_date: "",
+                },
+
                 modelManager:{ //manager da empresa
                     name: "",
                     role_id: "",
@@ -188,6 +254,8 @@
             editCompany: function() { //U
                 this.modelManager = Object.assign({}, this.model_manager);
                 this.modelCompany = Object.assign({}, this.model_company);
+                this.modelRpi = Object.assign({}, this.model_rpi);
+
             },
 
             updateCompany: function() { 
@@ -257,11 +325,23 @@
                 this.modelManager.password = "";
                 this.modelManager.CPF = "";
                 this.modelManager.phone = "";
-                this.modelManager.image_path= "";
-                this.modelManager.whatsapp_id= "";
-                this.modelManager.facebook_id= "";
-                this.modelManager.instagram_id= "";
-                this.modelManager.linkedin_id="";
+                this.modelManager.image_path = "";
+                this.modelManager.whatsapp_id = "";
+                this.modelManager.facebook_id = "";
+                this.modelManager.instagram_id = "";
+                this.modelManager.linkedin_id = "";
+
+                this.modelRpi.api_user = "";
+                this.modelRpi.api_password = "";
+                this.modelRpi.root_user = "";
+                this.modelRpi.root_password = "";
+                this.modelRpi.tcp_tunnel = "";
+                this.modelRpi.tcp_port = "";
+                this.modelRpi.mac = "";
+                this.modelRpi.api_tunnel = "";
+                this.modelRpi.soft_version = "";
+                this.modelRpi.soft_version_date = "";
+
             },
 
             closeModals(){

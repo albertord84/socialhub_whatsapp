@@ -76,17 +76,17 @@
 
         <!-- Add Companies Modal -->
         <b-modal v-model="modalAddCompanies" size="lg" :hide-footer="true" title="Nova empresa">
-            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
+            <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
         <!-- Edit Companies Modal -->
         <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa">
-            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
+            <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :model_rpi='model_rpi' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
         <!-- Delete Companies Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteCompanies" :hide-footer="true" title="Verificação de cancelamento">
-            <sellerCRUDCompanies :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"delete"' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
+            <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"delete"' :model_rpi='model_rpi' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
         </b-modal>
 
     </div>
@@ -97,6 +97,7 @@
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import sellerCRUDCompanies from "./popups/sellerCRUDCompanies";
+    // import sellerCRUDCompanies from "./popups/sellerCRUDCompaniesWizzard";
 
     export default {
         props: {
@@ -133,11 +134,13 @@
                 companies_url:'companies',  //route to controller
                 users_url:'users',  //route to controller
                 usersManager_url:'usersManagers',  //route to controller
+                rpi_url:'rpis',  //route to controller
                 
                 //---------Specific properties-----------------------------
                 companies_id: "",
                 model_company:'',
                 model_manager:'',
+                model_rpi:'',
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------

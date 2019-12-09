@@ -161,8 +161,13 @@
                 ApiService.delete(this.attendant_contact_url+'/'+this.item.id)
                     .then(response => {
                         
+                        console.log('estoyaqui1');
+
                         ApiService.delete(this.url+'/'+this.item.id)
                             .then(response => {
+                                
+                                console.log('estoyaqui2');
+
                                 //TODO-JR: eliminar un atendente elimina en cascada?
                                 ApiService.delete(this.first_url+'/'+this.item.id)
                                     .then(response => {

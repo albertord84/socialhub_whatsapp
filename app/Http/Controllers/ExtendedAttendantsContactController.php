@@ -19,4 +19,10 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $this->attendantsContactRepository->deleteAllByContactId($contat_id);
     }
 
+
+    // public function deleteAllByAttendantId(int $attendant_id)
+    // {
+    //     $this->attendantsContactRepository->deleteAllByAttendantId($attendant_id);
+    // }
+
 }

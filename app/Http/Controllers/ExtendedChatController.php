@@ -42,6 +42,8 @@ class ExtendedChatController extends ChatController
 
         $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
 
+        
+
         $User = Auth::check() ? Auth::user() : session('logged_user');
         broadcast(new NewContactMessage($User->company_id, $newContactsCount));
 
