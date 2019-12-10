@@ -21,13 +21,20 @@ class RpiRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'company_id',
-        'mac',
-        'tunnel',
         'ip',
-        'password',
         'data',
+
+        'api_user',
+        'api_password',
+        'root_user',
+        'root_password',
+        'tcp_tunnel',
+        'tcp_port',
+        'mac',
+        'api_tunnel',
         'soft_version',
         'soft_version_date'
+
     ];
 
     /**

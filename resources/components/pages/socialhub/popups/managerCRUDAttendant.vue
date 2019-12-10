@@ -49,6 +49,16 @@
                         <input v-model="model.linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
                     </div>
                 </div>
+                <div v-if="action=='edit'" class="row">
+                    <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-key form-control-feedback"></span>
+                            <input v-model="model.password" type="password" placeholder="Senha" class="form-control"/>
+                        </div>
+                    <div class="col-lg-6 form-group has-search">
+                        <span class="fa fa-key form-control-feedback"></span>
+                        <input v-model="model.repeat_password" type="password" placeholder="Repetir senha" class="form-control"/>
+                    </div>
+                </div>
                 <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addAttendant">Adicionar</button>
                     <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateAttendant">Atualizar</button>
@@ -95,6 +105,7 @@
                     role_id: "",
                     email: "",
                     login: "",
+                    password:'',
                     CPF: "",
                     phone: "",
                     image_path: "",
@@ -102,6 +113,8 @@
                     facebook_id: "",
                     instagram_id: "",
                     linkedin_id: "",
+                    password: "",
+                    repeat_password: "",
                 },
             }
         },
@@ -109,7 +122,8 @@
         methods:{
             addAttendant: function() { //C
                 this.model.id=8;
-                this.model.role_id=3;
+                this.model.role_id=4;
+                this.model.password='';
                 this.model.image_path = "images/user.jpg";
                 ApiService.post(this.first_url, this.model)
                 .then(response => {
@@ -137,14 +151,23 @@
             editAttendant: function() { //U
                 this.attendant_id = this.item.id;
                 this.model = Object.assign({}, this.item);
+                this.model.password = this.model.repeat_password = '';
                 this.closeModals();
             },
 
             updateAttendant: function() { //U
+                if(this.model.password.trim()!='' && this.model.password!=this.model.repeat_password){
+                     miniToastr.error('Erro', "As senha não coincidem"); return;
+                }
+
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
                 delete model_cpy.updated_at;
                 delete model_cpy.deleted_at;
+                if(this.model.password.trim()==''){
+                    delete model_cpy.password;
+                    delete model_cpy.repeat_password;
+                }
                 ApiService.put(this.first_url+'/'+this.attendant_id, model_cpy)
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");
@@ -158,17 +181,11 @@
             },
 
             deleteAttendant: function(){
-                ApiService.delete(this.attendant_contact_url+'/'+this.item.id)
+                
+                ApiService.delete('deleteAllByAttendantId/'+this.item.id)
                     .then(response => {
-                        
-                        console.log('estoyaqui1');
-
                         ApiService.delete(this.url+'/'+this.item.id)
-                            .then(response => {
-                                
-                                console.log('estoyaqui2');
-
-                                //TODO-JR: eliminar un atendente elimina en cascada?
+                            .then(response => {                                
                                 ApiService.delete(this.first_url+'/'+this.item.id)
                                     .then(response => {
                                         miniToastr.success("Atendente eliminado com sucesso","Sucesso");

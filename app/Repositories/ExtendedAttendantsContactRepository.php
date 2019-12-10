@@ -38,9 +38,8 @@ class ExtendedAttendantsContactRepository extends AttendantsContactRepository
         
     }
 
-    // public function deleteAllByAttendant(int $attendant_id)
-    // {
-    //     ExtendedAttendantsContact::where("attendant_id", $attendant_id)->delete();
-        
-    // }
+    public function deleteAllByAttendantId(int $attendant_id)
+    {
+        ExtendedAttendantsContact::where("attendant_id", $attendant_id)->delete();        
+    }
 }

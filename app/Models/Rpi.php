@@ -30,14 +30,25 @@ class Rpi extends Model
 
 
     public $fillable = [
+        'id',
         'company_id',
-        'mac',
-        'tunnel',
         'ip',
-        'password',
         'data',
+        'api_user',
+        'api_password',
+        'root_user',
+        'root_password',
+        'tcp_tunnel',
+        'tcp_port',
+        'mac',
+        'api_tunnel',
         'soft_version',
         'soft_version_date'
+
+
+
+
+
     ];
 
     /**
@@ -48,13 +59,20 @@ class Rpi extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'mac' => 'string',
-        'tunnel' => 'string',
         'ip' => 'string',
-        'password' => 'string',
         'data' => 'string',
+        'api_user' => 'string',
+        'api_password' => 'string',
+        'root_user' => 'string',
+        'root_password' => 'string',
+        'tcp_tunnel' => 'string',
+        'tcp_port' => 'string',
+        'mac' => 'string',
+        'api_tunnel' => 'string',
         'soft_version' => 'string',
         'soft_version_date' => 'string'
+
+
     ];
 
     /**

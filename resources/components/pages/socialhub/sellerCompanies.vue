@@ -138,6 +138,7 @@
                 
                 //---------Specific properties-----------------------------
                 companies_id: "",
+                rpi_id: "",
                 model_company:'',
                 model_manager:'',
                 model_rpi:'',
@@ -235,45 +236,67 @@
 
             actionEditCompanies: function(value){
                 this.model_company = Object.assign({}, value);
-                this.companies_id = value.id; 
-                ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
+                this.companies_id = value.id;
+                this.rpi_id = value.rpi_id;
+
+                ApiService.get(this.rpi_url+'/'+this.rpi_id)
                     .then(response => {
-                        try {
-                            this.model_manager  = response.data[0];
-                            for (var key in this.model_manager.user) {
-                                this.model_manager[key] = this.model_manager.user[key];
-                            }
-                            delete this.model_manager.user;
-                            this.modalEditCompanies = !this.modalEditCompanies;
-                            
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        this.model_rpi = response.data;
+                 
+                        ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
+                            .then(response => {
+                                try {
+                                    this.model_manager  = response.data[0];
+                                    for (var key in this.model_manager.user) {
+                                        this.model_manager[key] = this.model_manager.user[key];
+                                    }
+                                    delete this.model_manager.user;
+                                    this.modalEditCompanies = !this.modalEditCompanies;
+                                    
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            })
+                            .catch(function(error) {
+                                miniToastr.error(error, "Erro obtendo Manager");   
+                            });
+
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                        miniToastr.error(error, "Erro obtendo canal de comunicação");   
                     });
+                    
             },
 
             actionDeleteCompanies: function(value){
                 this.model_company = Object.assign({}, value);
-                this.companies_id = value.id; 
-                
-                ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
+                this.companies_id = value.id;
+                this.rpi_id = value.rpi_id;
+
+                ApiService.get(this.rpi_url+'/'+this.rpi_id)
                     .then(response => {
-                        try {
-                            this.model_manager  = response.data[0];
-                            for (var key in this.model_manager.user) {
-                                this.model_manager[key] = this.model_manager.user[key];
-                            }
-                            delete this.model_manager.user;
-                            this.modalDeleteCompanies = !this.modalDeleteCompanies;
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        this.model_rpi = response.data;
+                
+                        ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
+                            .then(response => {
+                                try {
+                                    this.model_manager  = response.data[0];
+                                    for (var key in this.model_manager.user) {
+                                        this.model_manager[key] = this.model_manager.user[key];
+                                    }
+                                    delete this.model_manager.user;
+                                    this.modalDeleteCompanies = !this.modalDeleteCompanies;
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            })
+                            .catch(function(error) {
+                                miniToastr.error(error, "Erro obtendo Manager");   
+                            });
+                            
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                        miniToastr.error(error, "Erro obtendo canal de comunicação");   
                     });
             },
 

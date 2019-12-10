@@ -46,7 +46,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                         </div>
-                                        <input v-model="model.password" name="password" id="password" type="password" required placeholder="Senha" class="form-control" minlength="4" maxlength="10"/>
+                                        <input v-model="model.password" name="password" id="password" type="password" required placeholder="Senha" class="form-control"/>
                                     </div>
                                     <field-messages name="password" show="$invalid && $submitted" class="text-danger">
                                         <div slot="required">A senha é obrigatória</div>

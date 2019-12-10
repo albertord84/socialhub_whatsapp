@@ -2,6 +2,5 @@
 
 ## Require
 
-- [Attendants files folder: ](/var/www/html/socialhub_mvp_files/attendants/).
-- [No Attendants assigned files folder: ](/var/www/html/socialhub_mvp_files/attendants/NULL).
-- [websocket running on 6001: ]().
+- [chats Files folder: ]("./public/companies  -> ln -s /mnt/disks/chat-files-1/companies").
+- [websocket running on 6001: ]("service status supervisor").

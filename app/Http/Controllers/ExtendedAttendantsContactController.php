@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
 use App\Repositories\ExtendedAttendantsContactRepository;
 
@@ -20,9 +21,9 @@ class ExtendedAttendantsContactController extends AttendantsContactController
     }
 
 
-    // public function deleteAllByAttendantId(int $attendant_id)
-    // {
-    //     $this->attendantsContactRepository->deleteAllByAttendantId($attendant_id);
-    // }
+    public function deleteAllByAttendantId(int $attendant_id, Request $request)
+    {
+        $this->attendantsContactRepository->deleteAllByAttendantId($attendant_id);
+    }
 
 }
