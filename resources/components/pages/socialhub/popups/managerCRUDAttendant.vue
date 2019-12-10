@@ -60,15 +60,23 @@
                     </div>
                 </div>
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addAttendant">Adicionar</button>
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateAttendant">Atualizar</button>
+                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addAttendant">
+                        <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Adicionar
+                    </button>
+
+                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateAttendant">
+                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
+                    </button>
+
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
             <form v-show="action=='delete'">
                 Tem certeza que deseja remover esse Atendente?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="deleteAttendant">Eliminar</button>
+                    <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteAttendant">
+                        <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
+                    </button>
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
@@ -116,6 +124,10 @@
                     password: "",
                     repeat_password: "",
                 },
+                
+                isSendingInsert: false,
+                isSendingUpdate: false,
+                isSendingDelete: false,
             }
         },
 
@@ -125,6 +137,9 @@
                 this.model.role_id=4;
                 this.model.password='';
                 this.model.image_path = "images/user.jpg";
+
+                this.isSendingInsert = true;
+
                 ApiService.post(this.first_url, this.model)
                 .then(response => {
                     ApiService.post(this.url, { 
@@ -159,6 +174,8 @@
                 if(this.model.password.trim()!='' && this.model.password!=this.model.repeat_password){
                      miniToastr.error('Erro', "As senha não coincidem"); return;
                 }
+                
+                this.isSendingUpdate = true;
 
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
@@ -181,7 +198,9 @@
             },
 
             deleteAttendant: function(){
-                
+
+                this.isSendingDelete = true;
+
                 ApiService.delete('deleteAllByAttendantId/'+this.item.id)
                     .then(response => {
                         ApiService.delete(this.url+'/'+this.item.id)

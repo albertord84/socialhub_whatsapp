@@ -74,7 +74,7 @@
 
                         <div class="col-lg-12 text-right">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block" @click.prevent="onSubmit">
+                                <button type="submit" class="btn btn-primary btn-block" :disabled="isSending==true" @click.prevent="onSubmit">
                                     <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
                                 </button>
                             </div>
@@ -104,6 +104,11 @@
     import options from "src/validations/validations.js";
     import ApiService from "../../common/api.service";
 
+    import miniToastr from "mini-toastr";
+    miniToastr.init();
+
+    import validation from "src/common/validation.service";
+
     Vue.use(VueForm, options);
     export default {
         name: "login2",
@@ -120,8 +125,11 @@
         },
         methods: {
             onSubmit() {
-                if (this.formstate.$invalid) {
-                    return;
+                // if (this.formstate.$invalid) {
+                //     return;
+                var check = validation.check('email', this.model.email);
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );   
                 } else {
                     this.isSending = true;
                     ApiService.post('auth/login', this.model)
@@ -165,6 +173,13 @@
         },
         destroyed: function () {
 
+        },
+
+        created() {
+            miniToastr.setIcon("error", "i", {class: "fa fa-times"});
+            miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
+            miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
+            miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
         },
 
     }

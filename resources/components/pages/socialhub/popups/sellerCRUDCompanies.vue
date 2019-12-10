@@ -122,17 +122,25 @@
                         </div>
                     </div>                                   
                 </div> 
-                               
+                                               
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addCompany">Adicionar</button>
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateCompany">Atualizar</button>
+                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
+                        <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
+                    </button>
+
+                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
+                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
+                    </button>
+
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
             <form v-show="action=='delete'">
                 Tem certeza que deseja cancelar o contrato dessa Empresa?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="deleteCompany">Eliminar</button>
+                    <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteCompany">
+                        <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
+                    </button>
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
@@ -205,7 +213,10 @@
                     instagram_id: "",
                     linkedin_id: "",
                 },
-                logued_user:null
+                logued_user:null,
+                isSendingInsert: false,
+                isSendingUpdate: false,
+                isSendingDelete: false,
             }
         },
 
@@ -216,6 +227,7 @@
                 this.modelManager.id=1;
                 this.modelManager.role_id=3;
                 this.modelManager.image_path = "images/user.jpg";
+                this.isSendingInsert = true;
 
                 //inserindo canal de comunicação.
                 ApiService.post(this.rpi_url, this.modelRpi)
@@ -275,6 +287,8 @@
                 delete this.modelManager.updated_at;
                 delete this.modelRpi.created_at;
                 delete this.modelRpi.updated_at;
+                
+                this.isSendingUpdate = true;
 
                 ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
                         .then(response => {
@@ -306,6 +320,8 @@
 
 
             deleteCompany: function(){
+                
+                this.isSendingDelete = true;
 
                 ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
                         .then(response => {

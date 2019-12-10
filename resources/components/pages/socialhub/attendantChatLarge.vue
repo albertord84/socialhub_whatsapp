@@ -329,52 +329,55 @@
                             </div>
                         </li>
                     </ul> -->
-
                 </v-scroll> 
+
+                <!-- Compose and send new message -->
                 <div class="p-3">
                     <div class="input-group pb-5 pr-1" style="color:gray">
-
                         <div class="input-group-prepend">
                             <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
-                                <i v-if="isSending==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
-                                <i v-if="isSending==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
+                                <i v-if="isSendingNewMessage==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
+                                <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
+
                         <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
                                 class="form-control border border-left-0 border-right-0 text-input-message srcollbar"
                                 ref="inputTextAreaMessage">
                         </textarea>
+
                         <div class="input-group-prepend">
-                            <div v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
+                            <a href="javascript:void()" v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
                                 <i class="fa fa-clipboard icons-selected-file"></i>
                                 <i style="background-color:withe; color:red; position: relative; height:1.5em; width1.5em; top:-0.25em; left:-1.7em; border-radius:20px;" class="fa fa-window-close"></i>
-                            </div>
+                            </a>
                         </div>
+
                         <div class="input-group-prepend">
-                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
+                            <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
                                 <i class="fa fa-file-image-o icons-action-message"></i>
-                            </div>
-                        </div>
+                            </a>
+                        </div>                       
                         <div class="input-group-prepend">
-                            <div class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputAudio')" title="Anexar áudio">
+                            <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputAudio')" title="Anexar audio">
                                 <i class="fa fa-file-audio-o icons-action-message"></i>
-                            </div>
+                            </a>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="triggerEvent('fileInputDocument')" title="Anexar documento">
+                            <a href="javascript:void()" class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="triggerEvent('fileInputDocument')" title="Anexar documento">
                                 <i class="fa fa-file-text-o icons-action-message"></i>
-                            </div>
+                            </a>
                         </div>
                         <div class="input-group-prepend">
-                            <div class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="sendMessage">
+                            <a href="javascript:void()" class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="sendMessage">
                                 <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
-                            </div>
+                            </a>
                         </div>
+
                         <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
                         <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
                         <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
                         <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
-
                     </div>
                 </div>
             </div>
@@ -740,7 +743,7 @@
                 isSearchContact:false,
                 isEditingContact:false,
                 isEditingContactSummary:false,
-                isSending:false,
+                isSendingNewMessage:false,
                 isUpdatingContact:false,
 
                 modalRemoveSelectedFile:false,
@@ -763,13 +766,12 @@
         
         methods: {    
             sendMessage() {
+                if (isSendingNewMessage) return;
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
                     this.newMessage.contact_id = this.contacts[this.selectedContactIndex].id;
-
-                    this.isSending = true;
-
+                    this.isSendingNewMessage = true;
                     let formData = new FormData();
                     formData.append('attendant_id', this.newMessage.attendant_id);
                     formData.append('contact_id', this.newMessage.contact_id);
@@ -778,7 +780,6 @@
                     formData.append('type_id', this.newMessage.type_id);
                     formData.append('status_id', this.newMessage.status_id);
                     formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
-                    
                     if(this.newMessage.type_id>1 && this.file){
                         formData.append("file",this.file); //Add the form data we need to submit  
                     }
@@ -796,16 +797,16 @@
                             this.newMessage.message = "";
                             this.file = null;
                             this.$refs.message_scroller.scrolltobottom();
-                            this.isSending = false;
+                            this.isSendingNewMessage = false;
                         })
                         .catch(function(error) {
-                            This.isSending = false;
+                            This.isSendingNewMessage = false;
                             This.newMessage.message = "";
                             miniToastr.error(error, "Error enviando mensagem");   
                         });                        
                     } catch (error) {
                         This.newMessage.message = "";
-                        This.isSending = false;                        
+                        This.isSendingNewMessage = false;                        
                     }
                 }
             },
@@ -1182,7 +1183,8 @@
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                wsHost: window.location.hostname,
+                wsHost: process.env.MIX_APP_HOST,
+                // wsHost: window.location.hostname,
                 wsPort: 6001,
                 wssPort: 6001,
                 encrypted: false,
@@ -1269,10 +1271,12 @@
                 this.getContacts();
             },
 
-            isSending: function(value){
+            isSendingNewMessage: function(value){
                 if(value){
+                    console.log('sending message');
                     //disable new message, and upload and send buttons
                 }else{
+                    console.log('sended message');
                     //enable new message, and upload and send buttons
                 }
             }
