@@ -16,6 +16,13 @@ class ExtendedUsersAttendantRepository extends UsersAttendantRepository
         return $Attentands;
     }
 
+    public function Attendants_User_By_Attendant(int $company_id, int $role_id): Collection
+    {
+        $Attentands = $this->with('User')->findWhere(['company_id' => $company_id, 'role_id'=>$role_id]);
+
+        return $Attentands;
+    }
+
     public function createAttendantChatTable(int $attendantId)
     {
         try {

@@ -49,8 +49,8 @@ class TestController extends AppBaseController
         // dd($Count);
         // dd($Contact);
 
-        $ChatsBussines = new ChatsBusiness();
-        return $ChatsBussines->getBagContactsCount(1);
+        // $ChatsBussines = new ChatsBusiness();
+        // return $ChatsBussines->getBagContactsCount(1);
 
 
 
@@ -88,10 +88,10 @@ class TestController extends AppBaseController
         // BROAD CAST TESTS
         // broadcast(new newMessage("{'message':'test 77'}"));
 
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = '4';
-        // $Chat = $ExtendedChat->find(1);
-        // broadcast(new MessageToAttendant($Chat));
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $Chat = $ExtendedChat->find(1);
+        broadcast(new MessageToAttendant($Chat));
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));
