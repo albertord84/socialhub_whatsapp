@@ -15,7 +15,7 @@
                         <div class="col-md-3"></div>
                         <div class="col-md-2">
                             <!-- <a :href='"#/"+link+"/user_profile"' title="Perfil"><i class="fa fa-user-o"></i></a> -->
-                            <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas"><i class="fa fa-user-o"></i></a>
+                            <a href="javascript:void()" title="Dados do Usuario" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas"><i class="fa fa-user-o"></i></a>
                         </div>
                         <div class="col-md-2">
                             <a href="#/lockscreen" title="Bloquear"><i class="fa fa-lock" aria-hidden="true"></i></a>

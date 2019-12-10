@@ -4,11 +4,11 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.first_name" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
+                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
                 </div>
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-headphones form-control-feedback"></span>
-                    <select v-model="contact_atendant_id" class="form-control has-search-color" size="1">
+                    <select v-model="contact_atendant_id" title="Ex: Escolha um atendente para o contato" class="form-control has-search-color" size="1">
                         <option value="0">Asignar um Atendente agora?</option>
                         <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.id" :title="attendant.email">{{attendant.name}}</option>
                     </select>
@@ -17,31 +17,31 @@
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-envelope form-control-feedback"></span>
-                    <input v-model="model.email" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                    <input v-model="model.email" title="Ex: contato@gmail.com" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.phone" id="phone" name="hone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                    <input v-model="model.phone" id="phone" title="Ex: 55(21)559-6918" name="hone" type="text" placeholder="Telefone fixo" class="form-control"/>
                 </div>                                
             </div>
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-whatsapp form-control-feedback"></span>
-                    <input v-model="model.whatsapp_id" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                    <input v-model="model.whatsapp_id" title="Ex: 963525397" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-facebook form-control-feedback"></span>
-                    <input v-model="model.facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
+                    <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-instagram form-control-feedback"></span>
-                        <input v-model="model.instagram_id" id="instagram_id" name="instagram_id" type="text" placeholder="Instagram" class="form-control"/>
+                        <input v-model="model.instagram_id" title="Ex: instagram_id" id="instagram_id" name="instagram_id" type="text" placeholder="Instagram" class="form-control"/>
                     </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-linkedin form-control-feedback"></span>
-                    <input v-model="model.linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
+                    <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
                 </div>
             </div>
             <div class="row">
