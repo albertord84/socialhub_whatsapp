@@ -258,7 +258,7 @@
                 }
                 if(!this.modal.whatsapp_id.includes('@s.whatsapp.net'))
                     this.modal.whatsapp_id+='@s.whatsapp.net';
-
+                    
                 this.isSendingUpdate = true;
                 
                 ApiService.put(this.url+'/'+this.item.id, this.model)
