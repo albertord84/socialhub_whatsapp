@@ -80,7 +80,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.mac" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
+                            <input v-model="modelRpi.mac" name="mac" title="Ex: b8:27:eb:76:21:41" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
