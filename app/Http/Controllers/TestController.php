@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Business\ChatsBusiness;
 use App\Events\MessageToAttendant;
+use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
@@ -49,8 +50,8 @@ class TestController extends AppBaseController
         // dd($Count);
         // dd($Contact);
 
-        $ChatsBussines = new ChatsBusiness();
-        return $ChatsBussines->getBagContactsCount(1);
+        // $ChatsBussines = new ChatsBusiness();
+        // return $ChatsBussines->getBagContactsCount(1);
 
 
 
@@ -86,12 +87,19 @@ class TestController extends AppBaseController
 
 
         // BROAD CAST TESTS
-        // broadcast(new newMessage("{'message':'test 77'}"));
+        // try {
+        //     //code...
+        //     $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
+        //     var_dump($pendingBC);
+        // } catch (\Throwable $th) {
+        //     var_dump($th);
+        // }
 
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = '4';
-        // $Chat = $ExtendedChat->find(1);
-        // broadcast(new MessageToAttendant($Chat));
+        
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $Chat = $ExtendedChat->find(1);
+        broadcast(new MessageToAttendant($Chat));
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));

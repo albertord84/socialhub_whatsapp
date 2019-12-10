@@ -30,10 +30,20 @@ class ExtendedUsersAttendantController extends UsersAttendantController
     public function index(Request $request)
     {
         $this->usersAttendantRepository->pushCriteria(new RequestCriteria($request));
-        //TODO: get manager_id form session
+        
         $User = Auth::check()? Auth::user():session('logged_user');
-        //TODO-ALBERTO: obtener el nombre del status del atendiente tambiem para mostrar al manager
-        $usersAttendants = $this->usersAttendantRepository->Attendants_User((int)$User->id);
+        if($User->role_id==ExtendedContactsStatusController::MANAGER){
+            //get attendants of loggued manager            
+            $usersAttendants = $this->usersAttendantRepository->Attendants_User((int)$User->id);
+        }
+        else
+        if($User->role_id==ExtendedContactsStatusController::ATTENDANT){
+            //get attendants of the same company of loggued attendant
+            $usersAttendants = $this->usersAttendantRepository->Attendants_User_By_Attendant((int)$User->company_id, (int)ExtendedContactsStatusController::ATTENDANT);
+        }
+        
+        
+        // $usersAttendants = $this->usersAttendantRepository->Attendants_User((int)$User->id);
         
         return $usersAttendants->toJson();
     }
