@@ -99,7 +99,11 @@ class TestController extends AppBaseController
         $ExtendedChat = new ExtendedChat();
         $ExtendedChat->table = '4';
         $Chat = $ExtendedChat->find(1);
-        broadcast(new MessageToAttendant($Chat));
+        $pendingBC = broadcast(new MessageToAttendant($Chat));
+
+        dd($pendingBC);
+
+        // var_dump($pendingBC);
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));

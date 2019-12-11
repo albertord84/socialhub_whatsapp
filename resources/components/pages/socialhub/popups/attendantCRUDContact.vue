@@ -112,8 +112,13 @@
                 </div>
 
                 <div class="col-lg-12 mt-2 text-center">
-                    <button v-if='action=="insert"' type="button" class="btn btn-primary btn_width" :disabled='isSending || !whatssapChecked' @click.prevent="addContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar</button>
-                    <button v-if='action=="edit"' type="button" class="btn btn-primary btn_width" :disabled='isSending' @click.prevent="updateContact"> <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar</button>
+                    <button v-if='action=="insert"' type="button" class="btn btn-primary btn_width" :disabled='isSendingInsert || !whatssapChecked' @click.prevent="addContact">
+                        <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
+                    </button>
+
+                    <button v-if='action=="edit"' type="button" class="btn btn-primary btn_width" :disabled='isSendingUpdate' @click.prevent="updateContact">
+                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
+                    </button>
                     <button type="reset"  class="btn btn-effect-ripple btn-secondary btn_width reset_btn1" @click.prevent="formReset();toggle_left('close')">Cancelar</button>
                 </div>
             </form>
@@ -121,7 +126,9 @@
         <form v-show="action=='delete'">
             Tem certeza que deseja remover esse contato?
             <div class="col-lg-12 mt-5 text-center">
-                <button type="button" class="btn btn-primary btn_width" @click.prevent="deleteContact">Eliminar</button>
+                <button type="button" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteContact">
+                    <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
+                </button>
                 <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
             </div>                    
         </form>
@@ -199,7 +206,9 @@
                     linkedin_id: "",
                 },
 
-                isSending: false,
+                isSendingInsert: false,
+                isSendingUpdate: false,
+                isSendingDelete: false,
                 whatssapChecked: true,                
                 // whatssapChecked: false,  
                 
@@ -232,7 +241,7 @@
                 this.model.status_id = 1;
                 this.model.whatsapp_id += '@s.whatsapp.net';
                 this.contact_atendant_id = JSON.parse(localStorage.user).id;
-                this.isSending = true;
+                this.isSendingInsert = true;
                 ApiService.post(this.url,this.model)
                 .then(response => {
                     if (this.contact_atendant_id) {
@@ -246,24 +255,24 @@
                             this.formReset();
                             this.toggle_left('close');
                             this.reload();
-                            this.isSending = false;
+                            this.isSendingInsert = false;
                         })
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando contato");  
-                            this.isSending = false;
+                            this.isSendingInsert = false;
                         });
                     }else{
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
                         this.formCancel();
-                        this.isSending = false;
+                        this.isSendingInsert = false;
                     }
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                    this.isSending = false;
+                    this.isSendingInsert = false;
                 });
             },
 
@@ -279,14 +288,21 @@
                 }
                 if(!this.modal.whatsapp_id.includes('@s.whatsapp.net'))
                     this.modal.whatsapp_id+='@s.whatsapp.net';
-                this.isSending = true;
+                    
+                this.isSendingUpdate = true;
+
+                delete this.model.updated_at;
+
+                console.log(this.model);
+                return;
+                
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                     this.formReset();
                     this.editclose();
                     this.reload();
-                    this.isSending = false;
+                    this.isSendingUpdate = false;
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
@@ -294,7 +310,10 @@
                 });
             },
 
-            deleteContact: function(){
+            deleteContact(){
+
+                this.isSendingDelete = true;
+
                 ApiService.delete(this.url+'/'+this.item.id)
                     .then(response => {                        
                         miniToastr.success("Contato eliminado com sucesso","Sucesso");
