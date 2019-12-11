@@ -42,7 +42,7 @@ return [
                 'host' => env('APP_HOST'),
                 'port' => 6001,
                 'scheme' => 'https',       
-                // 'useTLS' => true,
+                'useTLS' => true,
 
                 'curl_options' => [
                     CURLOPT_SSL_VERIFYHOST => 0,
