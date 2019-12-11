@@ -53,7 +53,7 @@ class AttendantsContactController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateAttendantsContactRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 

@@ -196,8 +196,7 @@
                         ApiService.post(this.secondUrl,{
                             'id':0,
                             'contact_id':this.model.id,
-                            'attendant_id':this.contact_atendant_id,
-                            
+                            'attendant_id':this.contact_atendant_id,                            
                         })
                         .then(response => {
                             miniToastr.success("Contato atualizado com sucesso","Sucesso");

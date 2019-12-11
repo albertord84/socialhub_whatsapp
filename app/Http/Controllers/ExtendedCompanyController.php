@@ -47,6 +47,20 @@ class ExtendedCompanyController extends CompanyController
         //     ->with('companies', $companies);
     }
 
+    public function store(CreateCompanyRequest $request)
+    {
+        $input = $request->all();
+
+        // dd($request);
+
+        $company = $this->companyRepository->create($input);
+
+        Flash::success('Company saved successfully.');
+
+        return $company->toJson();
+        // return redirect(route('companies.index'));
+    }
+
     public function update($id, UpdateCompanyRequest $request)
     {
         $company = $this->companyRepository->findWithoutFail($id);

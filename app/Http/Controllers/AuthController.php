@@ -20,7 +20,19 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'passwordReset', 'passwordSave', 'deleteUser']]);
+        $this->middleware('auth:api', ['except' => ['index', 'login', 'register', 'passwordReset', 'passwordSave', 'deleteUser']]);
+    }
+
+
+    /**
+     * Display Welcome.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        return view('welcome');
     }
 
     /**
