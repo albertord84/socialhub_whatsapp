@@ -124,6 +124,8 @@ return [
         'passphrase' => null,
 
         'verify_peer' => false,
+
+        'perform_dns_lookup' => true
     ],
 
     /*
