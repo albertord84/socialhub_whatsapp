@@ -25,14 +25,7 @@ class CompaniesTableSeeder extends Seeder
 
     public function createCompanies(){
         $this->command->info('Create Companies:');
-        // Company::create([
-        //     'id' => '1',
-        //     'user_seller_id' => '2',
-        //     'name' => 'Social Hub',
-        //     'phone' => '5511970111071@c.us',
-        //     'description' => 'Companie Social Hub',
-        // ]);
-        // $this->command->info('Companie Social Hub');
+        
         Company::create([
             'id' => '1',
             'user_seller_id' => '2',
@@ -40,6 +33,7 @@ class CompaniesTableSeeder extends Seeder
             'phone' => '5521965536174@c.us',
             'description' => 'Companie Develop',
         ]);
-        
+        $this->command->info('Created Companie-Develop');
     }    
 }
+            
