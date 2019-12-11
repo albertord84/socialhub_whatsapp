@@ -290,6 +290,11 @@
                     this.modal.whatsapp_id+='@s.whatsapp.net';
                     
                 this.isSendingUpdate = true;
+
+                delete this.model.updated_at;
+
+                console.log(this.model);
+                return;
                 
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
