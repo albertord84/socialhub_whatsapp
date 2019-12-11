@@ -20,10 +20,8 @@ class RpiRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'company_id',
         'ip',
         'data',
-
         'api_user',
         'api_password',
         'root_user',
@@ -34,7 +32,6 @@ class RpiRepository extends BaseRepository
         'api_tunnel',
         'soft_version',
         'soft_version_date'
-
     ];
 
     /**

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewTransferredContact
+class NewTransferredContact implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,7 +22,7 @@ class NewTransferredContact
      *
      * @return void
      */
-    public function __construct(int $attendant_id, $contact)
+    public function __construct(int $attendant_id,  $contact)
     {
         $this->message = $contact->toJson();
         $this->channel = "sh.transferred-contact.$attendant_id";

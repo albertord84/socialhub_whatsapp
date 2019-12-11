@@ -1245,7 +1245,7 @@
             });
 
             window.Echo.channel('sh.transferred-contact.' + this.loggedAttendant.id)
-                .listen('MessageToAttendant', (e) => {
+                .listen('NewTransferredContact', (e) => {
                     // this.getContacts();
                     console.log(e);
                     var newContact = e.message;
