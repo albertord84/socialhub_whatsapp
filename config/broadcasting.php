@@ -40,7 +40,7 @@ return [
                 'encrypted' => false,
                 'host' => env('APP_HOST'),
                 'port' => 6001,
-                'scheme' => 'http',       
+                'scheme' => 'https',       
                 'useTLS' => true,
 
                 'curl_options' => [
