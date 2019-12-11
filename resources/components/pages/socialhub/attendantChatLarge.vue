@@ -626,7 +626,7 @@
         </div>
 
         <!-- Modal to transfer contact-->
-        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Verificação de exclusão">
+        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
             <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
         </b-modal>
         
@@ -710,7 +710,7 @@
 
         data() {
             return {
-                loggedAttendant:{},                
+                loggedAttendant:{},
 
                 contacts_url: 'contacts',
                 contacts_bag_url: 'getBagContact',
@@ -1241,6 +1241,19 @@
                         this.$refs.newContactInBag.play();
                     console.log(e);
                     this.amountContactsInBag = e.message;
+            });
+
+            window.Echo.channel('sh.transferred-contact.' + this.loggedAttendant.id)
+                .listen('MessageToAttendant', (e) => {
+                    // this.getContacts();
+                    var newContact = e.message;
+                    newContact.index = this.contacts.length;
+                    this.contacts.unshift(newContact);
+                    var i = 0;
+                    this.contacts.forEach(function(item, i){
+                        item.index = i++;
+                    });
+                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
             });
                 
         },
