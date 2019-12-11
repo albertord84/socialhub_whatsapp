@@ -30,12 +30,12 @@ class Company extends Model
 
 
     public $fillable = [
+        'rpi_id',
         'CNPJ',
         'name',
         'phone',
         'email',
         'whatsapp',
-        'rpi_id',
         'description',
         'user_seller_id'
     ];

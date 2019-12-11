@@ -17,17 +17,6 @@ use InfyOm\Generator\Common\BaseRepository;
 class ExtendedCompanyRepository extends CompanyRepository
 {
     
-    protected $fieldSearchable = [
-        'CNPJ',
-        'name',
-        'phone',
-        'email',
-        'whatsapp',
-        'ngrok_url',
-        'description',
-        'user_seller_id'
-    ];
-
     public function allBySeller(int $seller_id = null)
     {
         $Attentands = $this->findWhere(['user_seller_id' => $seller_id]);
