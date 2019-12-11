@@ -126,24 +126,27 @@
             </div>                    
         </form>
         <form v-show="action=='transfer'">
-            <label for=""> Escolha o novo atendente</label>
+            <h6> Tranferir contato para: <b>{{(selectedAttendantToTransfer)? selectedAttendantToTransfer.user.name : ""}}</b></h6> 
             <v-scroll :height="100"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
-                <ul>
-                    <li v-for="(attendant,index) in attendants" class="chat_block" :key="index">
-                        <a href="javascript:void()">
-                            <article class="media mt-1 mb-4">
-                                <!-- <input type="radio"> -->
-                                <b-form-radio :disabled=true checked="false">
-                                    Disabled
-                                </b-form-radio>
-                            </article>
-                        </a>
+                <ul v-for="(attendant,index) in attendants" :key="index" class="list-group list-group-horizontal mouse-over" @click.prevent="selectedAttendantToTransfer = attendant">
+                    <li v-if="attendant.user_id != loggedAttendant.id" class="list-group-item border-0">
+                        <img :src="attendant.user.image_path" width="50px" height="50px" class="my-rounded-circle mt-1 " alt="Foto">
+                    </li>
+                    <li v-if="attendant.user_id != loggedAttendant.id" class="list-group-item border-0">
+                        <span style="font-size:1em">{{attendant.user.name}}</span>
+                        <br><span class="text-muted" style="font-size:0.8em">{{attendant.user.email}}</span>
+                    </li>
+                    <li v-if="attendant.user_id != loggedAttendant.id" class="ml-5">
+                        <i v-show="selectedAttendantToTransfer && selectedAttendantToTransfer.user_id == attendant.user_id" class="fa fa-check fa-2x mt-3" style="color:green"></i>
                     </li>
                 </ul>
             </v-scroll>
-
+            <br><br><br><br>
             <div class="col-lg-12 mt-5 text-center">
-                <button type="button" class="btn btn-primary btn_width" @click.prevent="deleteContact">Eliminar</button>
+                <button type="button" class="btn btn-primary btn_width" @click.prevent="transferContact">
+                    <i v-if="isTransferingContact==true" class="fa fa-spinner fa-spin"></i>
+                    Transferir
+                </button>
                 <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
             </div>                    
         </form>
@@ -202,8 +205,11 @@
                 isSending: false,
                 whatssapChecked: true,                
                 // whatssapChecked: false,  
-                
+
                 attendants:null,
+                selectedAttendantToTransfer:null,
+                isTransferingContact:false,
+                loggedAttendant:{},
 
                 summary_length:0,
                 remember_length:0,
@@ -307,11 +313,35 @@
                     });  
             },
 
+            transferContact: function(){
+                if(!this.selectedAttendantToTransfer){
+                    miniToastr.warn("Atenção", "Você deve selecionar um atendente."); 
+                    return;
+                }
+                if(!this.isTransferingContact){
+                    this.isTransferingContact = true;
+                    ApiService.post(this.secondUrl,{
+                        'id':0,
+                        'attendant_id':this.selectedAttendantToTransfer.user.id,
+                        'contact_id':this.item.id
+                    })
+                    .then(response => {
+                        miniToastr.success("Contato tranferido com sucesso","Sucesso");
+                        this.isTransferingContact = false;
+                        this.reload();
+                        this.formCancel();
+                    })
+                    .catch(function(error) {
+                        this.isTransferingContact = false;
+                        miniToastr.error(error, "Erro tranferindo o contato"); 
+                    }); 
+                }
+            },
+
             getAttendants: function(){
                 ApiService.get('usersAttendants')
                     .then(response => {                        
                         this.attendants = response.data;
-                        console.log(this.attendants);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Erro eliminando o contato"); 
@@ -321,7 +351,6 @@
             checkWhatsappNumber:function(){
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
-                        console.log(response.data);
                         this.whatssapChecked = true;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
                     })
@@ -384,6 +413,7 @@
                 this.editContact();
                 this.getAttendants();
             }
+            this.loggedAttendant = JSON.parse(window.localStorage.getItem('user'));
         },
 
         created() {
@@ -504,6 +534,19 @@
 
     .header-title{
         font-size: 1.3em;
+    }
+
+    .my-rounded-circle{
+        border-radius: 50%;
+        width: 50px;
+        width: 50px;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .mouse-over:hover{
+        cursor: pointer;
+        background-color: #fafafa !important;
     }
 
 </style>
