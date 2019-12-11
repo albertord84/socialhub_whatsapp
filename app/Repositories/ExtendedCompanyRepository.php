@@ -28,6 +28,13 @@ class ExtendedCompanyRepository extends CompanyRepository
         'user_seller_id'
     ];
 
+    public function allBySeller(int $seller_id = null)
+    {
+        $Attentands = $this->findWhere(['user_seller_id' => $seller_id]);
+    
+        return $Attentands;
+    }
+
     
     /**
      * Configure the Model

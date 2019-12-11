@@ -1162,7 +1162,8 @@
             },
 
             closemodal(){
-                this.modalDeleteContact = !this.modalDeleteContact;
+                this.modalDeleteContact = false;
+                this.modalTransferContact = false;
             },
            
             logout() {
