@@ -21,12 +21,17 @@ class ExtendedRpiController extends RpiController
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $rpis = $this->rpiRepository->rpiOfCompany((int) $User->company_id); 
-        if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-            $QRCode = ExternalRPIController::getQRCode($rpis);
+        if ($rpis) {
+            if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
+                $QRCode = ExternalRPIController::getQRCode($rpis);
 
-            $rpis->QRCode = $QRCode;
-        }
-        return $rpis->toJson();
+                $rpis->QRCode = $QRCode;
+            }
+
+            return $rpis->toJson();
+        } 
+
+        return null;
     }
     
 }

@@ -19,7 +19,7 @@ use function React\Promise\Stream\first;
 class ExtendedRpiRepository extends RpiRepository
 {
     
-    public function rpiOfCompany(int $company_id): Rpi
+    public function rpiOfCompany(int $company_id): ?Rpi
     {
         $pri = $this->findWhere(['company_id' => $company_id])->first();
 
