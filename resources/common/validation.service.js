@@ -5,6 +5,26 @@ var regexp={
         'regexp':'^[a-zA-Z0-9\._-]+@([a-zA-Z0-9-]{2,}[.])*[a-zA-Z]{2,}$',
         'error':'Email inválido'
     },
+    'phone':{
+        'regexp':'^[0-9]{2}-([0-9]{8}|[0-9]{9})$',
+        'error':'Número de telefone inválido'
+    },
+    'date':{
+        'regexp':'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}$',
+        'error':'Data inválida'
+    },
+    'mac':{
+        'regexp':'^(([0-9a-f]{2}):){5}([0-9a-f]{2})$',
+        'error':'Endereço MAC inválido'
+    },
+    'user':{
+        'regexp':'^[a-zA-Z0-9\._]{1,100} $',
+        'error':'Usuario inválido'
+    },
+    'password':{
+        'regexp':'^[^\W_]{4}$',
+        'error':'Insira uma senha com ao menos 4 carateres, contendo letras e números'
+    },
     'instagram_profile':{
         'regexp':'^[a-zA-Z0-9\._]{1,300}$',
         'error':''
@@ -74,7 +94,11 @@ var regexp={
         'error':''
     },
     'cpf':{
-        'regexp':'^[0-9]{2,11}$',
+        'regexp':'^[0-9]{11}$',
+        'error':''
+    },
+    'cnpj':{
+        'regexp':'^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})$',
         'error':''
     },
     'cep':{
@@ -120,8 +144,16 @@ const validation = {
         }
         return response;
     },
-    check2(type){
-        return regexp[type];
+    checkCPF(type, string){
+        
+        var response={
+            'success':false,
+            'error':regexp[type].error
+        };
+        response.success=true;
+        response.error='';
+
+        return response;
     }
 };
 

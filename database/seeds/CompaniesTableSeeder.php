@@ -15,8 +15,7 @@ class CompaniesTableSeeder extends Seeder
         $this->command->info('Truncate Companies Table...');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('companies')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
+        
         $this->command->info('Create Companies:');
         Company::create([
             'id' => '1',
@@ -33,7 +32,7 @@ class CompaniesTableSeeder extends Seeder
             'phone' => '5521965536174@c.us',
             'rpi_id' => '2',
             'description' => 'Companie Alberto Develop',
-        ]);
+            ]);
         $this->command->info('Companie Alberto Develop');
         Company::create([
             'id' => '3',
@@ -42,9 +41,10 @@ class CompaniesTableSeeder extends Seeder
             'phone' => '5511997239998@c.us',
             'rpi_id' => '2',
             'description' => 'Companie Social Hub Bruno',
-        ]);
+            ]);
         $this->command->info('Companie Social Hub Bruno');
-
-        
+                    
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
+            
