@@ -27,9 +27,11 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('update', 'ExternalRPIController@update');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'AuthController@index');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('register', 'AuthController@register');
