@@ -28,9 +28,11 @@ class CompaniesTableSeeder extends Seeder
         
         Company::create([
             'id' => '1',
+            'rpi_id' => '1',
             'user_seller_id' => '2',
             'name' => 'Companie-Develop',
             'phone' => '5521965536174@c.us',
+            'CNPJ' => '07367014196',
             'description' => 'Companie Develop',
         ]);
         $this->command->info('Created Companie-Develop');

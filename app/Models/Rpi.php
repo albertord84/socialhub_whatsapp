@@ -31,7 +31,6 @@ class Rpi extends Model
 
     public $fillable = [
         'id',
-        'company_id',
         'ip',
         'data',
         'api_user',
@@ -53,7 +52,6 @@ class Rpi extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'company_id' => 'integer',
         'ip' => 'string',
         'data' => 'string',
         'api_user' => 'string',

@@ -51,8 +51,7 @@ class ExtendedCompanyController extends CompanyController
     {
         $input = $request->all();
 
-        // dd($request);
-
+        
         $company = $this->companyRepository->create($input);
 
         Flash::success('Company saved successfully.');

@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Models\UsersAttendant;
 use App\Models\UsersManager;
+use App\Models\UsersSeller;
 use App\Repositories\ExtendedUsersAttendantRepository;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -51,7 +52,6 @@ class UsersTableSeeder extends Seeder
     public function createSellers($role_id){
         User::create([
             'id' => 2,
-            'company_id' => 1,
             'name' => 'Seller 1',
             'email' => 'seller1@socialhub.pro',
             'login' => 'seller1',
@@ -62,7 +62,7 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('seller1'), // password
             'remember_token' => Str::random(10),
         ]);
-        UsersManager::create([
+        UsersSeller::create([
             'user_id' => 2,
         ]);
         $this->command->info('Seller 1 created: [user: seller, pass: seller]');
@@ -82,31 +82,10 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('manager'), // password
             'remember_token' => Str::random(10),
         ]);
-        
         UsersManager::create([
             'user_id' => 3,
         ]);
         $this->command->info('Manager 1 created: [user: manager, pass: manager]');
-
-        // User::create([
-        //     'id' => 7,
-        //     'company_id' => 2,
-        //     'name' => 'Manager2',
-        //     'email' => 'manager2@socialhub.pro',
-        //     'login' => 'manager2',
-        //     'CPF' => '00000000012',
-        //     'role_id' => $role_id,
-        //     'status_id' => 1,
-        //     'email_verified_at' => now(),
-        //     'password' => bcrypt('manager2'), // password
-        //     'remember_token' => Str::random(10),
-        // ]);
-        // UsersManager::create([
-        //     'user_id' => 7,
-        // ]);
-        // $this->command->info('Manager 2 created: [user: manager2, pass: manager2]');
-
-
 
     }
 
