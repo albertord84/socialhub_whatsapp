@@ -24,9 +24,10 @@ class CompanyRepository extends BaseRepository
         'name',
         'phone',
         'email',
+        'whatsapp',
         'description',
+        'rpi_id',
         'user_seller_id',
-        'rpi_id'
     ];
 
     /**

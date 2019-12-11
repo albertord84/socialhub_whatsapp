@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
-
+use App\Events\NewTransferredContact;
 use App\Repositories\ExtendedAttendantsContactRepository;
+use Illuminate\Support\Facades\Auth;
+use Laracasts\Flash\Flash;
 
 class ExtendedAttendantsContactController extends AttendantsContactController
 {
@@ -40,8 +42,8 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $Contact->updated_at = time();
         $Contact->save();
 
-        $attendantsContact->toJson();       
-
+        $User = Auth::check()? Auth::user():session('logged_user');
+        broadcast(new NewTransferredContact((int) $User->id, $Contact));
 
         // return redirect(route('attendantsContacts.index'));
     }
