@@ -37,7 +37,7 @@ class Company extends Model
         'whatsapp',
         'rpi_id',
         'description',
-        // 'user_seller_id'
+        'user_seller_id'
     ];
 
     /**
@@ -54,7 +54,7 @@ class Company extends Model
         'email' => 'string',
         'whatsapp'=> 'string',
         'description' => 'string',
-        ///'user_seller_id'
+        'user_seller_id' => 'integer',
     ];
 
     /**

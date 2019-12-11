@@ -15,7 +15,7 @@ class RpisTableSeeder extends Seeder
         $this->command->info('Truncate RPis Table...');
         DB::table('rpis')->truncate();
 
-        $this->createRpis();
+        // $this->createRpis();
     }
 
     public function createRpis()
