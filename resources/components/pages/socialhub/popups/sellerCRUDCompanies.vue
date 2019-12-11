@@ -44,33 +44,33 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelRpi.api_user" title="Ex: Nome da Empresa" name="api_user" id="api_user" type="text" required placeholder="Usuario da API (*)" class="form-control"/>
+                            <input v-model="modelRpi.api_user" title="Ex: Nome da Empresa" name="api_user" id="api_user" type="text" required placeholder="Usuario da API" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="modelRpi.api_password" title="Ex: x2+A*fd!" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API (*)" class="form-control"/>
+                            <input v-model="modelRpi.api_password" title="Ex: x2+A*fd!" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API" class="form-control"/>
                         </div>                                                      
                     </div>
 
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelRpi.root_user" title="Ex: Nome da Empresa" name="root_user" id="root_user" type="text" required placeholder="Usuario Root (*)" class="form-control"/>
+                            <input v-model="modelRpi.root_user" title="Ex: Nome da Empresa" name="root_user" id="root_user" type="text" required placeholder="Usuario Root" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="modelRpi.root_password" title="Ex: x2+A*fd!" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root (*)" class="form-control"/>
+                            <input v-model="modelRpi.root_password" title="Ex: x2+A*fd!" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root" class="form-control"/>
                         </div>                                                      
                     </div>
 
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.tcp_tunnel" title="Ex: 1.tcp.ngrok.io" name="tcp_tunnel" id="tcp_tunnel" type="text" required placeholder="Tunnel TCP (*)" class="form-control"/>
+                            <input v-model="modelRpi.tcp_tunnel" title="Ex: 1.tcp.ngrok.io" name="tcp_tunnel" id="tcp_tunnel" type="text" required placeholder="Tunnel TCP" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.tcp_port" title="Ex: 29426" id="tcp_port" name="tcp_port" type="text" required placeholder="Porto TCP (*)" class="form-control"/>
+                            <input v-model="modelRpi.tcp_port" title="Ex: 29426" id="tcp_port" name="tcp_port" type="text" required placeholder="Porto TCP" class="form-control"/>
                         </div>                                                      
                     </div>
 
@@ -88,11 +88,11 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-cog form-control-feedback"></span>
-                            <input v-model="modelRpi.soft_version" title="Ex: 0.1.0" name="soft_version" id="soft_version" type="text" required placeholder="Versão do Software (*)" class="form-control"/>
+                            <input v-model="modelRpi.soft_version" title="Ex: 0.1.0" name="soft_version" id="soft_version" type="text" required placeholder="Versão do Software" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-cog form-control-feedback"></span>
-                            <input v-model="modelRpi.soft_version_date" title="Ex: 30/11/2019" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software (*)" class="form-control"/>                            
+                            <input v-model="modelRpi.soft_version_date" title="Ex: 30/11/2019" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software" class="form-control"/>                            
                         </div>                                                      
                     </div>
 
@@ -154,9 +154,10 @@
     import ApiService from "../../../../common/api.service";
     import miniToastr from "mini-toastr";
     miniToastr.init();
-
     import VueFormWizard from 'vue-form-wizard'
     import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+    import validation from "src/common/validation.service";
+
     
     export default {
         // name: 'adminCRUDSellers',
@@ -222,6 +223,148 @@
 
         methods:{
             addCompany: function() { //C
+
+
+                this.modelCompany.CNPJ = this.modelCompany.CNPJ.trim();
+                this.modelCompany.name = this.modelCompany.name.trim();
+                this.modelCompany.phone = this.modelCompany.phone.trim();
+                this.modelCompany.email = this.modelCompany.email.trim();
+                this.modelCompany.whatsapp = this.modelCompany.whatsapp.trim();
+                this.modelCompany.description = this.modelCompany.description.trim();
+
+                this.modelRpi.api_user = this.modelRpi.api_user.trim();
+                this.modelRpi.api_password = this.modelRpi.api_password.trim();
+                this.modelRpi.root_user = this.modelRpi.root_user.trim();
+                this.modelRpi.root_password = this.modelRpi.root_password.trim();
+                this.modelRpi.tcp_tunnel = this.modelRpi.tcp_tunnel.trim();
+                this.modelRpi.tcp_port = this.modelRpi.tcp_port.trim();
+                this.modelRpi.mac = this.modelRpi.mac.trim();
+                this.modelRpi.api_tunnel = this.modelRpi.api_tunnel.trim();
+                this.modelRpi.soft_version = this.modelRpi.soft_version.trim();
+                this.modelRpi.soft_version_date = this.modelRpi.soft_version_date.trim();
+
+                this.modelManager.name = this.modelManager.name.trim();
+                this.modelManager.role_id = this.modelManager.role_id.trim();
+                this.modelManager.email = this.modelManager.email.trim();
+                this.modelManager.login = this.modelManager.login.trim();
+                this.modelManager.CPF = this.modelManager.CPF.trim();
+                this.modelManager.phone = this.modelManager.phone.trim();
+                this.modelManager.image_path = this.modelManager.image_path.trim();
+                this.modelManager.whatsapp_id = this.modelManager.whatsapp_id.trim();
+                this.modelManager.facebook_id = this.modelManager.facebook_id.trim();
+                this.modelManager.instagram_id = this.modelManager.instagram_id.trim();
+                this.modelManager.linkedin_id = this.modelManager.linkedin_id.trim();
+
+                var flagReference = true;
+                var check;
+                var temp = {"success":true };
+                // Validação dos campos da empresa
+                check = (this.modelCompany.CNPJ!='')? validation.check('cnpj', this.modelCompany.CNPJ):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false;   
+                } 
+                check = (this.modelCompany.name!='')? validation.check('complete_name', this.modelCompany.name):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false;   
+                } 
+                check = (this.modelCompany.phone!='')?  validation.check('phone', this.modelCompany.phone):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false;  
+                } 
+                check = (this.modelCompany.email!='')?  validation.check('email', this.modelCompany.email):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false;   
+                } 
+                check = (this.modelCompany.whatsapp!='')?  validation.check('phone', this.modelCompany.whatsapp):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+
+                // Validação dos campos do canal de comunicação
+                check = (this.modelRpi.api_user!='')?  validation.check('user', this.modelRpi.api_user):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.api_password!='')?  validation.check('password', this.modelRpi.api_password):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.root_user!='')?  validation.check('user', this.modelRpi.root_user):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.root_password!='')?  validation.check('password', this.modelRpi.root_password):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.tcp_tunnel!='')?  validation.check('tcp_tunnel', this.modelRpi.tcp_tunnel):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.tcp_port!='')?  validation.check('tcp_port', this.modelRpi.tcp_port):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.mac!='')?  validation.check('mac', this.modelRpi.mac):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.api_tunnel!='')?  validation.check('tunnel', this.modelRpi.api_tunnel):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelRpi.soft_version!='')?  validation.check('version', this.modelRpi.soft_version):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check =  (this.modelRpi.soft_version_date!='')? validation.check('date', this.modelRpi.soft_version_date):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+
+                // Validação dos campos do manager
+                check = (this.modelManager.name!='')?  validation.check('complete_name', this.modelManager.name):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelManager.email!='')? validation.check('email', this.modelManager.email):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelManager.CPF!='')? validation.check('cpf', this.modelManager.CPF):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                check = (this.modelManager.phone!='')? validation.check('phone', this.modelManager.phone):temp=true;
+                if(check.success==false){
+                    miniToastr.error("Erro", check.error );
+                    flagReference = false; 
+                }
+                
+                if (flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    return;
+                }
+
+
                 this.modelCompany.id=1;
                 this.modelCompany.user_seller_id=this.logued_user.id;
                 this.modelManager.id=1;

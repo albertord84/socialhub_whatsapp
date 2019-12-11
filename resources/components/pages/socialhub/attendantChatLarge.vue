@@ -1201,7 +1201,8 @@
                 wsPort: 6001,
                 wssPort: 6001,
                 enabledTransports: ['ws', 'wss'],
-                encrypted: false,
+                encrypted: true,
+                // encrypted: false,
                 disableStats: false
             });
 
