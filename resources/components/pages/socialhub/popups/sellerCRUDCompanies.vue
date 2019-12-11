@@ -224,7 +224,185 @@
         methods:{
             addCompany: function() { //C
 
+                this.trimDataModels();
+                this.validateData();
 
+                this.modelCompany.id=1;
+                this.modelCompany.user_seller_id=this.logued_user.id;
+                this.modelManager.id=1;
+                this.modelManager.role_id=3;
+                this.modelManager.image_path = "images/user.jpg";
+                this.isSendingInsert = true;
+
+                //inserindo canal de comunicação.
+                ApiService.post(this.rpi_url, this.modelRpi)
+                        .then(response => {
+                            this.modelCompany.rpi_id = response.data.id;
+                            // inserindo company
+                                ApiService.post(this.companies_url, this.modelCompany)
+                                    .then(response => {
+                                        this.modelManager.company_id = response.data.id;
+                                        this.modelRpi.company_id = response.data.id;
+                                        // inserindo user
+                                        ApiService.post(this.users_url, this.modelManager)
+                                                .then(response => {
+                                                //inserindo userManager
+                                                ApiService.post(this.usersManager_url, {'user_id':response.data.id})
+                                                        .then(response => {
+                                                            miniToastr.success("Empresa adicionada com sucesso","Sucesso");
+                                                            this.formReset();
+                                                            this.reload();
+                                                            this.closeModals();
+                                                        })
+                                                        .catch(function(error) {
+                                                            ApiService.process_request_error(error); 
+                                                            miniToastr.error(error, "Erro adicionando Manager");  
+                                                        });
+                                                
+                                                })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error); 
+                                            miniToastr.error(error, "Erro adicionando Manager");  
+                                        });
+
+                                })
+                                .catch(function(error) {
+                                    ApiService.process_request_error(error); 
+                                    miniToastr.error(error, "Erro adicionando Empresa");  
+                                });
+
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro adicionando canal de comunicação");  
+                });
+            },
+            
+            editCompany: function() { //U
+                this.modelManager = Object.assign({}, this.model_manager);
+                this.modelCompany = Object.assign({}, this.model_company);
+                this.modelRpi = Object.assign({}, this.model_rpi);
+            },
+
+            updateCompany: function() { 
+                delete this.modelCompany.created_at;
+                delete this.modelCompany.updated_at;
+                delete this.modelManager.created_at;
+                delete this.modelManager.updated_at;
+                delete this.modelRpi.created_at;
+                delete this.modelRpi.updated_at;
+                this.isSendingUpdate = true;
+                ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                        .then(response => {
+
+                            ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
+                                .then(response => {
+                                    ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                                        .then(response => {
+                                            miniToastr.success("Manager atualizado com sucesso","Sucesso");
+                                            this.reload();
+                                            this.closeModals();
+                                        })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error);  
+                                            miniToastr.error(error, "Erro atualizando Manager"); 
+                                        });
+                                })
+                                .catch(function(error) {
+                                    ApiService.process_request_error(error);  
+                                    miniToastr.error(error, "Erro atualizando companhia"); 
+                                });
+
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro atualizando canal de comunicação");  
+                });
+            },
+
+            deleteCompany: function(){
+                
+                this.isSendingDelete = true;
+
+                ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
+                        .then(response => {
+
+                            ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
+                                .then(response => {
+                                    
+                                    ApiService.delete(this.users_url+'/'+this.modelManager.id)
+                                        .then(response => {
+                                            ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
+                                                .then(response => {
+                                                    miniToastr.success("Companhia eliminada com sucesso","Sucesso");
+                                                    this.reload();
+                                                    this.closeModals();
+                                                })
+                                                .catch(function(error) {
+                                                    ApiService.process_request_error(error);  
+                                                    miniToastr.error(error, "Erro eliminando Companhia"); 
+                                                });
+                                        })
+                                        .catch(function(error) {
+                                            ApiService.process_request_error(error);  
+                                            miniToastr.error(error, "Erro eliminando Manager"); 
+                                        });
+                                })
+                                .catch(function(error) {
+                                    ApiService.process_request_error(error);  
+                                    miniToastr.error(error, "Erro eliminando Manager"); 
+                                });
+
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error); 
+                    miniToastr.error(error, "Erro eliminando canal de comunicação");  
+                });
+
+            },
+
+            formReset:function(){
+                this.modelCompany.CNPJ = "";
+                this.modelCompany.name = "";
+                this.modelCompany.phone = "";
+                this.modelCompany.email = "";
+                this.modelCompany.description = "";
+                this.modelCompany.whatsapp = "";
+                
+                this.modelManager.name = "";
+                this.modelManager.login = "";
+                this.modelManager.email = "";
+                this.modelManager.password = "";
+                this.modelManager.CPF = "";
+                this.modelManager.phone = "";
+                this.modelManager.image_path = "";
+                this.modelManager.whatsapp_id = "";
+                this.modelManager.facebook_id = "";
+                this.modelManager.instagram_id = "";
+                this.modelManager.linkedin_id = "";
+
+                this.modelRpi.api_user = "";
+                this.modelRpi.api_password = "";
+                this.modelRpi.root_user = "";
+                this.modelRpi.root_password = "";
+                this.modelRpi.tcp_tunnel = "";
+                this.modelRpi.tcp_port = "";
+                this.modelRpi.mac = "";
+                this.modelRpi.api_tunnel = "";
+                this.modelRpi.soft_version = "";
+                this.modelRpi.soft_version_date = "";
+
+            },
+
+            closeModals(){
+                this.$emit('modalclose');
+            }, 
+            
+            reload(){
+                this.$emit('onreloaddatas');
+            },
+
+            trimDataModels:function(){
                 this.modelCompany.CNPJ = this.modelCompany.CNPJ.trim();
                 this.modelCompany.name = this.modelCompany.name.trim();
                 this.modelCompany.phone = this.modelCompany.phone.trim();
@@ -254,14 +432,18 @@
                 this.modelManager.facebook_id = this.modelManager.facebook_id.trim();
                 this.modelManager.instagram_id = this.modelManager.instagram_id.trim();
                 this.modelManager.linkedin_id = this.modelManager.linkedin_id.trim();
+            },
 
+            validateData:function(){
+                
                 var flagReference = true;
                 var check;
                 var temp = {"success":true };
+
                 // Validação dos campos da empresa
                 check = (this.modelCompany.CNPJ!='')? validation.check('cnpj', this.modelCompany.CNPJ):temp=true;
                 if(check.success==false){
-                    miniToastr.error("Erro", check.error );
+                    miniToastr.error(" ", check.error );
                     flagReference = false;   
                 } 
                 check = (this.modelCompany.name!='')? validation.check('complete_name', this.modelCompany.name):temp=true;
@@ -363,187 +545,7 @@
                     miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
                     return;
                 }
-
-
-                this.modelCompany.id=1;
-                this.modelCompany.user_seller_id=this.logued_user.id;
-                this.modelManager.id=1;
-                this.modelManager.role_id=3;
-                this.modelManager.image_path = "images/user.jpg";
-                this.isSendingInsert = true;
-
-                //inserindo canal de comunicação.
-                ApiService.post(this.rpi_url, this.modelRpi)
-                        .then(response => {
-                            this.modelCompany.rpi_id = response.data.id;
-                            // inserindo company
-                                ApiService.post(this.companies_url, this.modelCompany)
-                                    .then(response => {
-                                        this.modelManager.company_id = response.data.id;
-                                        this.modelRpi.company_id = response.data.id;
-                                        // inserindo user
-                                        ApiService.post(this.users_url, this.modelManager)
-                                                .then(response => {
-                                                //inserindo userManager
-                                                ApiService.post(this.usersManager_url, {'user_id':response.data.id})
-                                                        .then(response => {
-                                                            miniToastr.success("Empresa adicionada com sucesso","Sucesso");
-                                                            this.formReset();
-                                                            this.reload();
-                                                            this.closeModals();
-                                                        })
-                                                        .catch(function(error) {
-                                                            ApiService.process_request_error(error); 
-                                                            miniToastr.error(error, "Erro adicionando Manager");  
-                                                        });
-                                                
-                                                })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error); 
-                                            miniToastr.error(error, "Erro adicionando Manager");  
-                                        });
-
-                                })
-                                .catch(function(error) {
-                                    ApiService.process_request_error(error); 
-                                    miniToastr.error(error, "Erro adicionando Empresa");  
-                                });
-
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando canal de comunicação");  
-                });
             },
-            
-            editCompany: function() { //U
-                this.modelManager = Object.assign({}, this.model_manager);
-                this.modelCompany = Object.assign({}, this.model_company);
-                this.modelRpi = Object.assign({}, this.model_rpi);
-
-            },
-
-            updateCompany: function() { 
-                delete this.modelCompany.created_at;
-                delete this.modelCompany.updated_at;
-                delete this.modelManager.created_at;
-                delete this.modelManager.updated_at;
-                delete this.modelRpi.created_at;
-                delete this.modelRpi.updated_at;
-                
-                this.isSendingUpdate = true;
-
-                ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
-                        .then(response => {
-
-                            ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
-                                .then(response => {
-                                    ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                                        .then(response => {
-                                            miniToastr.success("Manager atualizado com sucesso","Sucesso");
-                                            this.reload();
-                                            this.closeModals();
-                                        })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error);  
-                                            miniToastr.error(error, "Erro atualizando Manager"); 
-                                        });
-                                })
-                                .catch(function(error) {
-                                    ApiService.process_request_error(error);  
-                                    miniToastr.error(error, "Erro atualizando companhia"); 
-                                });
-
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro atualizando canal de comunicação");  
-                });
-            },
-
-
-            deleteCompany: function(){
-                
-                this.isSendingDelete = true;
-
-                ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
-                        .then(response => {
-
-                            ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
-                                .then(response => {
-                                    
-                                    ApiService.delete(this.users_url+'/'+this.modelManager.id)
-                                        .then(response => {
-                                            ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
-                                                .then(response => {
-                                                    miniToastr.success("Companhia eliminada com sucesso","Sucesso");
-                                                    this.reload();
-                                                    this.closeModals();
-                                                })
-                                                .catch(function(error) {
-                                                    ApiService.process_request_error(error);  
-                                                    miniToastr.error(error, "Erro eliminando Companhia"); 
-                                                });
-                                        })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error);  
-                                            miniToastr.error(error, "Erro eliminando Manager"); 
-                                        });
-                                })
-                                .catch(function(error) {
-                                    ApiService.process_request_error(error);  
-                                    miniToastr.error(error, "Erro eliminando Manager"); 
-                                });
-
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro eliminando canal de comunicação");  
-                });
-
-            },
-
-            formReset:function(){
-                this.modelCompany.CNPJ = "";
-                this.modelCompany.name = "";
-                this.modelCompany.phone = "";
-                this.modelCompany.email = "";
-                this.modelCompany.description = "";
-                this.modelCompany.whatsapp = "";
-                
-                this.modelManager.name = "";
-                this.modelManager.login = "";
-                this.modelManager.email = "";
-                this.modelManager.password = "";
-                this.modelManager.CPF = "";
-                this.modelManager.phone = "";
-                this.modelManager.image_path = "";
-                this.modelManager.whatsapp_id = "";
-                this.modelManager.facebook_id = "";
-                this.modelManager.instagram_id = "";
-                this.modelManager.linkedin_id = "";
-
-                this.modelRpi.api_user = "";
-                this.modelRpi.api_password = "";
-                this.modelRpi.root_user = "";
-                this.modelRpi.root_password = "";
-                this.modelRpi.tcp_tunnel = "";
-                this.modelRpi.tcp_port = "";
-                this.modelRpi.mac = "";
-                this.modelRpi.api_tunnel = "";
-                this.modelRpi.soft_version = "";
-                this.modelRpi.soft_version_date = "";
-
-            },
-
-            closeModals(){
-                this.$emit('modalclose');
-            }, 
-            
-            reload(){
-                this.$emit('onreloaddatas');
-            }, 
-
         },
 
         mounted(){
@@ -559,7 +561,6 @@
             miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
             miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
         },
-
     }
 </script>
 
