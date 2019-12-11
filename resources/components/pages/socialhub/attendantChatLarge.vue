@@ -1187,6 +1187,7 @@
                 // wsHost: window.location.hostname,
                 wsPort: 6001,
                 wssPort: 6001,
+                enabledTransports: ['ws', 'wss'],
                 encrypted: false,
                 disableStats: false
             });

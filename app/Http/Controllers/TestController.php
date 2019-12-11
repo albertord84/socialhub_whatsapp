@@ -100,6 +100,8 @@ class TestController extends AppBaseController
         $Chat = $ExtendedChat->find(1);
         $pendingBC = broadcast(new MessageToAttendant($Chat));
 
+        dd($pendingBC);
+
         // var_dump($pendingBC);
 
         // broadcast(new NewContactMessage(1));
