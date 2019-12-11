@@ -954,6 +954,7 @@
                 if(!this.selectedContactToEdit.whatsapp_id.includes('@s.whatsapp.net'))
                     this.selectedContactToEdit.whatsapp_id+='@s.whatsapp.net';
                 this.isUpdatingContact = true;
+
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -1199,6 +1200,7 @@
                 // wsHost: window.location.hostname,
                 wsPort: 6001,
                 wssPort: 6001,
+                enabledTransports: ['ws', 'wss'],
                 encrypted: false,
                 disableStats: false
             });

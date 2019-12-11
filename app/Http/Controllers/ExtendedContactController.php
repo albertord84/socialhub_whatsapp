@@ -101,6 +101,8 @@ class ExtendedContactController extends ContactController
             return redirect(route('contacts.index'));
         }
 
+        unset($request['updated_at']);
+
         $contact = $this->contactRepository->update($request->all(), $id);
 
         Flash::success('Contact updated successfully.');
