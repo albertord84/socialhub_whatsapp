@@ -88,23 +88,23 @@ class UsersTableSeeder extends Seeder
         ]);
         $this->command->info('Manager 1 created: [user: manager, pass: manager]');
 
-        User::create([
-            'id' => 7,
-            'company_id' => 2,
-            'name' => 'Manager2',
-            'email' => 'manager2@socialhub.pro',
-            'login' => 'manager2',
-            'CPF' => '00000000012',
-            'role_id' => $role_id,
-            'status_id' => 1,
-            'email_verified_at' => now(),
-            'password' => bcrypt('manager2'), // password
-            'remember_token' => Str::random(10),
-        ]);
-        UsersManager::create([
-            'user_id' => 7,
-        ]);
-        $this->command->info('Manager 2 created: [user: manager2, pass: manager2]');
+        // User::create([
+        //     'id' => 7,
+        //     'company_id' => 2,
+        //     'name' => 'Manager2',
+        //     'email' => 'manager2@socialhub.pro',
+        //     'login' => 'manager2',
+        //     'CPF' => '00000000012',
+        //     'role_id' => $role_id,
+        //     'status_id' => 1,
+        //     'email_verified_at' => now(),
+        //     'password' => bcrypt('manager2'), // password
+        //     'remember_token' => Str::random(10),
+        // ]);
+        // UsersManager::create([
+        //     'user_id' => 7,
+        // ]);
+        // $this->command->info('Manager 2 created: [user: manager2, pass: manager2]');
 
 
 

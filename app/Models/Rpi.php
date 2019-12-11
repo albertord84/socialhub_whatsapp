@@ -44,11 +44,6 @@ class Rpi extends Model
         'api_tunnel',
         'soft_version',
         'soft_version_date'
-
-
-
-
-
     ];
 
     /**
@@ -71,8 +66,6 @@ class Rpi extends Model
         'api_tunnel' => 'string',
         'soft_version' => 'string',
         'soft_version_date' => 'string'
-
-
     ];
 
     /**
