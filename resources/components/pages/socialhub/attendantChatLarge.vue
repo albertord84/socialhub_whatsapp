@@ -1246,6 +1246,7 @@
             window.Echo.channel('sh.transferred-contact.' + this.loggedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
                     // this.getContacts();
+                    console.log(e);
                     var newContact = e.message;
                     newContact.index = this.contacts.length;
                     this.contacts.unshift(newContact);

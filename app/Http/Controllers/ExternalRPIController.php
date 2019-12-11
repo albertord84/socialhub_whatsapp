@@ -57,7 +57,7 @@ class ExternalRPIController extends Controller
         return json_encode($RPI);
     }
 
-    public function registerNewRPI(string $MAC = null): bool
+    public function registerNewRPI(string $MAC = null)
     {
         $RPI = new Rpi();
         try {
