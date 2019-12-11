@@ -8,67 +8,75 @@
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.login" name="login" id="login" type="text" required placeholder="Login (*)" class="form-control"/>
+                        <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login (*)" class="form-control"/>
                     </div>
                     <div  class="col-lg-6 form-group has-search">
                         <span class="fa fa-envelope form-control-feedback"></span>
-                        <input v-model="model.email" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
+                        <input v-model="model.email" title="Ex: atendente@gmail.com" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
                     </div>                                                      
                 </div>
                 <div class="row">
                     <div  class="col-lg-6 form-group has-search">
                         <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.CPF" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        <input v-model="model.CPF" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                        <input v-model="model.phone" title="Ex: 55(21)559-6918" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                     </div>  
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" title="Ex: 963525397" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
-                        <input v-model="model.facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
+                        <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-instagram form-control-feedback"></span>
-                            <input v-model="model.instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
+                            <input v-model="model.instagram_id" title="Ex: instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
                         </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-linkedin form-control-feedback"></span>
-                        <input v-model="model.linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
+                        <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
                     </div>
                 </div>
                 <div v-if="action=='edit'" class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="model.password" type="password" placeholder="Senha" class="form-control"/>
+                            <input v-model="model.password" title="Inserir a nova senha" type="password" placeholder="Senha" class="form-control"/>
                         </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-key form-control-feedback"></span>
-                        <input v-model="model.repeat_password" type="password" placeholder="Repetir senha" class="form-control"/>
+                        <input v-model="model.repeat_password" title="Repetir a nova senha" type="password" placeholder="Repetir senha" class="form-control"/>
                     </div>
                 </div>
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" @click.prevent="addAttendant">Adicionar</button>
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" @click.prevent="updateAttendant">Atualizar</button>
+                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addAttendant">
+                        <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Adicionar
+                    </button>
+
+                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateAttendant">
+                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
+                    </button>
+
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
             <form v-show="action=='delete'">
                 Tem certeza que deseja remover esse Atendente?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="deleteAttendant">Eliminar</button>
+                    <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteAttendant">
+                        <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
+                    </button>
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
@@ -116,6 +124,10 @@
                     password: "",
                     repeat_password: "",
                 },
+                
+                isSendingInsert: false,
+                isSendingUpdate: false,
+                isSendingDelete: false,
             }
         },
 
@@ -125,6 +137,9 @@
                 this.model.role_id=4;
                 this.model.password='';
                 this.model.image_path = "images/user.jpg";
+
+                this.isSendingInsert = true;
+
                 ApiService.post(this.first_url, this.model)
                 .then(response => {
                     ApiService.post(this.url, { 
@@ -159,6 +174,8 @@
                 if(this.model.password.trim()!='' && this.model.password!=this.model.repeat_password){
                      miniToastr.error('Erro', "As senha não coincidem"); return;
                 }
+                
+                this.isSendingUpdate = true;
 
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
@@ -181,7 +198,9 @@
             },
 
             deleteAttendant: function(){
-                
+
+                this.isSendingDelete = true;
+
                 ApiService.delete('deleteAllByAttendantId/'+this.item.id)
                     .then(response => {
                         ApiService.delete(this.url+'/'+this.item.id)

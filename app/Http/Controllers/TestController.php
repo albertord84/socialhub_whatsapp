@@ -95,6 +95,7 @@ class TestController extends AppBaseController
         //     var_dump($th);
         // }
 
+        
         $ExtendedChat = new ExtendedChat();
         $ExtendedChat->table = '4';
         $Chat = $ExtendedChat->find(1);

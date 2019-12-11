@@ -408,12 +408,15 @@
                                     <!-- <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
                                     </b-dropdown-item> -->
+                                    
                                     <!-- <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-exchange"></i> Transferir</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
-                                    </b-dropdown-item>                                     -->
+                                    </b-dropdown-item>-->
+
+                                    <b-dropdown-item exact class="dropdown_content">
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="modalTransferContact=!modalTransferContact"><i class="fa fa-exchange"></i> Transferir</a>
+                                    </b-dropdown-item>
+
                                     <b-dropdown-item exact class="dropdown_content">
                                         <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="displayDeleteContact()"><i class="fa fa-trash-o"></i> Eliminar</a>
                                     </b-dropdown-item>
@@ -621,6 +624,11 @@
                 </ul>
             </v-scroll>
         </div>
+
+        <!-- Modal to transfer contact-->
+        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Verificação de exclusão">
+            <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+        </b-modal>
         
         <!-- Modal to delete contact-->
         <b-modal v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
@@ -671,6 +679,8 @@
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
                 </div>
         </b-modal>
+
+        
     </div>
 </template>
 
@@ -755,6 +765,7 @@
                 modalShowVideoSrc:'',
                 modalNewContactFromBag:false,
                 modalUserCRUDDatas:false,
+                modalTransferContact:false,
                 
                 rightLayout:'toggle-edit-contact',
                 leftLayout:'toggle-add-contact',
@@ -943,6 +954,7 @@
                 if(!this.selectedContactToEdit.whatsapp_id.includes('@s.whatsapp.net'))
                     this.selectedContactToEdit.whatsapp_id+='@s.whatsapp.net';
                 this.isUpdatingContact = true;
+
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -1150,7 +1162,8 @@
             },
 
             closemodal(){
-                this.modalDeleteContact = !this.modalDeleteContact;
+                this.modalDeleteContact = false;
+                this.modalTransferContact = false;
             },
            
             logout() {

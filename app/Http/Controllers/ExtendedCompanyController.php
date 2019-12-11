@@ -7,9 +7,11 @@ use App\Http\Requests\UpdateCompanyRequest;
 use App\Repositories\ExtendedCompanyRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laracasts\Flash\Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use stdClass;
 
 class ExtendedCompanyController extends CompanyController
 {
@@ -19,6 +21,30 @@ class ExtendedCompanyController extends CompanyController
         parent::__construct($companyRepo);
 
         $this->companyRepository = $companyRepo;
+    }
+
+    /**
+     * Display a listing of the Company.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        $this->companyRepository->pushCriteria(new RequestCriteria($request));
+        $companies = new stdClass();
+        $User = Auth::check()? Auth::user():session('logged_user');
+        if($User->role_id==ExtendedContactsStatusController::SELLER){
+            $companies = $this->companyRepository->allBySeller($User->id);
+        }
+        else if ($User->role_id==ExtendedContactsStatusController::ADMIN) {
+            $companies = $this->companyRepository->all();
+        }
+
+        return $companies->toJson();
+        
+        // return view('companies.index')
+        //     ->with('companies', $companies);
     }
 
     public function update($id, UpdateCompanyRequest $request)
