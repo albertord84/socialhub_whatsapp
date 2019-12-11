@@ -28,7 +28,7 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $this->attendantsContactRepository->deleteAllByAttendantId($attendant_id);
     }
 
-    public function store(CreateAttendantsContactRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -39,7 +39,8 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $Contact = Contact::find($request->contact_id);
         $Contact->updated_at = time();
         $Contact->save();
-        
+
+        $attendantsContact->toJson();       
 
 
         // return redirect(route('attendantsContacts.index'));
