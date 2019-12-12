@@ -53,12 +53,13 @@ class ExtendedRpiController extends RpiController
         $mac = $request->mac;
         $company_id = $request->company_id;
 
-        if ($id == 0 && $mac) {
+        $rpi = null;
+
+        if ($mac) {
             $rpi = $this->rpiRepository->model()::where(['mac' => $mac])->first();
-            // $rpi = Rpi::where(['mac' => $mac])->first();
-        }
-        else if ($id > 0) {
-            $rpi = $this->rpiRepository->findWithoutFail($id);
+            if ($rpi && $rpi->id != $id) { // Tentando atuaizar uma MAC que ja existe
+                $id = $rpi->id;
+            }
         }
 
         if (!empty($rpi)) {
@@ -66,7 +67,7 @@ class ExtendedRpiController extends RpiController
             $rpi = $this->rpiRepository->update($input, $rpi->id);
 
             $Company = Company::find($company_id);
-            $Company->rpi_id = $rpi->id;
+            $Company->rpi_id = $id;
             $Company->save();
         }
 
