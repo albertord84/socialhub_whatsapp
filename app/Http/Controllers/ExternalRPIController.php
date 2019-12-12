@@ -45,16 +45,18 @@ class ExternalRPIController extends Controller
         $rpiUser = $request->user;
         $rpiPass = $request->password;
 
-        $RPI = new stdClass;
-        $RPI = Rpi::with('company')->whereHas('company', function($query) use ($rpiMAC) {
+        $Company = Company::with('rpi')->whereHas('rpi', function($query) use ($rpiMAC) {
             $query->where(['mac' => $rpiMAC]);
         })->first();
-
-        if (!$RPI) {  // Whether not found RPI associated to a company
-            $this->registerNewRPI($rpiMAC);
+        
+        if (!$Company) { // Whether not found RPI associated to a company
+            $RPI = Rpi::where(['mac' => $rpiMAC])->first();
+            if (!$RPI) { // Whether not found RPI
+                $RPI = $this->registerNewRPI($rpiMAC);
+            }
         }
 
-        return json_encode($RPI);
+        return json_encode($Company);
     }
 
     public function registerNewRPI(string $MAC = null)
@@ -64,7 +66,7 @@ class ExternalRPIController extends Controller
             $RPI->mac = $MAC;
             return $RPI->save();
         } catch (\Throwable $th) {
-            // throw $th;
+            throw $th;
         }
     }
 

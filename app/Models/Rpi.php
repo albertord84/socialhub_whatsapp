@@ -75,11 +75,11 @@ class Rpi extends Model
         
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
-    public function company()
-    {
-        return $this->belongsTo(\App\Models\Company::class, 'company_id');
-    }    
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    //  **/
+    // public function company()
+    // {
+    //     return $this->belongsTo(\App\Models\Company::class, 'company_id');
+    // }    
 }

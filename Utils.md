@@ -64,3 +64,61 @@ php artisan serve --host=192.168.25.6
 
 # Advanced Elloquent Querys
 https://m.dotdev.co/writing-advanced-eloquent-search-query-filters-de8b6c2598db
+
+
+
+
+
+### https://github.com/beyondcode/laravel-websockets/issues/285
+Nothing work with https :(  only work with http!
+
+I tried almost all combinations:
+     ////  My .vue component on start
+            window.Echo = new Echo({
+                broadcaster: 'pusher',
+                key: process.env.MIX_PUSHER_APP_KEY,
+                cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                wsHost: process.env.MIX_APP_HOST,
+                // wsHost: window.location.hostname,
+                wsPort: 6001,
+                wssPort: 6001,
+                // enabledTransports: ['ws'],
+                enabledTransports: ['ws', 'wss'],
+                // encrypted: true,
+                encrypted: false,
+                disableStats: false
+            });
+
+    ///// config/broadcasting.php
+            'options' => [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                // 'encrypted' => true,
+                // 'scheme' => 'https',       
+                'useTLS' => false,
+                'encrypted' => false,
+                'host' => env('APP_HOST'),
+                'port' => 6001,
+                'scheme' => 'http',       
+
+                'curl_options' => [
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                ]         
+            ],
+
+     ///// config/websockets.php
+    'ssl' => [
+
+        'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', null),
+
+        'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', null),
+
+        // 'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
+        'passphrase' => null,
+
+        'verify_peer' => false,
+    ],
+
+Clear all laravel cache, npm run dev, composer dump-autoload -o, clear navigator cache, restart supervisor and websockets, and I still having websocket with https erros like:
+
+WebSocket connection to 'wss://[MYDOMINE]:6001/app/NNN?protocol=7&client=js&version=5.0.3&flash=false' failed: WebSocket is closed before the connection is established. 
