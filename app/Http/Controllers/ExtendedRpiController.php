@@ -53,8 +53,6 @@ class ExtendedRpiController extends RpiController
         $mac = $request->mac;
         $company_id = $request->company_id;
 
-        $rpi = new stdClass();
-
         if ($id == 0 && $mac) {
             $rpi = $this->rpiRepository->model()::where(['mac' => $mac])->first();
             // $rpi = Rpi::where(['mac' => $mac])->first();
@@ -72,6 +70,6 @@ class ExtendedRpiController extends RpiController
             $Company->save();
         }
 
-        return $rpi->toJson();
+        return $rpi ? $rpi->toJson() : null;
     }
 }
