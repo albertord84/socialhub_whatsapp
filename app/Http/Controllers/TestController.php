@@ -12,6 +12,7 @@ use App\Repositories\ExtendedChatRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
+use App\Repositories\ExtendedRpiRepository;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -39,10 +40,10 @@ class TestController extends AppBaseController
         // $Attendants = $extContRepo->getAttendants(1);
         // dd($Attendants);
         
-        // $extChatRepo = new ExtendedChatRepository(app());
-        // $ContactChats = $extChatRepo->contactChatAllAttendants(1);
+        $extRepo = new ExtendedRpiRepository(app());
+        $ContactChats = $extRepo->rpiOfCompany(3);
 
-        // dd($ContactChats);
+        dd($ContactChats);
 
         // $extChatRepo = new ExtendedChatRepository(app());
         // $Contact = $extChatRepo->getBagContact(4);
