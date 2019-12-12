@@ -3,66 +3,6 @@
         <b-container fluid>                
             <form v-show="action!='delete'"> 
                 <div>
-                    <h3>Dados do canal de comunicação</h3>
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelRpi.api_user" title="Ex: Nome da Empresa" name="api_user" id="api_user" type="text" required placeholder="Usuario da API" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="modelRpi.api_password" title="Ex: x2+A*fd!" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API" class="form-control"/>
-                        </div>                                                      
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelRpi.root_user" title="Ex: Nome da Empresa" name="root_user" id="root_user" type="text" required placeholder="Usuario Root" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="modelRpi.root_password" title="Ex: x2+A*fd!" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root" class="form-control"/>
-                        </div>                                                      
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.tcp_tunnel" title="Ex: 1.tcp.ngrok.io" name="tcp_tunnel" id="tcp_tunnel" type="text" required placeholder="Tunnel TCP" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.tcp_port" title="Ex: 29426" id="tcp_port" name="tcp_port" type="text" required placeholder="Porto TCP" class="form-control"/>
-                        </div>                                                      
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.mac" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.api_tunnel" title="Ex: http://shrpialberto.sa.ngrok.io.ngrok.io" id="api_tunnel" name="api_tunnel" type="text" required placeholder="Tunnel da API (*)" class="form-control"/>                            
-                        </div>                                                      
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-cog form-control-feedback"></span>
-                            <input v-model="modelRpi.soft_version" title="Ex: 0.1.0" name="soft_version" id="soft_version" type="text" required placeholder="Versão do Software" class="form-control"/>
-                        </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-cog form-control-feedback"></span>
-                            <input v-model="modelRpi.soft_version_date" title="Ex: 30/11/2019" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software" class="form-control"/>                            
-                        </div>                                                      
-                    </div>
-
-                </div>
-                <hr>
-
-                <div>
                     <h3>Dados da empresa</h3>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
@@ -121,13 +61,67 @@
                             <input v-model="modelManager.phone" title="Ex: 55(21)559-6918" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                     </div>                                   
+                </div> 
+                
+                <hr>
+                <div v-if="action=='edit'">
+                    <h3>Dados do canal de comunicação</h3>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp" title="Ex: 963525397" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="modelRpi.api_user" title="Ex: Nome da Empresa" name="api_user" id="api_user" type="text" required placeholder="Usuario da API" class="form-control"/>
                         </div>
-                    </div>                                   
-                </div> 
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-key form-control-feedback"></span>
+                            <input v-model="modelRpi.api_password" title="Ex: x2+A*fd!" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API" class="form-control"/>
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="modelRpi.root_user" title="Ex: Nome da Empresa" name="root_user" id="root_user" type="text" required placeholder="Usuario Root" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-key form-control-feedback"></span>
+                            <input v-model="modelRpi.root_password" title="Ex: x2+A*fd!" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root" class="form-control"/>
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.tcp_tunnel" title="Ex: 1.tcp.ngrok.io" name="tcp_tunnel" id="tcp_tunnel" type="text" required placeholder="Tunnel TCP" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.tcp_port" title="Ex: 29426" id="tcp_port" name="tcp_port" type="text" required placeholder="Porto TCP" class="form-control"/>
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.mac" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-link form-control-feedback"></span>
+                            <input v-model="modelRpi.api_tunnel" title="Ex: http://shrpialberto.sa.ngrok.io.ngrok.io" id="api_tunnel" name="api_tunnel" type="text" required placeholder="Tunnel da API (*)" class="form-control"/>                            
+                        </div>                                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-cog form-control-feedback"></span>
+                            <input v-model="modelRpi.soft_version" title="Ex: 0.1.0" name="soft_version" id="soft_version" type="text" required placeholder="Versão do Software" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-cog form-control-feedback"></span>
+                            <input v-model="modelRpi.soft_version_date" title="Ex: 30/11/2019" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software" class="form-control"/>                            
+                        </div>                                                      
+                    </div>
+
+                </div>
                                                
                 <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
@@ -141,6 +135,7 @@
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
+
             <form v-show="action=='delete'">
                 Tem certeza que deseja cancelar o contrato dessa Empresa?
                 <div class="col-lg-12 mt-5 text-center">
@@ -229,59 +224,42 @@
 
         methods:{
             addCompany: function() { //C
-
-                // this.trimDataModels();
-                // this.validateData();
-
-                this.modelCompany.id=1;
+                this.modelCompany.id=0;
                 this.modelCompany.user_seller_id=this.logued_user.id;
-                this.modelManager.id=1;
+                this.modelManager.id=0;
                 this.modelManager.role_id=3;
                 this.modelManager.image_path = "images/user.jpg";
                 this.isSendingInsert = true;
 
-                //inserindo canal de comunicação.
-                ApiService.post(this.rpi_url, this.modelRpi)
-                        .then(response => {
-                            this.modelCompany.rpi_id = response.data.id;
-                            // inserindo company
-                                ApiService.post(this.companies_url, this.modelCompany)
+                 // inserindo company
+                ApiService.post(this.companies_url, this.modelCompany)
+                    .then(response => {
+                        this.modelManager.company_id = response.data.id;
+                        // inserindo user
+                        ApiService.post(this.users_url, this.modelManager)
+                            .then(response => {
+                                //inserindo userManager
+                                ApiService.post(this.usersManager_url, {'user_id':response.data.id})
                                     .then(response => {
-                                        this.modelManager.company_id = response.data.id;
-                                        this.modelRpi.company_id = response.data.id;
-                                        // inserindo user
-                                        ApiService.post(this.users_url, this.modelManager)
-                                                .then(response => {
-                                                //inserindo userManager
-                                                ApiService.post(this.usersManager_url, {'user_id':response.data.id})
-                                                        .then(response => {
-                                                            miniToastr.success("Empresa adicionada com sucesso","Sucesso");
-                                                            this.formReset();
-                                                            this.reload();
-                                                            this.closeModals();
-                                                        })
-                                                        .catch(function(error) {
-                                                            ApiService.process_request_error(error); 
-                                                            miniToastr.error(error, "Erro adicionando Manager");  
-                                                        });
-                                                
-                                                })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error); 
-                                            miniToastr.error(error, "Erro adicionando Manager");  
-                                        });
-
+                                        miniToastr.success("Empresa adicionada com sucesso","Sucesso");
+                                        this.formReset();
+                                        this.reload();
+                                        this.closeModals();
+                                    })
+                                    .catch(function(error) {
+                                        miniToastr.error(error, "Erro adicionando Manager");  
+                                        ApiService.process_request_error(error); 
+                                    });
                                 })
-                                .catch(function(error) {
-                                    ApiService.process_request_error(error); 
-                                    miniToastr.error(error, "Erro adicionando Empresa");  
-                                });
-
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando canal de comunicação");  
-                });
+                            .catch(function(error) {
+                                miniToastr.error(error, "Erro adicionando Manager");  
+                                ApiService.process_request_error(error); 
+                            });
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Erro adicionando Empresa");  
+                        ApiService.process_request_error(error); 
+                    });
             },
             
             editCompany: function() { //U
@@ -298,73 +276,90 @@
                 delete this.modelRpi.created_at;
                 delete this.modelRpi.updated_at;
                 this.isSendingUpdate = true;
-                ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
-                        .then(response => {
-
-                            ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
-                                .then(response => {
-                                    ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                                        .then(response => {
-                                            miniToastr.success("Manager atualizado com sucesso","Sucesso");
-                                            this.reload();
-                                            this.closeModals();
-                                        })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error);  
-                                            miniToastr.error(error, "Erro atualizando Manager"); 
-                                        });
+                
+                ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
+                    .then(response => {
+                        ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                            .then(response => {
+                                miniToastr.success("Dados atualizado com sucesso","Sucesso");
+                                if(!this.modelRpi.id) 
+                                    this.modelRpi.id=0;                                
+                                ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                                    .then(response => {
+                                        this.isSendingUpdate = false;
+                                        this.reload();
+                                        this.closeModals();
                                 })
                                 .catch(function(error) {
-                                    ApiService.process_request_error(error);  
-                                    miniToastr.error(error, "Erro atualizando companhia"); 
+                                    this.isSendingUpdate = false;
+                                    if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                        alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                    else
+                                        miniToastr.error(error, "Erro atualizando canal de comunicação"); 
                                 });
-
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro atualizando canal de comunicação");  
-                });
+                        })
+                        .catch(function(error) {
+                            this.isSendingUpdate = false;
+                            miniToastr.error(error, "Erro atualizando Manager"); 
+                        });
+                    })
+                    .catch(function(error) {
+                        this.isSendingUpdate = false;
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro atualizando companhia"); 
+                    });
             },
 
             deleteCompany: function(){
                 
                 this.isSendingDelete = true;
-
-                ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
-                        .then(response => {
-
-                            ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
-                                .then(response => {
-                                    
-                                    ApiService.delete(this.users_url+'/'+this.modelManager.id)
-                                        .then(response => {
-                                            ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
+                
+                //delete userManager row
+                ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
+                    .then(response => {                        
+                        //delete user row
+                        ApiService.delete(this.users_url+'/'+this.modelManager.id)
+                            .then(response => {
+                                //delete Company row
+                                ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
+                                    .then(response => {
+                                        //delete RPI row
+                                        if(this.modelCompany.rpi_id){
+                                            ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
                                                 .then(response => {
-                                                    miniToastr.success("Companhia eliminada com sucesso","Sucesso");
+                                                    miniToastr.success("Empresa eliminada com sucesso","Sucesso");
                                                     this.reload();
                                                     this.closeModals();
+                                                    this.isSendingDelete = false;
                                                 })
                                                 .catch(function(error) {
                                                     ApiService.process_request_error(error);  
-                                                    miniToastr.error(error, "Erro eliminando Companhia"); 
+                                                    miniToastr.error(error, "Erro eliminando canal de comunicação"); 
                                                 });
-                                        })
-                                        .catch(function(error) {
-                                            ApiService.process_request_error(error);  
-                                            miniToastr.error(error, "Erro eliminando Manager"); 
-                                        });
-                                })
-                                .catch(function(error) {
-                                    ApiService.process_request_error(error);  
-                                    miniToastr.error(error, "Erro eliminando Manager"); 
-                                });
-
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro eliminando canal de comunicação");  
-                });
-
+                                        }else{
+                                            miniToastr.success("Empresa eliminada com sucesso","Sucesso");
+                                            this.reload();
+                                            this.closeModals();
+                                            this.isSendingDelete = false;
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        ApiService.process_request_error(error);  
+                                        miniToastr.error(error, "Erro eliminando empresa");
+                                        this.isSendingDelete = false;
+                                    });
+                            })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error);  
+                                miniToastr.error(error, "Erro eliminando o usuário"); 
+                                this.isSendingDelete = false;
+                            });
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro eliminando o usuário");  
+                        this.isSendingDelete = false;
+                    });
             },
 
             formReset:function(){

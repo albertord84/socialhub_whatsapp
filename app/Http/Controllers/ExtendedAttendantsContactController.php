@@ -43,7 +43,8 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $Contact->save();
 
         $User = Auth::check()? Auth::user():session('logged_user');
-        broadcast(new NewTransferredContact((int) $User->id, $Contact));
+        //TODO-Alberto: enviar el last_message y el last_attendant al igual que la funcion que me da los contactos
+        broadcast(new NewTransferredContact((int) $request->attendant_id, $Contact));
 
         // return redirect(route('attendantsContacts.index'));
     }

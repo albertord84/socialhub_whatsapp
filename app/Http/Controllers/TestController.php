@@ -96,12 +96,12 @@ class TestController extends AppBaseController
         // }
 
         
-        $ExtendedChat = new ExtendedChat();
-        $ExtendedChat->table = '4';
-        $Chat = $ExtendedChat->find(1);
-        $pendingBC = broadcast(new MessageToAttendant($Chat));
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = '4';
+        // $Chat = $ExtendedChat->find(1);
+        // $pendingBC = broadcast(new MessageToAttendant($Chat));
 
-        dd($pendingBC);
+        // dd($pendingBC);
 
         // var_dump($pendingBC);
 
@@ -109,6 +109,13 @@ class TestController extends AppBaseController
         // broadcast(new NewContactMessage($User->company_id));
         // Bugsnag::notifyException(new RuntimeException("Test error"));
         
+
+        // $Contact = Contact::find($request->contact_id);
+        // $Contact->updated_at = time();
+        // $Contact->save();
+        // broadcast(new NewTransferredContact((int) $User->id, $Contact));
+
+
 
 
         // TEST CONTROLLERS

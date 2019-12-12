@@ -81,4 +81,14 @@ class Company extends Model
     {
         return $this->hasMany(\App\Models\User::class, 'company_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function rpi()
+    {
+        return $this->hasOne(\App\Models\Rpi::class, 'id', 'rpi_id');
+        // return $this->hasOne(\App\Models\Rpi::class, 'rpi_id');
+    } 
+
 }
