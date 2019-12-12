@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateRpiRequest;
 use App\Models\Company;
 use App\Models\Rpi;
 use App\Repositories\ExtendedRpiRepository;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
@@ -63,12 +64,23 @@ class ExtendedRpiController extends RpiController
         }
 
         if (!empty($rpi)) {
-            $input['id'] = $rpi->id;
-            $rpi = $this->rpiRepository->update($input, $rpi->id);
-
-            $Company = Company::find($company_id);
-            $Company->rpi_id = $id;
-            $Company->save();
+            $companyMAC = Company::with('rpi')->whereHas('rpi', function($query) use ($mac) {
+                $query->where(['mac' => $mac]);
+            })->first();
+            
+            if ($companyMAC->id != $company_id) { // Whether it RPi is assigned to another comapany
+                throw new Exception("Esta MAC (Id do dispositivo) ja esta assinado a outra empressa! Por favor contate supporte!", 1);
+            }
+            else {
+                // Update RPi data by id
+                $input['id'] = $rpi->id;
+                $rpi = $this->rpiRepository->update($input, $rpi->id);
+    
+                // Update Company RPi id
+                $Company = Company::find($company_id);
+                $Company->rpi_id = $id;
+                $Company->save();
+            }
         }
 
         return $rpi ? $rpi->toJson() : null;
