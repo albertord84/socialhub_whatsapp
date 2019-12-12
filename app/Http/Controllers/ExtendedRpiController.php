@@ -58,9 +58,13 @@ class ExtendedRpiController extends RpiController
 
         if ($mac) {
             $rpi = $this->rpiRepository->model()::where(['mac' => $mac])->first();
-            if ($rpi && $rpi->id != $id) { // Tentando atuaizar uma MAC que ja existe
+
+            if (!$rpi) throw new Exception("Esta MAC (Id do dispositivo) no consta no nosso sistema! Por favor contate supporte!", 1);
+
+            if ($rpi->id != $id) { // Tentando atuaizar uma MAC que ja existe
                 $id = $rpi->id;
             }
+            
         }
 
         if (!empty($rpi)) {
@@ -68,8 +72,8 @@ class ExtendedRpiController extends RpiController
                 $query->where(['mac' => $mac]);
             })->first();
             
-            if ($companyMAC->id != $company_id) { // Whether it RPi is assigned to another comapany
-                throw new Exception("Esta MAC (Id do dispositivo) ja esta assinado a outra empressa! Por favor contate supporte!", 1);
+            if ($companyMAC->id != $company_id) { // Whether it RPi is assigned to  another comapany
+                throw new Exception("Esta MAC (Id do dispositivo) ja esta assinado a outra empressa! Por favor contate supporte!", 2);
             }
             else {
                 // Update RPi data by id
