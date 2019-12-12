@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <form v-show="action=='isert' || action=='edit'">   
+        <form v-show="action=='insert' || action=='edit'">   
             <div class="col-lg-12 sect_header">
                 <ul v-if='action=="insert"' class="menu">
                     <li ><a  href="javascript:void(0)" @click.prevent="toggle_left('close')"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
@@ -347,7 +347,7 @@
                     .then(response => {
                         miniToastr.success("Contato tranferido com sucesso","Sucesso");
                         this.isTransferingContact = false;
-                        this.reload();
+                        this.reloadAfterTransferContact();
                         this.formCancel();
                     })
                     .catch(function(error) {
@@ -376,7 +376,7 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Número de Whatsapp incorreto ou não existe"); 
-                    }); 
+                    });
             },
 
             formReset:function(){
@@ -417,6 +417,9 @@
 
             reload(){
                 this.$emit('reloadContacts');
+            },
+            reloadAfterTransferContact(){
+                this.$emit('reloadAfterTransferContact');
             },
 
             editclose() {                

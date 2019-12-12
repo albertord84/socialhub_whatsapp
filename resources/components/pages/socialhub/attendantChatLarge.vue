@@ -1,8 +1,8 @@
 <template>
     <div class="row chat p-0" style="background-color:#fefefe !important">
         <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
-        <audio ref="newMessageSound" controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
-        <audio ref="newContactInBag" controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
+        <audio ref="newMessageSound" autoplay controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
+        <audio ref="newContactInBag" autoplay controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -113,9 +113,9 @@
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">                    
                     <ul class='menu'>                        
-                        <li><span class="pl-4"><img :src="JSON.parse(contacts[selectedContactIndex].json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
+                        <li><span class="pl-4"><img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
-                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ contacts[selectedContactIndex].first_name }} </p></li>                        
+                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ selectedContact.first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
                             <li><a href="javascript:void()" title="Buscar mensagens" @click.prevent="displayChatFindMessage()"><i class="fa fa-search"></i></a></li>
                             <li>
@@ -428,8 +428,8 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white">
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <img :src="JSON.parse(contacts[selectedContactIndex].json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
-                        <h4 class="profile-decription-name">{{contacts[selectedContactIndex].first_name}}</h4>
+                        <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
                         
                         <!-- Informação -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
@@ -453,28 +453,28 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-box-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact">{{contacts[selectedContactIndex].first_name}}</span>
+                                    <span v-show="!isEditingContact">{{selectedContact.first_name}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Email"><i class="mdi mdi-contact-mail-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span  v-show="!isEditingContact">{{contacts[selectedContactIndex].email}}</span>
+                                    <span  v-show="!isEditingContact">{{selectedContact.email}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>                            
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" style="word-break: break-word;">{{contacts[selectedContactIndex].whatsapp_id}}</span>
+                                    <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-contact-phone-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].phone}}</span>
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.phone" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
@@ -505,7 +505,7 @@
                         </div>
                         <div v-if="showContactSummary" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-2" style="min-height:40px">
-                                <p v-show="!isEditingContactSummary" style="word-break: break-word; text-align:justify">{{contacts[selectedContactIndex].summary}}</p>
+                                <p v-show="!isEditingContactSummary" style="word-break: break-word; text-align:justify">{{selectedContact.summary}}</p>
                                 <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
                             </div>
                             <div v-show="isEditingContactSummary">
@@ -627,7 +627,7 @@
 
         <!-- Modal to transfer contact-->
         <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
-            <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+            <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadAfterTransferContact='reloadAfterTransferContact'></attendantCRUDContact>
         </b-modal>
         
         <!-- Modal to delete contact-->
@@ -832,6 +832,7 @@
                         this.contacts.forEach(function(item, i){
                             item.index = i++;
                         });
+                        console.log(this.contacts);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
@@ -931,7 +932,7 @@
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
                 if (this.searchMessageByStringInput.length > 1){
                     ApiService.get(this.chat_url,{
-                            'contact_id': this.contacts[this.selectedContactIndex].id,
+                            'contact_id': this.selectedContact.id,
                             'searchMessageByStringInput': this.searchMessageByStringInput,
                             'page': 1
                         })
@@ -1076,6 +1077,9 @@
                             'chat_files' +'/' +
                             file_name;
 
+                //TODO-JR: change SavedFileName by SavedFilePath
+                // let pathFile = process.env.MIX_FILE_PATH +'/' + SavedFilePath; 
+
                 return pathFile;
             },
             
@@ -1122,7 +1126,7 @@
             },
 
             displayDeleteContact(){
-                this.item = this.contacts[this.selectedContactIndex]; 
+                this.item = this.selectedContact; 
                 this.modalDeleteContact=!this.modalDeleteContact;
             },
 
@@ -1161,6 +1165,13 @@
                 this.getContacts();
             },
 
+            reloadAfterTransferContact(){
+                this.selectedContactIndex = -1;
+                this.selectedContact = null;
+                this.displayChatRightSide();
+                this.getContacts();
+            },
+
             closemodal(){
                 this.modalDeleteContact = false;
                 this.modalTransferContact = false;
@@ -1174,7 +1185,7 @@
             },
 
             copyContact(){
-                this.item= Object.assign({}, this.contacts[this.selectedContactIndex]);
+                this.item= Object.assign({}, this.selectedContact);
             }
         },
 
@@ -1211,7 +1222,7 @@
                 .listen('MessageToAttendant', (e) => {
                     console.log(e);
                     var message = JSON.parse(e.message);
-                    if(this.selectedContactIndex >= 0 && this.contacts[this.selectedContactIndex].id == message.contact_id){
+                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
                         try {
                             if(message.data != "" && message.data != null && message.data.length>0) {
                                 message.data = JSON.parse(message.data);
@@ -1219,12 +1230,13 @@
                                     message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
                         } catch (error) {
-                            console.log(error);
+                            // console.log(error);
                         }
 
                         message.time = this.getMessageTime(message.created_at)
                         this.messages[this.messages.length]=message;
                         this.contacts[this.selectedContactIndex].last_message = message;
+                        this.selectedContact.last_message = message;
                         this.$refs.message_scroller.scrolltobottom();
                     }else{
                         var This = this;
@@ -1242,24 +1254,24 @@
                 .listen('NewContactMessage', (e) => {
                     if(this.amountContactsInBag<e.message)
                         this.$refs.newContactInBag.play();
-                    console.log(e);
+                    // console.log(e);
                     this.amountContactsInBag = e.message;
             });
 
             window.Echo.channel('sh.transferred-contact.' + this.loggedAttendant.id)
                 .listen('NewTransferredContact', (e) => {
-                    // this.getContacts();
-                    console.log(e);
-                    var newContact = e.message;
-                    newContact.index = this.contacts.length;
+                    // console.log(e);
+                    var newContact = JSON.parse(e.message);
+                    // newContact.index = this.contacts.length;
                     this.contacts.unshift(newContact);
                     var i = 0;
                     this.contacts.forEach(function(item, i){
                         item.index = i++;
                     });
+                    this.selectedContactIndex ++;
+                    this.selectedContact = this.contacts[this.selectedContactIndex];
                     miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
             });
-                
         },
 
         created() {
