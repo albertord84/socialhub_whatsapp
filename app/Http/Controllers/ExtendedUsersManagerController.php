@@ -10,7 +10,7 @@ use App\Models\UsersManager;
 use App\Repositories\ExtendedUsersManagerRepository;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Laracasts\Flash\Flash;
 
@@ -50,16 +50,16 @@ class ExtendedUsersManagerController extends UsersManagerController
 
         Flash::success('Users Manager saved successfully.');
 
-        // $Seller = Auth::check()? Auth::user():session('logged_user');
-
+        
         //enviar email de cadastro de companhia e manager para o manager e o seller que está fazendo a venda
+        // $Seller = Auth::check()? Auth::user():session('logged_user');
         // $UserManager = User::find($usersManager->user_id);
         // $Company = Company::find($UserManager->company_id);
         // Mail::to($UserManager->email)
         //     ->bcc($Seller->email)
         //     ->send(new EmailSiginCompany($Seller, $UserManager, $Company));
 
-        return $usersManager->toJson();
+        // return $usersManager->toJson();
 
     }
 
