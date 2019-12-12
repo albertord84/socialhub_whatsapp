@@ -177,8 +177,8 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Descrição',
-                        field: 'description',
+                        label: 'RPI-DB-ID',
+                        field: 'rpi_id',
                         numeric: false,
                         html: false,
                     }, {
@@ -235,37 +235,46 @@
             },
 
             actionEditCompanies: function(value){
+                //company datas
                 this.model_company = Object.assign({}, value);
                 this.companies_id = value.id;
                 this.rpi_id = value.rpi_id;
-
-                ApiService.get(this.rpi_url+'/'+this.rpi_id)
+                this.model_rpi={};
+                
+                //manager data
+                ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
                     .then(response => {
-                        this.model_rpi = response.data;
-                 
-                        ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
-                            .then(response => {
-                                try {
-                                    this.model_manager  = response.data[0];
-                                    for (var key in this.model_manager.user) {
-                                        this.model_manager[key] = this.model_manager.user[key];
-                                    }
-                                    delete this.model_manager.user;
-                                    this.modalEditCompanies = !this.modalEditCompanies;
-                                    
-                                } catch (error) {
-                                    console.log(error);
-                                }
-                            })
-                            .catch(function(error) {
-                                miniToastr.error(error, "Erro obtendo Manager");   
-                            });
+                        try {
+                            this.model_manager  = response.data[0];
+                            for (var key in this.model_manager.user) { //pasar los campos del usuraio para el manager
+                                this.model_manager[key] = this.model_manager.user[key];
+                            }
+                            delete this.model_manager.user;
+                            
+                            //rpi datas
+                            if(this.rpi_id){
+                                ApiService.get(this.rpi_url+'/'+this.rpi_id)
+                                .then(response => {
+                                    this.model_rpi = response.data;
+                                    this.modalEditCompanies = !this.modalEditCompanies;    
+                                })
+                                .catch(function(error) {
+                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                });
 
+                            }else{
+                                this.modalEditCompanies = !this.modalEditCompanies;
+                            }
+
+
+                            
+                        } catch (error) {
+                            console.log(error);
+                        }
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                        miniToastr.error(error, "Erro obtendo Manager");   
                     });
-                    
             },
 
             actionDeleteCompanies: function(value){
