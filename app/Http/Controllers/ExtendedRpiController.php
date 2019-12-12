@@ -53,6 +53,8 @@ class ExtendedRpiController extends RpiController
         $mac = $request->mac;
         $company_id = $request->company_id;
 
+        $rpi = null; 
+        
         if ($id == 0 && $mac) {
             $rpi = $this->rpiRepository->model()::where(['mac' => $mac])->first();
             // $rpi = Rpi::where(['mac' => $mac])->first();
