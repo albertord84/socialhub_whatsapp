@@ -1208,6 +1208,7 @@
 
             window.Echo.channel('sh.message-to-attendant.' + this.loggedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
+                    console.log(e);
                     var message = JSON.parse(e.message);
                     if(this.selectedContactIndex >= 0 && this.contacts[this.selectedContactIndex].id == message.contact_id){
                         try {
