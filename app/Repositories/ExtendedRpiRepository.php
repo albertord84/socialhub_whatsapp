@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Company;
 use App\Models\Rpi;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -21,7 +22,10 @@ class ExtendedRpiRepository extends RpiRepository
     
     public function rpiOfCompany(int $company_id): ?Rpi
     {
-        $pri = $this->findWhere(['company_id' => $company_id])->first();
+        $Company = Company::with('rpi')->where(['id' => $company_id])->first();
+
+        // TODO ALberto: Quitar esto y coger $Company->pri
+        $pri = $this->find($Company->rpi_id);
 
         return $pri;
     }
