@@ -324,6 +324,7 @@
                         this.isSendingUpdate = false; 
                         miniToastr.error(error, "Erro atualizando companhia"); 
                     });
+                });
             },
 
 
