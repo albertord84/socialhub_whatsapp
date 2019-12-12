@@ -278,13 +278,16 @@
                 delete this.modelRpi.updated_at;
                 this.isSendingUpdate = true;
                 
+                console.log(1);
+                console.log(this.modelCompany);
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
                         ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
                             .then(response => {
-                                miniToastr.success("Dados atualizado com sucesso","Sucesso");
-                                if(!this.modelRpi.id) 
-                                    this.modelRpi.id=0;                                
+                                if(!this.modelRpi.id) {
+                                    this.modelRpi.id=0;
+                                }
+                                this.modelRpi.company_id = this.modelCompany.id;                             
                                 ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
                                     .then(response => {
                                         this.isSendingUpdate = false;
@@ -298,6 +301,7 @@
                                     else
                                         miniToastr.error(error, "Erro atualizando canal de comunicação"); 
                                 });
+                                // miniToastr.success("Dados atualizado com sucesso","Sucesso");
                         })
                         .catch(function(error) {
                             this.isSendingUpdate = false;
