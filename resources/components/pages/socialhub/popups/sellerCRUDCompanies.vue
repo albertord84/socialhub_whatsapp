@@ -278,8 +278,6 @@
                 delete this.modelRpi.updated_at;
                 this.isSendingUpdate = true;
                 
-                console.log(1);
-                console.log(this.modelCompany);
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
                         ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
@@ -290,6 +288,25 @@
                                 this.modelRpi.company_id = this.modelCompany.id;                             
                                 ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
                                     .then(response => {
+                                                    miniToastr.success("Dados atualizado com sucesso","Sucesso");
+                                                    if(!this.modelRpi.id) 
+                                                        this.modelRpi.id=0;
+                                                    //atualizando rpi                            
+                                                    ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                                                        .then(response => {
+                                                            this.isSendingUpdate = false;
+                                                            this.reload();
+                                                            this.closeModals();
+                                                        })
+                                                        .catch(function(error) {
+                                                            this.isSendingUpdate = false;
+                                                            if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                                                alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                                            else
+                                                                miniToastr.error(error, "Erro atualizando canal de comunicação"); 
+                                                        });
+                                    })
+                                    .catch(function(error) {
                                         this.isSendingUpdate = false;
                                         this.reload();
                                         this.closeModals();
@@ -303,14 +320,8 @@
                                 });
                                 // miniToastr.success("Dados atualizado com sucesso","Sucesso");
                         })
-                        .catch(function(error) {
-                            this.isSendingUpdate = false;
-                            miniToastr.error(error, "Erro atualizando Manager"); 
-                        });
-                    })
                     .catch(function(error) {
-                        this.isSendingUpdate = false;
-                        ApiService.process_request_error(error); 
+                        this.isSendingUpdate = false; 
                         miniToastr.error(error, "Erro atualizando companhia"); 
                     });
             },
