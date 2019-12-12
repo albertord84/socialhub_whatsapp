@@ -81,7 +81,7 @@ class ExternalRPIController extends Controller
         $QRCode = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
-            $url = $Rpi->tunnel . '/qrcode';
+            $url = $Rpi->api_tunnel . '/qrcode';
 
             $QRCode = $client->request('GET', $url);
             $QRCode = $QRCode->getBody()->getContents();
