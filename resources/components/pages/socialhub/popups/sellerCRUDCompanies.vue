@@ -279,41 +279,44 @@
                 this.isSendingUpdate = true;
                 
                 //1. atualizando company
-                console.log(0);
-                console.log(this);
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
 
                                 //2. atualizando usuario
-                                console.log(1);
-                                console.log(this);
                                 delete this.modelManager.password;
                                 ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
                                     .then(response => {
 
                                                     //3. atualizando rpi
-                                                    console.log(2);
-                                                    console.log(this);
                                                     this.modelRpi.company_id = this.modelCompany.id;
                                                     if(!this.modelRpi.id) {
                                                         this.modelRpi.id=0;
                                                     }
+                                                    var This=this;
                                                     ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
                                                         .then(response => {
-                                                            console.log(3);
-                                                            console.log(this);
-                                                            miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
-                                                            this.isSendingUpdate = false;
-                                                            this.reload();
-                                                            this.closeModals();
-                                                        })
-                                                        .catch(function(error) {
-                                                            this.isSendingUpdate = false;
-                                                            if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                                                alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                                            else
-                                                                miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                                        });
+                                                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                                                this.isSendingUpdate = false;
+                                                                this.reload();
+                                                                this.closeModals();
+                                                            })
+                                                        .catch(function (error) {
+                                                            console.log(error);
+                                                            if (error.response) {
+                                                                // Request made and server responded
+                                                                    // console.log(error.response.data);
+                                                                    // console.log(error.response.data.message);
+                                                                miniToastr.warn(error.response.data.message, "Atenção"); 
+                                                                    // console.log(error.response.status);
+                                                                    // console.log(error.response.headers);
+                                                            } else if (error.request) {
+                                                                // The request was made but no response was received
+                                                                // console.log(error.request);
+                                                            } else {
+                                                                // Something happened in setting up the request that triggered an Error
+                                                                // console.log('Error', error.message);
+                                                            }
+                                                        }).finally(() => this.isSendingUpdate = false);
                                 
                                     })
                                     .catch(function(error) {
@@ -346,24 +349,24 @@
                                 ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
                                     .then(response => {
                                         //delete RPI row
-                                        if(this.modelCompany.rpi_id){
-                                            ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
-                                                .then(response => {
+                                        // if(this.modelCompany.rpi_id){
+                                        //     ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
+                                        //         .then(response => {
                                                     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
                                                     this.reload();
                                                     this.closeModals();
                                                     this.isSendingDelete = false;
-                                                })
-                                                .catch(function(error) {
-                                                    ApiService.process_request_error(error);  
-                                                    miniToastr.error(error, "Erro eliminando canal de comunicação"); 
-                                                });
-                                        }else{
-                                            miniToastr.success("Empresa eliminada com sucesso","Sucesso");
-                                            this.reload();
-                                            this.closeModals();
-                                            this.isSendingDelete = false;
-                                        }
+                                        //         })
+                                        //         .catch(function(error) {
+                                        //             ApiService.process_request_error(error);  
+                                        //             miniToastr.error(error, "Erro eliminando canal de comunicação"); 
+                                        //         });
+                                        // }else{
+                                        //     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
+                                        //     this.reload();
+                                        //     this.closeModals();
+                                        //     this.isSendingDelete = false;
+                                        // }
                                     })
                                     .catch(function(error) {
                                         ApiService.process_request_error(error);  
