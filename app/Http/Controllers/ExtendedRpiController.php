@@ -72,7 +72,7 @@ class ExtendedRpiController extends RpiController
                 $query->where(['mac' => $mac]);
             })->first();
             
-            if ($companyMAC->id != $company_id) { // Whether it RPi is assigned to  another comapany
+            if ($companyMAC && $companyMAC->id != $company_id) { // Whether it RPi is assigned to  another comapany
                 throw new Exception("Esta MAC (Id do dispositivo) ja esta assinado a outra empressa! Por favor contate supporte!", 2);
             }
             else {
