@@ -118,21 +118,23 @@ class RpiController extends AppBaseController
      */
     public function update($id, UpdateRpiRequest $request)
     {
-        $rpi = $this->rpiRepository->findWithoutFail($id);
-
-        if (empty($rpi)) {
-            Flash::error('Rpi not found');
-
-            return redirect(route('rpis.index'));
+        if ($id == 0) {
+            $rpi = $this->rpiRepository->model()->where(['mac' => $request->mac])->first();
+        }
+        else {
+            $rpi = $this->rpiRepository->findWithoutFail($id);
         }
 
-        $rpi = $this->rpiRepository->update($request->all(), $id);
+        if (empty($rpi)) {
+            $rpi = $this->rpiRepository->update($request->all(), $id);
+            
+            Flash::error('Rpi not found');
+        }
+        else {
 
-        Flash::success('Rpi updated successfully.');
-
-        // return redirect(route('rpis.index'));
-        return $rpi->toJson();
-
+            Flash::success('Rpi updated successfully.');
+            return $rpi->toJson();
+        }
     }
 
     /**
