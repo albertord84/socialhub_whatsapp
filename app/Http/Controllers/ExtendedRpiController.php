@@ -72,6 +72,6 @@ class ExtendedRpiController extends RpiController
             $Company->save();
         }
 
-        return $rpi->toJson();
+        return $rpi ? $rpi->toJson() : null;
     }
 }
