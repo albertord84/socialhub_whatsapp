@@ -1200,9 +1200,10 @@
                 // wsHost: window.location.hostname,
                 wsPort: 6001,
                 wssPort: 6001,
+                // enabledTransports: ['ws'],
                 enabledTransports: ['ws', 'wss'],
-                encrypted: true,
-                // encrypted: false,
+                // encrypted: true,
+                encrypted: false,
                 disableStats: false
             });
 
