@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <!-- Jose R: <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <title>SocialHUB</title>
-    <link rel="shortcut icon" type="image/png" href="../resources/img/Logo roxo.png" />
+    <link rel="shortcut icon" type="image/png" href="/images/chats.jpg" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
