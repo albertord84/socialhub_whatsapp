@@ -112,12 +112,11 @@
                         this.newMessage.message = "";
                         this.file = null;
                         this.$refs.message_scroller.scrolltobottom();
-                        this.isSending = false;
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error enviando mensagem");   
-                        this.isSending = false;
-                    });
+                        miniToastr.error(error, "Error enviando mensagem"); 
+                    })
+                    .finally(() => this.isSending = false);
                 }
             },
 
