@@ -91,15 +91,13 @@ class ExtendedContactController extends ContactController
         //um atendente: atualiza dados do contato, status, atendente
         //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
 
-        unset($request["created_at"]);
-        unset($request["updated_at"]);
+        // unset($request["created_at"]);
+        // unset($request["updated_at"]);
 
         if (empty($contact)) {
             Flash::error('Contact not found');
             return redirect(route('contacts.index'));
         }
-
-        unset($request['updated_at']);
 
         $contact = $this->contactRepository->update($request->all(), $id);
 
