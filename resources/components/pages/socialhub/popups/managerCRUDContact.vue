@@ -158,7 +158,8 @@
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando contato");  
-                        });    
+                        })
+                        .finally(() => this.isSendingInsert = false);       
                     }else{
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
@@ -168,7 +169,8 @@
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });
+                })
+                .finally(() => this.isSendingInsert = false);   
             },
             
             editContact: function() { //U
@@ -206,7 +208,8 @@
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro atualizando contato");  
-                        });    
+                        })
+                        .finally(() => this.isSendingUpdate = false);     
                     }else{
                         miniToastr.success("Contato atualizado com sucesso","Sucesso");
                         this.reload();
@@ -216,7 +219,8 @@
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });    
+                })
+                .finally(() => this.isSendingUpdate = false);   
             },
 
             deleteContact: function() { //D
@@ -232,7 +236,8 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro eliminando o contato"); 
-                    });                
+                    })
+                    .finally(() => this.isSendingDelete = false);                   
             },
 
             //------ auxiliary methods--------------------

@@ -11,7 +11,7 @@
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
                             <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                <img :src="loggedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
+                                <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
                             </a>
                         </li>
                         <ul class='menu' style="float:right; margin-right:5px">
@@ -89,7 +89,7 @@
                             <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
                                 <article class="media mt-1 mb-4">
                                     <a class="float-left desc-img mt-3">
-                                        <img :src="JSON.parse(contact.json_data).urlProfilePicture" class="contact-picture">
+                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).urlProfilePicture:''" class="contact-picture">
                                     </a>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
@@ -113,7 +113,7 @@
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">                    
                     <ul class='menu'>                        
-                        <li><span class="pl-4"><img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
+                        <li><span class="pl-4"><img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
                         <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ selectedContact.first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
@@ -213,7 +213,7 @@
                                         </p>
                                     </div>
                                     <div class="col-lg-1">
-                                        <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture"  alt="" class="my-rounded-circle receivedMessageImg">
+                                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''"  alt="" class="my-rounded-circle receivedMessageImg">
                                     </div>
                                     <div class="col-lg-11">
                                         <div style="float:left" class="thetime">{{message.time.hour}}</div>
@@ -265,7 +265,7 @@
                                         <div style="float:right" class="thetime">{{message.time.hour}}</div>
                                     </div>
                                     <div class="col-lg-1">
-                                        <img :src="loggedAttendant.image_path" alt="" class="my-rounded-circle sendedMessageImg">
+                                        <img :src="logguedAttendant.image_path" alt="" class="my-rounded-circle sendedMessageImg">
                                     </div>
                                 </div>
                             </div>
@@ -319,7 +319,7 @@
                                 <span class="msg-time" >
                                     <ul v-if='message.source==0' class="menu">
                                         <li><div class="thetime">{{message.time.hour}}</div></li>
-                                        <li> <img :src="loggedAttendant.image_path" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
+                                        <li> <img :src="logguedAttendant.image_path" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
                                     </ul>
                                     <ul v-if='message.source==1' class="menu" >
                                         <li> <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
@@ -428,7 +428,7 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white">
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
                         <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
                         
                         <!-- Informação -->
@@ -710,7 +710,7 @@
 
         data() {
             return {
-                loggedAttendant:{},
+                logguedAttendant:{},
 
                 contacts_url: 'contacts',
                 contacts_bag_url: 'getBagContact',
@@ -832,7 +832,6 @@
                         this.contacts.forEach(function(item, i){
                             item.index = i++;
                         });
-                        console.log(this.contacts);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
@@ -890,7 +889,6 @@
                             this.messages = response.data; 
                             this.messages_copy=[];
                             var This = this;
-
                             this.messages.forEach(function(item, i){
                                 try {
                                     item.time = This.getMessageTime(item.created_at);
@@ -902,14 +900,12 @@
                                         });
                                         This.messageTimeDelimeter = item.time.date;
                                     }
-                                
                                     if(item.data != "" && item.data != null && item.data.length>0) {
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
                                             item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
                                     This.messages_copy.push(item);
-
                                 } catch (error) {
                                     console.log(error);
                                 }
@@ -1071,7 +1067,7 @@
 
             pathContactMessageFile(contact_id, file_name) {
                 let pathFile = process.env.MIX_FILE_PATH +'/' + 
-                            this.loggedAttendant.company_id +'/' +
+                            this.logguedAttendant.company_id +'/' +
                             'contacts' +'/' +
                             contact_id +'/' +
                             'chat_files' +'/' +
@@ -1190,12 +1186,12 @@
         },
 
         updated(){
-            if(this.selectedContactIndex>=0)
+            if(this.selectedContactIndex>=0 && this.$refs.message_scroller)
                 this.$refs.message_scroller.scrolltobottom();
         },
 
         beforeMount() {
-            this.loggedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
@@ -1218,7 +1214,7 @@
                 disableStats: false
             });
 
-            window.Echo.channel('sh.message-to-attendant.' + this.loggedAttendant.id)
+            window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
                     console.log(e);
                     var message = JSON.parse(e.message);
@@ -1237,7 +1233,8 @@
                         this.messages[this.messages.length]=message;
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
-                        this.$refs.message_scroller.scrolltobottom();
+                        if(this.$refs.message_scroller)
+                            this.$refs.message_scroller.scrolltobottom();
                     }else{
                         var This = this;
                         This.contacts.forEach((item, index) => {
@@ -1250,7 +1247,7 @@
                     this.$refs.newMessageSound.play();
             });
 
-            window.Echo.channel('sh.contact-to-bag.' + this.loggedAttendant.company_id)
+            window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
                 .listen('NewContactMessage', (e) => {
                     if(this.amountContactsInBag<e.message)
                         this.$refs.newContactInBag.play();
@@ -1258,7 +1255,7 @@
                     this.amountContactsInBag = e.message;
             });
 
-            window.Echo.channel('sh.transferred-contact.' + this.loggedAttendant.id)
+            window.Echo.channel('sh.transferred-contact.' + this.logguedAttendant.id)
                 .listen('NewTransferredContact', (e) => {
                     // console.log(e);
                     var newContact = JSON.parse(e.message);

@@ -261,25 +261,23 @@
                             this.formReset();
                             this.toggle_left('close');
                             this.reload();
-                            this.isSendingInsert = false;
                         })
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando contato");  
-                            this.isSendingInsert = false;
-                        });
+                        })
+                        .finally(() => this.isSendingInsert = false);
                     }else{
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
                         this.formCancel();
-                        this.isSendingInsert = false;
                     }
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                    this.isSendingInsert = false;
-                });
+                })
+                .finally(() => this.isSendingInsert = false);
             },
 
             editContact: function(){
@@ -308,12 +306,12 @@
                     this.formReset();
                     this.editclose();
                     this.reload();
-                    this.isSendingUpdate = false;
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });
+                })
+                .finally(() => this.isSendingUpdate = false);
             },
 
             deleteContact(){
@@ -329,7 +327,8 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro eliminando o contato"); 
-                    });  
+                    })
+                    .finally(() => this.isSendingDelete = false);  
             },
 
             transferContact: function(){
@@ -353,7 +352,8 @@
                     .catch(function(error) {
                         this.isTransferingContact = false;
                         miniToastr.error(error, "Erro tranferindo o contato"); 
-                    }); 
+                    })
+                    .finally(() => this.isTransferingContact = false);   
                 }
             },
 

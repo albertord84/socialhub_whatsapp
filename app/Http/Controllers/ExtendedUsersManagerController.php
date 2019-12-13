@@ -59,7 +59,7 @@ class ExtendedUsersManagerController extends UsersManagerController
         //     ->bcc($Seller->email)
         //     ->send(new EmailSiginCompany($Seller, $UserManager, $Company));
 
-        // return $usersManager->toJson();
+        return $usersManager->toJson();
 
     }
 

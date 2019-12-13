@@ -249,17 +249,20 @@
                                     .catch(function(error) {
                                         miniToastr.error(error, "Erro adicionando Manager");  
                                         ApiService.process_request_error(error); 
-                                    });
+                                    })
+                                    .finally(() => this.isSendingInsert = false);
                                 })
                             .catch(function(error) {
                                 miniToastr.error(error, "Erro adicionando Manager");  
                                 ApiService.process_request_error(error); 
-                            });
+                            })
+                            .finally(() => this.isSendingInsert = false);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Erro adicionando Empresa");  
                         ApiService.process_request_error(error); 
-                    });
+                    })
+                    .finally(() => this.isSendingInsert = false);
             },
             
             editCompany: function() { //U
@@ -301,7 +304,6 @@
                                                                 this.closeModals();
                                                             })
                                                         .catch(function (error) {
-                                                            console.log(error);
                                                             if (error.response) {
                                                                 // Request made and server responded
                                                                     // console.log(error.response.data);
@@ -320,17 +322,16 @@
                                 
                                     })
                                     .catch(function(error) {
-                                        this.isSendingUpdate = false;
                                         if(!this.modelRpi.id && this.modelRpi.mac!='')
                                             alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
                                         else
                                             miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                    });
+                                    }).finally(() => this.isSendisSendingUpdateingInsert = false);
                         })
                     .catch(function(error) {
                         this.isSendingUpdate = false; 
                         miniToastr.error(error, "Erro atualizando companhia"); 
-                    });
+                    }).finally(() => this.isSendingUpdate = false);
 
             },
 
@@ -355,7 +356,6 @@
                                                     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
                                                     this.reload();
                                                     this.closeModals();
-                                                    this.isSendingDelete = false;
                                         //         })
                                         //         .catch(function(error) {
                                         //             ApiService.process_request_error(error);  
@@ -365,26 +365,27 @@
                                         //     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
                                         //     this.reload();
                                         //     this.closeModals();
-                                        //     this.isSendingDelete = false;
                                         // }
                                     })
                                     .catch(function(error) {
                                         ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando empresa");
-                                        this.isSendingDelete = false;
-                                    });
+                                        miniToastr.error(error, "Erro eliminando empresa");                                        
+                                    })
+                                    .finally(() => this.isSendingDelete = false);
                             })
                             .catch(function(error) {
                                 ApiService.process_request_error(error);  
                                 miniToastr.error(error, "Erro eliminando o usuário"); 
                                 this.isSendingDelete = false;
-                            });
+                            })
+                            .finally(() => this.isSendingDelete = false);
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
                         miniToastr.error(error, "Erro eliminando o usuário");  
                         this.isSendingDelete = false;
-                    });
+                    })
+                    .finally(() => this.isSendingDelete = false);
             },
 
             formReset:function(){

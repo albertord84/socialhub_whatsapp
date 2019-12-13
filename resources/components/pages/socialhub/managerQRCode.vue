@@ -28,12 +28,28 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-3 col-md-3 text-right invoice_address">
-                            <h4><div v-if="qrcodebase64==''" ref="imgQRCode" class="qrcode-spinner">
+                        <div class="col-3 col-md-3 text-right invoice_address text-center">
+                            <h4 v-if="beforeRequest" title="Solicitar código QR" class="mouse-hover" @click.prevent="getTunnel">
+                                <div  ref="imgQRCode" class="qrcode-spinner">
+                                    <i class="mdi mdi-reload fa-2x"></i>
+                                </div>
+                            </h4>
+                            <h4 v-if="duringRequest">
+                                <div  ref="imgQRCode" class="qrcode-spinner">
                                     <i class="fa fa-spinner fa-spin fa-2x"></i>
                                 </div>
                             </h4>
-                            <h4><img v-if="qrcodebase64!=''" :src="qrcodebase64" ref="imgQRCode" class="qrcode" alt="invoice QR Code"/></h4>
+                            <h4 v-if="qrcodebase64!=''">
+                                <img  :src="qrcodebase64" ref="imgQRCode" class="qrcode" alt="invoice QR Code"/>
+                            </h4>
+                            <h4 v-if="isLoggued">
+                                <div  ref="imgQRCode" class="qrcode-spinner">
+                                    <i class="mdi mdi-emoticon-happy-outline fa-2x"></i>
+                                </div>
+                            </h4>
+                            <h6 v-if="isLoggued">Ja está logado</h6>
+                            <h6 v-if="!isLoggued">QRCode</h6>
+                            <h6 v-if="!someError">{{erroMessage}}</h6>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address"></div>
                     </div>
@@ -57,26 +73,60 @@
             return {
                 url:'rpis',
                 rpi:{},
-                qrcodebase64:'',
+                beforeRequest:true,
+                duringRequest:false,
+                qrcodebase64:false,
+                isLoggued:false,
+                someError:false,
+                erroMessage:'',
             }
         },
 
         methods: {
-            getTunnel() {                
+            getTunnel() {
+                this.qrcodebase64=false;
+                this.isLoggued=false;
+                this.someError=false;
+                this.beforeRequest=false;
+                this.duringRequest=true;
+
+                var This =this;
+
                 ApiService.get(this.url)
                     .then(response => {
+                        this.duringRequest=false;
                         this.rpi = response.data;
-                        this.qrcodebase64 = JSON.parse(this.rpi.QRCode).qrcodebase64;
-                        console.log(this.qrcodebase64);
+                        if(this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
+                            this.isLoggued = true;
+                        }else
+                        if(JSON.parse(this.rpi.QRCode).qrcodebase64){
+                            this.qrcodebase64 = JSON.parse(this.rpi.QRCode).qrcodebase64;
+                        }else{
+                            this.erroMessage = "Erro na conexão"
+                            this.someError=true;
+                        }
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "");   
+                        This.erroMessage = "Erro na conexão"
+                        This.someError=true;
+                        if (error.response) {
+                            // Request made and server responded
+                                // console.log(error.response.data);
+                                // console.log(error.response.data.message);
+                            miniToastr.warn(error.response.data.message, "Atenção"); 
+                            this.duringRequest=false;
+                            this.beforeRequest=false;
+                                // console.log(error.response.status);
+                                // console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            // console.log('Error', error.message);
+                        }
                 });
             }
-        },
-
-        beforeMount: function() {
-            this.getTunnel();
         },
 
         created: function() {
@@ -187,6 +237,10 @@
         position: relative;
         padding: 4em 4em 4em 4em;
         border: 3px solid silver;
+    }
+
+    .mouse-hover:hover{
+        cursor: pointer;
     }
 
 </style>
