@@ -98,13 +98,14 @@
                 var This =this;
 
                 ApiService.get(this.url)
-                    .then(response => {                        
+                    .then(response => {  
+                        console.log(response.data);                      
                         this.rpi = response.data;
                         if(this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
                             this.isLoggued = true;
                         }else
-                        if(JSON.parse(this.rpi.QRCode).qrcodebase64){
-                            this.qrcodebase64 = JSON.parse(this.rpi.QRCode).qrcodebase64;
+                        if(this.rpi.QRCode.qrcodebase64){
+                            this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
                         }else{
                             this.erroMessage = "Erro na conexão"
                             this.someError=true;

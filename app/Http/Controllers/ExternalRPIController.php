@@ -97,7 +97,6 @@ class ExternalRPIController extends Controller
      */
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
     public function getContactInfo(string $contact_id = '5521976550734') //: stdClass
-
     {
         $contactInfo = new stdClass();
         try {
