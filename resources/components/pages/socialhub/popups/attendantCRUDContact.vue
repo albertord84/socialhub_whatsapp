@@ -245,7 +245,6 @@
                 }
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 this.model.status_id = 1;
-                this.model.whatsapp_id += '@s.whatsapp.net';
                 this.contact_atendant_id = JSON.parse(localStorage.user).id;
                 this.isSendingInsert = true;
                 ApiService.post(this.url,this.model)
@@ -290,9 +289,7 @@
                     miniToastr.error(error, "Confira os dados fornecidos");  
                     return;
                 }
-                if(!this.modal.whatsapp_id.includes('@s.whatsapp.net'))
-                    this.modal.whatsapp_id+='@s.whatsapp.net';
-                    
+                
                 this.isSendingUpdate = true;
 
                 delete this.model.updated_at;
