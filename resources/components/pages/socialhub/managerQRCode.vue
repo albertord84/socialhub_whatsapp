@@ -47,9 +47,14 @@
                                     <i class="mdi mdi-emoticon-happy-outline fa-2x"></i>
                                 </div>
                             </h4>
+                            <h4 v-if="someError">
+                                <div  ref="imgQRCode" class="qrcode-spinner">
+                                    <i class="mdi mdi-emoticon-sad-outline fa-2x"></i>
+                                </div>
+                            </h4>
                             <h6 v-if="isLoggued">Ja está logado</h6>
                             <h6 v-if="!isLoggued">QRCode</h6>
-                            <h6 v-if="!someError">{{erroMessage}}</h6>
+                            <h6 v-if="someError">{{erroMessage}}</h6>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address"></div>
                     </div>
@@ -93,8 +98,7 @@
                 var This =this;
 
                 ApiService.get(this.url)
-                    .then(response => {
-                        this.duringRequest=false;
+                    .then(response => {                        
                         this.rpi = response.data;
                         if(this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
                             this.isLoggued = true;
@@ -106,26 +110,32 @@
                             this.someError=true;
                         }
                     })
-                    .catch(function(error) {
+                    .catch(function(error) {                        
                         This.erroMessage = "Erro na conexão"
                         This.someError=true;
                         if (error.response) {
-                            // Request made and server responded
-                                // console.log(error.response.data);
-                                // console.log(error.response.data.message);
+                            console.log('error.response');
+                            console.log(error.response.data);
+                            console.log(error.response.data.message);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
                             miniToastr.warn(error.response.data.message, "Atenção"); 
-                            this.duringRequest=false;
-                            this.beforeRequest=false;
-                                // console.log(error.response.status);
-                                // console.log(error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // console.log(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            // console.log('Error', error.message);
+                        } else
+                        if (error.request) {
+                            console.log('error.request');
+                            console.log(error.request);
+                        } else{
+                            console.log('some another error');
+                            console.log(error.message);
+                            This.erroMessage = "Erro na conexão"
+                            This.someError=true;
                         }
-                });
+                        console.log('error config');
+                        console.log(error.config);                        
+                    })
+                    .finally(() => {
+                        This.duringRequest=false;
+                    });   
             }
         },
 
