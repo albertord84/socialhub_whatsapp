@@ -777,7 +777,7 @@
         
         methods: {    
             sendMessage() {
-                if (isSendingNewMessage) return;
+                if (this.isSendingNewMessage) return;
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
