@@ -21,17 +21,17 @@
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
                                     </template>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
-                                        <a href='javascript:void(0)' exact class="round_btn" @click="toggleLeft('toggle-add-contact')">
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                        <a href='javascript:void(0)' class="drpodowtext" @click="toggleLeft('toggle-add-contact')">
                                             <i class="fa fa-user-plus fa-xs " ></i> 
                                             Inserir contato
                                         </a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
-                                        <router-link to="/" exact class="drpodowtext">
+                                        <router-link to="/" class="drpodowtext">
                                             <div v-on:click="logout">
                                                 <i class="fa fa-sign-out"></i> 
-                                                Sair
+                                                Encerrar sessão
                                             </div>
                                         </router-link>
                                     </b-dropdown-item>
