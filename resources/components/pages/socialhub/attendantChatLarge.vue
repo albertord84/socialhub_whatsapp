@@ -952,16 +952,18 @@
                     this.selectedContactToEdit.whatsapp_id+='@s.whatsapp.net';
                 this.isUpdatingContact = true;
 
+                delete this.selectedContactToEdit.created_at;
+                delete this.selectedContactToEdit.updated_at;
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                     this.getContacts();
-                    this.isUpdatingContact = false;
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });
+                })
+                .finally(() => this.isUpdatingContact = false);
             },
 
             chatMessageScroling: function(value){
