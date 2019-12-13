@@ -184,7 +184,8 @@ class ExternalRPIController extends Controller
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
-        $filePath = "$Company->id/contacts/$Chat->contact_id/chat_files";
+        $envFilePath = env('APP_FILE_PATH');
+        $filePath = "$envFilePath/$Company->id/contacts/$Chat->contact_id/chat_files";
         // Log::debug('reciveFileMessage: ', [$filePath]);
 
         $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
