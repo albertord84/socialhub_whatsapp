@@ -64,12 +64,7 @@ class ExtendedContactController extends ContactController
         //onde devo enviar o contact_atendant_id, por url ou nos dados?
 
         $User = Auth::check() ? Auth::user() : session('logged_user');
-        if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-            $input['company_id'] = $User->company_id;
-        } else
-        if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-            $input['company_id'] = 1; //TODO-Alberto: obtener el id de la camponhia del atendetnte
-        }
+        $input['company_id'] = $User->company_id;
         $contact = $this->contactRepository->create($input);
 
         // TODO: Create Contact Chat Table
