@@ -123,7 +123,7 @@ class ExternalRPIController extends Controller
         $contact_Jid = $input['Jid'];
 
         $contact_Jid = str_replace("@c.us", "", $contact_Jid);
-        
+
         $company_phone = $input['CompanyPhone'];
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
@@ -161,15 +161,18 @@ class ExternalRPIController extends Controller
     public function reciveFileMessage(Request $request)
     {
         $input = $request->all();
+        Log::debug('reciveFileMessage: ', [$input]);
+        
         $contact_Jid = $input['Jid'];
 
         $contact_Jid = str_replace("@c.us", "", $contact_Jid);
 
         $company_phone = $input['CompanyPhone'];
+
+        // $company_phone = str_replace("@c.us", "", $contact_Jid);
         
         $Company = Company::where(['phone' => $company_phone])->first();
 
-        Log::debug('reciveFileMessage: ', [$input]);
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
 
         $Chat = $this->messageToChatModel($input, $Contact);
@@ -259,15 +262,22 @@ class ExternalRPIController extends Controller
         return $Chat;
     }
 
-    public function sendTextMessage(string $message, string $contact_Jid)
+    public function sendTextMessage(string $message, Contact $Contact)
     {
         try {
             $client = new \GuzzleHttp\Client();
-            $url = $this->APP_WP_API_URL . '/SendTextMessage';
+
+            $Company = Company::with('rpi')->where(['id' => $Contact->company_id])->first();
+
+            if ($Company) {
+                $url = $Company->rpi->api_tunnel . '/SendTextMessage';
+            }
+
+            $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
 
             $response = $client->request('POST', $url, [
                 'form_params' => [
-                    'RemoteJid' => "$contact_Jid@s.whatsapp.net",
+                    'RemoteJid' => $contact_Jid,
                     'Message' => $message,
                     'Contact' => Contact::where(['whatsapp_id' => $contact_Jid])->first(),
                 ],
@@ -280,12 +290,21 @@ class ExternalRPIController extends Controller
     }
 
     // public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
-    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, string $contact_Jid)
+    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, Contact $Contact)
     {
         try {
             $client = new \GuzzleHttp\Client();
             $EndPoint = 'SendDocumentMessage';
             $FileName = 'Document';
+
+            $Company = Company::with('rpi')->where(['id' => $Contact->company_id])->first();
+
+            if ($Company) {
+                $url = $Company->rpi->api_tunnel . '/SendTextMessage';
+            }
+            
+            $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
+
             switch ($file_type) {
                 // case 'image':
                 case '2':
