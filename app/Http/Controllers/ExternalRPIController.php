@@ -338,7 +338,7 @@ class ExternalRPIController extends Controller
                         'contents' => $File,
                         'filename' => "$file_name",
                     ],
-                    ['name' => "RemoteJid", 'contents' => $contact_Jid,
+                    ['name' => "RemoteJid", 'contents' => $contact_Jid],
                     ['name' => "Contact", 'contents' => $Contact],
                     ['name' => "Message", 'contents' => $message],
                 ],
