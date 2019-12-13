@@ -122,6 +122,8 @@ class ExternalRPIController extends Controller
         $input = $request->all();
         $contact_Jid = $input['Jid'];
 
+        $contact_Jid = str_replace("@c.us", "", $contact_Jid);
+        
         $company_phone = $input['CompanyPhone'];
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
@@ -160,7 +162,11 @@ class ExternalRPIController extends Controller
     {
         $input = $request->all();
         $contact_Jid = $input['Jid'];
+
+        $contact_Jid = str_replace("@c.us", "", $contact_Jid);
+
         $company_phone = $input['CompanyPhone'];
+        
         $Company = Company::where(['phone' => $company_phone])->first();
 
         Log::debug('reciveFileMessage: ', [$input]);
@@ -261,7 +267,7 @@ class ExternalRPIController extends Controller
 
             $response = $client->request('POST', $url, [
                 'form_params' => [
-                    'RemoteJid' => $contact_Jid,
+                    'RemoteJid' => "$contact_Jid@s.whatsapp.net",
                     'Message' => $message,
                     'Contact' => Contact::where(['whatsapp_id' => $contact_Jid])->first(),
                 ],
@@ -309,7 +315,7 @@ class ExternalRPIController extends Controller
                         'contents' => $File,
                         'filename' => "$file_name",
                     ],
-                    ['name' => "RemoteJid", 'contents' => $contact_Jid],
+                    ['name' => "RemoteJid", 'contents' => "$contact_Jid@s.whatsapp.net"],
                     ['name' => "Contact", 'contents' => $Contact],
                     ['name' => "Message", 'contents' => $message],
                 ],
