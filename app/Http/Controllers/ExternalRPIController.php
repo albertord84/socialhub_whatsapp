@@ -123,7 +123,7 @@ class ExternalRPIController extends Controller
         Log::debug('reciveTextMessage: ', [$input]);
         $contact_Jid = $input['Jid'];
         
-        $contact_Jid = str_replace("@c.us", "", $contact_Jid);
+        $contact_Jid = str_replace("@s.whatsapp.net", "", $contact_Jid);
         
         $company_phone = $input['CompanyPhone'];
         
