@@ -191,6 +191,8 @@
                     miniToastr.error(error, "Erro adicionando contato");  
                     return;
                 }
+                if(this.contact_atendant_id>0)
+                    this.model.status_id = 1;
                 this.isSendingUpdate = true;
                 ApiService.put(this.url+'/'+this.model.id, this.model)//ecr this.item.contact_id
                 .then(response => {
