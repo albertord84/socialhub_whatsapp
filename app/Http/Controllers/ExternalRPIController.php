@@ -120,13 +120,15 @@ class ExternalRPIController extends Controller
     public function reciveTextMessage(Request $request)
     {
         $input = $request->all();
+        Log::debug('reciveTextMessage: ', [$input]);
         $contact_Jid = $input['Jid'];
-
+        
         $contact_Jid = str_replace("@c.us", "", $contact_Jid);
-
+        
         $company_phone = $input['CompanyPhone'];
-
+        
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+        Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
         $Chat = $this->messageToChatModel($input, $Contact);
         if (!$Chat) {
@@ -162,7 +164,7 @@ class ExternalRPIController extends Controller
     {
         $input = $request->all();
         Log::debug('reciveFileMessage: ', [$input]);
-        
+
         $contact_Jid = $input['Jid'];
 
         $contact_Jid = str_replace("@c.us", "", $contact_Jid);
