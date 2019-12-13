@@ -328,7 +328,8 @@ class ExternalRPIController extends Controller
                     break;
             }
 
-            $url = $this->APP_WP_API_URL . "/$EndPoint";
+            $url = $url . "/$EndPoint";
+
             $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
             $response = $client->request('POST', $url, [
                 'multipart' => [
@@ -337,7 +338,7 @@ class ExternalRPIController extends Controller
                         'contents' => $File,
                         'filename' => "$file_name",
                     ],
-                    ['name' => "RemoteJid", 'contents' => "$contact_Jid@s.whatsapp.net"],
+                    ['name' => "RemoteJid", 'contents' => $contact_Jid,
                     ['name' => "Contact", 'contents' => $Contact],
                     ['name' => "Message", 'contents' => $message],
                 ],
