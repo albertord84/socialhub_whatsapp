@@ -947,9 +947,7 @@
                 if(!this.selectedContactToEdit.whatsapp_id || this.selectedContactToEdit.whatsapp_id.trim() =='' || this.selectedContactToEdit.first_name.trim() ==''){
                     miniToastr.error(error, "Confira os dados fornecidos");
                     return;
-                }
-                if(!this.selectedContactToEdit.whatsapp_id.includes('@s.whatsapp.net'))
-                    this.selectedContactToEdit.whatsapp_id+='@s.whatsapp.net';
+                }                
                 this.isUpdatingContact = true;
 
                 delete this.selectedContactToEdit.created_at;
