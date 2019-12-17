@@ -85,23 +85,23 @@ class ExtendedContactController extends ContactController
      */
     public function update($id, UpdateContactRequest $request)
     {
+        $input = $request->all();
+
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:
         //um atendente: atualiza dados do contato, status, atendente
         //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
 
-        unset($request["created_at"]);
-        unset($request["updated_at"]);
+        // unset($input["created_at"]);
+        // unset($input["updated_at"]);
 
         if (empty($contact)) {
             Flash::error('Contact not found');
             return redirect(route('contacts.index'));
         }
 
-        unset($request['updated_at']);
-
-        $contact = $this->contactRepository->update($request->all(), $id);
+        $contact = $this->contactRepository->update($input, $id);
 
         Flash::success('Contact updated successfully.');
 
