@@ -256,7 +256,7 @@
                             'attendant_id':this.contact_atendant_id,
                         })
                         .then(response => {
-                            miniToastr.success("Contato adicionado com sucesso. Procure-o na lista de contatos","Sucesso");
+                            miniToastr.success("Contato adicionado com sucesso.","Sucesso");
                             this.formReset();
                             this.toggle_left('close');
                             this.reload();
@@ -267,7 +267,6 @@
                         })
                         .finally(() => this.isSendingInsert = false);
                     }else{
-                        miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
                         this.formCancel();
                     }
@@ -291,12 +290,7 @@
                 }
                 
                 this.isSendingUpdate = true;
-
-                delete this.model.updated_at;
-
-                console.log(this.model);
-                return;
-                
+                delete this.model.updated_at;                
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -338,7 +332,8 @@
                     ApiService.post(this.secondUrl,{
                         'id':0,
                         'attendant_id':this.selectedAttendantToTransfer.user.id,
-                        'contact_id':this.item.id
+                        'contact_id':this.item.id,
+                        'transfering':true
                     })
                     .then(response => {
                         miniToastr.success("Contato tranferido com sucesso","Sucesso");
