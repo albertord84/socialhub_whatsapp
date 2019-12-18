@@ -96,6 +96,13 @@ class ExtendedChatRepository extends ChatRepository
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
+
+        //updating contact
+        $contact_id = (int)$attributes['contact_id'];
+        $Contact = Contact::find($contact_id);
+        $Contact->updated_at = Carbon::now();
+        $Contact->save();
+
         return $chatModel->create($attributes);
     }
 
