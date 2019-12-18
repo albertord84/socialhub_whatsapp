@@ -284,12 +284,10 @@
                 //1. atualizando company
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
-
                                 //2. atualizando usuario
                                 delete this.modelManager.password;
                                 ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
                                     .then(response => {
-
                                                     //3. atualizando rpi
                                                     this.modelRpi.company_id = this.modelCompany.id;
                                                     if(!this.modelRpi.id) {
@@ -306,11 +304,11 @@
                                                         .catch(function (error) {
                                                             if (error.response) {
                                                                 // Request made and server responded
-                                                                    // console.log(error.response.data);
-                                                                    // console.log(error.response.data.message);
+                                                                // console.log(error.response.data);
+                                                                // console.log(error.response.data.message);
                                                                 miniToastr.warn(error.response.data.message, "Atenção"); 
-                                                                    // console.log(error.response.status);
-                                                                    // console.log(error.response.headers);
+                                                                // console.log(error.response.status);
+                                                                // console.log(error.response.headers);
                                                             } else if (error.request) {
                                                                 // The request was made but no response was received
                                                                 // console.log(error.request);
@@ -332,14 +330,11 @@
                         this.isSendingUpdate = false; 
                         miniToastr.error(error, "Erro atualizando companhia"); 
                     }).finally(() => this.isSendingUpdate = false);
-
             },
 
 
-            deleteCompany: function(){
-                
-                this.isSendingDelete = true;
-                
+            deleteCompany: function(){                
+                this.isSendingDelete = true;                
                 //delete userManager row
                 ApiService.delete(this.usersManager_url+'/'+this.modelManager.user_id )
                     .then(response => {                        
