@@ -504,8 +504,8 @@
                         </div>
                         <div v-if="showContactSummary" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-2" style="min-height:40px">
-                                <p v-show="!isEditingContactSummary" style="word-break: break-word; text-align:justify">{{selectedContact.summary}}</p>
-                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
+                                <p v-show="!isEditingContactSummary" style="word-break: break-word; color:black" class="text-center">{{selectedContact.summary}}</p>
+                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic text-center" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
                             </div>
                             <div v-show="isEditingContactSummary">
                                 <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
@@ -956,6 +956,8 @@
                 delete this.selectedContactToEdit.updated_at;
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
+                    if(this.isEditingContactSummary)
+                        this.isEditingContactSummary = false;
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                     this.getContacts();
                 })
@@ -1245,11 +1247,33 @@
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
                     }else{
+                        
                         var This = this;
                         This.contacts.forEach((item, index) => {
                             if(item.id == message.contact_id){
+                                //atualizar item atual
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
+
+                                //salvar item atual
+                                var targetContact = Object.assign({}, item);
+
+                                //eliminar item da lista de contatos
+                                delete This.contacts[index];
+
+                                //inserir item salvo no inicio da lista
+                                This.contacts.unshift(targetContact);
+
+                                //atualizar indices
+                                var i = 0;
+                                This.contacts.forEach(function(item2, i){
+                                    item2.index = i++;
+                                });
+                                if(This.selectedContactIndex >=0 ){
+                                    This.selectedContactIndex ++;
+                                    This.selectedContact = This.contacts[This.selectedContactIndex];
+                                }
+
                             }
                         });
                     }
@@ -1266,9 +1290,6 @@
 
             window.Echo.channel('sh.transferred-contact.' + this.logguedAttendant.id)
                 .listen('NewTransferredContact', (e) => {
-                    console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-                    console.log(e);
-                    console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
                     var newContact = JSON.parse(e.message);
                     // newContact.index = this.contacts.length;
                     this.contacts.unshift(newContact);
@@ -1276,8 +1297,10 @@
                     this.contacts.forEach(function(item, i){
                         item.index = i++;
                     });
-                    this.selectedContactIndex ++;
-                    this.selectedContact = this.contacts[this.selectedContactIndex];
+                    if(this.selectedContactIndex >=0){
+                        this.selectedContactIndex ++;
+                        this.selectedContact = this.contacts[this.selectedContactIndex];
+                    }
                     miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
             });
         },
