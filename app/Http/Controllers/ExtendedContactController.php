@@ -59,7 +59,10 @@ class ExtendedContactController extends ContactController
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $input['company_id'] = $User->company_id;
 
-        $input['created_at'] = $input['updated_at'] = time();        
+        //esa mierda no funciona asi
+        // $input['created_at'] = time();
+        // $input['updated_at'] = time();
+
         $contact = $this->contactRepository->create($input);
 
         Flash::success('Contact saved successfully.');

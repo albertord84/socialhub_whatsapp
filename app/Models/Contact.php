@@ -32,11 +32,11 @@ class Contact extends Model
 
     public $table = 'contacts';
 
-    public $timestamps = false;
-
-    // const CREATED_AT = 'created_at';
+    // public $timestamps = false;
+    
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';    
     // const UPDATED_AT = false    ;
-    // const UPDATED_AT = 'updated_at';
 
     public $fillable = [
         'company_id',
