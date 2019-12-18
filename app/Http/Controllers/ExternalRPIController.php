@@ -256,6 +256,7 @@ class ExternalRPIController extends Controller
             $Contact->first_name = $contact_Jid;
             $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
+            $Contact->updated_at = time();
 
             // TODO Alberto: Get contact info photo
 
