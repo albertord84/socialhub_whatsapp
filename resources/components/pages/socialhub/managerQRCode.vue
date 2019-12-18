@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address text-center">
-                            <h4 v-if="beforeRequest" title="Solicitar código QR" class="mouse-hover" @click.prevent="getTunnel">
+                            <h4 v-if="beforeRequest" title="Solicitar código QR" class="mouse-hover" @click.prevent="recurrentGetTunnel">
                                 <div  ref="imgQRCode" class="qrcode-spinner">
                                     <i class="mdi mdi-reload fa-2x"></i>
                                 </div>
@@ -84,10 +84,19 @@
                 isLoggued:false,
                 someError:false,
                 erroMessage:'',
+                handleTimerRequest:null,
+                amountTimeRequest:0,
+                intervalTimeRequest:4000,
+                newTimeRequest:20000,
             }
         },
 
         methods: {
+            recurrentGetTunnel(){
+                this.getTunnel();
+                return this.handleTimerRequest = setInterval(this.getTunnel, this.intervalTimeRequest);                                
+            },
+
             getTunnel() {
                 this.qrcodebase64=false;
                 this.isLoggued=false;
@@ -95,19 +104,27 @@
                 this.beforeRequest=false;
                 this.duringRequest=true;
 
-                var This =this;
+                var reload = 0;
+                if(this.amountTimeRequest >= this.newTimeRequest){
+                    reload = 1;  
+                    this.amountTimeRequest = 0;                  
+                }
+                this.amountTimeRequest += this.intervalTimeRequest;
 
-                ApiService.get(this.url)
-                    .then(response => {  
-                        console.log(response.data);                      
+                console.log('New qrcode request with reload = '+reload+ ' and amountTimeRequest = '+this.amountTimeRequest);
+
+                var This =this;
+                ApiService.get(this.url,{ 'reload':reload})
+                    .then(response => {
                         this.rpi = response.data;
                         if(this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
                             this.isLoggued = true;
+                            clearInterval(this.handleTimerRequest);
                         }else
                         if(this.rpi.QRCode.qrcodebase64){
                             this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
                         }else{
-                            this.erroMessage = "Erro na conexão"
+                            this.erroMessage = "Algum problema encontrado"
                             this.someError=true;
                         }
                     })
@@ -115,24 +132,24 @@
                         This.erroMessage = "Erro na conexão"
                         This.someError=true;
                         if (error.response) {
-                            console.log('error.response');
-                            console.log(error.response.data);
-                            console.log(error.response.data.message);
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
+                            // console.log('error.response');
+                            // console.log(error.response.data);
+                            // console.log(error.response.data.message);
+                            // console.log(error.response.status);
+                            // console.log(error.response.headers);
                             miniToastr.warn(error.response.data.message, "Atenção"); 
                         } else
                         if (error.request) {
-                            console.log('error.request');
-                            console.log(error.request);
+                            // console.log('error.request');
+                            // console.log(error.request);
                         } else{
-                            console.log('some another error');
-                            console.log(error.message);
+                            // console.log('some another error');
+                            // console.log(error.message);
                             This.erroMessage = "Erro na conexão"
                             This.someError=true;
                         }
-                        console.log('error config');
-                        console.log(error.config);                        
+                        // console.log('error config');
+                        // console.log(error.config);
                     })
                     .finally(() => {
                         This.duringRequest=false;
@@ -147,8 +164,8 @@
             miniToastr.setIcon("success", "i", {class: "fa fa-arrow-circle-o-down"});
         },
 
-        destroyed: function() {
-
+        beforeDestroy: function() {
+            clearInterval(this.handleTimerRequest);
         },
     }
 </script>
