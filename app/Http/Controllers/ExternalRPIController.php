@@ -12,6 +12,7 @@ use App\Models\ExtendedChat;
 use App\Models\Rpi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use stdClass;
 
 class ExternalRPIController extends Controller
@@ -125,7 +126,7 @@ class ExternalRPIController extends Controller
         
         $contact_Jid = str_replace("@s.whatsapp.net", "", $contact_Jid);
         
-        $company_phone = $input['CompanyPhone'];
+        $company_phone = str_replace("@c.us", "", $input['CompanyPhone']);
         
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
         Log::debug('reciveTextMessage to Contact: ', [$Contact]);
@@ -163,19 +164,19 @@ class ExternalRPIController extends Controller
     public function reciveFileMessage(Request $request)
     {
         $input = $request->all();
-        Log::debug('reciveFileMessage: ', [$input]);
+        // Log::debug('reciveFileMessage: ', [$input]);
 
         $contact_Jid = $input['Jid'];
 
-        $contact_Jid = str_replace("@c.us", "", $contact_Jid);
-
-        $company_phone = $input['CompanyPhone'];
-
-        // $company_phone = str_replace("@c.us", "", $contact_Jid);
+        $contact_Jid = str_replace("@s.whatsapp.net", "", $contact_Jid);
+        
+        $company_phone = str_replace("@c.us", "", $input['CompanyPhone']);
         
         $Company = Company::where(['phone' => $company_phone])->first();
+        // Log::debug('reciveFileMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+        // Log::debug('reciveFileMessage to Contact: ', [$Contact]);
 
         $Chat = $this->messageToChatModel($input, $Contact);
         if (!$Chat) {
@@ -184,12 +185,15 @@ class ExternalRPIController extends Controller
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
-        $envFilePath = env('APP_FILE_PATH');
-        $filePath = "$envFilePath/$Company->id/contacts/$Chat->contact_id/chat_files";
-        // Log::debug('reciveFileMessage: ', [$filePath]);
+        // $envFilePath = env('APP_FILE_PATH', 'external_files');
+        // Log::debug('Storage Disk: ', [Storage::disk('chats_files')]);
+        // $envFilePath = Storage::disk('chats_files')->root;
 
+        $filePath = "companies/$Company->id/contacts/$Chat->contact_id/chat_files";
+        Log::debug('reciveFileMessage File Path: ', [$filePath]);
+        
         $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
-        // Log::debug('reciveFileMessage: ', [$file_response]);
+        Log::debug('reciveFileMessage File Response: ', [$file_response]);
 
         $Chat->data = json_encode($file_response);
         $Chat->save();
