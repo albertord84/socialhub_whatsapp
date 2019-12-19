@@ -84,6 +84,8 @@
     import ApiService from "../../../../common/api.service";
     import miniToastr from "mini-toastr";
     miniToastr.init();
+    import validation from "src/common/validation.service";
+
     
     export default {
         name: 'managerCRUDContact',
@@ -125,22 +127,37 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
+
+                flagReference: true,
             
             }
         },
 
         methods:{
             addContact: function() { //C
-                if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error(error, "Alguns dados incompletos");  
+                // if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                //     miniToastr.error(error, "Alguns dados incompletos");  
+                //     return;
+                // }
+
+                this.isSendingInsert = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingInsert = false;
+                    this.flagReference = true;
                     return;
                 }
+
+
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
                     this.model.status_id = 1;
                 this.model.whatsapp_id += '@s.whatsapp.net';
 
-                this.isSendingInsert = true;
 
                 ApiService.post(this.url,this.model)
                 .then(response => {
@@ -181,15 +198,32 @@
                 delete this.model.updated_at;
 
                 this.contact_atendant_id =  this.model.contact_atendant_id;
+
+                this.model.whatsapp_id = this.model.whatsapp_id.replace(/@s.whatsapp.net/i, '');
+                
                 this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U
-                if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error(error, "Erro adicionando contato");  
+                // if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                //     miniToastr.error(error, "Erro adicionando contato");  
+                //     return;
+                // }
+
+                this.isSendingUpdate = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingUpdate = false;
+                    this.flagReference = true;
                     return;
                 }
-                this.isSendingUpdate = true;
+
+                this.model.whatsapp_id += '@s.whatsapp.net';
+
                 ApiService.put(this.url+'/'+this.model.id, this.model)//ecr this.item.contact_id
                 .then(response => {
                     if (this.contact_atendant_id && this.contact_atendant_id != this.item.contact_atendant_id) {
@@ -267,6 +301,85 @@
                 this.model.instagram_id = "";
                 this.model.linkedin_id = "";
             },
+
+            trimDataModel: function(){
+                if(this.model.first_name) this.model.first_name = this.model.first_name.trim();
+                if(this.model.last_name) this.model.last_name = this.model.last_name.trim();
+                if(this.model.email) this.model.email = this.model.email.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+                if(this.model.remember) this.model.remember = this.model.remember.trim();
+                if(this.model.summary) this.model.summary = this.model.summary.trim();
+                if(this.model.description) this.model.description = this.model.description.trim();
+            },
+
+            validateData: function(){
+                // Validação dos dados do atendente
+                var check;
+                if(this.model.first_name && this.model.first_name !=''){
+                    check = validation.check('complete_name', this.model.first_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.last_name && this.model.last_name !=''){
+                    check = validation.check('complete_name', this.model.last_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.email && this.model.email !=''){
+                    check = validation.check('email', this.model.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                    check = validation.check('phone', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
+
         },
 
         beforeUpdate(){

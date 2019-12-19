@@ -37,7 +37,18 @@ class Company extends Model
         'email',
         'whatsapp',
         'description',
-        'user_seller_id'
+        'user_seller_id',
+
+        'CEP',
+        'cidade',
+        'estado',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+
+
+
     ];
 
     /**
@@ -55,6 +66,16 @@ class Company extends Model
         'whatsapp'=> 'string',
         'description' => 'string',
         'user_seller_id' => 'integer',
+
+        'CEP'=> 'string',
+        'estado'=> 'string',
+        'cidade'=> 'string',
+        'rua'=> 'string',
+        'numero'=> 'string',
+        'complemento'=> 'string',
+        'bairro'=> 'string',
+
+
     ];
 
     /**

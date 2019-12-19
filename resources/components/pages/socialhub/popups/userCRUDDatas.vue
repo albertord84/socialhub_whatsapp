@@ -145,9 +145,10 @@
     import vScroll from "components/plugins/scroll/vScroll.vue"
     import ApiService from "resources/common/api.service";    
     import miniToastr from "mini-toastr";
+    import validation from "src/common/validation.service";
     miniToastr.init();
 
-     export default {
+    export default {
         name: "userCRUDDatas",
 
         props:{
@@ -171,6 +172,8 @@
                 repeat_password:'',
                 watchPassword:false,
                 watchRepeatPassword:false,
+
+                flagReference: true,
             }
         },
 
@@ -189,6 +192,17 @@
                     this.model.password = this.password;
                 }
                 this.isSending = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSending = false;
+                    this.flagReference = true;
+                    return;
+                }
+
                 ApiService.put(this.url+'/'+this.model.id, this.model)
                 .then(response => {
                     // window.location.reload(false);
@@ -261,6 +275,97 @@
                     This.editMode = false;
                 }
             },
+
+            trimDataModel: function(){
+                if(this.model.CPF) this.model.CPF = this.model.CPF.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+
+                this.password= this.password.trim();
+                this.repeat_password = this.repeat_password.trim();
+            },
+
+            validateData: function(){
+                // Validação dos dados do manager
+                var check;
+
+                if(this.model.CPF && this.model.CPF !=''){
+                    check = validation.check('cpf', this.model.CPF)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O CPF do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O telefone do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                    check = validation.check('phone', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.password && this.password !=''){
+                    check = validation.check('password', this.password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.repeat_password && this.repeat_password !=''){
+                    check = validation.check('password', this.repeat_password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
+
         },
 
         beforeMount(){
@@ -297,13 +402,7 @@
 
         }
 
-       
-
-
-     }
-
-
-
+    }
 
 </script>
 

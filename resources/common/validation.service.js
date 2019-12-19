@@ -1,14 +1,33 @@
 // import Vue from "vue";
 
 var regexp={
+    'complete_name':{
+        'regexp':'^[a-z A-ZáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.-]{2,150}$',
+        'error':'Confira a escrita do nome'
+    },
+    'cpf':{
+        'regexp':'^[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}$',
+        'error':'CPF inválido'
+    },
+    'cnpj':{
+        'regexp':'^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})$',
+        'error':'CNPJ inválido'
+    },
+    'cep':{
+        // 'regexp':'^([0-9]{5}[\-]?[0-9]{3})|([0-9]{8})$',  
+        'regexp':'^([0-9]{8})$',  
+        'error':'CEP inválido. Botar CEP sem traço'
+    },
     'email':{
         'regexp':'^[a-zA-Z0-9\._-]+@([a-zA-Z0-9-]{2,}[.])*[a-zA-Z]{2,}$',
         'error':'Email inválido'
     },
     'phone':{
-        'regexp':'^[0-9]{2}-([0-9]{8}|[0-9]{9})$',
-        'error':'Número de telefone inválido'
+        'regexp':'^(([1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}))$',
+        'error':'Número de telefone inválido. Confira se o DDD foi inserido'
     },
+
+
     'date':{
         'regexp':'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}$',
         'error':'Data inválida'
@@ -17,17 +36,34 @@ var regexp={
         'regexp':'^(([0-9a-f]{2}):){5}([0-9a-f]{2})$',
         'error':'Endereço MAC inválido'
     },
+    
+    'tunnel':{
+        'regexp':'^[a-z A-Z0-9áÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._]{2,150}$',
+        'error':'Endereço MAC inválido'
+    },
+
     'user':{
-        'regexp':'^[a-zA-Z0-9\._]{1,100} $',
+        'regexp':'^[a-zA-Z0-9\._]{1,100}$',
         'error':'Usuario inválido'
     },
     'password':{
-        'regexp':'^[^\W_]{4}$',
-        'error':'Insira uma senha com ao menos 4 carateres, contendo letras e números'
+        'regexp':'^[a-zA-Z0-9\._]{4,15}$',
+        'error':'Insira uma senha de entre 4 e 15 carateres, contendo letras e números'
     },
+    
+    'linkedin_profile':{
+        'regexp':'^[a-zA-Z0-9\._]{1,300}$',
+        'error':'Perfil de Linkedin provavelmente inválido'
+    },
+
+    'facebook_profile':{
+        'regexp':'^[a-zA-Z0-9\._]{1,300}$',
+        'error':'Perfil de Facebook provavelmente inválido'
+    },
+
     'instagram_profile':{
         'regexp':'^[a-zA-Z0-9\._]{1,300}$',
-        'error':''
+        'error':'Perfil de Instagram provavelmente inválido'
     },
     'instagram_geolocation':{
         'regexp':'^[a-zA-Z-0-9\._áéíóúàèìòùâêîôûãõẽçÇ]{1,300}$',
@@ -41,10 +77,7 @@ var regexp={
         'regexp':'^[0-9]{4}$',
         'error':''
     },
-    'complete_name':{
-        'regexp':'^[a-z A-Z0-9áÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._]{2,150}$',
-        'error':''
-    },
+
     'credit_card_cvv':{
         'regexp':'^[0-9]{3,4}$',
         'error':''
@@ -91,18 +124,6 @@ var regexp={
     },
     'ticket_bank_client_name':{
         'regexp':'^[A-Za-z ]{4,50}$',
-        'error':''
-    },
-    'cpf':{
-        'regexp':'^[0-9]{11}$',
-        'error':''
-    },
-    'cnpj':{
-        'regexp':'^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})$',
-        'error':''
-    },
-    'cep':{
-        'regexp':'^[0-9]{8}$',
         'error':''
     },
     'street_address':{

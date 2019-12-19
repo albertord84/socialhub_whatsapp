@@ -17,25 +17,79 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" title="Ex: 55(21)559-6918" name="phone" id="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" title="Ex:  11 988888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
+                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="email" name="email" type="email" required placeholder="Email empresarial(*)" class="form-control"/>                            
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" title="Ex: 963525397" name="whatsapp" id="whatsapp" type="text" required placeholder="whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" title="Ex:  11 988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                        </div>
+                    </div>
+
+
+                    <h6>Endereço postal </h6>
+                    <div class="row">
+                        <!-- <div class="col-lg-3 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.CEP" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>
+                        </div>
+                        <div class="col-lg-1" >
+                            <button class="btn btn-info text-18" href="javascript:void(0)" title="Validar CEP" @click.prevent="validateCEP"><i class="fa fa-check-circle-o" aria-hidden="true"></i> </button>
+                        </div> -->
+
+                        <div class="col-lg-4" >
+                            <div class="input-group">
+                                <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
+                                    <input v-model="modelCompany.CEP" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
+                                    <div class="input-group-text" id="btnGroupAddon" @click.prevent="getAddressByCEP"><i class="fa fa-search" aria-hidden="true"></i></div>
+                                </div>
+                            </div>
                         </div>
 
+                        <div  class="col-lg-4 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)" class="form-control"/>                            
+                        </div>                                                      
+                        <div  class="col-lg-4 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.estado" title="Ex: RJ" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)" class="form-control"/>                            
+                        </div> 
                     </div>
+
+                    <div class="row">
+                        <div class="col-lg-8 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida (*)" class="form-control"/>
+                        </div>
+                        <div  class="col-lg-4 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.numero" title="Ex: 000" id="numero" name="numero" type="text" required placeholder="Número (*)" class="form-control"/>                            
+                        </div>                                                                               
+                    </div>
+
+                    <div class="row">
+                        <div  class="col-lg-8 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.complemento" title="Ex: Casa 00 / Bloco 00, Apto 00" id="complemento" name="complemento" type="text" required placeholder="Complemento (*)" class="form-control"/>
+                        </div> 
+                        <div class="col-lg-4 form-group has-search">
+                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <input v-model="modelCompany.bairro" title="Ex: centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <h6>Descrição da empresa</h6>
                     <div class="row">
                         <div class="col-lg-12 form-group has-search">
                             <textarea v-model="modelCompany.description" title="Ex: Describe informaçẽs relevantes da empresa" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
                         </div>                                                                         
                     </div>
+
                 </div>
                 <hr>
 
@@ -44,11 +98,11 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="modelManager.name" title="Ex: Nome do Manager" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                            <input v-model="modelManager.name" title="Ex: Nome do Manager" id="nameManager" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelManager.email" title="Ex: manager@gmail.com" name="email" id="email" type="text" required placeholder="Email (*)" class="form-control"/>
+                            <input v-model="modelManager.email" title="Ex: manager@gmail.com" name="email" id="emailManager" type="text" required placeholder="Email do manager. Para fazer Loging (*)" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
@@ -58,9 +112,15 @@
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" title="Ex: 55(21)559-6918" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelManager.phone" title="Ex: 11 988888888" id="phoneManager" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
-                    </div>                                   
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-whatsapp form-control-feedback"></span>
+                            <input v-model="modelManager.whatsapp_id" title="Ex: 11 988888888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                        </div>
+                    </div>                                  
                 </div> 
                 
                 <hr>
@@ -187,6 +247,13 @@
                     email: "",
                     whatsapp: "",
                     description: "",
+                    CEP: "",
+                    cidade: "",
+                    estado: "",
+                    rua: "",
+                    numero: "",
+                    complemento: "",
+                    bairro: "",
                 },
 
                 modelRpi:{ //dados do canal de comunicação
@@ -219,6 +286,7 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
+                flagReference: true,
             }
         },
 
@@ -230,6 +298,17 @@
                 this.modelManager.role_id=3;
                 this.modelManager.image_path = "images/user.jpg";
                 this.isSendingInsert = true;
+
+                // Validando dados
+                this.trimDataModels();
+                this.validateDataModelCompany();
+                this.validateDataModelManager();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingInsert = false;
+                    this.flagReference = true;
+                    return;
+                }
 
                  // inserindo company
                 ApiService.post(this.companies_url, this.modelCompany)
@@ -277,6 +356,18 @@
                 delete this.modelRpi.updated_at;
                 this.isSendingUpdate = true;
                 
+                // Validando dados
+                this.trimDataModels();
+                this.validateDataModelCompany();
+                this.validateDataModelManager();
+                // this.validateDataModelRpi();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingUpdate = false;
+                    this.flagReference = true;
+                    return;
+                }
+
                 //atualizando company
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
@@ -405,151 +496,305 @@
                 this.$emit('onreloaddatas');
             },
 
+            getAddressByCEP: function(){
 
-            // trimDataModels:function(){
-            //     this.modelCompany.CNPJ = this.modelCompany.CNPJ.trim();
-            //     this.modelCompany.name = this.modelCompany.name.trim();
-            //     this.modelCompany.phone = this.modelCompany.phone.trim();
-            //     this.modelCompany.email = this.modelCompany.email.trim();
-            //     this.modelCompany.whatsapp = this.modelCompany.whatsapp.trim();
-            //     this.modelCompany.description = this.modelCompany.description.trim();
+                ApiService.get('https://viacep.com.br/ws/'+this.modelCompany.CEP+'/json')
+                    .then(response => {
+                      console.log(response.data);
+                    //   this.modelCompany.estado = response.data.estado;
+                    //   this.modelCompany.cidade = response.data.cidade;
+                    //   this.modelCompany.bairro = response.data.bairro;
+                    //   this.modelCompany.rua = response.data.rua;
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error);  
+                        miniToastr.error(error, "Erro validando CEP"); 
+                    });
 
-            //     this.modelRpi.api_user = this.modelRpi.api_user.trim();
-            //     this.modelRpi.api_password = this.modelRpi.api_password.trim();
-            //     this.modelRpi.root_user = this.modelRpi.root_user.trim();
-            //     this.modelRpi.root_password = this.modelRpi.root_password.trim();
-            //     this.modelRpi.tcp_tunnel = this.modelRpi.tcp_tunnel.trim();
-            //     this.modelRpi.tcp_port = this.modelRpi.tcp_port.trim();
-            //     this.modelRpi.mac = this.modelRpi.mac.trim();
-            //     this.modelRpi.api_tunnel = this.modelRpi.api_tunnel.trim();
-            //     this.modelRpi.soft_version = this.modelRpi.soft_version.trim();
-            //     this.modelRpi.soft_version_date = this.modelRpi.soft_version_date.trim();
+            },
 
-            //     this.modelManager.name = this.modelManager.name.trim();
-            //     this.modelManager.role_id = this.modelManager.role_id.trim();
-            //     this.modelManager.email = this.modelManager.email.trim();
-            //     this.modelManager.login = this.modelManager.login.trim();
-            //     this.modelManager.CPF = this.modelManager.CPF.trim();
-            //     this.modelManager.phone = this.modelManager.phone.trim();
-            //     this.modelManager.image_path = this.modelManager.image_path.trim();
-            //     this.modelManager.whatsapp_id = this.modelManager.whatsapp_id.trim();
-            //     this.modelManager.facebook_id = this.modelManager.facebook_id.trim();
-            //     this.modelManager.instagram_id = this.modelManager.instagram_id.trim();
-            //     this.modelManager.linkedin_id = this.modelManager.linkedin_id.trim();
-            // },
+            trimDataModels: function(){
+                if(this.modelCompany.CNPJ) this.modelCompany.CNPJ = this.modelCompany.CNPJ.trim();
+                if(this.modelCompany.name) this.modelCompany.name = this.modelCompany.name.trim();
+                if(this.modelCompany.phone) this.modelCompany.phone = this.modelCompany.phone.trim();
+                if(this.modelCompany.email) this.modelCompany.email = this.modelCompany.email.trim();
+                if(this.modelCompany.whatsapp) this.modelCompany.whatsapp = this.modelCompany.whatsapp.trim();
+                if(this.modelCompany.CEP) this.modelCompany.CEP = this.modelCompany.CEP.trim();
+                if(this.modelCompany.cidade) this.modelCompany.cidade = this.modelCompany.cidade.trim();
+                if(this.modelCompany.estado) this.modelCompany.estado = this.modelCompany.estado.trim();
+                if(this.modelCompany.rua) this.modelCompany.rua = this.modelCompany.rua.trim();
+                if(this.modelCompany.numero) this.modelCompany.numero = this.modelCompany.numero.trim();
+                if(this.modelCompany.complemento) this.modelCompany.complemento = this.modelCompany.complemento.trim();
+                if(this.modelCompany.bairro) this.modelCompany.bairro = this.modelCompany.bairro.trim();
+                if(this.modelCompany.description) this.modelCompany.description = this.modelCompany.description.trim();
 
-            // validateData:function(){
+                if(this.modelManager.name) this.modelManager.name = this.modelManager.name.trim();
+                if(this.modelManager.email) this.modelManager.email = this.modelManager.email.trim();
+                if(this.modelManager.login) this.modelManager.login = this.modelManager.login.trim();
+                if(this.modelManager.CPF) this.modelManager.CPF = this.modelManager.CPF.trim();
+                if(this.modelManager.phone) this.modelManager.phone = this.modelManager.phone.trim();
+                if(this.modelManager.image_path) this.modelManager.image_path = this.modelManager.image_path.trim();
+                if(this.modelManager.whatsapp_id) this.modelManager.whatsapp_id = this.modelManager.whatsapp_id.trim();
+                if(this.modelManager.facebook_id) this.modelManager.facebook_id = this.modelManager.facebook_id.trim();
+                if(this.modelManager.instagram_id) this.modelManager.instagram_id = this.modelManager.instagram_id.trim();
+                if(this.modelManager.linkedin_id) this.modelManager.linkedin_id = this.modelManager.linkedin_id.trim();
+
+                if(this.modelRpi.api_user) this.modelRpi.api_user = this.modelRpi.api_user.trim();
+                if(this.modelRpi.api_user) this.modelRpi.api_password = this.modelRpi.api_password.trim();
+                if(this.modelRpi.root_user) this.modelRpi.root_user = this.modelRpi.root_user.trim();
+                if(this.modelRpi.root_password) this.modelRpi.root_password = this.modelRpi.root_password.trim();
+                if(this.modelRpi.tcp_tunnel) this.modelRpi.tcp_tunnel = this.modelRpi.tcp_tunnel.trim();
+                if(this.modelRpi.tcp_port) this.modelRpi.tcp_port = this.modelRpi.tcp_port.trim();
+                if(this.modelRpi.mac) this.modelRpi.mac = this.modelRpi.mac.trim();
+                if(this.modelRpi.api_tunnel) this.modelRpi.api_tunnel = this.modelRpi.api_tunnel.trim();
+                if(this.modelRpi.soft_version) this.modelRpi.soft_version = this.modelRpi.soft_version.trim();
+                if(this.modelRpi.soft_version_date) this.modelRpi.soft_version_date = this.modelRpi.soft_version_date.trim();  
+            },
+
+            validateDataModelCompany:function(){
+                // Validação dos dados da empresa
+                var check;
+                if(this.modelCompany.CNPJ && this.modelCompany.CNPJ !=''){
+                    check = validation.check('cnpj', this.modelCompany.CNPJ)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O CNPJ é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.name && this.modelCompany.name !=''){
+                    check = validation.check('complete_name', this.modelCompany.name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.phone && this.modelCompany.phone !=''){
+                    check = validation.check('phone', this.modelCompany.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O telefone da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.email && this.modelCompany.email !=''){
+                    check = validation.check('email', this.modelCompany.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O e-mail da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.whatsapp && this.modelCompany.whatsapp !=''){
+                    check = validation.check('phone', this.modelCompany.whatsapp)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.CEP && this.modelCompany.CEP !=''){
+                    check = validation.check('cep', this.modelCompany.CEP)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.numero && this.modelCompany.numero !=''){
+                    check = validation.check('house_number', this.modelCompany.numero)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O número no endereço da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelCompany.complemento && this.modelCompany.complemento !=''){
+                    check = validation.check('street_address', this.modelCompany.complemento)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O complemento no endereço da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+                //ECR: O resto dos campos do endereço se obtem por validaçao do CEP
+                //ECR: Desativar edição do campo pare evitar que se modifique o dado obtido na validação do CEP
+            },
+
+            validateDataModelManager: function(){
+                // Validação dos dados do manager
+                var check;
+
+                if(this.modelManager.name && this.modelManager.name !=''){
+                    check = validation.check('complete_name', this.modelManager.name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do manager da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.modelManager.email && this.modelManager.email !=''){
+                    check = validation.check('email', this.modelManager.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O e-mail do manager da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelManager.CPF && this.modelManager.CPF !=''){
+                    check = validation.check('cpf', this.modelManager.CPF)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O CPF do manager da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelManager.phone && this.modelManager.phone !=''){
+                    check = validation.check('phone', this.modelManager.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O telefone do manager da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelManager.whatsapp_id && this.modelManager.whatsapp_id !=''){
+                    check = validation.check('phone', this.modelManager.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do manager da empresa é obrigatorio" );
+                    this.flagReference = false;
+                }
+            },
+
+            // ECR: não se vai utilizar por enquanto
+            validateDataModelRpi: function(){
+                // Validação dos campos do canal de comunicação
+                var check;
                 
-            //     var flagReference = true;
-            //     var check;
-            //     var temp = {"success":true };
+                if(this.modelRpi.api_user && this.modelRpi.api_user!=''){
+                    check = validation.check('user', this.modelRpi.api_user);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
 
-            //     // Validação dos campos da empresa
-            //     check = (this.modelCompany.CNPJ!='')? validation.check('cnpj', this.modelCompany.CNPJ):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error(" ", check.error );
-            //         flagReference = false;   
-            //     } 
-            //     check = (this.modelCompany.name!='')? validation.check('complete_name', this.modelCompany.name):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false;   
-            //     } 
-            //     check = (this.modelCompany.phone!='')?  validation.check('phone', this.modelCompany.phone):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false;  
-            //     } 
-            //     check = (this.modelCompany.email!='')?  validation.check('email', this.modelCompany.email):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false;   
-            //     } 
-            //     check = (this.modelCompany.whatsapp!='')?  validation.check('phone', this.modelCompany.whatsapp):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
+                if(this.modelRpi.api_password && this.modelRpi.api_password!=''){
+                    check = validation.check('password', this.modelRpi.api_password);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
 
-            //     // Validação dos campos do canal de comunicação
-            //     check = (this.modelRpi.api_user!='')?  validation.check('user', this.modelRpi.api_user):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.api_password!='')?  validation.check('password', this.modelRpi.api_password):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.root_user!='')?  validation.check('user', this.modelRpi.root_user):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.root_password!='')?  validation.check('password', this.modelRpi.root_password):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.tcp_tunnel!='')?  validation.check('tcp_tunnel', this.modelRpi.tcp_tunnel):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.tcp_port!='')?  validation.check('tcp_port', this.modelRpi.tcp_port):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.mac!='')?  validation.check('mac', this.modelRpi.mac):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.api_tunnel!='')?  validation.check('tunnel', this.modelRpi.api_tunnel):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelRpi.soft_version!='')?  validation.check('version', this.modelRpi.soft_version):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check =  (this.modelRpi.soft_version_date!='')? validation.check('date', this.modelRpi.soft_version_date):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
+                if(this.modelRpi.root_user && this.modelRpi.root_user!=''){
+                    check = validation.check('user', this.modelRpi.root_user);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
 
-            //     // Validação dos campos do manager
-            //     check = (this.modelManager.name!='')?  validation.check('complete_name', this.modelManager.name):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelManager.email!='')? validation.check('email', this.modelManager.email):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelManager.CPF!='')? validation.check('cpf', this.modelManager.CPF):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
-            //     check = (this.modelManager.phone!='')? validation.check('phone', this.modelManager.phone):temp=true;
-            //     if(check.success==false){
-            //         miniToastr.error("Erro", check.error );
-            //         flagReference = false; 
-            //     }
+                if(this.modelRpi.root_password && this.modelRpi.root_password!=''){
+                    check = validation.check('password', this.modelRpi.root_password);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
+
+                if(this.modelRpi.tcp_tunnel && this.modelRpi.tcp_tunnel!=''){
+                    check = validation.check('tcp_tunnel', this.modelRpi.tcp_tunnel);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
+
+                if(this.modelRpi.tcp_port && this.modelRpi.tcp_port!=''){
+                    check = validation.check('tcp_port', this.modelRpi.tcp_port);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
                 
-            //     if (flagReference == false){
-            //         miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
-            //         return;
-            //     }
-            // },
+                if(this.modelRpi.mac && this.modelRpi.mac !=''){
+                    check = validation.check('mac', this.modelRpi.mac)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O endereço MAC é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelRpi.api_tunnel && this.modelRpi.api_tunnel !=''){
+                    check = validation.check('tunnel', this.modelRpi.api_tunnel)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O Tunel da API é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.modelRpi.soft_version && this.modelRpi.soft_version !=''){
+                    check = validation.check('version', this.modelRpi.soft_version)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
+
+                if(this.modelRpi.soft_version_date && this.modelRpi.soft_version_date!=''){
+                    check =  validation.check('date', this.modelRpi.soft_version_date);
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false; 
+                    }
+                }
+            }
         },
 
         mounted(){
