@@ -592,9 +592,9 @@
         </b-modal>
 
         <!-- Modal to show image-->
-        <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 p-0 modal-body-bg">
-            <div class="embed-responsive embed-responsive-16by9">
-                <img class="img-fluid" :src="modalShowImageSrc"/>
+        <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg" style="background-color:transparent !important" class="m-0 p-0 modal-body-bg">
+            <div >
+                <img class="img-fluid" style="max-height:600px; max-width:400px; " :src="modalShowImageSrc"/>
                 <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
             </div>
         </b-modal>
