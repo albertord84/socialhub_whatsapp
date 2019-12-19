@@ -169,7 +169,7 @@ class ExternalRPIController extends Controller
     public function reciveFileMessage(Request $request)
     {
         $input = $request->all();
-        // Log::debug('reciveFileMessage: ', [$input]);
+        Log::debug('reciveFileMessage: ', [$input]);
 
         $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
         $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
@@ -178,11 +178,11 @@ class ExternalRPIController extends Controller
         $company_phone = $input['CompanyPhone'];
         
         $Company = Company::where(['phone' => $company_phone])->first();
+        Log::debug('reciveFileMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
             ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
             ->first();
-        // Log::debug('reciveFileMessage to Company: ', [$Company]);
 
         $Chat = $this->messageToChatModel($input, $Contact);
         if (!$Chat) {
@@ -317,10 +317,11 @@ class ExternalRPIController extends Controller
             $Company = Company::with('rpi')->where(['id' => $Contact->company_id])->first();
 
             if ($Company) {
-                $url = $Company->rpi->api_tunnel . '/SendTextMessage';
+                $url = $Company->rpi->api_tunnel;
             }
             
             $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
+            Log::debug('sendFileMessage to Contact contact_Jid: ', [$contact_Jid]);
 
             switch ($file_type) {
                 // case 'image':
@@ -343,6 +344,7 @@ class ExternalRPIController extends Controller
             }
 
             $url = $url . "/$EndPoint";
+            Log::debug('sendFileMessage to Contact RPi URL: ', [$url]);
 
             $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
             $response = $client->request('POST', $url, [
@@ -358,6 +360,7 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
+            Log::debug('sendFileMessage to Contact Response: ', [$response]);
             return $response;
         } catch (\Throwable $th) {
             throw $th;
