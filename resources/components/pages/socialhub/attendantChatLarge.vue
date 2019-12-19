@@ -784,9 +784,9 @@
 
                             //----------update the message list and the last message of the contact-----
                             var pos = this.messages.length;
-                            Object.assign(this.messages, {pos: message});
                             console.log(this.messages);
                             console.log(pos);
+                            Object.assign(this.messages, {pos: message});
                             // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
@@ -1241,15 +1241,16 @@
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
                         var pos = this.messages.length;
-                        Object.assign(this.messages, {pos: message});
                         console.log(this.messages);
                         console.log(pos);
+                        Object.assign(this.messages, {pos: message});
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
-                    }else{    
-                        
+                        //TODO-JR: set message as readed in database
+                    
+                    }else{   
                         //-------find contact and update count_unread_messagess and last_message-------                    
                         var This = this;
                         This.contacts.forEach((item, index) => {
