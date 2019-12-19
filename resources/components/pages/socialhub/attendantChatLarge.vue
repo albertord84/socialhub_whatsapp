@@ -7,11 +7,11 @@
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
-                <div class="sect_header">                    
+                <div class="sect_header">
                     <ul v-if="isSearchContact==false" class='menu'>
                         <li>
                             <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                <img :src="loggedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
+                                <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
                             </a>
                         </li>
                         <ul class='menu' style="float:right; margin-right:5px">
@@ -21,17 +21,17 @@
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
                                     </template>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
-                                        <a href='javascript:void(0)' exact class="round_btn" @click="toggleLeft('toggle-add-contact')">
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                        <a href='javascript:void(0)' class="drpodowtext" @click="toggleLeft('toggle-add-contact')">
                                             <i class="fa fa-user-plus fa-xs " ></i> 
                                             Inserir contato
                                         </a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
-                                        <router-link to="/" exact class="drpodowtext">
+                                        <router-link to="/" class="drpodowtext">
                                             <div v-on:click="logout">
                                                 <i class="fa fa-sign-out"></i> 
-                                                Sair
+                                                Encerrar sessão
                                             </div>
                                         </router-link>
                                     </b-dropdown-item>
@@ -76,8 +76,8 @@
                                 <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag && amountContactsInBag>0">
                                     <span class="mdi mdi-account-box-outline fa-2x cl-blue" @click.prevent="getNewContactFromBag" title="Adherir novo contato"></span><br>
                                     <span style="position:relative; top:-0.8em; left:0.5em" @click.prevent="getNewContactFromBag" title="Adherir novo contato" class="principal-icons">Contatos</span>
-                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="principal-icons-basket-contact cl-blue">{{amountContactsInBag}}</span>
-                                    <span v-if="amountContactsInBag==0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="principal-icons-basket-contact cl-gray">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="amount-contacts-in-bag cl-blue">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag==0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="amount-contacts-in-bag cl-gray">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -89,7 +89,7 @@
                             <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
                                 <article class="media mt-1 mb-4">
                                     <a class="float-left desc-img mt-3">
-                                        <img :src="JSON.parse(contact.json_data).urlProfilePicture" class="contact-picture">
+                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).urlProfilePicture:''" class="contact-picture">
                                     </a>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
@@ -98,8 +98,8 @@
                                         <a class="text-muted"><span style="font-size:1em" :title='(contact.last_message) ? contact.last_message.message :""'>{{ (contact.last_message) ? textTruncate(contact.last_message.message,22):'' }}</span></a>
                                     </div>
                                     <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : ''}}</span>
-                                    <div v-show="contact.count_unread_messagess>0" class="status-new-messages mt-4" :title='contact.count_unread_messagess + " mensagens novas"'><b>{{contact.count_unread_messagess}}</b></div>
-                                    <span v-show="contact.count_unread_messagess==0" class="status-not-messages" > </span>
+                                    <div v-show="contact.count_unread_messagess>0" class="amount-unreaded-messages mt-4" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                    <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
                                 </article>
                             </a>
                         </li>
@@ -113,7 +113,7 @@
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">                    
                     <ul class='menu'>                        
-                        <li><span class="pl-4"><img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
+                        <li><span class="pl-4"><img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
                         <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
                         <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ selectedContact.first_name }} </p></li>                        
                         <ul class='menu' style="float:right">
@@ -206,14 +206,14 @@
                                                     </a>  
                                                     <br>                                      
                                                 </span>
-                                                <span v-if="message.message && message.message !=''" >
+                                                <span v-if="message.message && message.message !=''" class="text-message">
                                                     {{ message.message ? message.message : "" }}
                                                 </span>
                                                 <br>
                                         </p>
                                     </div>
                                     <div class="col-lg-1">
-                                        <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture"  alt="" class="my-rounded-circle receivedMessageImg">
+                                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''"  alt="" class="conversation-picture receivedMessageImg">
                                     </div>
                                     <div class="col-lg-11">
                                         <div style="float:left" class="thetime">{{message.time.hour}}</div>
@@ -253,7 +253,7 @@
                                                     </a>  
                                                     <br>                                      
                                                 </span>
-                                                <span v-if="message.message && message.message !=''" >
+                                                <span v-if="message.message && message.message !=''" class="text-message">
                                                     {{ message.message ? message.message : "" }}
                                                 </span>
                                                 <br>
@@ -265,13 +265,12 @@
                                         <div style="float:right" class="thetime">{{message.time.hour}}</div>
                                     </div>
                                     <div class="col-lg-1">
-                                        <img :src="loggedAttendant.image_path" alt="" class="my-rounded-circle sendedMessageImg">
+                                        <img :src="logguedAttendant.image_path" alt="" class="conversation-picture sendedMessageImg">
                                     </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
-
 
                     <!-- <ul >
                         <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
@@ -319,10 +318,10 @@
                                 <span class="msg-time" >
                                     <ul v-if='message.source==0' class="menu">
                                         <li><div class="thetime">{{message.time.hour}}</div></li>
-                                        <li> <img :src="loggedAttendant.image_path" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
+                                        <li> <img :src="logguedAttendant.image_path" style="width:40px; height:40px" alt="" class="conversation-picture"></li>
                                     </ul>
                                     <ul v-if='message.source==1' class="menu" >
-                                        <li> <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="my-rounded-circle"></li>
+                                        <li> <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="conversation-picture"></li>
                                         <li> <div class="thetime">{{message.time.hour}}</div></li>
                                     </ul>
                                 </span>
@@ -428,7 +427,7 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white">
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
                         <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
                         
                         <!-- Informação -->
@@ -505,8 +504,8 @@
                         </div>
                         <div v-if="showContactSummary" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-2" style="min-height:40px">
-                                <p v-show="!isEditingContactSummary" style="word-break: break-word; text-align:justify">{{selectedContact.summary}}</p>
-                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
+                                <p v-show="!isEditingContactSummary" style="word-break: break-word; color:black" class="text-center">{{selectedContact.summary}}</p>
+                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic text-center" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
                             </div>
                             <div v-show="isEditingContactSummary">
                                 <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
@@ -632,7 +631,7 @@
         
         <!-- Modal to delete contact-->
         <b-modal v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
-            <attendantCRUDContact :action='"delete"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContacts'></attendantCRUDContact>
+            <attendantCRUDContact :action='"delete"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
         </b-modal>
 
         <!-- Modal to show image-->
@@ -710,7 +709,7 @@
 
         data() {
             return {
-                loggedAttendant:{},
+                logguedAttendant:{},
 
                 contacts_url: 'contacts',
                 contacts_bag_url: 'getBagContact',
@@ -777,7 +776,7 @@
         
         methods: {    
             sendMessage() {
-                if (isSendingNewMessage) return;
+                if (this.isSendingNewMessage) return;
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
@@ -832,7 +831,9 @@
                         this.contacts.forEach(function(item, i){
                             item.index = i++;
                         });
-                        console.log(this.contacts);
+                        if(this.selectedContactIndex>=0){
+                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                        }
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
@@ -890,7 +891,6 @@
                             this.messages = response.data; 
                             this.messages_copy=[];
                             var This = this;
-
                             this.messages.forEach(function(item, i){
                                 try {
                                     item.time = This.getMessageTime(item.created_at);
@@ -902,14 +902,12 @@
                                         });
                                         This.messageTimeDelimeter = item.time.date;
                                     }
-                                
                                     if(item.data != "" && item.data != null && item.data.length>0) {
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
                                             item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
                                     This.messages_copy.push(item);
-
                                 } catch (error) {
                                     console.log(error);
                                 }
@@ -952,20 +950,22 @@
                     miniToastr.error(error, "Confira os dados fornecidos");
                     return;
                 }
-                if(!this.selectedContactToEdit.whatsapp_id.includes('@s.whatsapp.net'))
-                    this.selectedContactToEdit.whatsapp_id+='@s.whatsapp.net';
                 this.isUpdatingContact = true;
 
+                delete this.selectedContactToEdit.created_at;
+                delete this.selectedContactToEdit.updated_at;
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
+                    if(this.isEditingContactSummary)
+                        this.isEditingContactSummary = false;
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                     this.getContacts();
-                    this.isUpdatingContact = false;
                 })
                 .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando contato");  
-                });
+                    ApiService.process_request_error(error);
+                    miniToastr.error(error, "Erro adicionando contato");
+                })
+                .finally(() => this.isUpdatingContact = false);
             },
 
             chatMessageScroling: function(value){
@@ -1071,7 +1071,7 @@
 
             pathContactMessageFile(contact_id, file_name) {
                 let pathFile = process.env.MIX_FILE_PATH +'/' + 
-                            this.loggedAttendant.company_id +'/' +
+                            this.logguedAttendant.company_id +'/' +
                             'contacts' +'/' +
                             contact_id +'/' +
                             'chat_files' +'/' +
@@ -1165,6 +1165,13 @@
                 this.getContacts();
             },
 
+            reloadContactsAfterDelete(){
+                this.displayChatRightSide();
+                this.getContacts();
+                this.selectedContact={};
+                this.selectedContactIndex = -1;
+            },
+
             reloadAfterTransferContact(){
                 this.selectedContactIndex = -1;
                 this.selectedContact = null;
@@ -1190,12 +1197,12 @@
         },
 
         updated(){
-            if(this.selectedContactIndex>=0)
+            if(this.selectedContactIndex>=0 && this.$refs.message_scroller)
                 this.$refs.message_scroller.scrolltobottom();
         },
 
         beforeMount() {
-            this.loggedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
@@ -1218,7 +1225,7 @@
                 disableStats: false
             });
 
-            window.Echo.channel('sh.message-to-attendant.' + this.loggedAttendant.id)
+            window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
                     console.log(e);
                     var message = JSON.parse(e.message);
@@ -1237,20 +1244,43 @@
                         this.messages[this.messages.length]=message;
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
-                        this.$refs.message_scroller.scrolltobottom();
+                        if(this.$refs.message_scroller)
+                            this.$refs.message_scroller.scrolltobottom();
                     }else{
+                        
                         var This = this;
                         This.contacts.forEach((item, index) => {
                             if(item.id == message.contact_id){
+                                //atualizar item atual
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
+
+                                //salvar item atual
+                                var targetContact = Object.assign({}, item);
+
+                                //eliminar item da lista de contatos
+                                delete This.contacts[index];
+
+                                //inserir item salvo no inicio da lista
+                                This.contacts.unshift(targetContact);
+
+                                //atualizar indices
+                                var i = 0;
+                                This.contacts.forEach(function(item2, i){
+                                    item2.index = i++;
+                                });
+                                if(This.selectedContactIndex >=0 ){
+                                    This.selectedContactIndex ++;
+                                    This.selectedContact = This.contacts[This.selectedContactIndex];
+                                }
+
                             }
                         });
                     }
                     this.$refs.newMessageSound.play();
             });
 
-            window.Echo.channel('sh.contact-to-bag.' + this.loggedAttendant.company_id)
+            window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
                 .listen('NewContactMessage', (e) => {
                     if(this.amountContactsInBag<e.message)
                         this.$refs.newContactInBag.play();
@@ -1258,9 +1288,8 @@
                     this.amountContactsInBag = e.message;
             });
 
-            window.Echo.channel('sh.transferred-contact.' + this.loggedAttendant.id)
+            window.Echo.channel('sh.transferred-contact.' + this.logguedAttendant.id)
                 .listen('NewTransferredContact', (e) => {
-                    // console.log(e);
                     var newContact = JSON.parse(e.message);
                     // newContact.index = this.contacts.length;
                     this.contacts.unshift(newContact);
@@ -1268,8 +1297,10 @@
                     this.contacts.forEach(function(item, i){
                         item.index = i++;
                     });
-                    this.selectedContactIndex ++;
-                    this.selectedContact = this.contacts[this.selectedContactIndex];
+                    if(this.selectedContactIndex >=0){
+                        this.selectedContactIndex ++;
+                        this.selectedContact = this.contacts[this.selectedContactIndex];
+                    }
                     miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
             });
         },
@@ -1330,25 +1361,27 @@
 
 
 <style scoped lang="scss">
+
+    /* LAYOUT */
     .desc-img {
         height: 3.6em;
         width: 3.6em;
     }
-
     .desc-img2 {
         height: 10rem;
         width: 10rem;
     }
-
+    .chat {
+        min-height: calc(100vh); // min-height: calc(100vh - 70px);
+        height: calc(100vh); // height: calc(100vh - 70px);
+        overflow: hidden;
+    }  
     .chat_block {
         border-bottom: 1px solid #f4f2f2;
     }
-
     .chatalign {
         background-color: #fff !important;
-        height:100%;        
-        // height: calc(100%);        
-        // height: calc(100% - 170px);        
+        height:100%;   // height: calc(100%);  // height: calc(100% - 170px);        
         ul {
             padding: 0;
         }
@@ -1356,14 +1389,11 @@
             padding-right: 10px;
         }
     }
-
-    .converstion_back {        
-        height:100%;
-        // height: calc(100% - 170px);
+    .converstion_back {
+        height:100%; // height: calc(100% - 170px);
         overflow: hidden;
         background: #fff !important;
         border: 1px solid #d8d6d6;
-
         ul {
             padding: 0;
         }
@@ -1377,358 +1407,44 @@
                 height: 2em;
             }
         }
-    /deep/ .ss-wrapper{
+        /deep/ .ss-wrapper{
             background-color: transparent;
             top: 0%;
             height: 96%;
-            //  height: 90%;
         }
     }
-
-    .received div p, 
-    .sent div p {
-        max-width:26em;
-        min-width:14em;
-        text-overflow:hidden;
-        word-break: break-word; 
-        border-radius: 1em;        
-        display: inline-block;
-        padding: 0.7em 1em;
-        position: relative;
-        // border: 1px solid #d4d2d2;
-        margin-top: 30px;
-    }
-
-    .received div p::before{
-        // content: ' ';
-        // position: absolute;
-        // width: 0;
-        // height: 0;
-        // left: -120px;
-        // right: auto;
-        // top: -1px;
-        // bottom: auto;
-        // border: 12px solid;
-        // border-color: transparent transparent #d4d2d2  transparent;
-    }
-
-    .received div p::after{
-        // content: ' ';
-        // position: absolute;
-        // width: 0;
-        // height: 0;
-        // left: -12px;
-        // right: auto;
-        // top: auto;  // top: 0;
-        // bottom: 0; // bottom: auto;
-        // border: 12px solid;
-        // border-color:  transparent transparent #fff transparent;
-    }
-
-    .received>div {
-        text-align: left;
-        padding: 0 17px 0 17px;
-        .msg-time{
-            position: relative;
-            font-size: 0.8em;
-            float: left;
-            top: -15px;
-            .thetime{
-                position: relative;
-                top:20px;
-                left:15px;
-                color: #a4beda;
-            }
-        }
-        p {
-            background-color: #fff;
-            border-bottom-left-radius:0px;
-            margin-left: 55px !important;
-            margin-bottom: 0px;
-        }
-        .text-message{
-            font-size:1.2em; 
-        }
-    }
-
-    .sent div p::before{
-        // content: ' ';
-        // position: absolute;
-        // width: 0;
-        // height: 0;
-        // right: -13px;
-        // top: -1px;
-        // bottom: auto;
-        // border: 12px solid;
-        // border-color: #d4d2d2 transparent transparent transparent;
-    }
-
-    .sent div p::after{
-        // content: ' ';
-        // position: absolute;
-        // width: 0;
-        // height: 0;
-        // right: -12px;
-        // top: auto;  // top: 0;
-        // bottom: 0; // bottom: auto;
-        // border: 12px solid;
-        // border-color:  transparent transparent #0377FE transparent;  // border-color: #dbf2fa transparent transparent transparent;
-    }
-
-    .sent>div {        
-        text-align: right;
-        padding: 0 17px 0 17px;
-        .msg-time{
-            position: relative;
-            font-size: 0.8em;
-            float: right;
-            top: -15px;
-            .thetime{
-                position: relative;
-                top:20px;
-                right: 15px;
-                color: #90a8c2;
-            }
-        }
-        p {
-            background-color: #0377FE;  // background-color: #dbf2fa;
-            border-bottom-right-radius:0px;
-            right: 55px !important;
-            margin-bottom: 0px;
-        }
-        .text-message{
-            color:white;
-            font-size:1.2em; 
-        }
-    }
-
-    .self {
-        justify-content: flex-end;
-        align-items: flex-end;
-    }
-
-    .self .msg {
-        order: 1;
-        border-bottom-right-radius: 0px;
-        box-shadow: 1px 2px 0px #D4D4D4;
-    }
-
     .chat_content {
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-    .status-new-messages {
-        min-width: 3em;
-        height: 2.5em;
-        border-radius: 2em;
-        padding: 0.5em 1em 2em 1em;
-        font-size: 0.7em;
-        border: 2px solid #fff;
-        background-color: #0377FE;
-        color: white;
-        text-align: center;
-        position: relative;
-        top: 8px;
-        left: -25px;
-    }
-
-    .status-not-messages {
-        width: 2.5em;
-        height: 2.5em;
-        border-radius: 50%;
-        background-color: transparent;
-        text-align: center;
-        position: relative;
-        top: 8px;
-        left: -10px;
-    }
-
-    .person_name:before {
-        // content: ' \25CF';
-        // font-size: 21px;
-        // position: relative;
-        // top: -11px;
-        // left: -27px;
-        // color: #63c17f;
-    }
-
-    .person_name {
-        // font-size: 12px;
-        // color: #949aa2;;
-    }
-
-    .profile {
-        padding-bottom: 15px;
-        // border: none;
-        height: calc(100%);
-        // height: calc(100% - 70px);
-        // overflow-y: auto;
-        background-color: #FFFFFF;
-    }
-
     .wrapper .converstion_back .ss-container{
-        // background-image: url("~img/pages/chat_background.png");
         background-color: #eaedf2;
     }
-
     .colors{
         line-height: 1rem;
         margin-top: 2px;
         span{
             font-size: 10px;
         }
-    }
-
-    .myscrool{
-        // height: calc(100% - 70px);
-        height: calc(100hv);
-    }
-
-    //added here
-    //-----------------------------------------------
-    .search-input{
-        background-color:#fffff8;
-        font-size:1em;
-    }
-
-    .search-input:focus{
-        outline: 0 !important;
-        // border: none !important;
-        box-shadow: none;
-    }
-
-    .menu{
-        z-index: 100;
-        list-style:none; 
-        margin: 0;
-        padding: 0;        
-    }
-
-    .menu li{
-        position:relative; 
-        float:left; 
-    }
-
-    .menu li a,p{
-        font-size: 1.1em;
-        display: block;
-        color: #949aa2;
-        text-align: left;
-        padding: 16px;
-        text-decoration: none;
     }    
-
-    .menu li ul{
-        position:absolute; 
-        top:170px; 
-        left:-150px;
-        background-color:rgb(250, 248, 248); 
-        display:none;
-        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
-    }   
-
-    .menu li:hover ul, 
-    .menu li.over ul{
-        display:block;
-    }
-
-    .menu li ul li{
-        display:block; 
-        width:100%;
-    }
-
-    .menu li ul li:hover{
-        background-color: rgb(240, 238, 238)
-    }
-
-    .round_btn{
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-    }
-
-    .menu, li, a, a:active, a:focus {
-        outline: none;
-    }
-
     .sect_header{
-        background-color:#fefefe;
-        // height:70px;
-        height:6.5rem;
+        background-color:#fefefe;        
+        height:6.5rem; // height:70px;
         border-bottom: 1px solid #e9e9e9;
         padding-top:10px; 
     }
-
     .sec_decription p, h4{
         text-align: center !important;
         padding: 5px !important;
     }
-
-    .transp {
-        background-color:rgba(0, 0, 0, 0);
-        color:#949aa2;;
-        border: none !important;
-        outline:none !important;
-        height:28px;
-        transition:height 1s;
-        -webkit-transition:height 1s;
+    .header-title{
+        font-size: 1.3em;
     }
-
-    .transp:focus {
-        outline: none !important;
-        border: none !important;
-        outline-width: 0 !important;
-    }
-
-    .pointer-hover:hover{
-        cursor: pointer;
-    } 
-
-    .chat {
-        min-height: calc(100vh);
-        // min-height: calc(100vh - 70px);
-        height: calc(100vh);
-        // height: calc(100vh - 70px);
-        overflow: hidden;
-    }  
-
-    .mycontrolBar ml-2{
-        background-color: white !important;
-        color:white;
-    }
-
-    audio {
-        width:23em;
-        height: 25px;
-        border-radius: 3px;
-        transform: scale(1.05);
-    }
-
-    .message{
-        min-width:13em;
-    }
-
-    .message-hover{
-        visibility:visible;
-    }
-
-    .message-hout{
-        visibility:hidden;
-    }    
-
-    .send-btn{
-        border-top-right-radius:4px;
-        border-bottom-right-radius:4px;
-    }
-
     .non_converstion_back{
-        // background-image: url("~img/pages/chat_background.png");
         background-color: #eaedf2;
         height: 100%;
         width: 100%;
     }
-
     .non-selected-chat {
         position: absolute;
         top: 40%;
@@ -1738,15 +1454,18 @@
             width:18em; height:18em; border-radius:50%; opacity:0.5;
         }
     }
-
-    .my-rounded-circle{
-        border-radius: 50%;
-        width: 30px;
-        width: 30px;
-        padding: 0px !important;
-        margin: 0px !important;
+    .profile {
+        padding-bottom: 15px;
+        height: calc(100%); // height: calc(100% - 70px);
+        background-color: #FFFFFF;
     }
-
+    .profile-picture{
+        position: relative;
+        border-radius: 50%;
+        width: 50px;
+        width: 50px;
+        left: 15px;
+    }
     .contact-picture{
         border-radius: 50%;
         width: 50px;
@@ -1754,284 +1473,39 @@
         padding: 0px !important;
         margin: 0px !important;
     }
-
-    .profile-picture{
-        position: relative;
+    .conversation-picture{
         border-radius: 50%;
-        width: 50px;
-        width: 50px;
-        left: 15px;
-        // top:-15px !important;
-        // padding: 0px !important;
-        // margin: 0px !important;
+        width: 30px;
+        width: 30px;
+        padding: 0px !important;
+        margin: 0px !important;
     }
-
-    .midia-files{
-        width: 15em;
-    }
-
-    .midia-files-document{
-        width: 10em;
-    }    
-
-    .header-title{
-        font-size: 1.3em;
-    }
-
-    .text-input-message{
-        background-color:#fffff8;
-        font-size:1em;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-        resize: none;
-        scrollbar-color: rgba(0, 0, 0, 0.3) white;
-    }
-
-    .text-input-message:focus{
-        outline: 0 !important;
-        // border: none !important;
-        box-shadow: none !important;
-    }
-
-    // .srcollbar{
-    //     width: 4em !important;
-        // scrollbar-face-color: #ff8c00;
-        // scrollbar-track-color: #fff8dc;
-        // scrollbar-arrow-color: #ffffff;
-        // scrollbar-highlight-color: #fff8dc;
-        // scrollbar-shadow-color: #d2691e;
-        // scrollbar-3dlight-color: #ffebcd;
-        // scrollbar-darkshadow-color: #8b0000;
-    // }
-
-    .icons-action-send{
-        color:white;
-        background: #007bff;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        padding: 5px;
-    }
-
-    .icons-action-send:hover{
+    .pointer-hover:hover{
         cursor: pointer;
-    }
-
-    .icons-action{
-        color:#949aa2;
-        width: 40px;
-        height: 40px;
-        padding: 15px;
-    }
-
-    .icons-no-action{
-        font-size: 1.2rem;
-        color:#949aa2;
-        width: 40px;
-        height: 40px;
-        padding: 15px;
-    }
-
-    .icons-action:hover{
-        background-color: #f1f0f0;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-
-    .container-icons-action-message{
-        background-color:#fffff8;
-        padding: 0px;
-    }
-
-    .icons-action-message{
-        font-size: 1.2rem;
-        color:#949aa2;
-        width: 40px;
-        height: 40px;
-        padding: 15px;
-    }
-
-    .icons-action-message:hover{
-        background-color: #f1f0f0;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-
-    .icons-action-2{
-        color:#949aa2;
-        background-color:#fcf8f8;
-        width: 40px;
-        height: 40px;
-        padding: 15px;
-        border-radius:50px
-    }
-
-    .icons-action-2:hover{
-        background-color: #f1f0f0;
-        cursor: pointer;
-    }
-
-    .border-left-message{
-        border-top-left-radius: 30px;
-        border-bottom-left-radius: 30px;
-    }
-
-    .border-right-message{
-        border-top-right-radius: 30px !important;
-        border-bottom-right-radius: 30px !important;
-    }
-
-    .cl-blue{
-        color: #007bff;
-    }
-
-    .icons-selected-file{
-        font-size: 1.8rem;
-        color:#2471d6;
-        width: 60px;
-        height: 60px;
-        padding: 25px;
-    }
-
-    .icons-selected-file:hover{
-        cursor: pointer;
-    }
-
+    } 
     .profile-decription-name{
         font-weight: 600;
     }
-
     .fa-1_5x{
         font-size: 1.5em;
     }
-
-    .social-network{
-        
-    }
-
-    .social-network:hover{
-        cursor: pointer;
-        color:#007bff !important;
-    }
-
-    .document_sent{
-        color:white;
-    }
-
-    .document_received{
+    .cl-blue{
         color: #007bff;
     }
-
-
-    .message-time-separator {
-        color:gray;
-        font-size: 1em;
-        margin-left: 5%;
-        width: 90%; 
-        text-align: center !important; 
-        border-bottom: 1px solid #d6d4d4 !important; 
-        line-height: 0.01em;
-    } 
-
-
-    .message-time-separator span { 
-        background-color:#eaedf2 !important; 
-        border-radius: 10px;
-        padding: 1.2em;
-        // padding:0 10px; 
-    }
-    .message-time-separator span:hover { 
-        background-color:#d8d6d6 ; 
-    }
-
-    .founded-messages:hover{
-        background-color:#fafafa !important;
-        cursor: pointer;
-    }
-
-    .principal-icons{
-        width: 2em !important;
-        height: 2em !important;
-    }
-
-    .basket{
-        font-size: 2.4em;
-    }
-
-    .principal-icons-basket-contact{
-        color: white;
-        
-        min-width: 3em;
-        height: 2.5em;
-        border-radius: 2em;
-        padding: 0.5em 0.7em 0.5em 0.7em;
-        font-size: 0.7em;
-        border: 2px solid #fff;
-
-        background-color:#6adaa5; //007bff
-        border-radius: 50%;
-        // padding:4px;
-        position:relative; 
-        top:-40px;
-        left: -20px;
-    }
-
     .cl-gray{
         background-color: silver;
     }
-
-    .cursor-pointer:hover{
-        cursor: pointer;
+    .search-input{
+        background-color:#fffff8;
+        font-size:1em;
+    }
+    .search-input:focus{
+        outline: 0 !important;
+        box-shadow: none;
     }
 
-
-
-    .fadeIn {
-        -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
-        -moz-animation: fadein 1s; /* Firefox < 16 */
-            -ms-animation: fadein 1s; /* Internet Explorer */
-            -o-animation: fadein 1s; /* Opera < 12.1 */
-                animation: fadein 1s;
-    }
-
-    @keyframes fadein {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-
-    /* Firefox < 16 */
-    @-moz-keyframes fadein {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-
-    /* Safari, Chrome and Opera > 12.1 */
-    @-webkit-keyframes fadein {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-
-    /* Internet Explorer */
-    @-ms-keyframes fadein {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-
-    /* Opera < 12.1 */
-    @-o-keyframes fadein {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-
-    .action-icons-fade{
-        height:2em;width:2em; padding-top:0.5em; 
-    }
-
-    .action-icons-fade:hover{
-        cursor: pointer;
-    }
-
+    
+    /* CHAT - MESSAGES  */
     .receivedMessageText{
         color: black;
         background-color:white; 
@@ -2041,8 +1515,7 @@
         border-bottom-right-radius:1em;
         min-width: 15em;
         max-width: 40em;
-    }
-    
+    }    
     .receivedMessageImg{
         width:40px;
         height:40px;
@@ -2050,7 +1523,6 @@
         top:-1.6em; 
         right:-1em
     }
-
     .sendedMessageText{
         color: white;
         background-color: #0377FE;
@@ -2068,5 +1540,271 @@
         top:-1.6em; 
         right:1.4em
     }
+    .mycontrolBar{
+        background-color: white !important;
+        color:white;
+    }
+    audio {
+        width:23em;
+        height: 25px;
+        border-radius: 3px;
+        transform: scale(1.05);
+    }
+    .message{
+        min-width:13em;
+    }
+    .message-hover{
+        visibility:visible;
+    }
+    .message-hout{
+        visibility:hidden;
+    }
+    .text-message{
+        word-break: break-word; 
+    }
+    .document_sent{
+        color:white;
+    }
+    .document_received{
+        color: #007bff;
+    }
+    .midia-files{
+        width: 15em;
+    }
+    .midia-files-document{
+        width: 10em;
+    }
+    .text-input-message{
+        background-color:#fffff8;
+        font-size:1em;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        resize: none;
+        scrollbar-color: rgba(0, 0, 0, 0.3) white;
+    }
+    .text-input-message:focus{
+        outline: 0 !important;
+        box-shadow: none !important;
+    }
+    .message-time-separator {
+        color:gray;
+        font-size: 1em;
+        margin-left: 5%;
+        width: 90%; 
+        text-align: center !important; 
+        border-bottom: 1px solid #d6d4d4 !important; 
+        line-height: 0.01em;
+    } 
+    .message-time-separator span { 
+        background-color:#eaedf2 !important; 
+        border-radius: 10px;
+        padding: 1.2em;
+    }
+    .message-time-separator span:hover { 
+        background-color:#d8d6d6 ; 
+    }
+    .founded-messages:hover{
+        background-color:#fafafa !important;
+        cursor: pointer;
+    }
+    .amount-unreaded-messages {
+        min-width: 3em;
+        height: 2.5em;
+        border-radius: 2em;
+        padding: 0.5em 1em 2em 1em;
+        font-size: 0.85em;
+        font-weight: bold;
+        border: 2px solid #fff;
+        background-color: #0377FE;
+        color: white;
+        text-align: center;
+        position: relative;
+        top: 8px;
+        left: -25px;
+    }
+    .zero-unreaded-messages {
+        width: 2.5em;
+        height: 2.5em;
+        border-radius: 50%;
+        background-color: transparent;
+        text-align: center;
+        position: relative;
+        top: 8px;
+        left: -10px;
+    }    
+    .amount-contacts-in-bag{
+        color: white;        
+        min-width: 3em;
+        height: 2.5em;
+        border-radius: 2em;
+        padding: 0.5em 0.7em 0.5em 0.7em;
+        font-size: 0.85em;
+        font-weight: bold;
+        border: 2px solid #fff;
+        background-color:#6adaa5; //007bff
+        border-radius: 50%;
+        position:relative; 
+        top:-40px;
+        left: -20px;
+    }
+    
+
+    /* ICON STYLES*/
+    .action-icons-fade{
+        height:2em;width:2em; padding-top:0.5em; 
+    }
+    .action-icons-fade:hover{
+        cursor: pointer;
+    }
+    .principal-icons{
+        width: 2em !important;
+        height: 2em !important;
+    }    
+    .icons-action-send{
+        color:white;
+        background: #007bff;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        padding: 5px;
+    }
+    .icons-action-send:hover{
+        cursor: pointer;
+    }
+    .icons-action{
+        color:#949aa2;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+    }
+    .icons-no-action{
+        font-size: 1.2rem;
+        color:#949aa2;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+    }
+    .icons-action:hover{
+        background-color: #f1f0f0;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .container-icons-action-message{
+        background-color:#fffff8;
+        padding: 0px;
+    }
+    .icons-action-message{
+        font-size: 1.2rem;
+        color:#949aa2;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+    }
+    .icons-action-message:hover{
+        background-color: #f1f0f0;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .icons-action-2{
+        color:#949aa2;
+        background-color:#fcf8f8;
+        width: 40px;
+        height: 40px;
+        padding: 15px;
+        border-radius:50px
+    }
+    .icons-action-2:hover{
+        background-color: #f1f0f0;
+        cursor: pointer;
+    }
+    .border-left-message{
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+    }
+    .border-right-message{
+        border-top-right-radius: 30px !important;
+        border-bottom-right-radius: 30px !important;
+    }    
+    .icons-selected-file{
+        font-size: 1.8rem;
+        color:#2471d6;
+        width: 60px;
+        height: 60px;
+        padding: 25px;
+    }
+    .icons-selected-file:hover{
+        cursor: pointer;
+    }
+
+    /* UL-LI-MENU */
+    .menu{
+        z-index: 100;
+        list-style:none; 
+        margin: 0;
+        padding: 0;        
+    }
+    .menu li{
+        position:relative; 
+        float:left; 
+    }
+    .menu li a,p{
+        font-size: 1.1em;
+        display: block;
+        color: #949aa2;
+        text-align: left;
+        padding: 16px;
+        text-decoration: none;
+    }
+    .menu li ul{
+        position:absolute; 
+        top:170px; 
+        left:-150px;
+        background-color:rgb(250, 248, 248); 
+        display:none;
+        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
+    } 
+    .menu li:hover ul, .menu li.over ul{
+        display:block;
+    }
+    .menu li ul li{
+        display:block; 
+        width:100%;
+    }
+    .menu li ul li:hover{
+        background-color: rgb(240, 238, 238)
+    }
+    .menu, li, a, a:active, a:focus {
+        outline: none;
+    }
+
+    /* FADE IN EVENT*/
+    .fadeIn {
+        -webkit-animation: fadein 1s; 
+        -moz-animation: fadein 1s; 
+            -ms-animation: fadein 1s; 
+            -o-animation: fadein 1s; 
+                animation: fadein 1s;
+    }
+    @keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+    @-moz-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+    @-webkit-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+    @-ms-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+    @-o-keyframes fadein {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }    
    
 </style>

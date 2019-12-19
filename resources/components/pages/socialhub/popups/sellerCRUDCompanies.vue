@@ -328,17 +328,20 @@
                                     .catch(function(error) {
                                         miniToastr.error(error, "Erro adicionando Manager");  
                                         ApiService.process_request_error(error); 
-                                    });
+                                    })
+                                    .finally(() => this.isSendingInsert = false);
                                 })
                             .catch(function(error) {
                                 miniToastr.error(error, "Erro adicionando Manager");  
                                 ApiService.process_request_error(error); 
-                            });
+                            })
+                            .finally(() => this.isSendingInsert = false);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Erro adicionando Empresa");  
                         ApiService.process_request_error(error); 
-                    });
+                    })
+                    .finally(() => this.isSendingInsert = false);
             },
             
             editCompany: function() { //U
@@ -368,39 +371,55 @@
                     return;
                 }
 
-                //atualizando company
+                //1. atualizando company
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                     .then(response => {
-                                //atualizando user
+                                //2. atualizando usuario
+                                delete this.modelManager.password;
                                 ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
                                     .then(response => {
-                                                    miniToastr.success("Dados atualizado com sucesso","Sucesso");
-                                                    if(!this.modelRpi.id) 
+                                                    //3. atualizando rpi
+                                                    this.modelRpi.company_id = this.modelCompany.id;
+                                                    if(!this.modelRpi.id) {
                                                         this.modelRpi.id=0;
-                                                    //atualizando rpi                            
+                                                    }
+                                                    var This=this;
                                                     ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
                                                         .then(response => {
-                                                            this.isSendingUpdate = false;
-                                                            this.reload();
-                                                            this.closeModals();
-                                                        })
-                                                        .catch(function(error) {
-                                                            this.isSendingUpdate = false;
-                                                            if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                                                alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                                            else
-                                                                miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                                        });
+                                                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                                                this.isSendingUpdate = false;
+                                                                this.reload();
+                                                                this.closeModals();
+                                                            })
+                                                        .catch(function (error) {
+                                                            if (error.response) {
+                                                                // Request made and server responded
+                                                                // console.log(error.response.data);
+                                                                // console.log(error.response.data.message);
+                                                                miniToastr.warn(error.response.data.message, "Atenção"); 
+                                                                // console.log(error.response.status);
+                                                                // console.log(error.response.headers);
+                                                            } else if (error.request) {
+                                                                // The request was made but no response was received
+                                                                // console.log(error.request);
+                                                            } else {
+                                                                // Something happened in setting up the request that triggered an Error
+                                                                // console.log('Error', error.message);
+                                                            }
+                                                        }).finally(() => this.isSendingUpdate = false);
+                                
                                     })
                                     .catch(function(error) {
-                                        this.isSendingUpdate = false;
-                                        miniToastr.error(error, "Erro atualizando Manager"); 
-                                    });
+                                        if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                            alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                        else
+                                            miniToastr.error(error, "Erro atualizando canal de comunicação"); 
+                                    }).finally(() => this.isSendisSendingUpdateingInsert = false);
                         })
                     .catch(function(error) {
                         this.isSendingUpdate = false; 
                         miniToastr.error(error, "Erro atualizando companhia"); 
-                    });
+                    }).finally(() => this.isSendingUpdate = false);
             },
 
             deleteCompany: function(){
@@ -417,42 +436,42 @@
                                 ApiService.delete(this.companies_url+'/'+this.modelCompany.id)
                                     .then(response => {
                                         //delete RPI row
-                                        if(this.modelCompany.rpi_id){
-                                            ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
-                                                .then(response => {
+                                        // if(this.modelCompany.rpi_id){
+                                        //     ApiService.delete(this.rpi_url+'/'+this.modelRpi.id)
+                                        //         .then(response => {
                                                     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
                                                     this.reload();
                                                     this.closeModals();
-                                                    this.isSendingDelete = false;
-                                                })
-                                                .catch(function(error) {
-                                                    ApiService.process_request_error(error);  
-                                                    miniToastr.error(error, "Erro eliminando canal de comunicação"); 
-                                                });
-                                        }else{
-                                            miniToastr.success("Empresa eliminada com sucesso","Sucesso");
-                                            this.reload();
-                                            this.closeModals();
-                                            this.isSendingDelete = false;
-                                        }
+                                        //         })
+                                        //         .catch(function(error) {
+                                        //             ApiService.process_request_error(error);  
+                                        //             miniToastr.error(error, "Erro eliminando canal de comunicação"); 
+                                        //         });
+                                        // }else{
+                                        //     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
+                                        //     this.reload();
+                                        //     this.closeModals();
+                                        // }
                                     })
                                     .catch(function(error) {
                                         ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando empresa");
-                                        this.isSendingDelete = false;
-                                    });
+                                        miniToastr.error(error, "Erro eliminando empresa");                                        
+                                    })
+                                    .finally(() => this.isSendingDelete = false);
                             })
                             .catch(function(error) {
                                 ApiService.process_request_error(error);  
                                 miniToastr.error(error, "Erro eliminando o usuário"); 
                                 this.isSendingDelete = false;
-                            });
+                            })
+                            .finally(() => this.isSendingDelete = false);
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
                         miniToastr.error(error, "Erro eliminando o usuário");  
                         this.isSendingDelete = false;
-                    });
+                    })
+                    .finally(() => this.isSendingDelete = false);
             },
 
             formReset:function(){

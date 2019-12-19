@@ -155,8 +155,7 @@
 
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
-                    this.model.status_id = 1;
-                this.model.whatsapp_id += '@s.whatsapp.net';
+                    this.model.status_id = 1;                
 
 
                 ApiService.post(this.url,this.model)
@@ -175,7 +174,8 @@
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando contato");  
-                        });    
+                        })
+                        .finally(() => this.isSendingInsert = false);       
                     }else{
                         miniToastr.success("Contato adicionado com sucesso","Sucesso");
                         this.reload();
@@ -185,7 +185,8 @@
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });
+                })
+                .finally(() => this.isSendingInsert = false);   
             },
             
             editContact: function() { //U
@@ -221,8 +222,10 @@
                     this.flagReference = true;
                     return;
                 }
-
                 this.model.whatsapp_id += '@s.whatsapp.net';
+
+                if(this.contact_atendant_id>0)
+                    this.model.status_id = 1;
 
                 ApiService.put(this.url+'/'+this.model.id, this.model)//ecr this.item.contact_id
                 .then(response => {
@@ -240,7 +243,8 @@
                         .catch(function(error) {
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro atualizando contato");  
-                        });    
+                        })
+                        .finally(() => this.isSendingUpdate = false);     
                     }else{
                         miniToastr.success("Contato atualizado com sucesso","Sucesso");
                         this.reload();
@@ -250,7 +254,8 @@
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro adicionando contato");  
-                });    
+                })
+                .finally(() => this.isSendingUpdate = false);   
             },
 
             deleteContact: function() { //D
@@ -266,7 +271,8 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro eliminando o contato"); 
-                    });                
+                    })
+                    .finally(() => this.isSendingDelete = false);                   
             },
 
             //------ auxiliary methods--------------------

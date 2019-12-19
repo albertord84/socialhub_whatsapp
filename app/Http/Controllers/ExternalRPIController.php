@@ -12,6 +12,7 @@ use App\Models\ExtendedChat;
 use App\Models\Rpi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use stdClass;
 
 class ExternalRPIController extends Controller
@@ -81,7 +82,7 @@ class ExternalRPIController extends Controller
         $QRCode = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
-            $url = $Rpi->tunnel . '/qrcode';
+            $url = $Rpi->api_tunnel . '/qrcode';
 
             $QRCode = $client->request('GET', $url);
             $QRCode = $QRCode->getBody()->getContents();
@@ -97,7 +98,6 @@ class ExternalRPIController extends Controller
      */
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
     public function getContactInfo(string $contact_id = '5521976550734') //: stdClass
-
     {
         $contactInfo = new stdClass();
         try {
@@ -121,11 +121,15 @@ class ExternalRPIController extends Controller
     public function reciveTextMessage(Request $request)
     {
         $input = $request->all();
+        Log::debug('reciveTextMessage: ', [$input]);
         $contact_Jid = $input['Jid'];
-
-        $company_phone = $input['CompanyPhone'];
-
+        
+        $contact_Jid = str_replace("@s.whatsapp.net", "", $contact_Jid);
+        
+        $company_phone = str_replace("@c.us", "", $input['CompanyPhone']);
+        
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+        Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
         $Chat = $this->messageToChatModel($input, $Contact);
         if (!$Chat) {
@@ -160,12 +164,19 @@ class ExternalRPIController extends Controller
     public function reciveFileMessage(Request $request)
     {
         $input = $request->all();
-        $contact_Jid = $input['Jid'];
-        $company_phone = $input['CompanyPhone'];
-        $Company = Company::where(['phone' => $company_phone])->first();
+        // Log::debug('reciveFileMessage: ', [$input]);
 
-        Log::debug('reciveFileMessage: ', [$input]);
+        $contact_Jid = $input['Jid'];
+
+        $contact_Jid = str_replace("@s.whatsapp.net", "", $contact_Jid);
+        
+        $company_phone = str_replace("@c.us", "", $input['CompanyPhone']);
+        
+        $Company = Company::where(['phone' => $company_phone])->first();
+        // Log::debug('reciveFileMessage to Company: ', [$Company]);
+
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['whatsapp_id' => $contact_Jid])->first();
+        // Log::debug('reciveFileMessage to Contact: ', [$Contact]);
 
         $Chat = $this->messageToChatModel($input, $Contact);
         if (!$Chat) {
@@ -174,11 +185,15 @@ class ExternalRPIController extends Controller
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
-        $filePath = "$Company->id/contacts/$Chat->contact_id/chat_files";
-        // Log::debug('reciveFileMessage: ', [$filePath]);
+        // $envFilePath = env('APP_FILE_PATH', 'external_files');
+        // Log::debug('Storage Disk: ', [Storage::disk('chats_files')]);
+        // $envFilePath = Storage::disk('chats_files')->root;
 
+        $filePath = "companies/$Company->id/contacts/$Chat->contact_id/chat_files";
+        Log::debug('reciveFileMessage File Path: ', [$filePath]);
+        
         $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
-        // Log::debug('reciveFileMessage: ', [$file_response]);
+        Log::debug('reciveFileMessage File Response: ', [$file_response]);
 
         $Chat->data = json_encode($file_response);
         $Chat->save();
@@ -241,6 +256,7 @@ class ExternalRPIController extends Controller
             $Contact->first_name = $contact_Jid;
             $Contact->company_id = $Company->id;
             $Contact->whatsapp_id = $contact_Jid;
+            $Contact->updated_at = time();
 
             // TODO Alberto: Get contact info photo
 
@@ -254,11 +270,18 @@ class ExternalRPIController extends Controller
         return $Chat;
     }
 
-    public function sendTextMessage(string $message, string $contact_Jid)
+    public function sendTextMessage(string $message, Contact $Contact)
     {
         try {
             $client = new \GuzzleHttp\Client();
-            $url = $this->APP_WP_API_URL . '/SendTextMessage';
+
+            $Company = Company::with('rpi')->where(['id' => $Contact->company_id])->first();
+
+            if ($Company) {
+                $url = $Company->rpi->api_tunnel . '/SendTextMessage';
+            }
+
+            $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
 
             $response = $client->request('POST', $url, [
                 'form_params' => [
@@ -275,12 +298,21 @@ class ExternalRPIController extends Controller
     }
 
     // public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
-    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, string $contact_Jid)
+    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, Contact $Contact)
     {
         try {
             $client = new \GuzzleHttp\Client();
             $EndPoint = 'SendDocumentMessage';
             $FileName = 'Document';
+
+            $Company = Company::with('rpi')->where(['id' => $Contact->company_id])->first();
+
+            if ($Company) {
+                $url = $Company->rpi->api_tunnel . '/SendTextMessage';
+            }
+            
+            $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
+
             switch ($file_type) {
                 // case 'image':
                 case '2':
@@ -301,7 +333,8 @@ class ExternalRPIController extends Controller
                     break;
             }
 
-            $url = $this->APP_WP_API_URL . "/$EndPoint";
+            $url = $url . "/$EndPoint";
+
             $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
             $response = $client->request('POST', $url, [
                 'multipart' => [

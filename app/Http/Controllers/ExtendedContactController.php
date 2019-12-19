@@ -56,23 +56,14 @@ class ExtendedContactController extends ContactController
     {
         $input = $request->all();
 
-        //TODO-JR-ALBERTO: um contato pode ser criado por:
-        //um robot: manda para sacola
-        //um admin desde CVS: va para sacola
-        //um atendente: deve ser inserido com o Id do atendente que esta na sessão
-        //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente:
-        //onde devo enviar o contact_atendant_id, por url ou nos dados?
-
         $User = Auth::check() ? Auth::user() : session('logged_user');
-        if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-            $input['company_id'] = $User->company_id;
-        } else
-        if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-            $input['company_id'] = 1; //TODO-Alberto: obtener el id de la camponhia del atendetnte
-        }
-        $contact = $this->contactRepository->create($input);
+        $input['company_id'] = $User->company_id;
 
-        // TODO: Create Contact Chat Table
+        //esa mierda no funciona asi
+        // $input['created_at'] = time();
+        // $input['updated_at'] = time();
+
+        $contact = $this->contactRepository->create($input);
 
         Flash::success('Contact saved successfully.');
 
@@ -90,20 +81,23 @@ class ExtendedContactController extends ContactController
      */
     public function update($id, UpdateContactRequest $request)
     {
+        $input = $request->all();
+
         $contact = $this->contactRepository->findWithoutFail($id);
 
         //TODO-JR-ALBERTO: um contato pode ser atualizado por:
         //um atendente: atualiza dados do contato, status, atendente
         //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
 
+        // unset($input["created_at"]);
+        // unset($input["updated_at"]);
+
         if (empty($contact)) {
             Flash::error('Contact not found');
             return redirect(route('contacts.index'));
         }
 
-        unset($request['updated_at']);
-
-        $contact = $this->contactRepository->update($request->all(), $id);
+        $contact = $this->contactRepository->update($input, $id);
 
         Flash::success('Contact updated successfully.');
 

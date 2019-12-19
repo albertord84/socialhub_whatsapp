@@ -46,13 +46,16 @@ return [
         'chats_files_1' => [
             'driver' => 'local',
             // 'root' => storage_path('app/public/' . env('APP_FILE_PATH')),
-            'root' => base_path() . '/public/' . env('APP_FILE_PATH_1'),
+            // 'root' => base_path() . '/public/' . env('APP_FILE_PATH_1'),
+            // 'root' => base_path() . '/public/' . env('APP_FILE_PATH'),
+            'root' => base_path() . '/public',
         ],
-
+        
         'chats_files' => [
             'driver' => 'local',
-            // 'root' => storage_path('app/public/' . env('APP_FILE_PATH')),
-            'root' => base_path() . '/public/' . env('APP_FILE_PATH'),
+            // 'root' => storage_path('app/public/' . env('APP_FILE_PATH', 'external_files')),
+            // 'root' => base_path() . '/public',
+            'root' => base_path() . '/public/' . env('APP_FILE_PATH', 'external_files'),
         ],
 
         'local' => [

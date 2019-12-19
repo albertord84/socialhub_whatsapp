@@ -61,7 +61,9 @@
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro eliminando o contato"); 
                     });  
-            },            formCancel(){
+            },            
+            
+            formCancel(){
                 this.$emit('onclosemodal');
             }, 
 

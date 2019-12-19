@@ -209,14 +209,13 @@
                     this.user = response.data;
                     window.localStorage.setItem('user', JSON.stringify(response.data));                        
                     miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
-                    this.isSending = false;
                     this.editMode = false;
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
                     miniToastr.error(error, "Erro atualizando perfil");  
-                    this.isSending = false;
-                });
+                })
+                .finally(() => this.isSending = false);
                 
             },
 

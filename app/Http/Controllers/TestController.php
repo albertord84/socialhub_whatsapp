@@ -12,6 +12,7 @@ use App\Repositories\ExtendedChatRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
+use App\Repositories\ExtendedRpiRepository;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -39,9 +40,8 @@ class TestController extends AppBaseController
         // $Attendants = $extContRepo->getAttendants(1);
         // dd($Attendants);
         
-        // $extChatRepo = new ExtendedChatRepository(app());
-        // $ContactChats = $extChatRepo->contactChatAllAttendants(1);
-
+        // $extRepo = new ExtendedRpiRepository(app());
+        // $ContactChats = $extRepo->rpiOfCompany(3);
         // dd($ContactChats);
 
         // $extChatRepo = new ExtendedChatRepository(app());
@@ -52,8 +52,6 @@ class TestController extends AppBaseController
 
         // $ChatsBussines = new ChatsBusiness();
         // return $ChatsBussines->getBagContactsCount(1);
-
-
 
 
         // FIND CONTACT BY NUMBER
@@ -95,14 +93,12 @@ class TestController extends AppBaseController
         //     var_dump($th);
         // }
 
-        
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = '4';
-        // $Chat = $ExtendedChat->find(1);
-        // $pendingBC = broadcast(new MessageToAttendant($Chat));
-
+        // MESSAGE TO ATTENDANT
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $Chat = $ExtendedChat->find(1);
+        $pendingBC = broadcast(new MessageToAttendant($Chat));
         // dd($pendingBC);
-
         // var_dump($pendingBC);
 
         // broadcast(new NewContactMessage(1));

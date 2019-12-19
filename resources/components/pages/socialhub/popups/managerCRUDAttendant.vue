@@ -112,6 +112,7 @@
                 model:{
                     name: "",
                     role_id: "",
+                    company_id:0,
                     email: "",
                     login: "",
                     password:'',
@@ -141,7 +142,7 @@
                 this.model.role_id=4;
                 this.model.password='';
                 this.model.image_path = "images/user.jpg";
-
+                this.model.company_id = this.logguedAttendant.company_id;
                 this.isSendingInsert = true;
 
                 // Validando dados
@@ -154,8 +155,10 @@
                     return;
                 }
 
+                //isert user
                 ApiService.post(this.first_url, this.model)
                 .then(response => {
+                    //isert userAttendant
                     ApiService.post(this.url, { 
                         'user_id':response.data.id,
                         'user_manager_id':JSON.parse(localStorage.user).id
@@ -169,7 +172,8 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error); 
                         miniToastr.error(error, "Erro adicionando Atendente");  
-                    });
+                    })
+                    .finally(() => this.isSendingInsert = false);
                 })
                 .catch(function(error) {
                     ApiService.process_request_error(error); 
@@ -220,13 +224,12 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro atualizando Atendente"); 
-                    });
+                    })
+                    .finally(() => this.isSendingUpdate = false);
             },
 
             deleteAttendant: function(){
-
                 this.isSendingDelete = true;
-
                 ApiService.delete('deleteAllByAttendantId/'+this.item.id)
                     .then(response => {
                         ApiService.delete(this.url+'/'+this.item.id)
@@ -250,7 +253,8 @@
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro eliminando Atendente"); 
-                    });
+                    })
+                    .finally(() => this.isSendingDelete = false);
             },
 
             formReset:function(){
@@ -392,6 +396,10 @@
                 }
             },
 
+        },
+
+        beforeMount(){
+            this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
         },
 
         mounted(){

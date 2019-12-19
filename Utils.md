@@ -67,6 +67,10 @@ https://m.dotdev.co/writing-advanced-eloquent-search-query-filters-de8b6c2598db
 
 
 
+# Commnads
+nm-connection-editor
+
+sudo install/scripts/chroot-to-pi.sh /dev/mmcblk0
 
 
 ### https://github.com/beyondcode/laravel-websockets/issues/285
