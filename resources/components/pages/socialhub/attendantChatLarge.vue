@@ -807,13 +807,48 @@
                             this.newMessage.message = "";
                             this.file = null;
                             this.$refs.message_scroller.scrolltobottom();
-                            this.isSendingNewMessage = false;
+
+                            
+                            //-----------------------------------------------------
+                            //salvar item atual
+                            var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                            //eliminar item da lista de contatos
+                            delete this.contacts[this.selectedContactIndex];
+                            //inserir item salvo no inicio da lista
+                            this.contacts.unshift(targetContact);
+                            //atualizar indices
+                            var i = 0;
+                            this.contacts.forEach(function(item, i){
+                                item.index = i++;
+                            });
+                            this.selectedContactIndex = 0;
+                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                            //-----------------------------------------------------
+
+                            
                         })
-                        .catch(function(error) {
-                            This.isSendingNewMessage = false;
-                            This.newMessage.message = "";
-                            miniToastr.error(error, "Error enviando mensagem");   
-                        });                        
+                        .catch(function(error) {                            
+                            if (error.response) {
+                                console.log('error.response');
+                                console.log(error.response.data);
+                                console.log(error.response.data.message);
+                                console.log(error.response.status);
+                                console.log(error.response.headers);
+                                if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
+                                    console.log(error.response.data.message);
+                                    miniToastr.warn("Verifique a conexão do seu computador e  do hardware à Internet.", "Atenção");                                     
+                                }
+                            } else
+                            if (error.request) {
+                                console.log('error.request');
+                                console.log(error.request);
+                            } else{
+                                console.log('some another error');
+                                console.log(error.message);
+                            }
+                            console.log('error config');
+                            console.log(error.config);
+                        }).finally(() => {This.isSendingNewMessage = false;});
                     } catch (error) {
                         This.newMessage.message = "";
                         This.isSendingNewMessage = false;                        
@@ -1254,16 +1289,12 @@
                                 //atualizar item atual
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
-
                                 //salvar item atual
                                 var targetContact = Object.assign({}, item);
-
                                 //eliminar item da lista de contatos
                                 delete This.contacts[index];
-
                                 //inserir item salvo no inicio da lista
                                 This.contacts.unshift(targetContact);
-
                                 //atualizar indices
                                 var i = 0;
                                 This.contacts.forEach(function(item2, i){
