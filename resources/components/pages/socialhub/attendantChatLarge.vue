@@ -76,8 +76,8 @@
                                 <a href="javascript:void()" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag && amountContactsInBag>0">
                                     <span class="mdi mdi-account-box-outline fa-2x cl-blue" @click.prevent="getNewContactFromBag" title="Adherir novo contato"></span><br>
                                     <span style="position:relative; top:-0.8em; left:0.5em" @click.prevent="getNewContactFromBag" title="Adherir novo contato" class="principal-icons">Contatos</span>
-                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="amount-contacts-in-bag cl-blue">{{amountContactsInBag}}</span>
-                                    <span v-if="amountContactsInBag==0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="amount-contacts-in-bag cl-gray">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="amount-contacts-in-bag cl-green">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="amount-contacts-in-bag cl-gray">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -93,11 +93,30 @@
                                     </a>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
-                                            {{contact.first_name }}
+                                            {{textTruncate(contact.first_name,20) }}
                                         </a><br>
-                                        <a class="text-muted"><span style="font-size:1em" :title='(contact.last_message) ? contact.last_message.message :""'>{{ (contact.last_message) ? textTruncate(contact.last_message.message,22):'' }}</span></a>
+                                        <a class="text-muted"> 
+                                            <span v-if="!contact.last_message" style="font-size:1em">
+                                                <i>Sem mensagens</i>
+                                            </span>                                           
+                                            <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
+                                                {{textTruncate(contact.last_message.message,22)}}
+                                            </span>
+                                            <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
+                                                <i>Arquivo de imagem</i>
+                                            </span>
+                                            <span v-else-if="contact.last_message && contact.last_message.type_id==3" style="font-size:1em" title='Arquivo de audio'>
+                                                <i>Arquivo de audio</i>
+                                            </span>
+                                            <span v-else-if="contact.last_message && contact.last_message.type_id==4" style="font-size:1em" title='Arquivo de video'>
+                                                <i>Arquivo de video</i>
+                                            </span>
+                                            <span v-else-if="contact.last_message && contact.last_message.type_id==5" style="font-size:1em" title='Arquivo de texto'>
+                                                <i>Arquivo de texto</i>
+                                            </span>
+                                        </a>
                                     </div>
-                                    <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : ''}}</span>
+                                    <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}</span>
                                     <div v-show="contact.count_unread_messagess>0" class="amount-unreaded-messages mt-4" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
                                     <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
                                 </article>
@@ -271,63 +290,6 @@
                             </div>
                         </li>
                     </ul>
-
-                    <!-- <ul >
-                        <li v-for='(message,index) in messages' :key="index" :class="[{ sent: message.source==0 },{ received: message.source==1 }]">
-                            <div v-if="message.type_id=='date_separator'" class="pt-5 pb-5">
-                                <h6 class="message-time-separator mt-5"><span>{{message.time.date}}</span></h6>
-                            </div>
-                            <div v-if="message.type_id!='date_separator'" >
-                                <p class="message" @mouseover='mouseOverMessage("message-dropdown-"+index)' @mouseleave='mouseLeaveMessage("message-dropdown-"+index)'> 
-                                    <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                        <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                            <img :src="message.path" class="midia-files"/>
-                                        </a>
-                                        <br>
-                                    </span>                               
-                                    <span v-if='message.type_id == "3"' class='text-center'>
-                                        <br>
-                                        <audio controls class="mycontrolBar ml-2">
-                                            <source :src="message.path" type="audio/ogg">
-                                            <source :src="message.path" type="audio/mp3">
-                                            Seu navegador não suporta o elemento de áudio.
-                                        </audio>
-                                        <br>
-                                    </span>
-                                    <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                        <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                            <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                <source :src="message.path+'#t=2'" type="video/mp4">
-                                                Seu navegador não suporta o elemento de vídeo.
-                                            </video>
-                                        </a>
-                                        <br>
-                                    </span>
-                                    <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                        <a :href="message.path" target="_blank" rel=”noopener”  >
-                                            <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                        </a>  
-                                        <br>                                      
-                                    </span>
-                                    <span v-if="message.message && message.message !=''" class="text-message">
-                                        {{ message.message ? message.message : "" }}
-                                    </span>
-                                    <br>
-                                </p>
-                                <br>
-                                <span class="msg-time" >
-                                    <ul v-if='message.source==0' class="menu">
-                                        <li><div class="thetime">{{message.time.hour}}</div></li>
-                                        <li> <img :src="logguedAttendant.image_path" style="width:40px; height:40px" alt="" class="conversation-picture"></li>
-                                    </ul>
-                                    <ul v-if='message.source==1' class="menu" >
-                                        <li> <img :src="JSON.parse(selectedContact.json_data).urlProfilePicture" style="width:40px; height:40px" alt="" class="conversation-picture"></li>
-                                        <li> <div class="thetime">{{message.time.hour}}</div></li>
-                                    </ul>
-                                </span>
-                            </div>
-                        </li>
-                    </ul> -->
                 </v-scroll> 
 
                 <!-- Compose and send new message -->
@@ -339,19 +301,15 @@
                                 <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
-
                         <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
-                                class="form-control border border-left-0 border-right-0 text-input-message srcollbar"
-                                ref="inputTextAreaMessage">
+                                class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
                         </textarea>
-
                         <div class="input-group-prepend">
                             <a href="javascript:void()" v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
                                 <i class="fa fa-clipboard icons-selected-file"></i>
                                 <i style="background-color:withe; color:red; position: relative; height:1.5em; width1.5em; top:-0.25em; left:-1.7em; border-radius:20px;" class="fa fa-window-close"></i>
                             </a>
                         </div>
-
                         <div class="input-group-prepend">
                             <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
                                 <i class="fa fa-file-image-o icons-action-message"></i>
@@ -372,7 +330,6 @@
                                 <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
                             </a>
                         </div>
-
                         <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
                         <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
                         <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
@@ -635,15 +592,14 @@
         </b-modal>
 
         <!-- Modal to show image-->
-        <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
-            <div class="embed-responsive embed-responsive-16by9">
-                <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/>
-            </div>
+        <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg" style="background-color:red !important; padding:0px; " class="">
+                <img class="img-fluid" style="max-height:540px; max-width:400px; " :src="modalShowImageSrc"/>
+                <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
         </b-modal>
 
         <!-- Modal to show video-->
         <b-modal v-model="modalShowVideo" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
-            <div class="embed-responsive embed-responsive-16by9">
+            <div class="">
                  <video width="100%" height="100%" style="width:100%; height:100%" controls class="midia-files embed-responsive-item modal-body-bg">
                     <source :src="modalShowVideoSrc" type="video/mp4">
                     Seu navegador não suporta o elemento de vídeo.
@@ -784,6 +740,11 @@
                 if (this.newMessage.message != "" || this.file) {
                     this.newMessage.contact_id = this.contacts[this.selectedContactIndex].id;
                     this.isSendingNewMessage = true;
+
+                    if(!this.file){
+                        this.newMessage.type_id = 1;
+                    }
+
                     let formData = new FormData();
                     formData.append('attendant_id', this.newMessage.attendant_id);
                     formData.append('contact_id', this.newMessage.contact_id);
@@ -792,6 +753,7 @@
                     formData.append('type_id', this.newMessage.type_id);
                     formData.append('status_id', this.newMessage.status_id);
                     formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
+                   
                     if(this.newMessage.type_id>1 && this.file){
                         formData.append("file",this.file); //Add the form data we need to submit  
                     }
@@ -801,7 +763,8 @@
                             var message = response.data;
                             if (message.data) {
                                 message.data = JSON.parse(message.data);
-                                message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
+                                message.path = message.data.FullPath;
+                                // message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
                             message.time = this.getMessageTime(message.created_at)
                             this.messages[this.messages.length]=message;
@@ -809,13 +772,48 @@
                             this.newMessage.message = "";
                             this.file = null;
                             this.$refs.message_scroller.scrolltobottom();
-                            this.isSendingNewMessage = false;
+
+                            
+                            //-----------------------------------------------------
+                            //salvar item atual
+                            var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                            //eliminar item da lista de contatos
+                            delete this.contacts[this.selectedContactIndex];
+                            //inserir item salvo no inicio da lista
+                            this.contacts.unshift(targetContact);
+                            //atualizar indices
+                            var i = 0;
+                            this.contacts.forEach(function(item, i){
+                                item.index = i++;
+                            });
+                            this.selectedContactIndex = 0;
+                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                            //-----------------------------------------------------
+
+                            
                         })
-                        .catch(function(error) {
-                            This.isSendingNewMessage = false;
-                            This.newMessage.message = "";
-                            miniToastr.error(error, "Error enviando mensagem");   
-                        });                        
+                        .catch(function(error) {                            
+                            if (error.response) {
+                                console.log('error.response');
+                                console.log(error.response.data);
+                                console.log(error.response.data.message);
+                                console.log(error.response.status);
+                                console.log(error.response.headers);
+                                if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
+                                    console.log(error.response.data.message);
+                                    miniToastr.warn("Verifique a conexão do seu computador e  do hardware à Internet.", "Atenção");                                     
+                                }
+                            } else
+                            if (error.request) {
+                                console.log('error.request');
+                                console.log(error.request);
+                            } else{
+                                console.log('some another error');
+                                console.log(error.message);
+                            }
+                            console.log('error config');
+                            console.log(error.config);
+                        }).finally(() => {This.isSendingNewMessage = false;});
                     } catch (error) {
                         This.newMessage.message = "";
                         This.isSendingNewMessage = false;                        
@@ -907,7 +905,8 @@
                                     if(item.data != "" && item.data != null && item.data.length>0) {
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
-                                            item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
+                                            item.path = item.data.FullPath;
+                                            // item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
                                     This.messages_copy.push(item);
                                 } catch (error) {
@@ -972,9 +971,11 @@
                 this.selectedContactToEdit.whatsapp_id += '@s.whatsapp.net';
                 
                 delete this.selectedContactToEdit.created_at;
-                delete this.selectedContactToEdit.updated_at;
+                delete this.selectedContactToEdit.updated_at;                
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
+                    if(this.isEditingContact)
+                        this.isEditingContact = false;
                     if(this.isEditingContactSummary)
                         this.isEditingContactSummary = false;
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -1087,7 +1088,7 @@
                     }
                 }
             },
-
+            
             pathContactMessageFile(contact_id, file_name) {
                 let pathFile = process.env.MIX_FILE_PATH +'/' + 
                             this.logguedAttendant.company_id +'/' +
@@ -1095,10 +1096,6 @@
                             contact_id +'/' +
                             'chat_files' +'/' +
                             file_name;
-
-                //TODO-JR: change SavedFileName by SavedFilePath
-                // let pathFile = process.env.MIX_FILE_PATH +'/' + SavedFilePath; 
-
                 return pathFile;
             },
             
@@ -1334,7 +1331,8 @@
                             if(message.data != "" && message.data != null && message.data.length>0) {
                                 message.data = JSON.parse(message.data);
                                 if (message.type_id > 1)
-                                    message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
+                                    message.path = message.data.FullPath;
+                                    // message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
                         } catch (error) {
                             // console.log(error);
@@ -1354,16 +1352,12 @@
                                 //atualizar item atual
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
-
                                 //salvar item atual
                                 var targetContact = Object.assign({}, item);
-
                                 //eliminar item da lista de contatos
                                 delete This.contacts[index];
-
                                 //inserir item salvo no inicio da lista
                                 This.contacts.unshift(targetContact);
-
                                 //atualizar indices
                                 var i = 0;
                                 This.contacts.forEach(function(item2, i){
@@ -1378,6 +1372,8 @@
                         });
                     }
                     this.$refs.newMessageSound.play();
+
+                    console.log(this.amountContactsInBag);
             });
 
             window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
@@ -1595,6 +1591,9 @@
     .cl-gray{
         background-color: silver;
     }
+    .cl-green{
+        background-color:#6adaa5;
+    }
     .search-input{
         background-color:#fffff8;
         font-size:1em;
@@ -1741,8 +1740,7 @@
         padding: 0.5em 0.7em 0.5em 0.7em;
         font-size: 0.85em;
         font-weight: bold;
-        border: 2px solid #fff;
-        background-color:#6adaa5; //007bff
+        border: 2px solid #fff;        
         border-radius: 50%;
         position:relative; 
         top:-40px;

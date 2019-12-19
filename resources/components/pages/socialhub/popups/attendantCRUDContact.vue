@@ -365,14 +365,10 @@
             },
 
             checkWhatsappNumber:function(){
-                this.whatsappContactInfo = {
-                    'imageProfile':'images/user.jpg'
-                };
-                this.whatssapChecked = true;
-                return;
-
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
+                        console.log(response.data);
+
                         this.whatsappContactInfo = response.data;
                         this.whatssapChecked = true;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
