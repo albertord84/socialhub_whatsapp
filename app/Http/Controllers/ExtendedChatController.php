@@ -119,11 +119,13 @@ class ExtendedChatController extends ChatController
         
         if (isset($input['file'])) {
             $fileName = $chat->id; // Laravel Auto gerated file name
-            $envFilePath = env('APP_FILE_PATH');
-            $filePath = "$envFilePath/$Contact->company_id/contacts/$Contact->id/chat_files";
+            // $envFilePath = env('APP_FILE_PATH');
+            // $filePath = "$envFilePath/$Contact->company_id/contacts/$Contact->id/chat_files";
+            $filePath = "companies/$Contact->company_id/contacts/$Contact->id/chat_files";
             $json_data = FileUtils::SavePostFile($request->file, $filePath, $fileName);
             if ($json_data) { // Save file to disk (public/app/..)
-                $fileContent = Storage::disk('chats_files')->get("$json_data->FullPath"); // Retrive file like file_get_content(...) 
+                // $fileContent = Storage::disk('chats_files')->get("$json_data->FullPath"); // Retrive file like file_get_content(...) 
+                $fileContent = Storage::disk('chats_files')->get("$json_data->SavedFilePath/$json_data->SavedFileName"); // Retrive file like file_get_content(...) 
                 $response = $externalRPiController->sendFileMessage(
                     $fileContent, $json_data->SavedFileName, $input['type_id'], 
                     $input['message'], $Contact

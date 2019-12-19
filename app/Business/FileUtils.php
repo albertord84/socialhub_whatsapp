@@ -27,11 +27,10 @@ class FileUtils extends Business
             $json_data->MaxFilesize = $file->getMaxFilesize();
             $json_data->SavedFileName = $file_name ? $file_name : $file->hashName();
             $json_data->SavedFileName .= ".$json_data->ClientOriginalExtension";
-            $json_data->SavedFilePath = env('APP_FILE_PATH', 'external_files') . "/$FilePath";
+            $json_data->SavedFilePath = "$FilePath";
             
             $FullPath = "$json_data->SavedFilePath/$json_data->SavedFileName";
-            $json_data->FullPath = $FullPath;
-
+            
             // Remove file wheter exist
             if (Storage::disk('chats_files')->exists($FullPath)) {
                 Storage::disk('chats_files')->delete($FullPath);
@@ -45,6 +44,8 @@ class FileUtils extends Business
                 $json_data->error = true;
                 // Flash::success('Error movendo o arquivo.');
             }
+
+            $json_data->FullPath = env('APP_FILE_PATH', 'external_files') . "/$FullPath";
         } catch (\Throwable $th) {
             $json_data->msg = $th->getMessage();
             $json_data->error = true;
