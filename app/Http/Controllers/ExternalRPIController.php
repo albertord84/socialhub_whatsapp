@@ -72,6 +72,27 @@ class ExternalRPIController extends Controller
     }
 
     /**
+     * Force RPi Update
+     */
+    public static function sai_rpi_to_update(Rpi $Rpi = null) //: stdClass
+    {
+        // $Rpi = new stdClass();
+        // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
+        $response = new stdClass();
+        try {
+            $client = new \GuzzleHttp\Client();
+            $url = $Rpi->api_tunnel . '/update';
+
+            $response = $client->request('POST', $url);
+            $response = $response->getBody()->getContents();
+            $response = json_decode($response);
+            return $response;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    /**
      * Log Out from whatsapp
      */
     public static function logout(Rpi $Rpi = null) //: stdClass
@@ -84,7 +105,7 @@ class ExternalRPIController extends Controller
             $url = $Rpi->api_tunnel . '/logout';
 
             $response = $client->request('POST', $url);
-            $response = $QRCode->getBody()->getContents();
+            $response = $response->getBody()->getContents();
             $response = json_decode($response);
             return $response;
         } catch (\Throwable $th) {
