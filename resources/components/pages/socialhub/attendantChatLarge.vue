@@ -784,8 +784,9 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             //----------update the message list and the last message of the contact-----
+                            this.messages.concat(Object.assign({}, message));
                             // this.messages.push(Object.assign({}, message));
-                            this.messages[this.messages.length]=Object.assign({}, message);
+                            // this.messages[this.messages.length]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                         })
                         .catch(function(error) {                            
@@ -1238,7 +1239,8 @@
 
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
-                        this.messages[this.messages.length]=message;
+                        this.messages.concat(Object.assign({}, message));
+                        // this.messages[this.messages.length]=message;
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
