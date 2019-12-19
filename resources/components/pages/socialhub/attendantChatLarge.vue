@@ -601,7 +601,7 @@
 
         <!-- Modal to show video-->
         <b-modal v-model="modalShowVideo" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
-            <div class="embed-responsive embed-responsive-16by9">
+            <div class="">
                  <video width="100%" height="100%" style="width:100%; height:100%" controls class="midia-files embed-responsive-item modal-body-bg">
                     <source :src="modalShowVideoSrc" type="video/mp4">
                     Seu navegador não suporta o elemento de vídeo.
