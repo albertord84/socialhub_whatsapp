@@ -74,6 +74,7 @@ class Contact extends Model
         'instagram_id' => 'string',
         'linkedin_id' => 'string',
         'status_id' => 'integer',
+        'updated_at' => 'string',
     ];
 
     /**
