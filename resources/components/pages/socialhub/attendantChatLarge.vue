@@ -97,7 +97,7 @@
                                         </a><br>
                                         <a class="text-muted"> 
                                             <span v-if="!contact.last_message" style="font-size:1em">
-                                                <i>Nenhuma mensagem trocada</i>
+                                                <i>Sem mensagens</i>
                                             </span>                                           
                                             <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
                                                 {{textTruncate(contact.last_message.message,22)}}
@@ -1068,33 +1068,7 @@
                     }
                 }
             },
-
-            symbolicLastMessage(contact){
-                var resp = { "type": "","content": "", "title":""};
-                if(contact.last_message){
-                    resp.type = contact.last_message.type_id;
-                    switch (contact.last_message.type_id) {
-                        case 1: //text
-                            resp.content = this.textTruncate(contact.last_message.message,22); 
-                            resp.title = contact.last_message.message;
-                            break;
-                        case 2: //image
-                            resp.content = resp.title = "Arquivo de imagem"; break;
-                        case 3: //audio
-                            resp.content = resp.title = "Arquivo de audio"; break;
-                        case 4: //video
-                            resp.content = resp.title = "Arquivo de video"; break;
-                        case 5: //document
-                            resp.content = resp.title = "Arquivo de texto"; break;
-                    }
-                }else{
-                    resp.type = 0;
-                    resp.content = "Nenhuma mensagem";
-                    resp.title = "Nenhuma mensagem";
-                }
-                
-            },
-
+            
             pathContactMessageFile(contact_id, file_name) {
                 let pathFile = process.env.MIX_FILE_PATH +'/' + 
                             this.logguedAttendant.company_id +'/' +
