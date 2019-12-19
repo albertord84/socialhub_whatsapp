@@ -785,6 +785,7 @@
                             //----------update the message list and the last message of the contact-----
                             var pos = this.messages.length;
                             Object.assign(this.messages, {pos: message});
+                            console.log(this.messages);
                             // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
@@ -1223,7 +1224,7 @@
                 .listen('MessageToAttendant', (e) => {
 
                     //------------prepare message datas to be displayed------------------------
-                    console.log(e);
+                    // console.log(e);
                     var message = JSON.parse(e.message);
                     message.time = this.getMessageTime(message.created_at);
                     try {
@@ -1240,6 +1241,7 @@
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
                         var pos = this.messages.length;
                         Object.assign(this.messages, {pos: message});
+                        console.log(this.messages);
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
