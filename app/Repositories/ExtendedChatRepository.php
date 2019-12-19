@@ -51,7 +51,8 @@ class ExtendedChatRepository extends ChatRepository
                 }
         
                 $Contact = Contact::find($firstBagChat->contact_id);
-                $Contact->updated_at = Carbon::now();
+                // $Contact->updated_at = Carbon::now();
+                $Contact->updated_at = time();
                 $Contact->save();
                 
                 $AttendantsContact = new AttendantsContact();
