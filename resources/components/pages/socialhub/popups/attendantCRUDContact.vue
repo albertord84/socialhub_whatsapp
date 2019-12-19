@@ -24,7 +24,7 @@
                     <div class="input-group-prepend">
                         <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp (*)" style="background-color:white"></span>
                     </div>
-                    <input type="text" v-model="model.whatsapp_id" class="form-control border-left-0 outline" placeholder="Whatsapp Ex: 5521965984074" >
+                    <input type="text" v-model="model.whatsapp_id" title="Ex: 5511988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
                     <div class="input-group-append" title="Conferir número">
                         <span class="fa fa-check btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber"></span>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="form-group">
                         <div  class="form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="model.first_name" id="first_name" name="first_name" type="text" autofocus placeholder="Nome completo" class="form-control outline"/>
+                            <input v-model="model.first_name" title="Ex: Nome do Contato" id="first_name" name="first_name" type="text" autofocus placeholder="Nome completo" class="form-control outline"/>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="mdi mdi-email-outline form-control-feedback"></span>
-                            <input v-model="model.email" name="email" id="email" type="text" placeholder="Email" class="form-control outline"/>
+                            <input v-model="model.email" title="Ex: contato@gmail.com" name="email" id="email" type="text" placeholder="Email" class="form-control outline"/>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
+                            <input v-model="model.phone" title="Ex: 5511988888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
                         </div>
                     </div>
                 </div>                
@@ -187,6 +187,9 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
+
+                flagReference: true,
+
                 // whatssapChecked: true,                
                 whatssapChecked: false,  
                 whatsappContactInfo:'',
@@ -215,14 +218,29 @@
                     miniToastr.warn("Atenção","Precisa informar e conferir o número de Whatsapp");  
                     return;
                 }
-                if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error("Confira os dados fornecidos","Alguns dados incompletos");  
-                    return;
-                }
+
+                // if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
+                //     miniToastr.error("Confira os dados fornecidos","Alguns dados incompletos");  
+                //     return;
+                // }
+
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 this.model.status_id = 1;
                 this.contact_atendant_id = JSON.parse(localStorage.user).id;
                 this.isSendingInsert = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingInsert = false;
+                    this.flagReference = true;
+                    return;
+                }
+
+                this.model.whatsapp_id += '@s.whatsapp.net'; //ECR
+
                 ApiService.post(this.url,this.model)
                 .then(response => {
                     if (this.contact_atendant_id) {
@@ -264,9 +282,20 @@
                     miniToastr.error(error, "Confira os dados fornecidos");  
                     return;
                 }
-                
                 this.isSendingUpdate = true;
-                delete this.model.updated_at;                
+                delete this.model.updated_at;
+                
+                // // Validando dados
+                // this.trimDataModel();
+                // this.validateData();
+                // if (this.flagReference == false){
+                //     miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                //     this.isSendingUpdate = false;
+                //     this.flagReference = true;
+                //     return;
+                // }
+                // this.model.whatsapp_id += '@s.whatsapp.net';
+
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -399,6 +428,87 @@
 
             editclose() {                
                this.$emit('onclose');
+            },
+
+            trimDataModel: function(){
+                if(this.model.first_name) this.model.first_name = this.model.first_name.trim();
+                if(this.model.last_name) this.model.last_name = this.model.last_name.trim();
+                if(this.model.email) this.model.email = this.model.email.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+                if(this.model.remember) this.model.remember = this.model.remember.trim();
+                if(this.model.summary) this.model.summary = this.model.summary.trim();
+                if(this.model.description) this.model.description = this.model.description.trim();
+            },
+
+            validateData: function(){
+                // Validação dos dados do contato
+                var check;
+                if(this.model.first_name && this.model.first_name !=''){
+                    check = validation.check('complete_name', this.model.first_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.model.last_name && this.model.last_name !=''){
+                    check = validation.check('complete_name', this.model.last_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.email && this.model.email !=''){
+                    check = validation.check('email', this.model.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                    check = validation.check('phone', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
             },
         },
 

@@ -26,13 +26,13 @@
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" title="Ex: 55(21)559-6918" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                        <input v-model="model.phone" title="Ex: 55 11 988888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
                     </div>  
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" title="Ex: 963525397" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" title="Ex: 55 11 988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>

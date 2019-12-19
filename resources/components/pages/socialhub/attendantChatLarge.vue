@@ -453,28 +453,28 @@
                                 <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-box-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact">{{selectedContact.first_name}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" placeholder="Nome completo (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Email"><i class="mdi mdi-contact-mail-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span  v-show="!isEditingContact">{{selectedContact.email}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" placeholder="Email" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>                            
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-contact-phone-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.phone" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <div v-show="isEditingContact">
@@ -771,6 +771,8 @@
 
                 window: {width: 0,height: 0},
 
+                flagReference: true,
+
             }
         },
         
@@ -914,6 +916,9 @@
                             });
                             This.messages = Object.assign({}, This.messages_copy);
                             This.selectedContact = This.contacts[This.selectedContactIndex];
+
+                            This.selectedContact.whatsapp_id = This.selectedContact.whatsapp_id.replace(/@s.whatsapp.net/i, ''); //ECR
+                            
                             This.selectedContactToEdit = Object.assign({}, This.selectedContact);
                         })
                         .catch(function(error) {
@@ -946,12 +951,26 @@
             },
 
             updateContact: function() {
-                if(!this.selectedContactToEdit.whatsapp_id || this.selectedContactToEdit.whatsapp_id.trim() =='' || this.selectedContactToEdit.first_name.trim() ==''){
-                    miniToastr.error(error, "Confira os dados fornecidos");
-                    return;
-                }
+                // if(!this.selectedContactToEdit.whatsapp_id || this.selectedContactToEdit.whatsapp_id.trim() =='' || this.selectedContactToEdit.first_name.trim() ==''){
+                //     miniToastr.error(error, "Confira os dados fornecidos");
+                //     return;
+                // }
+                
                 this.isUpdatingContact = true;
 
+
+                // Validando dados
+                this.trimDataSelectedContactToEdit();
+                this.validateDataSelectedContactToEdit();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isUpdatingContact = false;
+                    this.flagReference = true;
+                    return;
+                }
+                
+                this.selectedContactToEdit.whatsapp_id += '@s.whatsapp.net';
+                
                 delete this.selectedContactToEdit.created_at;
                 delete this.selectedContactToEdit.updated_at;
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
@@ -1193,7 +1212,88 @@
 
             copyContact(){
                 this.item= Object.assign({}, this.selectedContact);
-            }
+            },
+
+            trimDataSelectedContactToEdit: function(){
+                if(this.selectedContactToEdit.first_name) this.selectedContactToEdit.first_name = this.selectedContactToEdit.first_name.trim();
+                if(this.selectedContactToEdit.last_name) this.selectedContactToEdit.last_name = this.selectedContactToEdit.last_name.trim();
+                if(this.selectedContactToEdit.email) this.selectedContactToEdit.email = this.selectedContactToEdit.email.trim();
+                if(this.selectedContactToEdit.phone) this.selectedContactToEdit.phone = this.selectedContactToEdit.phone.trim();
+                if(this.selectedContactToEdit.whatsapp_id) this.selectedContactToEdit.whatsapp_id = this.selectedContactToEdit.whatsapp_id.trim();
+                if(this.selectedContactToEdit.facebook_id) this.selectedContactToEdit.facebook_id = this.selectedContactToEdit.facebook_id.trim();
+                if(this.selectedContactToEdit.instagram_id) this.selectedContactToEdit.instagram_id = this.selectedContactToEdit.instagram_id.trim();
+                if(this.selectedContactToEdit.linkedin_id) this.selectedContactToEdit.linkedin_id = this.selectedContactToEdit.linkedin_id.trim();
+                if(this.selectedContactToEdit.remember) this.selectedContactToEdit.remember = this.selectedContactToEdit.remember.trim();
+                if(this.selectedContactToEdit.summary) this.selectedContactToEdit.summary = this.selectedContactToEdit.summary.trim();
+                if(this.selectedContactToEdit.description) this.selectedContactToEdit.description = this.selectedContactToEdit.description.trim();
+            },
+
+            validateDataSelectedContactToEdit: function(){
+                // Validação dos dados do contato
+                var check;
+                if(this.selectedContactToEdit.first_name && this.selectedContactToEdit.first_name !=''){
+                    check = validation.check('complete_name', this.selectedContactToEdit.first_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.selectedContactToEdit.last_name && this.selectedContactToEdit.last_name !=''){
+                    check = validation.check('complete_name', this.selectedContactToEdit.last_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.email && this.selectedContactToEdit.email !=''){
+                    check = validation.check('email', this.selectedContactToEdit.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.phone && this.selectedContactToEdit.phone !=''){
+                    check = validation.check('phone', this.selectedContactToEdit.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.whatsapp_id && this.selectedContactToEdit.whatsapp_id !=''){
+                    check = validation.check('phone', this.selectedContactToEdit.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.selectedContactToEdit.facebook_id && this.selectedContactToEdit.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.selectedContactToEdit.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.instagram_id && this.selectedContactToEdit.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.selectedContactToEdit.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.linkedin_id && this.selectedContactToEdit.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.selectedContactToEdit.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
         },
 
         updated(){

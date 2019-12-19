@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" title="Ex:  11 988888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" title="Ex: 5511988888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" title="Ex:  11 988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" title="Ex: 5511988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                     </div>
 
@@ -558,16 +558,16 @@
                 if(this.modelManager.instagram_id) this.modelManager.instagram_id = this.modelManager.instagram_id.trim();
                 if(this.modelManager.linkedin_id) this.modelManager.linkedin_id = this.modelManager.linkedin_id.trim();
 
-                if(this.modelRpi.api_user) this.modelRpi.api_user = this.modelRpi.api_user.trim();
-                if(this.modelRpi.api_user) this.modelRpi.api_password = this.modelRpi.api_password.trim();
-                if(this.modelRpi.root_user) this.modelRpi.root_user = this.modelRpi.root_user.trim();
-                if(this.modelRpi.root_password) this.modelRpi.root_password = this.modelRpi.root_password.trim();
-                if(this.modelRpi.tcp_tunnel) this.modelRpi.tcp_tunnel = this.modelRpi.tcp_tunnel.trim();
-                if(this.modelRpi.tcp_port) this.modelRpi.tcp_port = this.modelRpi.tcp_port.trim();
-                if(this.modelRpi.mac) this.modelRpi.mac = this.modelRpi.mac.trim();
-                if(this.modelRpi.api_tunnel) this.modelRpi.api_tunnel = this.modelRpi.api_tunnel.trim();
-                if(this.modelRpi.soft_version) this.modelRpi.soft_version = this.modelRpi.soft_version.trim();
-                if(this.modelRpi.soft_version_date) this.modelRpi.soft_version_date = this.modelRpi.soft_version_date.trim();  
+                // if(this.modelRpi.api_user) this.modelRpi.api_user = this.modelRpi.api_user.trim();
+                // if(this.modelRpi.api_user) this.modelRpi.api_password = this.modelRpi.api_password.trim();
+                // if(this.modelRpi.root_user) this.modelRpi.root_user = this.modelRpi.root_user.trim();
+                // if(this.modelRpi.root_password) this.modelRpi.root_password = this.modelRpi.root_password.trim();
+                // if(this.modelRpi.tcp_tunnel) this.modelRpi.tcp_tunnel = this.modelRpi.tcp_tunnel.trim();
+                // if(this.modelRpi.tcp_port) this.modelRpi.tcp_port = this.modelRpi.tcp_port.trim();
+                // if(this.modelRpi.mac) this.modelRpi.mac = this.modelRpi.mac.trim();
+                // if(this.modelRpi.api_tunnel) this.modelRpi.api_tunnel = this.modelRpi.api_tunnel.trim();
+                // if(this.modelRpi.soft_version) this.modelRpi.soft_version = this.modelRpi.soft_version.trim();
+                // if(this.modelRpi.soft_version_date) this.modelRpi.soft_version_date = this.modelRpi.soft_version_date.trim();  
             },
 
             validateDataModelCompany:function(){

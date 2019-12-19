@@ -21,13 +21,13 @@
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.phone" id="phone" title="Ex: 55(21)559-6918" name="hone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                    <input v-model="model.phone" id="phone" title="Ex: 5511988888888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                 </div>                                
             </div>
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-whatsapp form-control-feedback"></span>
-                    <input v-model="model.whatsapp_id" title="Ex: 963525397" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                    <input v-model="model.whatsapp_id" title="Ex: 5511988888888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-facebook form-control-feedback"></span>
@@ -151,7 +151,7 @@
                     this.flagReference = true;
                     return;
                 }
-
+                this.model.whatsapp_id += '@s.whatsapp.net';
 
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
@@ -323,7 +323,7 @@
             },
 
             validateData: function(){
-                // Validação dos dados do atendente
+                // Validação dos dados do contato
                 var check;
                 if(this.model.first_name && this.model.first_name !=''){
                     check = validation.check('complete_name', this.model.first_name)
@@ -331,6 +331,9 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
+                }else{
+                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    this.flagReference = false;
                 }
                 if(this.model.last_name && this.model.last_name !=''){
                     check = validation.check('complete_name', this.model.last_name)
@@ -360,7 +363,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){
