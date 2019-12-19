@@ -594,7 +594,8 @@
         <!-- Modal to show image-->
         <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
             <div class="embed-responsive embed-responsive-16by9">
-                <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/>
+                <img class="img-fluid embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/>
+                <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
             </div>
         </b-modal>
 
@@ -951,11 +952,12 @@
                     return;
                 }
                 this.isUpdatingContact = true;
-
                 delete this.selectedContactToEdit.created_at;
-                delete this.selectedContactToEdit.updated_at;
+                delete this.selectedContactToEdit.updated_at;                
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
+                    if(this.isEditingContact)
+                        this.isEditingContact = false;
                     if(this.isEditingContactSummary)
                         this.isEditingContactSummary = false;
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
