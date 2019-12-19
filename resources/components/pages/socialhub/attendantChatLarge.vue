@@ -784,8 +784,8 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             //----------update the message list and the last message of the contact-----
-                            this.messages.push(Object.assign({}, message));
-                            // this.messages[this.messages.length]=Object.assign({}, message);
+                            // this.messages.push(Object.assign({}, message));
+                            this.messages[this.messages.length]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                         })
                         .catch(function(error) {                            
