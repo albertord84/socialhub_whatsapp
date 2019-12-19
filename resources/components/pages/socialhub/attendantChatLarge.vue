@@ -782,6 +782,11 @@
                 if (this.newMessage.message != "" || this.file) {
                     this.newMessage.contact_id = this.contacts[this.selectedContactIndex].id;
                     this.isSendingNewMessage = true;
+
+                    if(!this.file){
+                        this.newMessage.type_id = 1;
+                    }
+
                     let formData = new FormData();
                     formData.append('attendant_id', this.newMessage.attendant_id);
                     formData.append('contact_id', this.newMessage.contact_id);
@@ -790,6 +795,7 @@
                     formData.append('type_id', this.newMessage.type_id);
                     formData.append('status_id', this.newMessage.status_id);
                     formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
+                   
                     if(this.newMessage.type_id>1 && this.file){
                         formData.append("file",this.file); //Add the form data we need to submit  
                     }

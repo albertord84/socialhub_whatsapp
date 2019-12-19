@@ -31,15 +31,18 @@ class ExtendedContactController extends ContactController
     {
         try {
             $User = Auth::check() ? Auth::user() : session('logged_user');
-            $Contacts = $this->contactRepository->all();
-            if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null);
-            } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-                $filter = $request->filter_contact;
-                $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter);
+            if($User){
+                $Contacts = $this->contactRepository->all();
+                if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null);
+                } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
+                    $filter = $request->filter_contact;
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter);
+                }    
+                return $Contacts->toJson();
+            }else{
+                //emitir mensagem de erro, sessão morreu
             }
-
-            return $Contacts->toJson();
         } catch (\Throwable $th) {
             throw $th;
         }
