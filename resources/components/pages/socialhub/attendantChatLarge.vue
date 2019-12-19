@@ -767,10 +767,9 @@
                                 message.path = message.data.FullPath;
                             }                           
                             
-                            //--------------clear the field inputs and set scroll-to-bottom-----------
+                            //--------------clear the field inputs ----------------------------------
                             this.newMessage.message = "";
-                            this.file = null;
-                            this.$refs.message_scroller.scrolltobottom();
+                            this.file = null;                            
                             
                             //---------------set the target contact as the first----------------------
                             var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
@@ -784,8 +783,11 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             //----------update the message list and the last message of the contact-----
-                            this.messages[this.messages.length+1]=Object.assign({}, message);
+                            var pos = this.messages.length;
+                            this.messages.push({pos: Object.assign({}, message)});
+                            // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            this.$refs.message_scroller.scrolltobottom();
                         })
                         .catch(function(error) {                            
                             if (error.response) {
@@ -901,7 +903,6 @@
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
                                             item.path = item.data.FullPath;
-                                            // item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
                                     This.messages_copy.push(item);
                                 } catch (error) {
@@ -1237,8 +1238,10 @@
 
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
-                        this.messages[this.messages.length+1]=message;
+                        var pos = this.messages.length;
+                        this.messages.push({pos:message});
                         this.contacts[this.selectedContactIndex].last_message = message;
+                        // this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
