@@ -786,6 +786,7 @@
                             var pos = this.messages.length;
                             Object.assign(this.messages, {pos: message});
                             console.log(this.messages);
+                            console.log(pos);
                             // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
@@ -1242,6 +1243,7 @@
                         var pos = this.messages.length;
                         Object.assign(this.messages, {pos: message});
                         console.log(this.messages);
+                        console.log(pos);
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
