@@ -72,10 +72,30 @@ class ExternalRPIController extends Controller
     }
 
     /**
+     * Log Out from whatsapp
+     */
+    public static function logout(Rpi $Rpi = null) //: stdClass
+    {
+        // $Rpi = new stdClass();
+        // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
+        $response = new stdClass();
+        try {
+            $client = new \GuzzleHttp\Client();
+            $url = $Rpi->api_tunnel . '/logout';
+
+            $response = $client->request('POST', $url);
+            $response = $QRCode->getBody()->getContents();
+            $response = json_decode($response);
+            return $response;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    /**
      * Get QRCode
      */
     public static function getQRCode(Rpi $Rpi = null) //: stdClass
-
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
