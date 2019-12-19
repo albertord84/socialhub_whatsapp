@@ -594,7 +594,7 @@
         <!-- Modal to show image-->
         <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
             <div class="embed-responsive embed-responsive-16by9">
-                <img class="img-fluid embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/>
+                <img class="img-fluid" :src="modalShowImageSrc"/>
                 <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
             </div>
         </b-modal>
