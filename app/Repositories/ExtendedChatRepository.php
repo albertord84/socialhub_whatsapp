@@ -61,7 +61,7 @@ class ExtendedChatRepository extends ChatRepository
                 $AttendantsContact->save();
             }
             
-            return $Contact;
+            return $Contact; //atrelar el last message igual que es atrelado en getContacts
         } catch (\Throwable $th) {
             throw $th;
         }

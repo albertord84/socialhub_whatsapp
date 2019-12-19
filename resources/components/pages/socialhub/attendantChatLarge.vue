@@ -805,7 +805,8 @@
                             var message = response.data;
                             if (message.data) {
                                 message.data = JSON.parse(message.data);
-                                message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
+                                message.path = message.data.FullPath;
+                                // message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
                             message.time = this.getMessageTime(message.created_at)
                             this.messages[this.messages.length]=message;
@@ -946,7 +947,8 @@
                                     if(item.data != "" && item.data != null && item.data.length>0) {
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
-                                            item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
+                                            item.path = item.data.FullPath;
+                                            // item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
                                     This.messages_copy.push(item);
                                 } catch (error) {
@@ -1111,17 +1113,18 @@
             },
 
             pathContactMessageFile(contact_id, file_name) {
-                let pathFile = process.env.MIX_FILE_PATH +'/' + 
-                            this.logguedAttendant.company_id +'/' +
-                            'contacts' +'/' +
-                            contact_id +'/' +
-                            'chat_files' +'/' +
-                            file_name;
+                // let pathFile = process.env.MIX_FILE_PATH +'/' + 
+                //             this.logguedAttendant.company_id +'/' +
+                //             'contacts' +'/' +
+                //             contact_id +'/' +
+                //             'chat_files' +'/' +
+                //             file_name;
+
 
                 //TODO-JR: change SavedFileName by SavedFilePath
-                // let pathFile = process.env.MIX_FILE_PATH +'/' + SavedFilePath; 
+                // let pathFile =  SavedFilePath; 
 
-                return pathFile;
+                // return pathFile;
             },
             
             mouseOverMessage(id){
@@ -1275,7 +1278,8 @@
                             if(message.data != "" && message.data != null && message.data.length>0) {
                                 message.data = JSON.parse(message.data);
                                 if (message.type_id > 1)
-                                    message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
+                                    message.path = message.data.FullPath;
+                                    // message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
                             }
                         } catch (error) {
                             // console.log(error);
