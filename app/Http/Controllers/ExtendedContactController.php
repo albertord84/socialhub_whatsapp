@@ -31,15 +31,18 @@ class ExtendedContactController extends ContactController
     {
         try {
             $User = Auth::check() ? Auth::user() : session('logged_user');
-            $Contacts = $this->contactRepository->all();
-            if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null);
-            } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-                $filter = $request->filter_contact;
-                $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter);
+            if($User){
+                $Contacts = $this->contactRepository->all();
+                if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null);
+                } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
+                    $filter = $request->filter_contact;
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter);
+                }    
+                return $Contacts->toJson();
+            }else{
+                //emitir mensagem de erro, sessão morreu
             }
-
-            return $Contacts->toJson();
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -56,18 +59,14 @@ class ExtendedContactController extends ContactController
     {
         $input = $request->all();
 
-        //TODO-JR-ALBERTO: um contato pode ser criado por:
-        //um robot: manda para sacola
-        //um admin desde CVS: va para sacola
-        //um atendente: deve ser inserido com o Id do atendente que esta na sessão
-        //um admin manualmente: pode ir para a sacola ou pode ser atribuido a um atendente:
-        //onde devo enviar o contact_atendant_id, por url ou nos dados?
-
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $input['company_id'] = $User->company_id;
-        $contact = $this->contactRepository->create($input);
 
-        // TODO: Create Contact Chat Table
+        //esa mierda no funciona asi
+        // $input['created_at'] = time();
+        // $input['updated_at'] = time();
+
+        $contact = $this->contactRepository->create($input);
 
         Flash::success('Contact saved successfully.');
 

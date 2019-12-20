@@ -25,6 +25,8 @@ class ExtendedRpiController extends RpiController
     public function index(Request $request)
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
+        if (!$User) throw new Exception("Not loggued id", 1);
+        
         $rpis = $this->rpiRepository->rpiOfCompany((int) $User->company_id); 
         if ($rpis) {
             if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
@@ -35,7 +37,6 @@ class ExtendedRpiController extends RpiController
 
             return $rpis->toJson();
         } 
-
         return null;
     }
     

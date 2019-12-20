@@ -51,7 +51,8 @@ class ExtendedChatRepository extends ChatRepository
                 }
         
                 $Contact = Contact::find($firstBagChat->contact_id);
-                $Contact->updated_at = Carbon::now();
+                // $Contact->updated_at = Carbon::now();
+                $Contact->updated_at = time();
                 $Contact->save();
                 
                 $AttendantsContact = new AttendantsContact();
@@ -60,7 +61,7 @@ class ExtendedChatRepository extends ChatRepository
                 $AttendantsContact->save();
             }
             
-            return $Contact;
+            return $Contact; //atrelar el last message igual que es atrelado en getContacts
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -96,6 +97,13 @@ class ExtendedChatRepository extends ChatRepository
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
+
+        //updating contact
+        $contact_id = (int)$attributes['contact_id'];
+        $Contact = Contact::find($contact_id);
+        $Contact->updated_at = Carbon::now();
+        $Contact->save();
+
         return $chatModel->create($attributes);
     }
 

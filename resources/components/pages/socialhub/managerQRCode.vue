@@ -86,7 +86,7 @@
                 erroMessage:'',
                 handleTimerRequest:null,
                 amountTimeRequest:0,
-                intervalTimeRequest:4000,
+                intervalTimeRequest:10000,
                 newTimeRequest:20000,
             }
         },
@@ -123,6 +123,7 @@
                         }else
                         if(this.rpi.QRCode.qrcodebase64){
                             this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
+                            clearInterval(this.handleTimerRequest);
                         }else{
                             this.erroMessage = "Algum problema encontrado"
                             this.someError=true;
