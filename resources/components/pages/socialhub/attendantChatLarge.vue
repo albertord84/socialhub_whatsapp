@@ -783,10 +783,7 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             //----------update the message list and the last message of the contact-----
-                            var pos = this.messages.length;
-                            console.log(this.messages);
-                            console.log(pos);
-                            this.messages = Object.assign(this.messages, {pos: message});
+                            this.messages.push(Object.assign({}, message));
                             // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
@@ -911,7 +908,8 @@
                                     console.log(error);
                                 }
                             });
-                            This.messages = Object.assign({}, This.messages_copy);
+                            This.messages = This.messages_copy.slice();
+                            // This.messages = Object.assign({}, This.messages_copy);
                             This.selectedContact = This.contacts[This.selectedContactIndex];
                             This.selectedContactToEdit = Object.assign({}, This.selectedContact);
                         })
@@ -1240,10 +1238,7 @@
 
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
-                        var pos = this.messages.length;
-                        console.log(this.messages);
-                        console.log(pos);
-                        this.messages = Object.assign(this.messages, {pos: message});
+                        this.messages.push(Object.assign({}, message));
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
@@ -1275,8 +1270,6 @@
                         });
                     }
                     this.$refs.newMessageSound.play();
-
-                    console.log(this.amountContactsInBag);
             });
 
             window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
