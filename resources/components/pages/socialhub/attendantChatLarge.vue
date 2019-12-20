@@ -592,13 +592,13 @@
         </b-modal>
 
         <!-- Modal to show image-->
-        <b-modal v-model="modalShowImage" :hide-footer="true" :hide-header="true" size="lg" style="background-color:red !important; padding:0px; " class="">
-                <img class="img-fluid" style="max-height:540px; max-width:400px; " :src="modalShowImageSrc"/>
+        <b-modal v-model="modalShowImage" :hide-footer="true" centered :hide-header="true" size="lg" style="background-color:red !important; padding:0px; text-align:center" class="">
+                <img class="img-fluid" style="max-height:540px; max-width:400px; background-color:red !important; padding:0px; text-align:center" :src="'images/contacts/jose_ramon.jpg'"/>
                 <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
         </b-modal>
 
         <!-- Modal to show video-->
-        <b-modal v-model="modalShowVideo" :hide-footer="true" :hide-header="true" size="lg"  class="m-0 modal-body-bg">
+        <b-modal v-model="modalShowVideo" :hide-footer="true" centered :hide-header="true" size="lg"  class="m-0 modal-body-bg">
             <div class="">
                  <video width="100%" height="100%" style="width:100%; height:100%" controls class="midia-files embed-responsive-item modal-body-bg">
                     <source :src="modalShowVideoSrc" type="video/mp4">
@@ -608,7 +608,7 @@
         </b-modal>
 
         <!-- Modal to show user datas-->
-        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" >
+        <b-modal v-model="modalUserCRUDDatas" centered :hide-footer="true" body-class="p-0" :hide-header="false" >
             <userCRUDDatas :contacts='contacts'></userCRUDDatas>
         </b-modal>
 
@@ -738,6 +738,7 @@
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
+                    //-------------------prepare the message to be sended-----------------------------
                     this.newMessage.contact_id = this.contacts[this.selectedContactIndex].id;
                     this.isSendingNewMessage = true;
 
@@ -752,45 +753,42 @@
                     formData.append('source', this.newMessage.source);
                     formData.append('type_id', this.newMessage.type_id);
                     formData.append('status_id', this.newMessage.status_id);
-                    formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);
-                   
+                    formData.append('socialnetwork_id', this.newMessage.socialnetwork_id);                   
                     if(this.newMessage.type_id>1 && this.file){
-                        formData.append("file",this.file); //Add the form data we need to submit  
+                        formData.append("file",this.file);
                     }
+                    //-----------------------sending the message--------------------------------------
                     try {
                         ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                         .then(response => {
+                            //---------------then, prepare the response message to display------------
                             var message = response.data;
+                            message.time = this.getMessageTime(message.created_at)
                             if (message.data) {
                                 message.data = JSON.parse(message.data);
                                 message.path = message.data.FullPath;
-                                // message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
-                            }
-                            message.time = this.getMessageTime(message.created_at)
-                            this.messages[this.messages.length]=message;
-                            this.contacts[this.selectedContactIndex].last_message = message;
-                            this.newMessage.message = "";
-                            this.file = null;
-                            this.$refs.message_scroller.scrolltobottom();
-
+                            }                           
                             
-                            //-----------------------------------------------------
-                            //salvar item atual
+                            //--------------clear the field inputs ----------------------------------
+                            this.newMessage.message = "";
+                            this.file = null;                            
+                            
+                            //---------------set the target contact as the first----------------------
                             var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                            //eliminar item da lista de contatos
                             delete this.contacts[this.selectedContactIndex];
-                            //inserir item salvo no inicio da lista
                             this.contacts.unshift(targetContact);
-                            //atualizar indices
                             var i = 0;
                             this.contacts.forEach(function(item, i){
                                 item.index = i++;
                             });
                             this.selectedContactIndex = 0;
                             this.selectedContact = this.contacts[this.selectedContactIndex];
-                            //-----------------------------------------------------
 
-                            
+                            //----------update the message list and the last message of the contact-----
+                            this.messages.push(Object.assign({}, message));
+                            // this.messages[this.messages.length+1]=Object.assign({}, message);
+                            this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            this.$refs.message_scroller.scrolltobottom();
                         })
                         .catch(function(error) {                            
                             if (error.response) {
@@ -906,14 +904,14 @@
                                         item.data = JSON.parse(item.data);
                                         if (item.type_id > 1)
                                             item.path = item.data.FullPath;
-                                            // item.path = This.pathContactMessageFile(item.contact_id, item.data.SavedFileName);
                                     }
                                     This.messages_copy.push(item);
                                 } catch (error) {
                                     console.log(error);
                                 }
                             });
-                            This.messages = Object.assign({}, This.messages_copy);
+                            This.messages = This.messages_copy.slice();
+                            // This.messages = Object.assign({}, This.messages_copy);
                             This.selectedContact = This.contacts[This.selectedContactIndex];
 
                             This.selectedContact.whatsapp_id = This.selectedContact.whatsapp_id.replace(/@s.whatsapp.net/i, ''); //ECR
@@ -1324,45 +1322,46 @@
 
             window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
-                    console.log(e);
-                    var message = JSON.parse(e.message);
-                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
-                        try {
-                            if(message.data != "" && message.data != null && message.data.length>0) {
-                                message.data = JSON.parse(message.data);
-                                if (message.type_id > 1)
-                                    message.path = message.data.FullPath;
-                                    // message.path = this.pathContactMessageFile(message.contact_id, message.data.SavedFileName);
-                            }
-                        } catch (error) {
-                            // console.log(error);
-                        }
 
-                        message.time = this.getMessageTime(message.created_at)
-                        this.messages[this.messages.length]=message;
+                    //------------prepare message datas to be displayed------------------------
+                    // console.log(e);
+                    var message = JSON.parse(e.message);
+                    message.time = this.getMessageTime(message.created_at);
+                    try {
+                        if(message.data != "" && message.data != null && message.data.length>0) {
+                            message.data = JSON.parse(message.data);
+                            if(message.type_id > 1)
+                                message.path = message.data.FullPath;
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    //------show the recived message if the target contact is selected----------
+                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
+                        this.messages.push(Object.assign({}, message));
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
-                    }else{
-                        
+                        //TODO-JR: set message as readed in database
+                    
+                    }else{   
+                        //-------find contact and update count_unread_messagess and last_message-------                    
                         var This = this;
                         This.contacts.forEach((item, index) => {
                             if(item.id == message.contact_id){
-                                //atualizar item atual
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
-                                //salvar item atual
                                 var targetContact = Object.assign({}, item);
-                                //eliminar item da lista de contatos
                                 delete This.contacts[index];
-                                //inserir item salvo no inicio da lista
                                 This.contacts.unshift(targetContact);
-                                //atualizar indices
                                 var i = 0;
                                 This.contacts.forEach(function(item2, i){
                                     item2.index = i++;
                                 });
+
+                                //---------update the index of the selected contact
                                 if(This.selectedContactIndex >=0 ){
                                     This.selectedContactIndex ++;
                                     This.selectedContact = This.contacts[This.selectedContactIndex];
@@ -1372,8 +1371,6 @@
                         });
                     }
                     this.$refs.newMessageSound.play();
-
-                    console.log(this.amountContactsInBag);
             });
 
             window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
