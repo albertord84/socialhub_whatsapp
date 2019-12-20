@@ -107,6 +107,7 @@ export default {
         right: -18px;
         overflow: auto;
         box-sizing: border-box;
+        overflow-x: inherit;
     }
 
     .ss-scroll {

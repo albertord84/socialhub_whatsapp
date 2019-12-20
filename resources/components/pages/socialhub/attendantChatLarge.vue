@@ -8,60 +8,58 @@
         <div id="chat-left-side" class="col-lg-3 p-0">
             <div class="chatalign">
                 <div class="sect_header">
-                    <ul v-if="isSearchContact==false" class='menu'>
-                        <li>
-                            <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
-                            </a>
-                        </li>
-                        <ul class='menu' style="float:right; margin-right:5px">
-                            <li><i class="fa fa-search icons-action mt-1" title="Buscar contato ..." @click.prevent="isSearchContact=!isSearchContact"></i></li>
-                            <!-- <li> -->
-                                <b-dropdown class="dropdown btn-group" variant="link" toggle-class="text-decoration-none" size="md"  right="">
-                                    <template v-slot:button-content>
-                                        <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
-                                    </template>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
-                                        <a href='javascript:void(0)' class="drpodowtext" @click="toggleLeft('toggle-add-contact')">
-                                            <i class="fa fa-user-plus fa-xs " ></i> 
-                                            Inserir contato
-                                        </a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
-                                        <router-link to="/" class="drpodowtext">
-                                            <div v-on:click="logout">
-                                                <i class="fa fa-sign-out"></i> 
-                                                Encerrar sessão
-                                            </div>
-                                        </router-link>
-                                    </b-dropdown-item>
+                    <div v-if="isSearchContact==false" class="container-fluid">
+                        <ul class='row'>
+                            <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
+                                <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
+                                    <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto de perfil">
+                                </a>
+                            </li>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="fa fa-search icons-action mt-1" title="Buscar contato ..." @click.prevent="isSearchContact=!isSearchContact"></i></li>
+                            <b-dropdown class="col-1 col-md-1 col-lg-1 col-xl-1 dropdown btn-group" variant="link" toggle-class="text-decoration-none" size="md"  right="">
+                                <template v-slot:button-content>
+                                    <i class="fa fa-ellipsis-h icons-action" title="Opções"  aria-hidden="false"></i>
+                                </template>
+                                <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                    <a href='javascript:void(0)' class="drpodowtext" @click="toggleLeft('toggle-add-contact')">
+                                        <i class="fa fa-user-plus fa-xs " ></i> 
+                                        Inserir contato
+                                    </a>
+                                </b-dropdown-item>
+                                <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
+                                    <router-link to="/" class="drpodowtext">
+                                        <div v-on:click="logout">
+                                            <i class="fa fa-sign-out"></i> 
+                                            Encerrar sessão
+                                        </div>
+                                    </router-link>
+                                </b-dropdown-item>
 
-                                    <!-- <b-dropdown-item title="Contatos com mensagens favoritas" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByFavorites'" ><i class="fa fa-star-o"></i> Favoritas</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item title="Contatos que possuem lembretes" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByRemember'"><i class="fa fa-bell-o"></i> Lembretes</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item title="Contatos que possuem resumo" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactBySummary'"><i class="fa fa-address-card-o"></i> Resumos</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item title="Contatos com mensagem lidas somente" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByReadedMsg'"><i class="fa fa-envelope-open-o"></i> Lidas</a>
-                                    </b-dropdown-item>
-                                    <b-dropdown-item title="Contatos com mensagem não lidas somente" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByUnrearedMsg'"><i class="fa fa-envelope-o"></i> Não lidas</a>
-                                    </b-dropdown-item> -->
-                                </b-dropdown>
-                            <!-- </li> -->
+                                <!-- <b-dropdown-item title="Contatos com mensagens favoritas" exact class="dropdown_content">
+                                    <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByFavorites'" ><i class="fa fa-star-o"></i> Favoritas</a>
+                                </b-dropdown-item>
+                                <b-dropdown-item title="Contatos que possuem lembretes" exact class="dropdown_content">
+                                    <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByRemember'"><i class="fa fa-bell-o"></i> Lembretes</a>
+                                </b-dropdown-item>
+                                <b-dropdown-item title="Contatos que possuem resumo" exact class="dropdown_content">
+                                    <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactBySummary'"><i class="fa fa-address-card-o"></i> Resumos</a>
+                                </b-dropdown-item>
+                                <b-dropdown-item title="Contatos com mensagem lidas somente" exact class="dropdown_content">
+                                    <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByReadedMsg'"><i class="fa fa-envelope-open-o"></i> Lidas</a>
+                                </b-dropdown-item>
+                                <b-dropdown-item title="Contatos com mensagem não lidas somente" exact class="dropdown_content">
+                                    <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByUnrearedMsg'"><i class="fa fa-envelope-o"></i> Não lidas</a>
+                                </b-dropdown-item> -->
+                            </b-dropdown>
                         </ul>
-                    </ul>
-                    <ul v-if="isSearchContact==true" class='menu'>
-                        <li><i class="fa fa-arrow-left icons-action mt-1" @click.prevent="isSearchContact=!isSearchContact"></i></li>
-                        <li><input class="form-control search-input border-0 mt-3" style="width:120%: left:-10px" type="search" v-model="searchContactByStringInput" placeholder="Buscar contato" ></li>
-                        <ul class='menu' style="float:right; margin-right:10px">
-                            <li><i class="fa fa-close icons-action mt-1" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact"></i></li>
-                        </ul>                        
-                    </ul>
+                    </div>
+                    <div v-if="isSearchContact==true" class="container-fluid">
+                        <ul class='row'>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="fa fa-arrow-left icons-action mt-1" @click.prevent="isSearchContact=!isSearchContact"></i></li>
+                            <li class='col-9 col-md-10 col-lg-8 col-xl-9'><input class="form-control search-input border-0 search-contact" type="text" v-model="searchContactByStringInput" placeholder="Buscar contato" ></li>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="fa fa-close icons-action mt-1" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact"></i></li>                            
+                        </ul>
+                    </div>
                 </div>
                 <div class="sect_header" style="background-color:#fafafa;">
                     <div class="text-center">
@@ -128,16 +126,21 @@
         </div>
 
         <!-- Center side of chat-->
-        <div id="chat-center-side" class="col-lg-9 p-0"><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
+        <div id="chat-center-side" ref="chatCenterSide" class="col-lg-9 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
             <div v-if="selectedContactIndex>=0" class="converstion_back">
-                <div class="sect_header">                    
-                    <ul class='menu'>                        
-                        <li><span class="pl-4"><img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
-                        <li><span class="pl-3 person_name person_name_style pointer-hover" @click.prevent="displayChatRightSide()"></span></li>
-                        <li><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ selectedContact.first_name }} </p></li>                        
-                        <ul class='menu' style="float:right">
-                            <li><a href="javascript:void()" title="Buscar mensagens" @click.prevent="displayChatFindMessage()"><i class="fa fa-search"></i></a></li>
-                            <li>
+                <div class="container-fluid sect_header">                    
+                    <ul class='row flex-baseline'>                        
+                        <li class='col-1 col-md-1 col-lg-1 col-xl-1 d-block d-lg-none'>
+                            <span id="btn-back" class="fa fa-arrow-left btn-back" @click.prevent="chatCenterSideBack"></span>
+                        </li>
+                        <li class='col-2 col-sm-2 col-md-2 col-lg-1 col-xl-1'>
+                            <span class="pl-4">
+                                <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="img-fluid rounded-circle desc-img pointer-hover" @click.prevent="displayChatRightSide()">
+                            </span>
+                        </li>
+                        <li class='col-7 col-md-8 col-lg-9 col-xl-10'><p class="pl-0 ml-0 pointer-hover" @click.prevent="displayChatRightSide()">{{ selectedContact.first_name }} </p></li>                        
+                        <li class='col-1 col-md-1 col-lg-1 col-xl-1'><a href="javascript:void()" title="Buscar mensagens" @click.prevent="displayChatFindMessage()"><i class="fa fa-search"></i></a></li>
+                            <!-- <li> -->
                                 <!-- <form action="">
                                     <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                         <template v-slot:button-content>
@@ -157,8 +160,8 @@
                                         </b-dropdown-item>
                                     </b-dropdown>
                                 </form> -->
-                            </li> 
-                            <li>
+                            <!-- </li> 
+                            <li> -->
                                 <!-- <b-dropdown class="dropdown hidden-xs-down btn-group" id="dropdown-right" variant="link" toggle-class="text-decoration-none"  right="">
                                     <template v-slot:button-content>
                                         <i class="fa fa-ellipsis-v mt-3" title="Opcões"  style="color:#949aa2;"></i>
@@ -176,10 +179,10 @@
                                         <a href="javascript:void(0)" exact class="drpodowtext"><i class="fa fa-address-card-o"></i> Resumos</a>
                                     </b-dropdown-item>
                                 </b-dropdown> -->
-                            </li> 
-                        </ul>
-                    </ul> 
+                            <!-- </li> -->
+                    </ul>
                 </div>
+
                 <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @onscrolling="chatMessageScroling">                       
                     <ul>
                         <li v-for='(message,index) in messages' :key="index">
@@ -192,9 +195,9 @@
                             <!-- Messages -->
                             <div v-if="message.type_id!='date_separator'" >
                                 <div v-if="message.source==1" class="row mt-2">
-                                    <div  class="col-lg-1"></div>
-                                    <div class="col-lg-11">
-                                        <p style="float:left" class="receivedMessageText">
+                                    <div  class="col-1"></div>
+                                    <div class="col-11">
+                                        <p style="float:left;" class="receivedMessageText">
                                                 <span v-if='message.type_id == "2"' class='mb-2 text-center'>
                                                     <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
                                                         <img :src="message.path" class="midia-files"/>
@@ -231,16 +234,16 @@
                                                 <br>
                                         </p>
                                     </div>
-                                    <div class="col-lg-1">
+                                    <div class="col-1 text-right">
                                         <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''"  alt="" class="conversation-picture receivedMessageImg">
                                     </div>
-                                    <div class="col-lg-11">
-                                        <div style="float:left" class="thetime">{{message.time.hour}}</div>
+                                    <div class="col-11">
+                                        <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>
                                     </div>
                                 </div>
 
                                 <div v-if="message.source==0" class="row mt-2">
-                                    <div class="col-lg-11">
+                                    <div class="col-10">
                                         <p style="float:right" class="sendedMessageText">
                                                 <span v-if='message.type_id == "2"' class='mb-2 text-center'>
                                                     <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
@@ -278,12 +281,12 @@
                                                 <br>
                                         </p>
                                     </div>
-                                    <div class="col-lg-1"></div>
+                                    <div class="col-1"></div>
                                     
-                                    <div class="col-lg-11">
+                                    <div class="col-10">
                                         <div style="float:right" class="thetime">{{message.time.hour}}</div>
                                     </div>
-                                    <div class="col-lg-1">
+                                    <div class="col-1">
                                         <img :src="logguedAttendant.image_path" alt="" class="conversation-picture sendedMessageImg">
                                     </div>
                                 </div>
@@ -294,7 +297,7 @@
 
                 <!-- Compose and send new message -->
                 <div class="p-3">
-                    <div class="input-group pb-5 pr-1" style="color:gray">
+                    <div class="input-group pb-5 pr-1 " style="color:gray">
                         <div class="input-group-prepend">
                             <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
                                 <i v-if="isSendingNewMessage==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
@@ -337,7 +340,7 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="non_converstion_back">
+            <div v-else class="non_converstion_back d-none d-lg-block">
                 <div class="non-selected-chat text-center">
                     <img src="~img/socialhub/attendant.jpg" alt="" >
                     <h1>Mantenha seus contatos atualizados</h1>
@@ -350,35 +353,31 @@
         </div>
 
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div v-show="showChatRightSide==true" class="col-lg-3 bg-white p-0">
-            <div class="sect_header">
-                <ul class='menu'>
-                    <li><a href="javascript:void(0)" @click.prevent="displayChatRightSide()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
-                    <li><p class="header-title">Detalhes</p></li>
-                        <ul class='menu' style="float:right">                            
-                            <li>
-                                <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
-                                    <template v-slot:button-content>
-                                        <i class="fa fa-ellipsis-v mt-3" title="Ações sobre contato" style="color:#949aa2;"></i>
-                                    </template>
-                                    <!-- <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
-                                    </b-dropdown-item> -->
-                                    
-                                    <!-- <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
-                                    </b-dropdown-item>-->
+        <div id="chat-right-side" v-show="showChatRightSide==true" class="col-lg-3 bg-white p-0">
+            <div class="container-fluid sect_header">
+                <ul class='row flex-baseline'>
+                    <li class='col-1 col-md-1 col-lg-1 col-xl-1'><a href="javascript:void(0)" @click.prevent="displayChatRightSide()"><i class="fa fa-close" aria-hidden="true"></i></a></li>
+                    <li class='col-6 col-md-9 col-lg-8 col-xl-9'><p class="header-title">Detalhes</p></li>
+                    <b-dropdown class="col-1 col-md-1 col-lg-1 col-xl-1 dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none"  right="">
+                        <template v-slot:button-content>
+                            <i class="fa fa-ellipsis-v mt-3" title="Ações sobre contato" style="color:#949aa2;"></i>
+                        </template>
+                        <!-- <b-dropdown-item exact class="dropdown_content">
+                            <a href="javascript:void(0)" exact class="drpodowtext" @click="fn_show_edit_right_side()"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                        </b-dropdown-item> -->
+                        
+                        <!-- <b-dropdown-item exact class="dropdown_content">
+                            <a href="javascript:void(0)" exact class="drpodowtext" ><i class="fa fa-bell-slash-o"></i> Silenciar</a>
+                        </b-dropdown-item>-->
 
-                                    <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="modalTransferContact=!modalTransferContact"><i class="fa fa-exchange"></i> Transferir</a>
-                                    </b-dropdown-item>
+                        <b-dropdown-item exact class="dropdown_content">
+                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="modalTransferContact=!modalTransferContact"><i class="fa fa-exchange"></i> Transferir</a>
+                        </b-dropdown-item>
 
-                                    <b-dropdown-item exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="displayDeleteContact()"><i class="fa fa-trash-o"></i> Eliminar</a>
-                                    </b-dropdown-item>
-                                </b-dropdown>
-                            </li>                            
-                        </ul>
+                        <b-dropdown-item exact class="dropdown_content">
+                            <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="displayDeleteContact()"><i class="fa fa-trash-o"></i> Eliminar</a>
+                        </b-dropdown-item>
+                    </b-dropdown>
                 </ul> 
             </div>
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white">
@@ -390,16 +389,16 @@
                         <!-- Informação -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="row" >
-                                <div class="col-lg-1 p-2 ml-3">
+                                <div class="col-1 p-2 ml-3">
                                     <i class="mdi mdi-account-box-outline text-muted" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-lg-8 p-1" style="text-align:left">
+                                <div class="col8 p-1" style="text-align:left">
                                     <span class="text-muted" style="font-size:1.1em">Informação</span>
                                 </div>
-                                <div class="col-lg-1 p-2" >
+                                <div class="col-1 p-2" >
                                     <i v-show="showContactInformation" style="" @click.prevent="copyContact; isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-lg-1 p-2" >
+                                <div class="col-1 p-2" >
                                     <i v-show="!showContactInformation" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
                                     <i v-show="showContactInformation"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
                                 </div>
@@ -444,16 +443,16 @@
                         <!-- Nota resumo -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="row" >
-                                <div class="col-lg-1 p-2 ml-3">
+                                <div class="col-1 p-2 ml-3">
                                     <i class="mdi mdi-account-badge-horizontal-outline text-muted" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-lg-8 p-1" style="text-align:left">
+                                <div class="col-8 p-1" style="text-align:left">
                                     <span class="text-muted" style="font-size:1.1em">Nota resumo</span>
                                 </div>
-                                <div class="col-lg-1 p-2" >
+                                <div class="col-1 p-2" >
                                     <i v-show="showContactSummary" style="" @click.prevent="copyContact; isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-lg-1 p-2" >
+                                <div class="col-1 p-2" >
                                     <i v-show="!showContactSummary" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
                                     <i v-show="showContactSummary"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
                                 </div>
@@ -474,13 +473,13 @@
                         <!-- Imagens e mídias -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="row" >
-                                <div class="col-lg-1 p-2 ml-3">
+                                <div class="col-1 p-2 ml-3">
                                     <i class="mdi mdi-camera-enhance-outline text-muted" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-lg-9 p-1" style="text-align:left">
+                                <div class="col-9 p-1" style="text-align:left">
                                     <span class="text-muted" style="font-size:1.1em">Imagens e mídias</span>
                                 </div>
-                                <div class="col-lg-1 p-2" >
+                                <div class="col-1 p-2" >
                                     <i v-show="!showContactMedia" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
                                     <i v-show="showContactMedia"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
                                 </div>
@@ -514,13 +513,13 @@
                         <!-- Arquivos e documentos -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="row" >
-                                <div class="col-lg-1 p-2 ml-3">
+                                <div class="col-1 p-2 ml-3">
                                     <i class="mdi mdi-file-document-outline text-muted" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-lg-9 p-1" style="text-align:left">
+                                <div class="col-9 p-1" style="text-align:left">
                                     <span class="text-muted" style="font-size:1.1em">Arquivos e documentos</span>
                                 </div>
-                                <div class="col-lg-1 p-2" >
+                                <div class="col-1 p-2" >
                                     <i v-show="!showContacDocuments" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
                                     <i v-show="showContacDocuments"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
                                 </div>
@@ -557,7 +556,7 @@
         </div>
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div v-show="showChatFindMessages==true" class="col-lg-3 bg-white p-0">
+        <div id="chat-find-side" v-show="showChatFindMessages==true" class="col-lg-3 bg-white p-0">
             <div class="col-lg-12 sect_header">
                 <ul class='menu'>
                     <li><i class="fa fa-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i></li>
@@ -872,55 +871,60 @@
                 if(this.showChatRightSide) this.displayChatRightSide();
                 if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
-                if(this.selectedContactIndex!=contact.index){                    
-                    this.selectedContactIndex = contact.index;
-                    ApiService.get(this.chat_url,{
-                        'contact_id':contact.id,
-                        'message_id': this.findAroundMessageId,
-                        'page':this.pageNumber
-                    })
-                        .then(response => {
-                            this.findAroundMessageId = null;
-                            this.contacts[this.selectedContactIndex].count_unread_messagess =0;
-                            this.messagesWhereLike = [];
-                            this.searchMessageByStringInput = [];
-                            this.messages = response.data; 
-                            this.messages_copy=[];
-                            var This = this;
-                            this.messages.forEach(function(item, i){
-                                try {
-                                    item.time = This.getMessageTime(item.created_at);
+                this.selectedContactIndex = contact.index;
+                ApiService.get(this.chat_url,{
+                    'contact_id':contact.id,
+                    'message_id': this.findAroundMessageId,
+                    'page':this.pageNumber
+                })
+                    .then(response => {
+                        this.findAroundMessageId = null;
+                        this.contacts[this.selectedContactIndex].count_unread_messagess =0;
+                        this.messagesWhereLike = [];
+                        this.searchMessageByStringInput = [];
+                        this.messages = response.data; 
+                        this.messages_copy=[];
+                        var This = this;
+                        this.messages.forEach(function(item, i){
+                            try {
+                                item.time = This.getMessageTime(item.created_at);
 
-                                    if(item.time.date!=This.messageTimeDelimeter){
-                                        This.messages_copy.push({
-                                            'type_id': 'date_separator',
-                                            'time':{'date':item.time.date}
-                                        });
-                                        This.messageTimeDelimeter = item.time.date;
-                                    }
-                                    if(item.data != "" && item.data != null && item.data.length>0) {
-                                        item.data = JSON.parse(item.data);
-                                        if (item.type_id > 1)
-                                            item.path = item.data.FullPath;
-                                    }
-                                    This.messages_copy.push(item);
-                                } catch (error) {
-                                    console.log(error);
+                                if(item.time.date!=This.messageTimeDelimeter){
+                                    This.messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    This.messageTimeDelimeter = item.time.date;
                                 }
-                            });
-                            This.messages = This.messages_copy.slice();
-                            // This.messages = Object.assign({}, This.messages_copy);
-                            This.selectedContact = This.contacts[This.selectedContactIndex];
-                            This.selectedContactToEdit = Object.assign({}, This.selectedContact);
-                        })
-                        .catch(function(error) {
-                            miniToastr.error(error, "Error carregando os contatos");   
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                This.messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
+                            }
                         });
-    
-                    // setTimeout(() => {
-                    //     this.$refs.input.focus();
-                    // }, 20);
-                }
+                        This.messages = This.messages_copy.slice();
+                        // This.messages = Object.assign({}, This.messages_copy);
+                        This.selectedContact = This.contacts[This.selectedContactIndex];
+                        This.selectedContactToEdit = Object.assign({}, This.selectedContact);
+
+                        // This.$refs.chatCenterSide
+                        document.getElementById("chat-center-side").classList.add("chat-center-side-open");
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
+                    });
+
+                // setTimeout(() => {
+                //     this.$refs.input.focus();
+                // }, 20);
+            },
+
+            chatCenterSideBack(){
+                document.getElementById("chat-center-side").classList.remove("chat-center-side-open");
             },
             
             getContactChatWhereLike: function() {
@@ -1091,11 +1095,13 @@
                 if(this.showChatRightSide==false){
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-right-side").classList.add("chat-right-side-open");
                     this.showChatFindMessages = false;
                     this.showChatRightSide = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-right-side").classList.remove("chat-right-side-open");
                     this.showChatFindMessages = false;
                     this.showChatRightSide = false;
                 }
@@ -1109,11 +1115,13 @@
                 if(this.showChatFindMessages==false){
                     document.getElementById("chat-center-side").classList.remove("col-lg-9");
                     document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-find-side").classList.add("chat-find-side-open");
                     this.showChatRightSide = false;
                     this.showChatFindMessages = true;
                 }else{
                     document.getElementById("chat-center-side").classList.remove("col-lg-6");
                     document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-find-side").classList.remove("chat-find-side-open");
                     this.showChatRightSide = false;
                     this.showChatFindMessages = false;
                 }
@@ -1491,7 +1499,7 @@
         background-color:#6adaa5;
     }
     .search-input{
-        background-color:#fffff8;
+        background:#ffffff !important;
         font-size:1em;
     }
     .search-input:focus{
@@ -1508,8 +1516,9 @@
         border-top-left-radius:1em; 
         border-top-right-radius:1em; 
         border-bottom-right-radius:1em;
-        min-width: 15em;
-        max-width: 40em;
+        min-width: 15rem;
+        width: 80%;
+        max-width: 40rem;
     }    
     .receivedMessageImg{
         width:40px;
@@ -1800,5 +1809,49 @@
         from { opacity: 0; }
         to   { opacity: 1; }
     }    
+    /*Novo - Margin busca*/
+    .flex-baseline{
+        display: flex;
+        align-items: baseline;
+    }
+
+    .search-contact{
+        width: 100%;
+        margin-top: 0.7rem;
+    }
+
+    .btn-back{
+        display: none;
+    }
+
+    /* On screens that are 992px or less, set the background color to blue */
+    @media screen and (max-width: 992px) {
+        .btn-back{
+            display: block;
+        }
+        .chat-center-side-open{
+            z-index: 99996;
+        }
+        .chat-center-side-open{
+            position: absolute;
+            z-index: 99997;
+        }
+        .chat-right-side-open{
+            position: absolute;
+            z-index: 99998;
+        }
+        .chat-find-side-open{
+            position: absolute;
+            z-index: 99999;
+        }
+    }
+
+     @media screen and (max-width: 700px) {
+        .receivedMessageImg{
+            top: -0.8em;
+            right: 0em;
+        }
+    }
+    
    
 </style>
