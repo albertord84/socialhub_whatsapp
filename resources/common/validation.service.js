@@ -14,8 +14,7 @@ var regexp={
         'error':'CNPJ inválido'
     },
     'cep':{
-        // 'regexp':'^([0-9]{5}[\-]?[0-9]{3})|([0-9]{8})$',  
-        'regexp':'^([0-9]{8})$',  
+        'regexp':'^([0-9]{5}[\-]?[0-9]{3})|([0-9]{8})$',  
         'error':'CEP inválido. Botar CEP sem traço'
     },
     'email':{

@@ -53,18 +53,18 @@
 
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)" class="form-control"/>                            
+                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)" disabled="" class="form-control"/>                            
                         </div>                                                      
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.estado" title="Ex: RJ" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)" class="form-control"/>                            
+                            <input v-model="modelCompany.estado" title="Ex: RJ" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)" disabled="" class="form-control"/>                            
                         </div> 
                     </div>
 
                     <div class="row">
                         <div class="col-lg-8 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida (*)" class="form-control"/>
+                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida (*)" disabled="" class="form-control"/>
                         </div>
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
@@ -79,7 +79,7 @@
                         </div> 
                         <div class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.bairro" title="Ex: centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
+                            <input v-model="modelCompany.bairro" title="Ex: centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" disabled="" class="form-control"/>
                         </div>
                     </div>
 
@@ -516,20 +516,38 @@
             },
 
             getAddressByCEP: function(){
+                // Validando CEP inserido
+                this.modelCompany.CEP = this.modelCompany.CEP.trim();
+                this.modelCompany.CEP = this.modelCompany.CEP.replace(/-/i, '');
+                
+                if(this.modelCompany.CEP !=''){
+                    var check = validation.check('cep', this.modelCompany.CEP)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        return;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    return;
+                }
 
+                // Validando CEP inserido
                 ApiService.get('https://viacep.com.br/ws/'+this.modelCompany.CEP+'/json')
                     .then(response => {
-                      console.log(response.data);
-                    //   this.modelCompany.estado = response.data.estado;
-                    //   this.modelCompany.cidade = response.data.cidade;
-                    //   this.modelCompany.bairro = response.data.bairro;
-                    //   this.modelCompany.rua = response.data.rua;
+                        if(response.data.erro && response.data.erro==true ){
+                            miniToastr.error("Confira os dados fornecidos", "O CEP inserido não existe"); 
+                            return;
+                        }
+                        this.modelCompany.CEP = response.data.cep;
+                        this.modelCompany.estado = response.data.uf;
+                        this.modelCompany.cidade = response.data.localidade;
+                        this.modelCompany.bairro = response.data.bairro;
+                        this.modelCompany.rua = response.data.logradouro;
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro validando CEP"); 
                     });
-
             },
 
             trimDataModels: function(){
