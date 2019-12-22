@@ -44,17 +44,17 @@ class ExtendedChatRepository extends ChatRepository
                 // Get Logged User
                 $User = Auth::check() ? Auth::user() : session('logged_user');
 
-                // Create new contact From Bag
-                $Contact = new Contact();
-                $Contact->first_name = $firstBagChat->contact_id;
-                $Contact->company_id = $User->company_id;
-                $Contact->whatsapp_id = $firstBagChat->contact_id;
-                $Contact->updated_at = time();
-                $Contact->save();
+                // Get contact From Bag by Contact Id
+                // $Contact = Contact::find($firstBagChat->contact_id);
+                // $Contact = new Contact();
+                // $Contact->company_id = $User->company_id;
+                // $Contact->whatsapp_id = $firstBagChat->contact_id;
+                // $Contact->updated_at = time();
+                // $Contact->save();
 
                 // Associate contact to attendant $attendant_id
                 $AttendantsContact = new AttendantsContact();
-                $AttendantsContact->contact_id = $Contact->id;
+                $AttendantsContact->contact_id = $firstBagChat->contact_id;
                 $AttendantsContact->attendant_id = $attendant_id;
                 $AttendantsContact->save();
                 
@@ -64,7 +64,7 @@ class ExtendedChatRepository extends ChatRepository
                     $newChat = $Chat->replicate();
                     $newChat->table = (string)$attendant_id;
                     $newChat->attendant_id = $attendant_id;
-                    $newChat->contact_id = $Contact->id;
+                    $newChat->contact_id = $firstBagChat->contact_id;
                     $newChat->save();
         
                     $Chat->delete();
@@ -72,7 +72,7 @@ class ExtendedChatRepository extends ChatRepository
 
                 
                 // Construct Contact with full data that chat need
-                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $Contact->id])->first();
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $firstBagChat->contact_id])->first();
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
