@@ -821,3 +821,31 @@ Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so
     Laravel development server started: <http://127.0.0.1:8000>
     Laravel development server started: <http://127.0.0.1:8000>
     Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>
+PHP Warning:  Use of undefined constant CURLOPT_SSL_VERIFYHOST - assumed 'CURLOPT_SSL_VERIFYHOST' (this will throw an Error in a future version of PHP) in /var/www/html/socialhub/config/broadcasting.php on line 49
+PHP Stack trace:
+PHP   1. {main}() /var/www/html/socialhub/artisan:0
+PHP   2. App\Console\Kernel->handle() /var/www/html/socialhub/artisan:37
+PHP   3. App\Console\Kernel->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:120
+PHP   4. Illuminate\Foundation\Application->bootstrapWith() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:297
+PHP   5. Illuminate\Foundation\Bootstrap\LoadConfiguration->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:211
+PHP   6. Illuminate\Foundation\Bootstrap\LoadConfiguration->loadConfigurationFiles() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:39
+PHP   7. require() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:72
+PHP Warning:  Use of undefined constant CURLOPT_SSL_VERIFYPEER - assumed 'CURLOPT_SSL_VERIFYPEER' (this will throw an Error in a future version of PHP) in /var/www/html/socialhub/config/broadcasting.php on line 50
+PHP Stack trace:
+PHP   1. {main}() /var/www/html/socialhub/artisan:0
+PHP   2. App\Console\Kernel->handle() /var/www/html/socialhub/artisan:37
+PHP   3. App\Console\Kernel->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:120
+PHP   4. Illuminate\Foundation\Application->bootstrapWith() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:297
+PHP   5. Illuminate\Foundation\Bootstrap\LoadConfiguration->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:211
+PHP   6. Illuminate\Foundation\Bootstrap\LoadConfiguration->loadConfigurationFiles() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:39
+PHP   7. require() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:72
+    
+In Pusher.php line 235:
+                                                                               
+  The Pusher library requires the PHP cURL module. Please ensure it is instal  
+  led                                                                          
+                                                                               
+
+    Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>

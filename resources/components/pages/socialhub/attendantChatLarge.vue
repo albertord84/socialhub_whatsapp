@@ -424,14 +424,14 @@
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-contact-phone-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <div v-show="isEditingContact">
@@ -914,7 +914,7 @@
                             // This.messages = Object.assign({}, This.messages_copy);
                             This.selectedContact = This.contacts[This.selectedContactIndex];
 
-                            This.selectedContact.whatsapp_id = This.selectedContact.whatsapp_id.replace(/@s.whatsapp.net/i, ''); //ECR
+                            // This.selectedContact.whatsapp_id = This.selectedContact.whatsapp_id.replace(/@s.whatsapp.net/i, ''); //ECR
                             
                             This.selectedContactToEdit = Object.assign({}, This.selectedContact);
                         })
@@ -966,11 +966,15 @@
                     return;
                 }
                 
-                this.selectedContactToEdit.whatsapp_id += '@s.whatsapp.net';
+                var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
+                selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                
+                // this.selectedContactToEdit.whatsapp_id += '@s.whatsapp.net'; //ECR
                 
                 delete this.selectedContactToEdit.created_at;
                 delete this.selectedContactToEdit.updated_at;                
-                ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
+                ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
                 .then(response => {
                     if(this.isEditingContact)
                         this.isEditingContact = false;

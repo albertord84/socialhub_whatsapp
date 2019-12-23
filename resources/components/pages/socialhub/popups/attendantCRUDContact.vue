@@ -24,7 +24,7 @@
                     <div class="input-group-prepend">
                         <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp (*)" style="background-color:white"></span>
                     </div>
-                    <input type="text" v-model="model.whatsapp_id" title="Ex: 5511988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
+                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
                     <div class="input-group-append" title="Conferir número">
                         <span class="fa fa-check btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber"></span>
                     </div>
@@ -57,7 +57,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" title="Ex: 5511988888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
+                            <input v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
                         </div>
                     </div>
                 </div>                
@@ -239,9 +239,11 @@
                     return;
                 }
 
-                this.model.whatsapp_id += '@s.whatsapp.net'; //ECR
+                var model_cpy = Object.assign({}, this.model_cpy);                //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
-                ApiService.post(this.url,this.model)
+                ApiService.post(this.url,model_cpy)
                 .then(response => {
                     if (this.contact_atendant_id) {
                         ApiService.post(this.secondUrl,{
@@ -294,7 +296,6 @@
                 //     this.flagReference = true;
                 //     return;
                 // }
-                // this.model.whatsapp_id += '@s.whatsapp.net';
 
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {

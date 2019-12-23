@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelCompany.CNPJ" title="Ex: 00.000.000/0001-00" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ (*)" class="form-control"/>
+                            <input v-model="modelCompany.CNPJ" v-mask="'##.###.###/####-##'" title="Ex: 00.000.000/0001-00" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-building-o form-control-feedback"></span>
@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" title="Ex: 5511988888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" title="Ex: 5511988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                         <div class="col-lg-4" >
                             <div class="input-group">
                                 <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
-                                    <input v-model="modelCompany.CEP" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
+                                    <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
                                     <div class="input-group-text" id="btnGroupAddon" @click.prevent="getAddressByCEP"><i class="fa fa-search" aria-hidden="true"></i></div>
                                 </div>
                             </div>
@@ -108,17 +108,17 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelManager.CPF" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                            <input v-model="modelManager.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" title="Ex: 11 988888888" id="phoneManager" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelManager.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phoneManager" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" title="Ex: 11 988888888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                     </div>                                  
                 </div> 
@@ -133,7 +133,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="modelRpi.api_password" title="Ex: x2+A*fd!" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API" class="form-control"/>
+                            <input v-model="modelRpi.api_password" title="Ex: g5Y6e4o" id="api_password" name="api_password" type="password" required placeholder="Senha do usuario da API" class="form-control"/>
                         </div>                                                      
                     </div>
 
@@ -144,7 +144,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="modelRpi.root_password" title="Ex: x2+A*fd!" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root" class="form-control"/>
+                            <input v-model="modelRpi.root_password" title="Ex: g5Y6e4o" id="root_password" name="root_password" type="password" required placeholder="Senha do usuario Root" class="form-control"/>
                         </div>                                                      
                     </div>
 
@@ -162,7 +162,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.mac" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
+                            <input v-model="modelRpi.mac" v-mask="'NN:NN:NN:NN:NN:NN'" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
@@ -177,7 +177,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-cog form-control-feedback"></span>
-                            <input v-model="modelRpi.soft_version_date" title="Ex: 30/11/2019" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software" class="form-control"/>                            
+                            <input v-model="modelRpi.soft_version_date" v-mask="'##/##/####'" title="Ex: dd/mm/aaaa" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software" class="form-control"/>                            
                         </div>                                                      
                     </div>
 
@@ -310,12 +310,22 @@
                     return;
                 }
 
+                var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                
+                var modelManager_cpy = Object.assign({}, this.modelManager);                      //ECR: Para eliminar espaços e traços
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+
                  // inserindo company
-                ApiService.post(this.companies_url, this.modelCompany)
+                // ApiService.post(this.companies_url, this.modelCompany)
+                ApiService.post(this.companies_url, modelCompany_cpy)           //ECR
                     .then(response => {
                         this.modelManager.company_id = response.data.id;
                         // inserindo user
-                        ApiService.post(this.users_url, this.modelManager)
+                        // ApiService.post(this.users_url, this.modelManager)
+                        ApiService.post(this.users_url, modelManager_cpy)       //ECR
                             .then(response => {
                                 //inserindo userManager
                                 ApiService.post(this.usersManager_url, {'user_id':response.data.id})
@@ -371,12 +381,23 @@
                     return;
                 }
 
+                var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                
+                var modelManager_cpy = Object.assign({}, this.modelManager);                      //ECR: Para eliminar espaços e traços
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+
                 //1. atualizando company
-                ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
+                // ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
+                ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)
                     .then(response => {
                                 //2. atualizando usuario
-                                delete this.modelManager.password;
-                                ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                                // delete this.modelManager.password;
+                                delete modelManager_cpy.password;
+                                // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                                ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)
                                     .then(response => {
                                                     //3. atualizando rpi
                                                     this.modelRpi.company_id = this.modelCompany.id;

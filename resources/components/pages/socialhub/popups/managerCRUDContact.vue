@@ -4,7 +4,7 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
+                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome (*)" class="form-control"/>
                 </div>
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-headphones form-control-feedback"></span>
@@ -21,13 +21,13 @@
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.phone" id="phone" title="Ex: 5511988888888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                    <input v-model="model.phone" id="phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                 </div>                                
             </div>
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-whatsapp form-control-feedback"></span>
-                    <input v-model="model.whatsapp_id" title="Ex: 5511988888888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                    <input v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-facebook form-control-feedback"></span>
@@ -135,10 +135,6 @@
 
         methods:{
             addContact: function() { //C
-                // if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                //     miniToastr.error(error, "Alguns dados incompletos");  
-                //     return;
-                // }
 
                 this.isSendingInsert = true;
 
@@ -151,14 +147,17 @@
                     this.flagReference = true;
                     return;
                 }
-                this.model.whatsapp_id += '@s.whatsapp.net';
-
+                
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
                     this.model.status_id = 1;                
 
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
-                ApiService.post(this.url,this.model)
+                // ApiService.post(this.url,this.model)
+                ApiService.post(this.url, model_cpy)            //ECR
                 .then(response => {
                     if (this.contact_atendant_id) {
                         ApiService.post(this.secondUrl,{
@@ -199,17 +198,10 @@
                 delete this.model.updated_at;
 
                 this.contact_atendant_id =  this.model.contact_atendant_id;
-
-                this.model.whatsapp_id = this.model.whatsapp_id.replace(/@s.whatsapp.net/i, '');
-                
                 this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U
-                // if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                //     miniToastr.error(error, "Erro adicionando contato");  
-                //     return;
-                // }
 
                 this.isSendingUpdate = true;
 
@@ -222,12 +214,16 @@
                     this.flagReference = true;
                     return;
                 }
-                this.model.whatsapp_id += '@s.whatsapp.net';
-
+ 
                 if(this.contact_atendant_id>0)
                     this.model.status_id = 1;
 
-                ApiService.put(this.url+'/'+this.model.id, this.model)//ecr this.item.contact_id
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+
+                // ApiService.put(this.url+'/'+this.model.id, this.model) //ecr this.item.contact_id
+                ApiService.put(this.url+'/'+this.model.id, model_cpy) //ecr this.item.contact_id       //ECR
                 .then(response => {
                     if (this.contact_atendant_id && this.contact_atendant_id != this.item.contact_atendant_id) {
                         ApiService.post(this.secondUrl,{
@@ -334,13 +330,6 @@
                 }else{
                     miniToastr.error("Erro", "O nome do contato é obrigatorio" );
                     this.flagReference = false;
-                }
-                if(this.model.last_name && this.model.last_name !=''){
-                    check = validation.check('complete_name', this.model.last_name)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
                 }
                 if(this.model.email && this.model.email !=''){
                     check = validation.check('email', this.model.email)
