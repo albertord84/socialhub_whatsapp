@@ -84,10 +84,60 @@
                         </ul>
                     </div>                        
                 </div>
-                <v-scroll :height="Height(170)"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
+                <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
-                            <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
+                            <div class="container-fluid">
+                                <div class="row mt-3 mb-3">
+                                    <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
+                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).urlProfilePicture:''" class="contact-picture">
+                                    </div>
+                                    <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
+                                        <div class="d-flex flex-column pointer-hover">
+                                            <div class="row">
+                                                <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
+                                                    {{textTruncate(contact.first_name,20) }}
+                                                </a>
+                                            </div>
+                                            <div class="row">
+                                                <a class="text-muted"> 
+                                                    <span v-if="!contact.last_message" style="font-size:1em">
+                                                        <i>Sem mensagens</i>
+                                                    </span>                                           
+                                                    <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
+                                                        {{textTruncate(contact.last_message.message,22)}}
+                                                    </span>
+                                                    <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
+                                                        <i>Arquivo de imagem</i>
+                                                    </span>
+                                                    <span v-else-if="contact.last_message && contact.last_message.type_id==3" style="font-size:1em" title='Arquivo de audio'>
+                                                        <i>Arquivo de audio</i>
+                                                    </span>
+                                                    <span v-else-if="contact.last_message && contact.last_message.type_id==4" style="font-size:1em" title='Arquivo de video'>
+                                                        <i>Arquivo de video</i>
+                                                    </span>
+                                                    <span v-else-if="contact.last_message && contact.last_message.type_id==5" style="font-size:1em" title='Arquivo de texto'>
+                                                        <i>Arquivo de texto</i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 d-flex">
+                                        <div class="d-flex flex-column text-right">
+                                            <div class="row text-right">
+                                                <span class="text-muted" style="font-size:0.8rem; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}</span>
+                                            </div>
+                                            <div class="row text-right">
+                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
                                 <article class="media mt-1 mb-4">
                                     <a class="float-left desc-img mt-3">
                                         <img :src="(contact.json_data)?JSON.parse(contact.json_data).urlProfilePicture:''" class="contact-picture">
@@ -118,10 +168,10 @@
                                         </a>
                                     </div>
                                     <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}</span>
-                                    <div v-show="contact.count_unread_messagess>0" class="amount-unreaded-messages mt-4" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                    <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill cl-blue amount-unreaded-messages mt-5 mr-4" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess*100}}</div>
                                     <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
                                 </article>
-                            </a>
+                            </a> -->
                         </li>
                     </ul>
                 </v-scroll>
@@ -134,7 +184,7 @@
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">     
                     <div class="container-fluid mt-2">
-                        <ul class='row flex-baseline'>                        
+                        <ul class='row flex-baseline'>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 d-block d-lg-none'>
                                 <span id="btn-back" class="mdi mdi-arrow-left btn-back icons-action" @click.prevent="chatCenterSideBack"></span>
                             </li>
@@ -315,7 +365,7 @@
                             </div>
                         </div>
                         <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
-                                class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
+                            class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
                         </textarea>
                         <div class="input-group-prepend">
                             <a href="javascript:void()" v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
@@ -1639,19 +1689,19 @@
         cursor: pointer;
     }
     .amount-unreaded-messages {
-        min-width: 3em;
-        height: 2.5em;
-        border-radius: 2em;
-        padding: 0.5em 1em 2em 1em;
-        font-size: 0.85em;
-        font-weight: bold;
-        border: 2px solid #fff;
-        background-color: #0377FE;
+        // min-width: 3em;
+        // height: 2.5em;
+        // border-radius: 2em;
+        // padding: 0.5em 1em 2em 1em;
+        // font-weight: bold;
+        // border: 2px solid #fff;
+        // background-color: #0377FE;
+        // text-align: center;
+        // position: relative;
+        // top: 8px;
+        // left: -25px;
+        font-size: 1rem;
         color: white;
-        text-align: center;
-        position: relative;
-        top: 8px;
-        left: -25px;
     }
     .zero-unreaded-messages {
         width: 2.5em;
