@@ -7,8 +7,10 @@ use App\Models\AttendantsContact;
 use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Models\UsersAttendant;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ExtendedChatRepository extends ChatRepository
 {    
@@ -34,31 +36,63 @@ class ExtendedChatRepository extends ChatRepository
 
     public function getBagContact(int $attendant_id): Contact{
         try {
-            $Contact = new Contact();
-
+            // First message from Bag
             $firstBagChat = $this->first();
-    
+            
+            $Contact = null;
             if ($firstBagChat) {
-                $Chats = $this->findWhere(['contact_id' => $firstBagChat->contact_id])->all();
+                // Get Logged User
+                $User = Auth::check() ? Auth::user() : session('logged_user');
+
+                // Get contact From Bag by Contact Id
+                // $Contact = Contact::find($firstBagChat->contact_id);
+                // $Contact = new Contact();
+                // $Contact->company_id = $User->company_id;
+                // $Contact->whatsapp_id = $firstBagChat->contact_id;
+                // $Contact->updated_at = time();
+                // $Contact->save();
+
+                // Associate contact to attendant $attendant_id
+                $AttendantsContact = new AttendantsContact();
+                $AttendantsContact->contact_id = $firstBagChat->contact_id;
+                $AttendantsContact->attendant_id = $attendant_id;
+                $AttendantsContact->save();
+                
                 // Move from Chats table to Attendant Table
+                $Chats = $this->findWhere(['contact_id' => $firstBagChat->contact_id])->all();
                 foreach ($Chats as $key => $Chat) {
                     $newChat = $Chat->replicate();
                     $newChat->table = (string)$attendant_id;
                     $newChat->attendant_id = $attendant_id;
+                    $newChat->contact_id = $firstBagChat->contact_id;
                     $newChat->save();
         
                     $Chat->delete();
                 }
-        
-                $Contact = Contact::find($firstBagChat->contact_id);
-                // $Contact->updated_at = Carbon::now();
-                $Contact->updated_at = time();
-                $Contact->save();
+
                 
-                $AttendantsContact = new AttendantsContact();
-                $AttendantsContact->contact_id = $Contact->id;
-                $AttendantsContact->attendant_id = $attendant_id;
-                $AttendantsContact->save();
+                // Construct Contact with full data that chat need
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $firstBagChat->contact_id])->first();
+                if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
+                    // Get Contact Status
+                    $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
+                    
+                    // Last Chat Message
+                        // Create chat model of $attendant_id to 
+                        $chatModel = new $this->model();
+                        $chatModel->table = (string) $attendant_id;
+                    $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+                    $Contact['last_message'] = $lastMesssage;
+                    
+                    // Unreaded Messages Count
+                    $countUnreadMessages = $chatModel
+                        ->where('contact_id', $Contact->id)
+                        ->where('status_id', 6) //UNREADED message for me
+                        ->count();
+
+                    $Contact['count_unread_messagess'] = $countUnreadMessages;
+                }
+
             }
             
             return $Contact; //atrelar el last message igual que es atrelado en getContacts
