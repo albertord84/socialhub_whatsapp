@@ -754,7 +754,7 @@
         
         methods: {    
             sendMessage() {
-                if (this.isSendingNewMessage) return;
+                if (this.isSendingNewMessage) return;                
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
                 if (this.newMessage.message != "" || this.file) {
@@ -805,7 +805,9 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             //----------update the message list and the last message of the contact-----
+                            console.log(this.messages.length);
                             this.messages.push(Object.assign({}, message));
+                            console.log(this.messages.length);
                             // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
@@ -906,12 +908,11 @@
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
                         this.messages = response.data; 
-                        this.messages_copy=[];
+                        this.messages_copy=new Array();
                         var This = this;
                         this.messages.forEach(function(item, i){
                             try {
                                 item.time = This.getMessageTime(item.created_at);
-
                                 if(item.time.date!=This.messageTimeDelimeter){
                                     This.messages_copy.push({
                                         'type_id': 'date_separator',
@@ -929,7 +930,8 @@
                                 console.log(error);
                             }
                         });
-                        This.messages = This.messages_copy.slice();
+                        This.messages = This.messages_copy;                        
+                        // This.messages = This.messages_copy.slice();
                         // This.messages = Object.assign({}, This.messages_copy);
                         This.selectedContact = This.contacts[This.selectedContactIndex];
                         This.selectedContactToEdit = Object.assign({}, This.selectedContact);
@@ -1268,8 +1270,10 @@
                     }
 
                     //------show the recived message if the target contact is selected----------
-                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){                            
+                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){  
+                        console.log(this.messages.length);                          
                         this.messages.push(Object.assign({}, message));
+                        console.log(this.messages.length);
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
