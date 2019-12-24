@@ -12,7 +12,7 @@
                         <ul class='row flex-baseline'>
                             <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                    <img :src="logguedAttendant.image_path" width="50px" class="profile-picture" alt="Foto">
+                                    <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
