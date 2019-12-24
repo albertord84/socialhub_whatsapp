@@ -664,7 +664,7 @@
         </b-modal>
 
         <!-- Modal to show image-->
-        <b-modal v-model="modalShowImage" :hide-footer="true" centered :hide-header="true" size="lg" style="background-color:red !important; padding:0px; text-align:center" class="">
+        <b-modal v-model="modalShowImage" :hide-footer="true" centered :hide-header="true" size="sm" style="background-color:red !important; padding:0px; text-align:center" class="">
                 <img class="img-fluid" style="max-height:540px; max-width:400px; background-color:red !important; padding:0px; text-align:center" :src="'images/contacts/jose_ramon.jpg'"/>
                 <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
         </b-modal>
