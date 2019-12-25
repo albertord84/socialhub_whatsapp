@@ -12,7 +12,7 @@
                         <ul class='row flex-baseline'>
                             <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                    <img :src="logguedAttendant.image_path" width="50px" class="profile-picture" alt="Foto">
+                                    <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
@@ -664,7 +664,7 @@
         </b-modal>
 
         <!-- Modal to show image-->
-        <b-modal v-model="modalShowImage" :hide-footer="true" centered :hide-header="true" size="lg" style="background-color:red !important; padding:0px; text-align:center" class="">
+        <b-modal v-model="modalShowImage" :hide-footer="true" centered :hide-header="true" size="sm" style="background-color:red !important; padding:0px; text-align:center" class="">
                 <img class="img-fluid" style="max-height:540px; max-width:400px; background-color:red !important; padding:0px; text-align:center" :src="'images/contacts/jose_ramon.jpg'"/>
                 <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
         </b-modal>
