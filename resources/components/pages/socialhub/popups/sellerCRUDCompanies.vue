@@ -221,7 +221,6 @@
 
     
     export default {
-        // name: 'adminCRUDSellers',
         name: 'sellersCRUDCompanies',
 
         props: {
@@ -240,7 +239,7 @@
 
         data(){
             return{
-                modelCompany:{ //dados da empresa
+                modelCompany:{  //dados da empresa
                     CNPJ: "",
                     name: "",
                     phone: "",
@@ -256,7 +255,7 @@
                     bairro: "",
                 },
 
-                modelRpi:{ //dados do canal de comunicação
+                modelRpi:{      //dados do canal de comunicação
                     api_user: "",
                     api_password: "",
                     root_user: "",
@@ -269,7 +268,7 @@
                     soft_version_date: "",
                 },
 
-                modelManager:{ //manager da empresa
+                modelManager:{  //manager da empresa
                     name: "",
                     role_id: "",
                     email: "",
@@ -282,6 +281,7 @@
                     instagram_id: "",
                     linkedin_id: "",
                 },
+
                 logued_user:null,
                 isSendingInsert: false,
                 isSendingUpdate: false,
@@ -313,16 +313,22 @@
                 var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
-                
-                var modelManager_cpy = Object.assign({}, this.modelManager);                      //ECR: Para eliminar espaços e traços
-                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
+                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
 
-                 // inserindo company
+                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
+                modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
+                modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+
+                // inserindo company
                 // ApiService.post(this.companies_url, this.modelCompany)
                 ApiService.post(this.companies_url, modelCompany_cpy)           //ECR
                     .then(response => {
-                        this.modelManager.company_id = response.data.id;
+                        // this.modelManager.company_id = response.data.id;
+                        modelManager_cpy.company_id = response.data.id;         //ECR
+
                         // inserindo user
                         // ApiService.post(this.users_url, this.modelManager)
                         ApiService.post(this.users_url, modelManager_cpy)       //ECR
@@ -384,20 +390,24 @@
                 var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
+                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
                 
-                var modelManager_cpy = Object.assign({}, this.modelManager);                      //ECR: Para eliminar espaços e traços
-                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
+                modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
+                modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
+                modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
 
                 //1. atualizando company
                 // ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
-                ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)
+                ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)   //ECR
                     .then(response => {
                                 //2. atualizando usuario
                                 // delete this.modelManager.password;
                                 delete modelManager_cpy.password;
                                 // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                                ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)
+                                ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
                                     .then(response => {
                                                     //3. atualizando rpi
                                                     this.modelRpi.company_id = this.modelCompany.id;
@@ -700,7 +710,6 @@
                     this.flagReference = false;
                 }
                 //ECR: O resto dos campos do endereço se obtem por validaçao do CEP
-                //ECR: Desativar edição do campo pare evitar que se modifique o dado obtido na validação do CEP
             },
 
             validateDataModelManager: function(){

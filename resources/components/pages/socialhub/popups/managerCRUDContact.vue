@@ -155,6 +155,10 @@
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
 
                 // ApiService.post(this.url,this.model)
                 ApiService.post(this.url, model_cpy)            //ECR
@@ -221,6 +225,10 @@
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
 
                 // ApiService.put(this.url+'/'+this.model.id, this.model) //ecr this.item.contact_id
                 ApiService.put(this.url+'/'+this.model.id, model_cpy) //ecr this.item.contact_id       //ECR

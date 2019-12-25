@@ -37,7 +37,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.CPF}}</span>
-                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" placeholder="CPF (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -49,7 +49,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.phone}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.phone" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" placeholder="Telefone fixo (*)" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -61,7 +61,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.whatsapp_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -203,7 +203,15 @@
                     return;
                 }
 
-                ApiService.put(this.url+'/'+this.model.id, this.model)
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                
+
+                // ApiService.put(this.url+'/'+this.model.id, this.model)
+                ApiService.put(this.url+'/'+this.model.id, model_cpy)               //ECR
                 .then(response => {
                     // window.location.reload(false);
                     this.user = response.data;

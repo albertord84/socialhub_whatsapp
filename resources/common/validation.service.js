@@ -127,12 +127,12 @@ var regexp={
         'error':''
     },
     'street_address':{
-        'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{5,80}$',
+        'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
         'error':''
     },
     'neighborhood_address':{
         'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
-        'error':''
+        'error':'Confira os dados do endereço'
     },
     'municipality_address':{
         'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',

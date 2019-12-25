@@ -1024,10 +1024,6 @@
             },
 
             updateContact: function() {
-                // if(!this.selectedContactToEdit.whatsapp_id || this.selectedContactToEdit.whatsapp_id.trim() =='' || this.selectedContactToEdit.first_name.trim() ==''){
-                //     miniToastr.error(error, "Confira os dados fornecidos");
-                //     return;
-                // }
                 
                 this.isUpdatingContact = true;
 
@@ -1042,14 +1038,15 @@
                     return;
                 }
                 
+                delete this.selectedContactToEdit.created_at;
+                delete this.selectedContactToEdit.updated_at;                
+                
                 var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
                 selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                
-                // this.selectedContactToEdit.whatsapp_id += '@s.whatsapp.net'; //ECR
-                
-                delete this.selectedContactToEdit.created_at;
-                delete this.selectedContactToEdit.updated_at;                
+                selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
+                selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                         
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
                 .then(response => {
                     if(this.isEditingContact)
