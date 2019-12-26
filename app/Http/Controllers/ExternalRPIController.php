@@ -11,8 +11,8 @@ use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Rpi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use stdClass;
 
 class ExternalRPIController extends Controller
@@ -21,7 +21,14 @@ class ExternalRPIController extends Controller
 
     public function __construct()
     {
-        $this->APP_WP_API_URL = env('APP_WP_API_URL', '');
+        // $this->User = Auth::check() ? Auth::user() : session('logged_user');
+
+        // if ($this->User->role_id == ExtendedUserController::ATTENDANT) {
+        //     $Company = Company::with('rpi')->findWhere(['id' => $this->User->company_id])->first();
+        //     $this->$Company;
+        // }
+
+        $this->APP_WP_API_URL = env('APP_WP_API_URL', 'http://shrpialberto.sa.ngrok.io.ngrok.io');
         $this->APP_FILE_PATH = 'public/' . env('APP_FILE_PATH');
     }
 
@@ -140,6 +147,8 @@ class ExternalRPIController extends Controller
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
     public function getContactInfo(string $contact_id = '5521976550734') //: stdClass
     {
+
+
         $contactInfo = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();

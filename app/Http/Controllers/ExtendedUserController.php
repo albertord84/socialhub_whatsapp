@@ -19,6 +19,12 @@ use Auth;
 class ExtendedUserController extends UserController
 {
 
+    const ADMIN = 1; 
+    const SELLER = 2; 
+    const MANAGER = 3; 
+    const ATTENDANT = 4; 
+    const VISITOR = 5; 
+    
     public function __construct(ExtendedUserRepository $userRepository)
     {
         parent::__construct($userRepository);
