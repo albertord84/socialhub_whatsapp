@@ -282,7 +282,6 @@
             },
 
             deleteContact(){
-
                 this.isSendingDelete = true;
 
                 ApiService.delete(this.url+'/'+this.item.id)
@@ -339,7 +338,7 @@
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
                         console.log(response.data);
-
+                        return;
                         this.whatsappContactInfo = response.data;
                         this.whatssapChecked = true;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");

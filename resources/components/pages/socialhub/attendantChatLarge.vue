@@ -29,11 +29,17 @@
                                             Inserir contato
                                         </a>
                                     </b-dropdown-item>
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                        <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotifications">
+                                            <span v-if="mutedNotifications" class="mdi mdi-volume-off"> Ativar som</span>
+                                            <span v-if="!mutedNotifications" class="mdi mdi-volume-high"> Desativar som</span>
+                                        </a>
+                                    </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
                                         <router-link to="/" class="drpodowtext text-muted">
                                             <div v-on:click="logout">
                                                 <i class="fa fa-sign-out"></i> 
-                                                Encerrar sessão
+                                                Sair da sessão
                                             </div>
                                         </router-link>
                                     </b-dropdown-item>
@@ -245,54 +251,59 @@
                 <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @onscrolling="chatMessageScroling">                       
                     <ul>
                         <li v-for='(message,index) in messages' :key="index">
-
                             <!-- Date separator message-->
                             <div v-if="message.type_id=='date_separator'" class="pt-5 pb-5">
                                 <h6 class="message-time-separator mt-5"><span>{{message.time.date}}</span></h6>
                             </div>
                             
-                            <div v-if="message.type_id!='date_separator'" >
+                            <div v-if="message.type_id!='date_separator'">
                                 <!-- Received messages -->
                                 <div v-if="message.source==1" class="row mt-2">
-                                    <div  class="col-1"></div>
-                                    <div class="col-11">
-                                        <p style="float:left;" class="receivedMessageText">
-                                                <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                                    <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                                        <img :src="message.path" class="midia-files"/>
-                                                    </a>
-                                                    <br>
-                                                </span>                               
-                                                <span v-if='message.type_id == "3"' class='text-center'>
-                                                    <br>
-                                                    <audio controls class="mycontrolBar m-2">
-                                                        <source :src="message.path" type="audio/ogg">
-                                                        <source :src="message.path" type="audio/mp3">
-                                                        Seu navegador não suporta o elemento de áudio.
-                                                    </audio>
-                                                    <br>
-                                                </span>
-                                                <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                                    <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                                        <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                            <source :src="message.path+'#t=2'" type="video/mp4">
-                                                            Seu navegador não suporta o elemento de vídeo.
-                                                        </video>
-                                                    </a>
-                                                    <br>
-                                                </span>
-                                                <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                    <a :href="message.path" target="_blank" rel=”noopener”  >
-                                                        <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                    </a>  
-                                                    <br>                                      
-                                                </span>
-                                                <span v-if="message.message && message.message !=''" class="text-message">
-                                                    {{ message.message ? message.message : "" }}
-                                                </span>
-                                                <br>
-                                        </p>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div  class="col-1"></div>
+                                            <div class="col-11" >
+                                                <p style="float:left;" class="receivedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
+                                                        <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
+                                                        <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                            <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                                <img :src="message.path" class="midia-files"/>
+                                                            </a>
+                                                            <br>
+                                                        </span>                               
+                                                        <span v-if='message.type_id == "3"' class='text-center'>
+                                                            <br>
+                                                            <audio controls class="mycontrolBar m-2">
+                                                                <source :src="message.path" type="audio/ogg">
+                                                                <source :src="message.path" type="audio/mp3">
+                                                                Seu navegador não suporta o elemento de áudio.
+                                                            </audio>
+                                                            <br>
+                                                        </span>
+                                                        <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                            <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                                <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                                    <source :src="message.path+'#t=2'" type="video/mp4">
+                                                                    Seu navegador não suporta o elemento de vídeo.
+                                                                </video>
+                                                            </a>
+                                                            <br>
+                                                        </span>
+                                                        <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                            <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                                <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                            </a>  
+                                                            <br>                                      
+                                                        </span>
+                                                        <span v-if="message.message && message.message !=''" class="text-message">
+                                                            {{ message.message ? message.message : "" }}
+                                                        </span>
+                                                        <br>
+                                                </p>                                                 
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div class="col-1 text-right">
                                         <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''"  alt="" class="conversation-picture receivedMessageImg">
                                     </div>
@@ -303,8 +314,9 @@
 
                                 <!-- Sent messages -->
                                 <div v-if="message.source==0" class="row mt-2">
-                                    <div class="col-11">
-                                        <p style="float:right" class="sendedMessageText">
+                                    <div class="col-11" >
+                                        <p style="float:right" class="sendedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
+                                            <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>                                            
                                             <span v-if='message.type_id == "2"' class='mb-2 text-center'>
                                                 <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
                                                     <img :src="message.path" class="midia-files"/>
@@ -664,15 +676,14 @@
         </b-modal>
 
         <!-- Modal to show image-->
-        <b-modal v-model="modalShowImage" :hide-footer="true" centered :hide-header="true" size="sm" style="background-color:red !important; padding:0px; text-align:center" class="">
-                <img class="img-fluid" style="max-height:540px; max-width:400px; background-color:red !important; padding:0px; text-align:center" :src="'images/contacts/jose_ramon.jpg'"/>
-                <!-- <img style="width:100%; height:100%" class="embed-responsive-item modal-body-bg" :src="modalShowImageSrc"/> -->
+        <b-modal v-model="modalShowImage" :hide-footer="true" centered class="" :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent">
+                <b-img  fluid :src="modalShowImageSrc" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
         </b-modal>
 
         <!-- Modal to show video-->
-        <b-modal v-model="modalShowVideo" :hide-footer="true" centered :hide-header="true" size="lg"  class="m-0 modal-body-bg">
+        <b-modal v-model="modalShowVideo" :hide-footer="true" centered :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent"  class="m-0 modal-body-bg">
             <div class="">
-                 <video width="100%" height="100%" style="width:100%; height:100%" controls class="midia-files embed-responsive-item modal-body-bg">
+                 <video width="100%" height="100%" style="max-height:540px; max-width:700px; padding:0px; text-align:center" controls class="midia-files embed-responsive-item modal-body-bg">
                     <source :src="modalShowVideoSrc" type="video/mp4">
                     Seu navegador não suporta o elemento de vídeo.
                 </video> 
@@ -739,9 +750,12 @@
             return {
                 logguedAttendant:{},
 
+                users_url: 'users',
                 contacts_url: 'contacts',
                 contacts_bag_url: 'getBagContact',
                 chat_url: 'chats',
+
+                mutedNotifications:true,
 
                 contacts:[],
                 selectedContact:{},
@@ -1157,13 +1171,13 @@
             },
             
             mouseOverMessage(id){
-                // document.getElementById(id).classList.remove("message-hout");
-                // document.getElementById(id).classList.add("message-hover");
+                document.getElementById(id).classList.remove("message-hout");
+                document.getElementById(id).classList.add("message-hover");
             },
 
             mouseLeaveMessage(id){
-                // document.getElementById(id).classList.add("message-hout");
-                // document.getElementById(id).classList.remove("message-hover");
+                document.getElementById(id).classList.add("message-hout");
+                document.getElementById(id).classList.remove("message-hover");
             },
 
             displayChatRightSide(){
@@ -1205,6 +1219,23 @@
             displayDeleteContact(){
                 this.item = this.selectedContact; 
                 this.modalDeleteContact=!this.modalDeleteContact;
+            },
+
+            muteNotifications(){
+                this.mutedNotifications = !this.mutedNotifications;
+                // ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {"mute_notifications":!this.mutedNotifications})
+                // .then(response => {     
+                //     if(this.mutedNotifications)
+                //         miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
+                //     else
+                //         miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
+                //     this.mutedNotifications = !this.mutedNotifications;
+                // })
+                // .catch(function(error) {
+                //     ApiService.process_request_error(error);
+                //     miniToastr.error(error, "Erro adicionando contato");
+                // })
+                // .finally(() => this.isUpdatingContact = false);
             },
 
             Height(val){
@@ -1304,9 +1335,7 @@
 
             window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
-
                     //------------prepare message datas to be displayed------------------------
-                    // console.log(e);
                     var message = JSON.parse(e.message);
                     message.time = this.getMessageTime(message.created_at);
                     try {
@@ -1320,7 +1349,7 @@
                     }
 
                     //------show the recived message if the target contact is selected----------
-                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){  
+                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
                         console.log(this.messages.length);                          
                         this.messages.push(Object.assign({}, message));
                         console.log(this.messages.length);
@@ -1328,9 +1357,8 @@
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
-                        //TODO-JR: set message as readed in database
-                    
-                    }else{   
+                        //TODO-JR: set message as readed in database                    
+                    }else{
                         //-------find contact and update count_unread_messagess and last_message-------                    
                         var This = this;
                         This.contacts.forEach((item, index) => {
@@ -1354,12 +1382,13 @@
                             }
                         });
                     }
-                    this.$refs.newMessageSound.play();
+                    if(!this.mutedNotifications)
+                        this.$refs.newMessageSound.play();
             });
 
             window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
                 .listen('NewContactMessage', (e) => {
-                    if(this.amountContactsInBag<e.message)
+                    if(this.amountContactsInBag<e.message && !this.mutedNotifications)
                         this.$refs.newContactInBag.play();
                     // console.log(e);
                     this.amountContactsInBag = e.message;
@@ -1588,12 +1617,12 @@
     .receivedMessageText{
         color: black;
         background-color:white; 
-        padding:1em; max-width:30em; 
+        padding:1em; 
         border-top-left-radius:1em; 
         border-top-right-radius:1em; 
         border-bottom-right-radius:1em;
         min-width: 15rem;
-        width: 80%;
+        // width: 80%;
         max-width: 40rem;
     }    
     .receivedMessageImg{
@@ -1606,12 +1635,14 @@
     .sendedMessageText{
         color: white;
         background-color: #0377FE;
-        padding:1em; max-width:30em; 
+        padding:1em; 
         border-top-left-radius:1em; 
         border-top-right-radius:1em; 
         border-bottom-left-radius:1em;
-        min-width: 15em;
-        max-width: 40em;
+        min-width: 15rem;
+        // width: 80%;
+        // max-width: 40em;
+        max-width: 40rem;
     }
     .sendedMessageImg{
         width:40px;
@@ -1638,6 +1669,13 @@
     }
     .message-hout{
         visibility:hidden;
+    }
+    .message-options-style{
+        position: relative;
+        top: 0px;
+        float: right;
+        z-index: 8888;
+        font-size: 1.9rem;
     }
     .text-message{
         word-break: break-word; 
@@ -1928,6 +1966,24 @@
     }
 
      @media screen and (max-width: 700px) {
+         .receivedMessageText{
+            color: black;
+            background-color:white; 
+            padding:1em; 
+            border-top-left-radius:1em; 
+            border-top-right-radius:1em; 
+            border-bottom-right-radius:1em;
+            width: 80%;
+        }
+        .sendedMessageText{
+            color: white;
+            background-color: #0377FE;
+            padding:1em; 
+            border-top-left-radius:1em; 
+            border-top-right-radius:1em; 
+            border-bottom-left-radius:1em;
+            width: 80%;
+        }
         .receivedMessageImg{
             top: -0.8em;
             right: 0em;
