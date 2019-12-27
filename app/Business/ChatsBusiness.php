@@ -3,6 +3,7 @@
 namespace App\Business;
 
 use App\Repositories\ExtendedChatRepository;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class ChatsBusiness extends Business {
