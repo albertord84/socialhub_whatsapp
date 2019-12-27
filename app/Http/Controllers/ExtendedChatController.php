@@ -56,8 +56,8 @@ class ExtendedChatController extends ChatController
             
             // Update contact without latestAttendant
             $UpdateContact = Contact::find($Contact->id);
-            $UpdateContact->first_name = $contactInfo ?? $contactInfo->name;
-            $UpdateContact->json_data = $Contact->json_data ?? $Contact->json_data;
+            $UpdateContact->first_name = $contactInfo ? $contactInfo->name : $UpdateContact->first_name;
+            $UpdateContact->json_data = $Contact->json_data ? $Contact->json_data : $UpdateContact->json_data;
             $UpdateContact->save();
         }
 
