@@ -9,7 +9,6 @@ use App\Repositories\ExtendedRpiRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use stdClass;
 
 class ExtendedRpiController extends RpiController
 {
