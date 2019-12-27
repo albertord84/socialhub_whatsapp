@@ -47,11 +47,11 @@ class ExtendedChatController extends ChatController
             // Get cotact info (profile photo etc..)
             $Controller = new ExternalRPIController();
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
-            $Contact->json_data = $contactInfo->toJson();
+            $Contact->json_data = $contactInfo;
             
             // Update contact without latestAttendant
             $UpdateContact = Contact::find($Contact->id);
-            $UpdateContact->json_data = $contactInfo->toJson();
+            $UpdateContact->json_data = $Contact->json_data;
             $UpdateContact->save();
         }
 
