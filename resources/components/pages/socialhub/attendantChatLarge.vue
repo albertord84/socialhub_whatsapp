@@ -1009,9 +1009,7 @@
                                 console.log(error);
                             }
                         });
-                        This.messages = This.messages_copy;                        
-                        // This.messages = This.messages_copy.slice();
-                        // This.messages = Object.assign({}, This.messages_copy);
+                        This.messages = This.messages_copy;
                         This.selectedContact = This.contacts[This.selectedContactIndex];
                         This.selectedContactToEdit = Object.assign({}, This.selectedContact);
 
@@ -1372,7 +1370,14 @@
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
-                        //TODO-JR: set message as readed in database                    
+                        //TODO-JR: set message as readed in database
+                        // ApiService.post(this.chat_url+'/'+message.id+'/')
+                        //     .then(response => {
+                                
+                        //     })
+                        //     .catch(function(error) {
+                        //         miniToastr.error(error, "Error carregando os contatos");   
+                        //     });
                     }else{
                         //-------find contact and update count_unread_messagess and last_message-------                    
                         var This = this;
