@@ -81,8 +81,8 @@
                             </li> -->
                             <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
-                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" @click.prevent="getNewContactFromBag" title="Adherir novo contato"></span><br>
-                                    <span style="position:relative; top:-0.8em; left:0.5em" @click.prevent="getNewContactFromBag" title="Adherir novo contato" class="principal-icons">Contatos</span>                                                                        
+                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adherir novo contato"></span><br>
+                                    <span style="position:relative; top:-0.8em; left:0.5em" title="Adherir novo contato" class="principal-icons">Contatos</span>                                                                        
                                     <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="badge badge-primary badge-pill amount-contacts-in-bag  cl-gray">{{amountContactsInBag}}</span>
                                     <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag ">{{amountContactsInBag}}</span>
                                 </a>
