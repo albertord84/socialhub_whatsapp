@@ -53,7 +53,7 @@ class ExtendedChatController extends ChatController
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
             Log::debug('getContactFromBag | ExtendedChatController | whatsapp_id: ', [$Contact->whatsapp_id]);
             Log::debug('getContactFromBag | ExtendedChatController: ', [$contactInfo]);
-            $Contact->json_data = json_encode($contactInfo);
+            $Contact->json_data = $contactInfo;
             
             // Update contact without latestAttendant
             $UpdateContact = Contact::find($Contact->id);

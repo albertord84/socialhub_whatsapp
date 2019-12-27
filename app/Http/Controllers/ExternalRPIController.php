@@ -152,15 +152,13 @@ class ExternalRPIController extends Controller
             $client = new \GuzzleHttp\Client();
             $url = $this->APP_WP_API_URL . '/GetContact';
 
-            Log::debug('getContactFromBag URL: ', [$url]);
-            
             $contactInfo = $client->request('GET', $url, [
                 'query' => ['RemoteJid' => $contact_id],
             ]);
 
-            Log::debug('getContactFromBag Response: ', [$contactInfo]);
             $contactInfo->getBody()->getContents();
             $contactInfo = json_decode($contactInfo);
+            Log::debug('getContactFromBag Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
             throw $th;
         }
