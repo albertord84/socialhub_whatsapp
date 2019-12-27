@@ -34,7 +34,7 @@
                 </div>
 
                 <div v-show="whatssapChecked" class="col-lg-12 mt-2 mb-2 text-center">
-                    <img :src="model.json_data.picurl" class="img-fluid whatsappImageProfile" alt="">
+                    <img :src="(model.json_data!='' && model.json_data.picurl!='')? model.json_data.picurl : 'images/contacts/default.png'" class="img-fluid whatsappImageProfile" alt="">
                     <br><br>
                     <span class="fa fa-check fa-2x" style="color:green"> </span> Verificado
                 </div>
@@ -355,23 +355,18 @@
             },
 
             formReset:function(){
-                var This = this;
-                for (var prop in this.model) {
-                    This.model[prop]="";
-                }
-
-                // this.model.first_name = "";
-                // this.model.last_name = "";
-                // this.model.email = "";
-                // this.model.description = "";
-                // this.model.remember = "";
-                // this.model.summary = "";
-                // this.model.phone = "";
-                // this.model.whatsapp_id = "";
-                // this.model.facebook_id = "";
-                // this.model.instagram_id = "";
-                // this.model.linkedin_id = "";
-                // this.model.json_data = "";
+                this.model.first_name = "";
+                this.model.last_name = "";
+                this.model.email = "";
+                this.model.description = "";
+                this.model.remember = "";
+                this.model.summary = "";
+                this.model.phone = "";
+                this.model.whatsapp_id = "";
+                this.model.facebook_id = "";
+                this.model.instagram_id = "";
+                this.model.linkedin_id = "";
+                this.model.json_data = "";
             },
 
             countLengthSumary: function(){
