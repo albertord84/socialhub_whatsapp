@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Response;
 
+use function GuzzleHttp\json_encode;
+
 class ExtendedChatController extends ChatController
 {
     private $APP_WP_API_URL;
@@ -47,7 +49,7 @@ class ExtendedChatController extends ChatController
             // Get cotact info (profile photo etc..)
             $Controller = new ExternalRPIController();
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
-            $Contact->json_data = $contactInfo;
+            $Contact->json_data = json_encode($contactInfo);
             
             // Update contact without latestAttendant
             $UpdateContact = Contact::find($Contact->id);
