@@ -34,9 +34,8 @@
                 </div>
 
                 <div v-show="whatssapChecked" class="col-lg-12 mt-2 mb-2 text-center">
-                    <img :src="whatsappContactInfo.picurl" class="img-fluid whatsappImageProfile" alt="">
-                    <br>
-                    <br>
+                    <img :src="model.json_data.picurl" class="img-fluid whatsappImageProfile" alt="">
+                    <br><br>
                     <span class="fa fa-check fa-2x" style="color:green"> </span> Verificado
                 </div>
                 
@@ -193,8 +192,7 @@
                 isSendingUpdate: false,
                 isSendingDelete: false,
                 isCheckingWhatsapp: false,
-                whatssapChecked: false,  
-                whatsappContactInfo:'',
+                whatssapChecked: false,
 
                 attendants:null,
                 selectedAttendantToTransfer:null,
@@ -237,6 +235,7 @@
                             'attendant_id':this.contact_atendant_id,
                         })
                         .then(response => {
+                            this.whatssapChecked = false;
                             miniToastr.success("Contato adicionado com sucesso.","Sucesso");
                             this.formReset();
                             this.toggle_left('close');
@@ -343,9 +342,8 @@
                 this.isCheckingWhatsapp = true;
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
-                        this.whatsappContactInfo = response.data;
                         this.model.json_data = JSON.stringify(response.data);
-                        this.model.first_name = this.whatsappContactInfo.name;
+                        this.model.first_name = response.data.name;
                         this.whatssapChecked = true;
                         this.isCheckingWhatsapp = false;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
@@ -357,17 +355,23 @@
             },
 
             formReset:function(){
-                this.model.first_name = "";
-                this.model.last_name = "";
-                this.model.email = "";
-                this.model.description = "";
-                this.model.remember = "";
-                this.model.summary = "";
-                this.model.phone = "";
-                this.model.whatsapp_id = "";
-                this.model.facebook_id = "";
-                this.model.instagram_id = "";
-                this.model.linkedin_id = "";
+                var This = this;
+                for (var prop in this.model) {
+                    This.model[prop]="";
+                }
+
+                // this.model.first_name = "";
+                // this.model.last_name = "";
+                // this.model.email = "";
+                // this.model.description = "";
+                // this.model.remember = "";
+                // this.model.summary = "";
+                // this.model.phone = "";
+                // this.model.whatsapp_id = "";
+                // this.model.facebook_id = "";
+                // this.model.instagram_id = "";
+                // this.model.linkedin_id = "";
+                // this.model.json_data = "";
             },
 
             countLengthSumary: function(){
