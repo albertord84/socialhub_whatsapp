@@ -48,10 +48,10 @@ class Contact extends Model
         'summary',
         'phone',
         'whatsapp_id',
-        'whatsapp_datas',
         'facebook_id',
         'instagram_id',
         'linkedin_id',
+        'json_data',
         'status_id',
     ];
 
@@ -71,10 +71,10 @@ class Contact extends Model
         'summary' => 'string',
         'phone' => 'string',
         'whatsapp_id' => 'string',
-        'whatsapp_datas' => 'string',
         'facebook_id' => 'string',
         'instagram_id' => 'string',
         'linkedin_id' => 'string',
+        'json_data' => 'string',
         'status_id' => 'integer',
         'updated_at' => 'string',
     ];

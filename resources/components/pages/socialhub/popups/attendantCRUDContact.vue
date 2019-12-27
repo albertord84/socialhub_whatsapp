@@ -183,7 +183,7 @@
                     remember: "",
                     summary: "",
                     whatsapp_id: "",
-                    whatsapp_datas: "",
+                    json_data: "",
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
@@ -344,7 +344,7 @@
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
                         this.whatsappContactInfo = response.data;
-                        this.model.whatsapp_datas = JSON.stringify(response.data);
+                        this.model.json_data = JSON.stringify(response.data);
                         this.model.first_name = this.whatsappContactInfo.name;
                         this.whatssapChecked = true;
                         this.isCheckingWhatsapp = false;
@@ -448,7 +448,7 @@
         height:6.5rem;  
         /* border: 1px solid #e9e9e9; */
         border-bottom: 1px solid #e9e9e9;
-        padding-top:10px 
+        padding-top:10px;
     }
     /*-------------------------------------*/
     .menu{
