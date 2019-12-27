@@ -34,7 +34,7 @@
                 </div>
 
                 <div v-show="whatssapChecked" class="col-lg-12 mt-2 mb-2 text-center">
-                    <img :src="(model.json_data!='' && model.json_data.picurl!='')? model.json_data.picurl : 'images/contacts/default.png'" class="img-fluid whatsappImageProfile" alt="">
+                    <img :src="(whatsappDatas!='' && whatsappDatas.picurl!='')? whatsappDatas.picurl : 'images/contacts/default.png'" class="img-fluid whatsappImageProfile" alt="">
                     <br><br>
                     <span class="fa fa-check fa-2x" style="color:green"> </span> Verificado
                 </div>
@@ -193,6 +193,7 @@
                 isSendingDelete: false,
                 isCheckingWhatsapp: false,
                 whatssapChecked: false,
+                whatsappDatas:'',
 
                 attendants:null,
                 selectedAttendantToTransfer:null,
@@ -343,6 +344,7 @@
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
                         this.model.json_data = JSON.stringify(response.data);
+                        this.whatsappDatas = response.data;
                         this.model.first_name = response.data.name;
                         this.whatssapChecked = true;
                         this.isCheckingWhatsapp = false;
