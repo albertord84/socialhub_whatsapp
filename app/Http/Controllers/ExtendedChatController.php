@@ -12,8 +12,11 @@ use App\Repositories\ExtendedChatRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Response;
+
+use function GuzzleHttp\json_encode;
 
 class ExtendedChatController extends ChatController
 {
@@ -39,13 +42,24 @@ class ExtendedChatController extends ChatController
         $attendant_id = $User->id;
         
         $Contact = $this->chatRepository->getBagContact($attendant_id);
-
-        $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
-
         
-
-        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
         broadcast(new NewContactMessage($User->company_id, $newContactsCount));
+
+        if($Contact){
+            // Get cotact info (profile photo etc..)
+            $Controller = new ExternalRPIController();
+            $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
+            $Contact->json_data = $contactInfo;
+            $contactInfo = json_decode($Contact->json_data);
+            $Contact->first_name = $contactInfo ? $contactInfo->name : $Contact->first_name;
+            
+            // Update contact without latestAttendant
+            $UpdateContact = Contact::find($Contact->id);
+            $UpdateContact->first_name = $Contact->first_name;
+            $UpdateContact->json_data = $Contact->json_data ? $Contact->json_data : $UpdateContact->json_data;
+            $UpdateContact->save();
+        }
 
         return $Contact->toJson();
     }

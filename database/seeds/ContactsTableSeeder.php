@@ -24,8 +24,8 @@ class ContactsTableSeeder extends Seeder
             'first_name' => 'Alberto',
             'last_name' => 'Reyes',
             'email' => 'albertord84@gmail.com',
-            'whatsapp_id' => '5521965536174@s.whatsapp.net',
-            'json_data' => '{"urlProfilePicture":"images/contacts/alberto.jpg"}',
+            'whatsapp_id' => '5521965536174',
+            'json_data' => '{"picurl":"images/contacts/alberto.jpg"}',
             'status_id' => 1,
         ]);
         $this->command->info('Contact Alberto Reyes');
@@ -36,9 +36,9 @@ class ContactsTableSeeder extends Seeder
             'first_name' => 'Jose',
             'last_name' => 'Ramon',
             'email' => 'josergm86@gmail.com',
-            'whatsapp_id' => '5521965913089@s.whatsapp.net',
-            'json_data' => '{"urlProfilePicture":"images/contacts/jose_ramon.jpg"}',
-            // 'json_data' => '{"urlProfilePicture":"https://pps.whatsapp.net/v/t61.24694-24/56153764_2440222649335231_7717483608692228096_n.jpg?oe=5DC87488&oh=390fd24d73bdff889dd7e3242ef3422b"}',
+            'whatsapp_id' => '5521965913089',
+            'json_data' => '{"picurl":"images/contacts/jose_ramon.jpg"}',
+            // 'json_data' => '{"picurl":"https://pps.whatsapp.net/v/t61.24694-24/56153764_2440222649335231_7717483608692228096_n.jpg?oe=5DC87488&oh=390fd24d73bdff889dd7e3242ef3422b"}',
             'status_id' => 1,
         ]);
         $this->command->info('Contact Jose Ramon');
@@ -49,8 +49,8 @@ class ContactsTableSeeder extends Seeder
             'first_name' => 'Marcos',
             'last_name' => 'Medina',
             'email' => 'marcosmedina@azuregroup.com',
-            'whatsapp_id' => '5511970111071@s.whatsapp.net',
-            'json_data' => '{"urlProfilePicture":"images/contacts/medina.jpg"}',
+            'whatsapp_id' => '5511970111071',
+            'json_data' => '{"picurl":"images/contacts/medina.jpg"}',
             'status_id' => 1,
         ]);
         $this->command->info('Contact Marcos Medina');
@@ -62,8 +62,8 @@ class ContactsTableSeeder extends Seeder
                 'first_name' => 'name_'.$i,
                 'last_name' => 'surename_'.$i,
                 'email' => 'authomatic_'.$i.'@gmail.com',
-                'whatsapp_id' => '5511970111071_'.$i.'@s.whatsapp.net',
-                'json_data' => '{"urlProfilePicture":"images/contacts/default.png"}',
+                'whatsapp_id' => '5511970111071_'.$i.'',
+                'json_data' => '{"picurl":"images/contacts/default.png"}',
                 'status_id' => 1,
             ]);
             $this->command->info('Created authomatic contact name_'.$i);

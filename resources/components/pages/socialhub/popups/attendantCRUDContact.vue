@@ -34,9 +34,8 @@
                 </div>
 
                 <div v-show="whatssapChecked" class="col-lg-12 mt-2 mb-2 text-center">
-                    <img :src="whatsappContactInfo.picurl" class="img-fluid whatsappImageProfile" alt="">
-                    <br>
-                    <br>
+                    <img :src="(whatsappDatas!='' && whatsappDatas.picurl!='')? whatsappDatas.picurl : 'images/contacts/default.png'" class="img-fluid whatsappImageProfile" alt="">
+                    <br><br>
                     <span class="fa fa-check fa-2x" style="color:green"> </span> Verificado
                 </div>
                 
@@ -183,7 +182,7 @@
                     remember: "",
                     summary: "",
                     whatsapp_id: "",
-                    whatsapp_datas: "",
+                    json_data: "",
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
@@ -193,8 +192,8 @@
                 isSendingUpdate: false,
                 isSendingDelete: false,
                 isCheckingWhatsapp: false,
-                whatssapChecked: false,  
-                whatsappContactInfo:'',
+                whatssapChecked: false,
+                whatsappDatas:'',
 
                 attendants:null,
                 selectedAttendantToTransfer:null,
@@ -237,6 +236,7 @@
                             'attendant_id':this.contact_atendant_id,
                         })
                         .then(response => {
+                            this.whatssapChecked = false;
                             miniToastr.success("Contato adicionado com sucesso.","Sucesso");
                             this.formReset();
                             this.toggle_left('close');
@@ -343,9 +343,9 @@
                 this.isCheckingWhatsapp = true;
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
-                        this.whatsappContactInfo = response.data;
-                        this.model.whatsapp_datas = JSON.stringify(response.data);
-                        this.model.first_name = this.whatsappContactInfo.name;
+                        this.model.json_data = JSON.stringify(response.data);
+                        this.whatsappDatas = response.data;
+                        this.model.first_name = response.data.name;
                         this.whatssapChecked = true;
                         this.isCheckingWhatsapp = false;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
@@ -368,6 +368,7 @@
                 this.model.facebook_id = "";
                 this.model.instagram_id = "";
                 this.model.linkedin_id = "";
+                this.model.json_data = "";
             },
 
             countLengthSumary: function(){
@@ -448,7 +449,7 @@
         height:6.5rem;  
         /* border: 1px solid #e9e9e9; */
         border-bottom: 1px solid #e9e9e9;
-        padding-top:10px 
+        padding-top:10px;
     }
     /*-------------------------------------*/
     .menu{

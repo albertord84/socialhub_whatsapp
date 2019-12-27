@@ -24,11 +24,10 @@ class CreateContactsTable extends Migration {
 			$table->string('summary', 1000)->nullable();
 			$table->string('phone', 45)->nullable();
 			$table->string('whatsapp_id', 45)->index();
-			$table->string('whatsapp_datas', 1000)->index();
 			$table->string('facebook_id', 45)->nullable();
 			$table->string('instagram_id', 45)->nullable();
 			$table->string('linkedin_id', 45)->nullable();
-			$table->string('json_data')->default('{"urlProfilePicture":"images/contacts/default.png"}');
+			$table->string('json_data',1000)->default('{"picurl":"images/contacts/default.png"}');
 			$table->integer('status_id')->nullable()->index('fk_contacts_status')->default('2');
 			$table->timestamps();
 			$table->softDeletes();

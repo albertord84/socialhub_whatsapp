@@ -81,8 +81,8 @@
                             </li> -->
                             <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
-                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" @click.prevent="getNewContactFromBag" title="Adherir novo contato"></span><br>
-                                    <span style="position:relative; top:-0.8em; left:0.5em" @click.prevent="getNewContactFromBag" title="Adherir novo contato" class="principal-icons">Contatos</span>                                                                        
+                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adherir novo contato"></span><br>
+                                    <span style="position:relative; top:-0.8em; left:0.5em" title="Adherir novo contato" class="principal-icons">Contatos</span>                                                                        
                                     <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="badge badge-primary badge-pill amount-contacts-in-bag  cl-gray">{{amountContactsInBag}}</span>
                                     <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag ">{{amountContactsInBag}}</span>
                                 </a>
@@ -96,7 +96,7 @@
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
                                     <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="(contact.whatsapp_datas)?JSON.parse(contact.whatsapp_datas).picurl:'images/contacts/default.png'" class="contact-picture">
+                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" class="contact-picture">
                                     </div>
                                     <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
@@ -142,42 +142,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
-                                <article class="media mt-1 mb-4">
-                                    <a class="float-left desc-img mt-3">
-                                        <img :src="(contact.whatsapp_datas)?JSON.parse(contact.whatsapp_datas).picurl:'images/contacts/default.png'" class="contact-picture">
-                                    </a>
-                                    <div class="media-body pl-3 mb-1 mt-3 chat_content">
-                                        <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
-                                            {{textTruncate(contact.first_name,20) }}
-                                        </a><br>
-                                        <a class="text-muted"> 
-                                            <span v-if="!contact.last_message" style="font-size:1em">
-                                                <i>Sem mensagens</i>
-                                            </span>                                           
-                                            <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
-                                                {{textTruncate(contact.last_message.message,22)}}
-                                            </span>
-                                            <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
-                                                <i>Arquivo de imagem</i>
-                                            </span>
-                                            <span v-else-if="contact.last_message && contact.last_message.type_id==3" style="font-size:1em" title='Arquivo de audio'>
-                                                <i>Arquivo de audio</i>
-                                            </span>
-                                            <span v-else-if="contact.last_message && contact.last_message.type_id==4" style="font-size:1em" title='Arquivo de video'>
-                                                <i>Arquivo de video</i>
-                                            </span>
-                                            <span v-else-if="contact.last_message && contact.last_message.type_id==5" style="font-size:1em" title='Arquivo de texto'>
-                                                <i>Arquivo de texto</i>
-                                            </span>
-                                        </a>
-                                    </div>
-                                    <span class="mt-2 text-muted" style="font-size:0.8em; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}</span>
-                                    <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill cl-blue amount-unreaded-messages mt-5 mr-4" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess*100}}</div>
-                                    <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
-                                </article>
-                            </a> -->
                         </li>
                     </ul>
                 </v-scroll>
@@ -196,7 +160,7 @@
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
                                 <span @click.prevent="displayChatRightSide()" class="pointer-hover">
-                                    <img :src="(selectedContact.whatsapp_datas)?JSON.parse(selectedContact.whatsapp_datas).picurl:'images/contacts/default.png'" width="50px" class="profile-picture " >
+                                    <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" width="50px" class="profile-picture " >
                                     <b style="font-size:1.1rem; margin-left:2rem">{{ selectedContact.first_name }}</b>
                                 </span>
                             </li>
@@ -305,7 +269,7 @@
                                     </div>
 
                                     <div class="col-1 text-right">
-                                        <img :src="(selectedContact.whatsapp_datas)?JSON.parse(selectedContact.whatsapp_datas).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg">
+                                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg">
                                     </div>
                                     <div class="col-11">
                                         <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>
@@ -367,8 +331,57 @@
                     </ul>
                 </v-scroll> 
 
-                <!-- Criate and send new message -->
+                <!-- Criate and send new message -->                
                 <div class="p-3">
+                    <div class="input-group pb-5 pr-1 " style="color:gray">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
+                                <i v-if="isSendingNewMessage==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
+                                <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
+                            </div>
+                        </div>
+                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
+                            class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
+                        </textarea>
+                        <div v-if="file!=null" class="input-group-prepend">
+                            <i class="mdi mdi-file-cancel-outline fa-1_5x pr-4 input-group-text border border-left-0 container-icons-action-message pointer-hover" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Remover o arquivo" style="color:red"></i>
+                        </div>
+                        <!-- <div class="input-group-prepend">
+                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Mensagem de audio" ></i>
+                        </div> -->
+                        <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
+                             <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
+                                <template v-slot:button-content>
+                                    <i class="mdi mdi-paperclip fa-1_5x text-muted" title="Anexar arquivos" aria-hidden="false"></i>
+                                </template>                                
+                                <b-dropdown-item class="dropdown_content" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
+                                    <a href='javascript:void(0)' class="drpodowtext text-muted">
+                                        <i class="fa fa-file-image-o " aria-hidden="true"></i> Imagem
+                                    </a>                                        
+                                </b-dropdown-item>                                    
+                                <b-dropdown-item class="dropdown_content" @click.prevent="triggerEvent('fileInputAudio')" title="Anexar audio">
+                                    <a href='javascript:void(0)' class="drpodowtext text-muted">                                        
+                                        <i class="fa fa-file-audio-o " aria-hidden="true"></i> Audio
+                                    </a> 
+                                </b-dropdown-item>                                    
+                                <b-dropdown-item class="dropdown_content" @click.prevent="triggerEvent('fileInputDocument')" title="Anexar documento">
+                                    <a href='javascript:void(0)' class="drpodowtext text-muted">                                        
+                                        <i class="fa fa-file-text-o " aria-hidden="true"></i> Documento
+                                    </a> 
+                                </b-dropdown-item>
+                            </b-dropdown>
+                        </div>
+                        <div class="input-group-prepend" title="Enviar">
+                            <i class="mdi mdi-send icons-action-send" @click.prevent="sendMessage"></i>
+                        </div>
+                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
+                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
+                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
+                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
+                    </div>
+                </div>
+
+                <!-- <div class="p-3">
                     <div class="input-group pb-5 pr-1 " style="color:gray">
                         <div class="input-group-prepend">
                             <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
@@ -400,17 +413,19 @@
                                 <i class="fa fa-file-text-o icons-action-message"></i>
                             </a>
                         </div>
+
                         <div class="input-group-prepend">
                             <a href="javascript:void()" class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="sendMessage">
                                 <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
                             </a>
-                        </div>
+                        </div>                        
                         <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
                         <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
                         <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
                         <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
                     </div>
-                </div>
+                </div> -->
+
             </div>
 
             <!-- if not selected contact -->
@@ -456,7 +471,7 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white" >
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <img :src="(selectedContact.whatsapp_datas)?JSON.parse(selectedContact.whatsapp_datas).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
                         <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
                         
                         <!-- Informação -->
@@ -994,9 +1009,7 @@
                                 console.log(error);
                             }
                         });
-                        This.messages = This.messages_copy;                        
-                        // This.messages = This.messages_copy.slice();
-                        // This.messages = Object.assign({}, This.messages_copy);
+                        This.messages = This.messages_copy;
                         This.selectedContact = This.contacts[This.selectedContactIndex];
                         This.selectedContactToEdit = Object.assign({}, This.selectedContact);
 
@@ -1357,7 +1370,14 @@
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();
-                        //TODO-JR: set message as readed in database                    
+                        //TODO-JR: set message as readed in database
+                        // ApiService.post(this.chat_url+'/'+message.id+'/')
+                        //     .then(response => {
+                                
+                        //     })
+                        //     .catch(function(error) {
+                        //         miniToastr.error(error, "Error carregando os contatos");   
+                        //     });
                     }else{
                         //-------find contact and update count_unread_messagess and last_message-------                    
                         var This = this;
@@ -1693,7 +1713,10 @@
         width: 10em;
     }
     .text-input-message{
-        background-color:#fffff8;
+        // border: none;
+        // padding: 0.6rem;
+        // margin-top:0.5rem;
+        width: 100%;
         font-size:1em;
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
@@ -1781,12 +1804,15 @@
         height: 2em !important;
     }    
     .icons-action-send{
+        position: relative;
+        top: 0.5rem;
         color:white;
+        width: 4rem;
+        height: 4rem;
+        font-size: 2rem;
         background: #007bff;
-        width: 50px;
-        height: 50px;
         border-radius: 50%;
-        padding: 5px;
+        padding: 0.5rem 1.1rem;
     }
     .icons-action-send:hover{
         cursor: pointer;
@@ -1851,9 +1877,7 @@
     }    
     .icons-selected-file{
         font-size: 1.8rem;
-        color:#2471d6;
-        width: 60px;
-        height: 60px;
+        color:#2471d6;        
         padding: 25px;
     }
     .icons-selected-file:hover{

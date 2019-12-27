@@ -147,8 +147,6 @@ class ExternalRPIController extends Controller
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
     public function getContactInfo(string $contact_id = '5521976550734') //: stdClass
     {
-
-
         $contactInfo = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
@@ -157,6 +155,10 @@ class ExternalRPIController extends Controller
             $contactInfo = $client->request('GET', $url, [
                 'query' => ['RemoteJid' => $contact_id],
             ]);
+
+            $contactInfo = $contactInfo->getBody()->getContents();
+            // $contactInfo = json_decode($contactInfo);
+            Log::debug('getContactFromBag Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
             throw $th;
         }
