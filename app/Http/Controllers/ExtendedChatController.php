@@ -42,6 +42,7 @@ class ExtendedChatController extends ChatController
         $attendant_id = $User->id;
         
         $Contact = $this->chatRepository->getBagContact($attendant_id);
+        Log::debug('getContactFromBag | ExtendedChatController | Contact: ', [$Contact]);
         
         $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
         broadcast(new NewContactMessage($User->company_id, $newContactsCount));
@@ -50,6 +51,7 @@ class ExtendedChatController extends ChatController
             // Get cotact info (profile photo etc..)
             $Controller = new ExternalRPIController();
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
+            Log::debug('getContactFromBag | ExtendedChatController | whatsapp_id: ', [$Contact->whatsapp_id]);
             Log::debug('getContactFromBag | ExtendedChatController: ', [$contactInfo]);
             $Contact->json_data = json_encode($contactInfo);
             
