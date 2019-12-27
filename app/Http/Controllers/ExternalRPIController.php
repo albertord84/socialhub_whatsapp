@@ -27,7 +27,7 @@ class ExternalRPIController extends Controller
         //     $Company = Company::with('rpi')->findWhere(['id' => $this->User->company_id])->first();
         //     $this->$Company;
         // }
-
+        
         $this->APP_WP_API_URL = env('APP_WP_API_URL', 'http://shrpialberto.sa.ngrok.io.ngrok.io');
         $this->APP_FILE_PATH = 'public/' . env('APP_FILE_PATH');
     }

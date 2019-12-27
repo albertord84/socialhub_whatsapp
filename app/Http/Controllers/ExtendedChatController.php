@@ -39,13 +39,16 @@ class ExtendedChatController extends ChatController
         $attendant_id = $User->id;
         
         $Contact = $this->chatRepository->getBagContact($attendant_id);
-
-        $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
-
         
-
-        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
         broadcast(new NewContactMessage($User->company_id, $newContactsCount));
+
+        if($Contact){
+            $Controller = new ExternalRPIController();
+            $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
+            $Contact->json_data = $contactInfo->toJson();
+        }
+        $Contact->save();
 
         return $Contact->toJson();
     }
