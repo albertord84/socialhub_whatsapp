@@ -96,7 +96,7 @@
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
                                     <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).urlProfilePicture:''" class="contact-picture">
+                                        <img :src="(contact.whatsapp_datas)?JSON.parse(contact.whatsapp_datas).picurl:'images/contacts/default.png'" class="contact-picture">
                                     </div>
                                     <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
@@ -146,7 +146,7 @@
                             <!-- <a :href="contact.first_name" @click.prevent="getContactChat(contact)">
                                 <article class="media mt-1 mb-4">
                                     <a class="float-left desc-img mt-3">
-                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).urlProfilePicture:''" class="contact-picture">
+                                        <img :src="(contact.whatsapp_datas)?JSON.parse(contact.whatsapp_datas).picurl:'images/contacts/default.png'" class="contact-picture">
                                     </a>
                                     <div class="media-body pl-3 mb-1 mt-3 chat_content">
                                         <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
@@ -196,7 +196,7 @@
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
                                 <span @click.prevent="displayChatRightSide()" class="pointer-hover">
-                                    <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" width="50px" class="profile-picture " >
+                                    <img :src="(selectedContact.whatsapp_datas)?JSON.parse(selectedContact.whatsapp_datas).picurl:'images/contacts/default.png'" width="50px" class="profile-picture " >
                                     <b style="font-size:1.1rem; margin-left:2rem">{{ selectedContact.first_name }}</b>
                                 </span>
                             </li>
@@ -305,7 +305,7 @@
                                     </div>
 
                                     <div class="col-1 text-right">
-                                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''"  alt="" class="conversation-picture receivedMessageImg">
+                                        <img :src="(selectedContact.whatsapp_datas)?JSON.parse(selectedContact.whatsapp_datas).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg">
                                     </div>
                                     <div class="col-11">
                                         <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>
@@ -456,7 +456,7 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white" >
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).urlProfilePicture:''" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <img :src="(selectedContact.whatsapp_datas)?JSON.parse(selectedContact.whatsapp_datas).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
                         <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
                         
                         <!-- Informação -->

@@ -26,12 +26,16 @@
                     </div>
                     <input type="text" v-model="model.whatsapp_id" class="form-control border-left-0 outline" placeholder="Whatsapp Ex: 5521965984074" >
                     <div class="input-group-append" title="Conferir número">
-                        <span class="fa fa-check btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber"></span>
+                        <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber">
+                            <span v-if="!isCheckingWhatsapp" class="fa fa-check"></span>
+                            <span v-if="isCheckingWhatsapp" class="fa fa-spinner fa-spin "></span>
+                        </button>
                     </div>
                 </div>
 
                 <div v-show="whatssapChecked" class="col-lg-12 mt-2 mb-2 text-center">
-                    <img :src="whatsappContactInfo.imageProfile" class="img-fluid whatsappImageProfile" alt="">
+                    <img :src="whatsappContactInfo.picurl" class="img-fluid whatsappImageProfile" alt="">
+                    <br>
                     <br>
                     <span class="fa fa-check fa-2x" style="color:green"> </span> Verificado
                 </div>
@@ -179,6 +183,7 @@
                     remember: "",
                     summary: "",
                     whatsapp_id: "",
+                    whatsapp_datas: "",
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
@@ -187,7 +192,7 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
-                // whatssapChecked: true,                
+                isCheckingWhatsapp: false,
                 whatssapChecked: false,  
                 whatsappContactInfo:'',
 
@@ -335,18 +340,20 @@
             },
 
             checkWhatsappNumber:function(){
+                this.isCheckingWhatsapp = true;
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
-                        console.log(response.data);
-                        return;
                         this.whatsappContactInfo = response.data;
+                        this.model.whatsapp_datas = JSON.stringify(response.data);
+                        this.model.first_name = this.whatsappContactInfo.name;
                         this.whatssapChecked = true;
+                        this.isCheckingWhatsapp = false;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
                     })
                     .catch(function(error) {
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Número de Whatsapp incorreto ou não existe"); 
-                    });
+                    }).finally(() => {this.isCheckingWhatsapp = false;});
             },
 
             formReset:function(){
