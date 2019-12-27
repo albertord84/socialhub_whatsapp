@@ -64,7 +64,7 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login()
-    {
+    {        
         $credentials = request(['email', 'password']);
         $remember = true;
         $token = Auth::attempt($credentials, $remember);
@@ -133,7 +133,7 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
-    {
+    {        
         auth('api')->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }

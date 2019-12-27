@@ -29,30 +29,39 @@
                             </div>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address text-center">
+                            <a href="javascript:void()" @click.prevent="logoutWhatsapp" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar</a>
+                            <!-- State 1 - beforeRequest -->
                             <h4 v-if="beforeRequest" title="Solicitar código QR" class="mouse-hover" @click.prevent="recurrentGetTunnel">
                                 <div  ref="imgQRCode" class="qrcode-spinner">
                                     <i class="mdi mdi-reload fa-2x"></i>
                                 </div>
                             </h4>
+                            <!-- State 2 - duringRequest -->
                             <h4 v-if="duringRequest">
                                 <div  ref="imgQRCode" class="qrcode-spinner">
                                     <i class="fa fa-spinner fa-spin fa-2x"></i>
                                 </div>
                             </h4>
+                            <!-- State 3 - qrcodebase64 OK (show image) -->
                             <h4 v-if="qrcodebase64!=''">
-                                <img  :src="qrcodebase64" ref="imgQRCode" class="qrcode" alt="invoice QR Code"/>
+                                <img :src="qrcodebase64" ref="imgQRCode" class="qrcode" alt="invoice QR Code"/>
                             </h4>
+
+                            <!-- State 4 - isLoggued -->
                             <h4 v-if="isLoggued">
                                 <div  ref="imgQRCode" class="qrcode-spinner">
                                     <i class="mdi mdi-emoticon-happy-outline fa-2x"></i>
                                 </div>
                             </h4>
+                            <h6 v-if="isLoggued">Ja está logado</h6>
+
+                            <!-- State 5 - someError -->
                             <h4 v-if="someError">
                                 <div  ref="imgQRCode" class="qrcode-spinner">
                                     <i class="mdi mdi-emoticon-sad-outline fa-2x"></i>
                                 </div>
                             </h4>
-                            <h6 v-if="isLoggued">Ja está logado</h6>
+
                             <h6 v-if="!isLoggued">QRCode</h6>
                             <h6 v-if="someError">{{erroMessage}}</h6>
                         </div>
@@ -110,9 +119,7 @@
                     this.amountTimeRequest = 0;                  
                 }
                 this.amountTimeRequest += this.intervalTimeRequest;
-
                 console.log('New qrcode request with reload = '+reload+ ' and amountTimeRequest = '+this.amountTimeRequest);
-
                 var This =this;
                 ApiService.get(this.url,{ 'reload':reload})
                     .then(response => {
@@ -155,7 +162,23 @@
                     .finally(() => {
                         This.duringRequest=false;
                     });   
+            },
+
+            logoutWhatsapp(){
+                ApiService.get('RPI/logout')
+                    .then(response => {
+                        this.beforeRequest=true;
+                        this.duringRequest=false;
+                        this.qrcodebase64=false;
+                        this.isLoggued=false;
+                        this.someError=false;
+                        this.erroMessage='';
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Erro adicionando o contato");   
+                    });
             }
+
         },
 
         created: function() {

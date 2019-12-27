@@ -30,7 +30,7 @@ const actions = {
         JwtService.saveUser(data.user);
     },
 
-    logout({commit}) {
+    logout({commit}) {        
         JwtService.destroyToken();
         JwtService.destroyUser();
     }
