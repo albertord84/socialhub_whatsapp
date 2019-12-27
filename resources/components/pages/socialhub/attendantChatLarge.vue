@@ -471,7 +471,9 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white" >
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        <a href="javascript:void()" @click.prevent="modalShowContactPicture=!modalShowContactPicture">
+                            <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                        </a>
                         <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
                         
                         <!-- Informação -->
@@ -705,6 +707,11 @@
             </div>            
         </b-modal>
 
+        <!-- Modal to show contact image picture-->
+        <b-modal v-model="modalShowContactPicture" :hide-footer="true" centered class="" :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent">
+                <b-img  fluid :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
+        </b-modal>
+
         <!-- Modal to show user datas-->
         <b-modal v-model="modalUserCRUDDatas" centered :hide-footer="true" body-class="p-0" :hide-header="false" >
             <userCRUDDatas :contacts='contacts'></userCRUDDatas>
@@ -804,7 +811,8 @@
                 showContactMedia:false,
                 showContacDocuments:false,
                 showChatRightSide:false,
-                showChatFindMessages:false,
+                showChatFindMessages:false,                
+                modalShowContactPicture:false,                
 
                 isSearchContact:false,
                 isEditingContact:false,
@@ -1306,10 +1314,10 @@
             },
            
             logout() {
-                window.localStorage.removeItem('token')
-                window.localStorage.removeItem('user')
-                delete axios.defaults.headers.common['Authorization']
-                this.$router.push({name: "login"})
+                window.localStorage.removeItem('token');
+                window.localStorage.removeItem('user');
+                delete axios.defaults.headers.common['Authorization'];
+                this.$router.push({name: "login"});          
             },
 
             copyContact(){
@@ -1369,15 +1377,7 @@
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
-                            this.$refs.message_scroller.scrolltobottom();
-                        //TODO-JR: set message as readed in database
-                        // ApiService.post(this.chat_url+'/'+message.id+'/')
-                        //     .then(response => {
-                                
-                        //     })
-                        //     .catch(function(error) {
-                        //         miniToastr.error(error, "Error carregando os contatos");   
-                        //     });
+                            this.$refs.message_scroller.scrolltobottom();                        
                     }else{
                         //-------find contact and update count_unread_messagess and last_message-------                    
                         var This = this;

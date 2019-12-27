@@ -190,7 +190,7 @@
         margin-top: 7%;
         margin-bottom: 7%;
         box-shadow: 0 0 20px #ccc;
-        background-size: 100% 100%;
+        /* background-size: 100% 100%; */
         border-radius: 7px;
         background-color: #ffffff;
 
@@ -198,12 +198,12 @@
 
 
     .img_backgrond {
-        /* background-image: url("../../img/pages/Login-03-01.png"); */
-        background-image: url("../../img/socialhub/background2.jpg");
+        /* background-image: url("../../img/socialhub/background2.jpg"); */
+        background-color: #eaedf2;
         background-size: cover;
         background-repeat: no-repeat;
         width: 100%;
-        padding: 75px 15px;
+        /* padding: 75px 15px; */
     }
 
     label {

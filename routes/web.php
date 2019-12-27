@@ -23,8 +23,8 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::get('getContactInfo/{whatsapp_id}', 'ExternalRPIController@getContactInfo');
     Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
     Route::get('getQRCode', 'ExternalRPIController@getQRCode');
-
     Route::post('update', 'ExternalRPIController@update');
+    Route::post('logout', 'ExternalRPIController@logout');
 });
 
 Route::get('/', 'AuthController@index');
