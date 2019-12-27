@@ -46,7 +46,7 @@ class ExtendedChatController extends ChatController
         if($Contact){
             $Controller = new ExternalRPIController();
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
-            $Contact->json_data = $contactInfo->toJson();
+            $Contact->json_data = json_encode($contactInfo);
         }
         $Contact->save();
 
