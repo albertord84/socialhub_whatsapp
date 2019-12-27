@@ -156,7 +156,8 @@ class ExternalRPIController extends Controller
                 'query' => ['RemoteJid' => $contact_id],
             ]);
 
-            $contactInfo->getBody()->getContents();
+            $contactInfo = $contactInfo->getBody()->getContents();
+            $contactInfo = json_decode($contactInfo);
             Log::debug('getContactFromBag Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
             throw $th;
