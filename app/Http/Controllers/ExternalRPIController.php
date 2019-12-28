@@ -6,12 +6,14 @@ use App\Business\ChatsBusiness;
 use App\Business\FileUtils;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
+use App\Events\WhatsappLoggedIn;
 use App\Models\AttendantsContact;
-use App\Models\UsersAttendant;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Rpi;
+use App\Models\User;
+use App\Models\UsersAttendant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -23,12 +25,7 @@ class ExternalRPIController extends Controller
 
     public function __construct(?Rpi $Rpi = null)
     {
-        // $this->User = Auth::check() ? Auth::user() : session('logged_user');
-
-        // if ($this->User->role_id == ExtendedUserController::ATTENDANT) {
-        //     $Company = Company::with('rpi')->findWhere(['id' => $this->User->company_id])->first();
-        //     $this->$Company;
-        // }
+        parent::__construct();
 
         $this->Rpi = $Rpi ?? $this->getRPI();
 
@@ -57,10 +54,10 @@ class ExternalRPIController extends Controller
         $rpiUser = $request->user;
         $rpiPass = $request->password;
 
-        $Company = Company::with('rpi')->whereHas('rpi', function($query) use ($rpiMAC) {
+        $Company = Company::with('rpi')->whereHas('rpi', function ($query) use ($rpiMAC) {
             $query->where(['mac' => $rpiMAC]);
         })->first();
-        
+
         if (!$Company) { // Whether not found RPI associated to a company
             $RPI = Rpi::where(['mac' => $rpiMAC])->first();
             if (!$RPI) { // Whether not found RPI
@@ -86,6 +83,7 @@ class ExternalRPIController extends Controller
      * Force RPi Update
      */
     public static function sai_rpi_to_update(?Rpi $Rpi = null) //: stdClass
+
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -105,9 +103,30 @@ class ExternalRPIController extends Controller
     }
 
     /**
+     * Logged in from GoMain whatsapp handler
+     */
+    public function loggedin(Request $request = null): stdClass
+    {
+        Log::debug('WhatsappLoggedIn Callback Recived: ', [$request]);
+        $response = new stdClass();
+        try {
+            if ($this->LoggedUser) {
+                broadcast(new WhatsappLoggedIn($this->LoggedUser->id));
+                Log::debug('WhatsappLoggedIn Event to: ', [$this->LoggedUser]);
+            }
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        return $response;
+    }
+
+    /**
      * Log Out from whatsapp
      */
     public static function logout(?Rpi $Rpi = null) //: stdClass
+
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -130,6 +149,7 @@ class ExternalRPIController extends Controller
      * Get QRCode
      */
     public static function getQRCode(?Rpi $Rpi = null) //: stdClass
+
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -153,6 +173,7 @@ class ExternalRPIController extends Controller
      */
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
     public function getContactInfo(string $contact_id = '5521976550734', ?Rpi $Rpi = null) //: stdClass
+
     {
         $contactInfo = new stdClass();
         try {
@@ -184,10 +205,10 @@ class ExternalRPIController extends Controller
 
         $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
         $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
-        
+
         $contact_Jid = $input['Jid'];
         $company_phone = $input['CompanyPhone'];
-        
+
         $Company = Company::where(['phone' => $company_phone])->first();
         Log::debug('reciveTextMessage to Company: ', [$Company]);
 
@@ -196,7 +217,7 @@ class ExternalRPIController extends Controller
             ->first();
         Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
-        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact??null);
+        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact ?? null);
         if (!$Chat) {
             return "Ignored group message!";
         }
@@ -226,16 +247,16 @@ class ExternalRPIController extends Controller
      * @return Response
      */
     public function reciveFileMessage(Request $request)
-    { 
+    {
         $input = $request->all();
         Log::debug('reciveFileMessage: ', [$input]);
 
         $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
         $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
-        
+
         $contact_Jid = $input['Jid'];
         $company_phone = $input['CompanyPhone'];
-        
+
         $Company = Company::where(['phone' => $company_phone])->first();
         Log::debug('reciveFileMessage to Company: ', [$Company]);
 
@@ -256,7 +277,7 @@ class ExternalRPIController extends Controller
 
         $filePath = "companies/$Company->id/contacts/$Chat->contact_id/chat_files";
         Log::debug('reciveFileMessage File Path: ', [$filePath]);
-        
+
         $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
         Log::debug('reciveFileMessage File Response: ', [$file_response]);
 
@@ -302,10 +323,10 @@ class ExternalRPIController extends Controller
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
         $Chat->type_id = $type_id;
-        $Chat->status_id = MessagesStatusController::UNREADED;  
+        $Chat->status_id = MessagesStatusController::UNREADED;
         $Attendnat = isset($AttendantsContact->attendant_id) ? UsersAttendant::find($AttendantsContact->attendant_id) : null;
         if ($Attendnat && $Attendnat->selected_contact_id) {
-            $Chat->status_id = MessagesStatusController::READED; 
+            $Chat->status_id = MessagesStatusController::READED;
         }
         $Chat->socialnetwork_id = 1; // WhatsApp
         $Chat->message = $input['Msg'];
@@ -327,11 +348,11 @@ class ExternalRPIController extends Controller
                 $Contact->company_id = $Company->id;
                 $Contact->whatsapp_id = $contact_Jid;
                 $Contact->updated_at = time();
-    
+
                 // TODO Alberto: Get contact info photo
-    
+
                 $Contact->save();
-            } 
+            }
             // else throw new Exception("Error Processing Request", 1);
         }
 
@@ -382,7 +403,7 @@ class ExternalRPIController extends Controller
             if ($Company) {
                 $url = $Company->rpi->api_tunnel;
             }
-            
+
             $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
             Log::debug('sendFileMessage to Contact contact_Jid: ', [$contact_Jid]);
 
@@ -435,7 +456,7 @@ class ExternalRPIController extends Controller
      *
      * @return Rpi|null
      */
-    public static function getRPI() : ?Rpi
+    public static function getRPI(): ?Rpi
     {
         $RPI = null;
         try {
@@ -443,10 +464,10 @@ class ExternalRPIController extends Controller
             Log::debug('getRPI -> Loged User: ', [$User]);
 
             if ($User) {
-                $Company = Company::with('rpi')->where(['id' => $User->company_id])->whereHas('rpi')->first();    
+                $Company = Company::with('rpi')->where(['id' => $User->company_id])->whereHas('rpi')->first();
                 Log::debug('getRPI -> Company: ', [$Company]);
-                
-                $RPI = $Company ? $Company->rpi : null;  
+
+                $RPI = $Company ? $Company->rpi : null;
             }
         } catch (\Throwable $th) {
             throw $th;
