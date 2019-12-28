@@ -28,8 +28,6 @@ class ExtendedChatController extends ChatController
         parent::__construct($chatRepo);
 
         $this->chatRepository = $chatRepo;
-
-        // $this->APP_WP_API_URL = env('APP_WP_API_URL');
     }
 
     /**

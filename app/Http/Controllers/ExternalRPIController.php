@@ -19,7 +19,6 @@ use stdClass;
 
 class ExternalRPIController extends Controller
 {
-    private $APP_WP_API_URL;
     private $Rpi;
 
     public function __construct(?Rpi $Rpi = null)
