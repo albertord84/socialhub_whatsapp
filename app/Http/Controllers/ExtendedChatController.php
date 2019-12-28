@@ -49,7 +49,7 @@ class ExtendedChatController extends ChatController
 
         if($Contact){
             // Get cotact info (profile photo etc..)
-            $Controller = new ExternalRPIController();
+            $Controller = new ExternalRPIController(null);
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
             $Contact->json_data = $contactInfo;
             $contactInfo = json_decode($Contact->json_data);
@@ -133,7 +133,7 @@ class ExtendedChatController extends ChatController
         $input['attendant_id'] = $User->id;
 
         $Contact = Contact::findOrFail($input['contact_id']);
-        $externalRPiController = new ExternalRPIController();
+        $externalRPiController = new ExternalRPIController(null);
 
         $chat = $this->chatRepository->createMessage($input);
         
