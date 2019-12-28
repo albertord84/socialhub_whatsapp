@@ -149,7 +149,6 @@ class ExternalRPIController extends Controller
      * Get QRCode
      */
     public static function getQRCode(?Rpi $Rpi = null) //: stdClass
-
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -178,6 +177,7 @@ class ExternalRPIController extends Controller
         $contactInfo = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
+            $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/GetContact';
 
             $contactInfo = $client->request('GET', $url, [
