@@ -938,7 +938,7 @@
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
-                        }
+                        }                        
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
@@ -1420,9 +1420,9 @@
 
                             }
                         });
-                    }
-                    if(!this.logguedAttendant.mute_notifications)
-                        this.$refs.newMessageSound.play();
+                        if(!this.logguedAttendant.mute_notifications)
+                            this.$refs.newMessageSound.play();
+                    }                    
             });
 
             window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
