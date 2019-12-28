@@ -1,8 +1,8 @@
 <template>
     <div class="row chat p-0" style="background-color:#fefefe !important">
         <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
-        <audio ref="newMessageSound" autoplay controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
-        <audio ref="newContactInBag" autoplay controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
+        <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
+        <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
         <div id="chat-left-side" class="col-lg-3 p-0">
@@ -31,8 +31,8 @@
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
                                         <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotifications">
-                                            <span v-if="mutedNotifications" class="mdi mdi-volume-off"> Ativar som</span>
-                                            <span v-if="!mutedNotifications" class="mdi mdi-volume-high"> Desativar som</span>
+                                            <span v-if="logguedAttendant.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
+                                            <span v-if="!logguedAttendant.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
                                         </a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
@@ -777,8 +777,6 @@
                 contacts_bag_url: 'getBagContact',
                 chat_url: 'chats',
 
-                mutedNotifications:true,
-
                 contacts:[],
                 selectedContact:{},
                 selectedContactToEdit:{},
@@ -1243,18 +1241,20 @@
             },
 
             muteNotifications(){
-                // this.mutedNotifications = !this.mutedNotifications;
-                ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {"mute_notifications":!this.mutedNotifications})
+                var val = (this.logguedAttendant.mute_notifications)?0:1;
+                ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {
+                    "id": this.logguedAttendant.id,
+                    "mute_notifications": val
+                })
                 .then(response => {     
-                    if(this.mutedNotifications)
-                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
-                    else
+                    if(val)
                         miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
-                    this.mutedNotifications = !this.mutedNotifications;
+                    else
+                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
+                    this.logguedAttendant.mute_notifications = val;
                 })
                 .catch(function(error) {
-                    ApiService.process_request_error(error);
-                    miniToastr.error(error, "Erro adicionando contato");
+                    miniToastr.error(error, "Erro atualizando notificações de som.");
                 })
                 .finally(() => this.isUpdatingContact = false);
             },
@@ -1327,7 +1327,6 @@
                 .catch(function(error) {
                     miniToastr.error(error, "Error carregando os contatos");   
                 });
-
             },
 
             copyContact(){
@@ -1346,6 +1345,16 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
+
+            ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
+                'user_id':this.logguedAttendant.id,
+                'selected_contact_id':0
+            })
+            .then(response => {                            
+            })
+            .catch(function(error) {
+                miniToastr.error(error, "Error carregando os contatos");   
+            });
         },
 
         mounted(){
@@ -1412,13 +1421,13 @@
                             }
                         });
                     }
-                    if(!this.mutedNotifications)
+                    if(!this.logguedAttendant.mute_notifications)
                         this.$refs.newMessageSound.play();
             });
 
             window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
                 .listen('NewContactMessage', (e) => {
-                    if(this.amountContactsInBag<e.message && !this.mutedNotifications)
+                    if(this.amountContactsInBag<e.message && !this.logguedAttendant.mute_notifications)
                         this.$refs.newContactInBag.play();
                     // console.log(e);
                     this.amountContactsInBag = e.message;

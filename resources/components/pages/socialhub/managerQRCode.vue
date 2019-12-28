@@ -29,7 +29,8 @@
                             </div>
                         </div>
                         <div class="col-3 col-md-3 text-right invoice_address text-center">
-                            <a href="javascript:void()" @click.prevent="logoutWhatsapp" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar</a>
+                            <!-- <a href="javascript:void()" @click.prevent="logoutWhatsapp" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar</a> -->
+                            
                             <!-- State 1 - beforeRequest -->
                             <h4 v-if="beforeRequest" title="Solicitar código QR" class="mouse-hover" @click.prevent="recurrentGetTunnel">
                                 <div  ref="imgQRCode" class="qrcode-spinner">
