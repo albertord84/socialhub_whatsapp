@@ -213,8 +213,8 @@
                 disableStats: false
             });
 
-            window.Echo.channel('sh.whatsapp-loggued.' + this.logguedManager.id)
-                .listen('NewWhatsappLoggued', (e) => {                    
+            window.Echo.channel('sh.whatsapp-logged.' + this.logguedManager.id)
+                .listen('WhatsappLoggedIn', (e) => {                    
                     this.isLoggued=true;
             });
         },
