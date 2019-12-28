@@ -140,6 +140,8 @@
                     this.model.status_id = 1;                
 
                 this.isSendingInsert = true;
+                
+                console.log(123456789);
 
                 ApiService.post(this.url,this.model)
                 .then(response => {
@@ -155,8 +157,29 @@
                             this.formCancel();
                         })
                         .catch(function(error) {
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando contato");  
+                            console.log(error);
+                            if (error.response) {
+                                console.log('error.response');
+                                console.log(error.response.data);
+                                console.log(error.response.data.message);
+                                if(error.response.data.message.includes("Duplicate entry")){
+                                    miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Erro");
+                                }
+                                console.log(error.response.status);
+                                console.log(error.response.headers);
+                                if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
+                                    console.log(error.response.data.message);
+                                }
+                            } else
+                            if (error.request) {
+                                console.log('error.request');
+                                console.log(error.request);
+                            } else{
+                                console.log('some another error');
+                                console.log(error.message);
+                            }
+                            console.log('error config');
+                            console.log(error.config);  
                         })
                         .finally(() => this.isSendingInsert = false);       
                     }else{

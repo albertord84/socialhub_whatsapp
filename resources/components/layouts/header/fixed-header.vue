@@ -212,11 +212,17 @@
 
             },
             logout() {
-                window.localStorage.removeItem('token')
-                window.localStorage.removeItem('user')
-                delete axios.defaults.headers.common['Authorization']
-                this.$router.push({name: "login"})
-            }
+                ApiService.post("auth/logout")
+                    .then(response => {
+                        window.localStorage.removeItem('token')
+                        window.localStorage.removeItem('user')
+                        delete axios.defaults.headers.common['Authorization']
+                        this.$router.push({name: "login"})
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error encerrando sessão.");   
+                    });                
+            },
         },
 
         beforeMount: function () {

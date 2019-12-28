@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -20,7 +21,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index', 'login', 'register', 'passwordReset', 'passwordSave', 'deleteUser']]);
+        $this->middleware('auth:api', ['except' => ['index', 'login', 'logout', 'register', 'passwordReset', 'passwordSave', 'deleteUser']]);
     }
 
 
@@ -64,7 +65,8 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login()
-    {
+    {        
+        Log::info('login');
         $credentials = request(['email', 'password']);
         $remember = true;
         $token = Auth::attempt($credentials, $remember);
@@ -133,10 +135,11 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
-    {
+    {        
+        Log::info('logout');
         auth('api')->logout();
         return response()->json(['message' => 'Successfully logged out']);
-    }
+    }   
 
     /**
      * user list
