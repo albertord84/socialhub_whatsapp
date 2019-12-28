@@ -6,6 +6,7 @@ use App\Business\ChatsBusiness;
 use App\Business\FileUtils;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
+use App\Models\AttendantsContact;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
@@ -274,7 +275,7 @@ class ExternalRPIController extends Controller
      * @param array Request $input
      * @return Chat
      */
-    public function messageToChatModel(array $input, ?Contact $Contact): ExtendedChat
+    public function messageToChatModel(array $input, ?Contact $Contact, ?AttendantsContact $AttendantsContact): ExtendedChat
     {
         // if (strpos("@g.us", $input['Msg']) !== false) return null;
 
@@ -295,7 +296,10 @@ class ExternalRPIController extends Controller
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
         $Chat->type_id = $type_id;
-        $Chat->status_id = MessagesStatusController::UNREADED; // Active
+        $Chat->status_id = MessagesStatusController::UNREADED; 
+        if ($AttendantsContact && $AttendantsContact->selected_contact_id) {
+            $Chat->status_id = MessagesStatusController::READED; 
+        }
         $Chat->socialnetwork_id = 1; // WhatsApp
         $Chat->message = $input['Msg'];
         // $Chat->created_at = $input['Date'];
