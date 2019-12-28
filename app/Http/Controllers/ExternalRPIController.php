@@ -22,7 +22,7 @@ class ExternalRPIController extends Controller
     private $APP_WP_API_URL;
     private $Rpi;
 
-    public function __construct(?Rpi $Rpi)
+    public function __construct(?Rpi $Rpi = null)
     {
         // $this->User = Auth::check() ? Auth::user() : session('logged_user');
 
@@ -86,7 +86,7 @@ class ExternalRPIController extends Controller
     /**
      * Force RPi Update
      */
-    public static function sai_rpi_to_update(?Rpi $Rpi) //: stdClass
+    public static function sai_rpi_to_update(?Rpi $Rpi = null) //: stdClass
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -108,7 +108,7 @@ class ExternalRPIController extends Controller
     /**
      * Log Out from whatsapp
      */
-    public static function logout(?Rpi $Rpi) //: stdClass
+    public static function logout(?Rpi $Rpi = null) //: stdClass
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -130,7 +130,7 @@ class ExternalRPIController extends Controller
     /**
      * Get QRCode
      */
-    public static function getQRCode(?Rpi $Rpi) //: stdClass
+    public static function getQRCode(?Rpi $Rpi = null) //: stdClass
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
@@ -153,7 +153,7 @@ class ExternalRPIController extends Controller
      * Get Contact Info
      */
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
-    public function getContactInfo(string $contact_id = '5521976550734', ?Rpi $Rpi) //: stdClass
+    public function getContactInfo(string $contact_id = '5521976550734', ?Rpi $Rpi = null) //: stdClass
     {
         $contactInfo = new stdClass();
         try {
@@ -197,7 +197,7 @@ class ExternalRPIController extends Controller
             ->first();
         Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
-        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact);
+        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact??null);
         if (!$Chat) {
             return "Ignored group message!";
         }
@@ -304,7 +304,7 @@ class ExternalRPIController extends Controller
         $Chat->message = $input['Msg'];
         $Chat->type_id = $type_id;
         $Chat->status_id = MessagesStatusController::UNREADED;  
-        $Attendnat = UsersAttendant::find($AttendantsContact->attendant_id);
+        $Attendnat = isset($AttendantsContact->attendant_id) ? UsersAttendant::find($AttendantsContact->attendant_id) : null;
         if ($Attendnat && $Attendnat->selected_contact_id) {
             $Chat->status_id = MessagesStatusController::READED; 
         }
