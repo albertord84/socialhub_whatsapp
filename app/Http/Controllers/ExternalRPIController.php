@@ -7,6 +7,7 @@ use App\Business\FileUtils;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
 use App\Models\AttendantsContact;
+use App\Models\UsersAttendant;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
@@ -302,8 +303,9 @@ class ExternalRPIController extends Controller
         $Chat->source = 1;
         $Chat->message = $input['Msg'];
         $Chat->type_id = $type_id;
-        $Chat->status_id = MessagesStatusController::UNREADED; 
-        if ($AttendantsContact && $AttendantsContact->selected_contact_id) {
+        $Chat->status_id = MessagesStatusController::UNREADED;  
+        $Attendnat = UsersAttendant::find($AttendantsContact->attendant_id);
+        if ($Attendnat && $Attendnat->selected_contact_id) {
             $Chat->status_id = MessagesStatusController::READED; 
         }
         $Chat->socialnetwork_id = 1; // WhatsApp
