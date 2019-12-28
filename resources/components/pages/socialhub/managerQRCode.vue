@@ -116,11 +116,13 @@
                 var This =this;
                 ApiService.get(This.url,{ 'reload':1})
                     .then(response => {
+                        console.log(response.data);
                         This.rpi = response.data;
-                        if(This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
+                        console.log(This.rpi);
+                        if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
                             This.isLoggued = true;
                         }else
-                        if(This.rpi.QRCode.qrcodebase64){
+                        if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.qrcodebase64){
                             This.qrcodebase64 = This.rpi.QRCode.qrcodebase64;
                         }else{
                             This.isError=true;
@@ -198,7 +200,7 @@
         mounted(){
             this.beforeRequest = true;
 
-             window.Echo = new Echo({
+            window.Echo = new Echo({
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
