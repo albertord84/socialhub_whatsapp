@@ -126,7 +126,6 @@ class ExternalRPIController extends Controller
      * Log Out from whatsapp
      */
     public static function logout(?Rpi $Rpi = null) //: stdClass
-
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
