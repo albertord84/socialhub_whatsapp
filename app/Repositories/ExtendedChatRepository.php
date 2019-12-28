@@ -7,10 +7,10 @@ use App\Models\AttendantsContact;
 use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
-use App\Models\UsersAttendant;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ExtendedChatRepository extends ChatRepository
 {    
@@ -37,34 +37,34 @@ class ExtendedChatRepository extends ChatRepository
     public function getBagContact(int $attendant_id): Contact{
         try {
             // First message from Bag
-            $firstBagChat = $this->first();
+            $ChastMessages = $this->first();
             
             $Contact = null;
-            if ($firstBagChat) {
+            if ($ChastMessages) {
                 // Get Logged User
                 $User = Auth::check() ? Auth::user() : session('logged_user');
 
                 // Get contact From Bag by Contact Id
-                // $Contact = Contact::find($firstBagChat->contact_id);
+                // $Contact = Contact::find($ChastMessages->contact_id);
                 // $Contact = new Contact();
                 // $Contact->company_id = $User->company_id;
-                // $Contact->whatsapp_id = $firstBagChat->contact_id;
+                // $Contact->whatsapp_id = $ChastMessages->contact_id;
                 // $Contact->updated_at = time();
                 // $Contact->save();
 
                 // Associate contact to attendant $attendant_id
                 $AttendantsContact = new AttendantsContact();
-                $AttendantsContact->contact_id = $firstBagChat->contact_id;
+                $AttendantsContact->contact_id = $ChastMessages->contact_id;
                 $AttendantsContact->attendant_id = $attendant_id;
                 $AttendantsContact->save();
                 
                 // Move from Chats table to Attendant Table
-                $Chats = $this->findWhere(['contact_id' => $firstBagChat->contact_id])->all();
+                $Chats = $this->findWhere(['contact_id' => $ChastMessages->contact_id])->all();
                 foreach ($Chats as $key => $Chat) {
                     $newChat = $Chat->replicate();
                     $newChat->table = (string)$attendant_id;
                     $newChat->attendant_id = $attendant_id;
-                    $newChat->contact_id = $firstBagChat->contact_id;
+                    $newChat->contact_id = $ChastMessages->contact_id;
                     $newChat->save();
         
                     $Chat->delete();
@@ -72,7 +72,7 @@ class ExtendedChatRepository extends ChatRepository
 
                 
                 // Construct Contact with full data that chat need
-                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $firstBagChat->contact_id])->first();
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $ChastMessages->contact_id])->first();
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
@@ -112,18 +112,20 @@ class ExtendedChatRepository extends ChatRepository
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
         if (!$searchMessageByStringInput) {
-            $firstBagChat = $chatModel->where('contact_id', $contact_id)->get();
-            $chatModel->where('contact_id', $contact_id)
-                      ->where('status_id', MessagesStatusController::UNREADED)
-                      ->update(['status_id' => MessagesStatusController::READED]);
+            $ChastMessages = $chatModel->where('contact_id', $contact_id)->get();
+            // $chatModel->where('contact_id', $contact_id)
+            //           ->where('status_id', MessagesStatusController::UNREADED)
+            //           ->update(['status_id' => MessagesStatusController::READED]);
+            Log::debug('Chat Messages -> All: ', [$ChastMessages->count]);
         } else {
-            $firstBagChat = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
+            $ChastMessages = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
+            Log::debug('Chat Messages -> for match: ', [$searchMessageByStringInput, $ChastMessages->count]);
         }
         // $cities = $chatModel->model::whereHas('state', function($query) {
         //         $query->whereId($attendant_id);
         //     })
         //     ->pluck('name', 'id');
-        return $firstBagChat;
+        return $ChastMessages;
     }
 
     public function createMessage(array $attributes)
