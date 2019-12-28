@@ -13,7 +13,6 @@ use App\Repositories\ExtendedChatRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Response;
 
@@ -28,8 +27,6 @@ class ExtendedChatController extends ChatController
         parent::__construct($chatRepo);
 
         $this->chatRepository = $chatRepo;
-
-        $this->APP_WP_API_URL = env('APP_WP_API_URL');
     }
 
     /**
@@ -49,7 +46,7 @@ class ExtendedChatController extends ChatController
 
         if($Contact){
             // Get cotact info (profile photo etc..)
-            $Controller = new ExternalRPIController();
+            $Controller = new ExternalRPIController(null);
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
             $Contact->json_data = $contactInfo;
             $contactInfo = json_decode($Contact->json_data);
@@ -133,7 +130,7 @@ class ExtendedChatController extends ChatController
         $input['attendant_id'] = $User->id;
 
         $Contact = Contact::findOrFail($input['contact_id']);
-        $externalRPiController = new ExternalRPIController();
+        $externalRPiController = new ExternalRPIController(null);
 
         $chat = $this->chatRepository->createMessage($input);
         
