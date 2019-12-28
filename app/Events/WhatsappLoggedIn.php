@@ -20,7 +20,7 @@ class WhatsappLoggedIn
      */
     public function __construct(int $manager_id)
     {
-        $this->message = "Whatsapp manager logged in";
+        $this->message = "NewWhatsappLogged";
         $this->channel = "sh.whatsapp-logged.$manager_id";
     }
 
