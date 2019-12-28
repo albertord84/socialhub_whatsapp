@@ -63,14 +63,16 @@ class ExtendedUsersAttendantController extends UsersAttendantController
         if (empty($usersAttendant)) {
             Flash::error('Users Attendant not found');
 
-            return redirect(route('usersAttendants.index'));
+            // return redirect(route('usersAttendants.index'));
         }
         $request->updated_at = time();
         $usersAttendant = $this->usersAttendantRepository->update($request->all(), $id);
 
         Flash::success('Users Attendant updated successfully.');
 
-        return redirect(route('usersAttendants.index'));
+        return $usersAttendant->toJson();
+
+        // return redirect(route('usersAttendants.index'));
     }
 
     /**

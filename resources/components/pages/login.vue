@@ -203,6 +203,8 @@
         background-size: cover;
         background-repeat: no-repeat;
         width: 100%;
+        /* min-height: 100% !important; */
+        height: 100%;
         /* padding: 75px 15px; */
     }
 
@@ -213,7 +215,7 @@
     ::-webkit-input-placeholder {
         font-size: 14px;
     }
-    .img_backgrond .input-group-text{
+    .input-group-text{
         background-color: white;
     }
     .fa-user,.fa-key,.fa{

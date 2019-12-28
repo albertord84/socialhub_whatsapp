@@ -61,6 +61,7 @@ class User extends Authenticatable implements JWTSubject
         'image_path',
         'role_id',
         'status_id',
+        'mute_notifications'
     ];
 
     /**
@@ -86,6 +87,7 @@ class User extends Authenticatable implements JWTSubject
         'image_path' => 'string',
         'role_id' => 'integer',
         'status_id' => 'integer',
+        'mute_notifications' => 'integer',
     ];
 
     /**
@@ -95,7 +97,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public static $rules = [
         'id' => 'required',
-        'image_path' => 'required',
+        // 'image_path' => 'required',
     ];
 
     /**

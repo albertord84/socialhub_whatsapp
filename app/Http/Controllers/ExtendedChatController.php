@@ -8,6 +8,7 @@ use App\Events\NewContactMessage;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Contact;
+use App\Models\UsersAttendant;
 use App\Repositories\ExtendedChatRepository;
 use Auth;
 use Flash;
@@ -78,6 +79,11 @@ class ExtendedChatController extends ChatController
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         
         $Contact = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput);
+        
+        // Update selected_contact_id
+        $userAttendant = UsersAttendant::find($User->id);
+        $userAttendant->selected_contact_id = $contact_id;
+        $userAttendant->save();
 
         return $Contact->toJson();
     }

@@ -62,6 +62,7 @@ class User extends Model
         'image_path',
         'role_id',
         'status_id',
+        'mute_notifications',
     ];
 
     /**
@@ -87,6 +88,7 @@ class User extends Model
         'image_path' => 'string',
         'role_id' => 'integer',
         'status_id' => 'integer',
+        'mute_notifications' => 'integer',
     ];
 
     /**
@@ -96,7 +98,7 @@ class User extends Model
      */
     public static $rules = [
         'id' => 'required',
-        'image_path' => 'required',
+        // 'image_path' => 'required',
     ];
 
     /**
