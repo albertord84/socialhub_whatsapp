@@ -19,8 +19,9 @@ use stdClass;
 class ExternalRPIController extends Controller
 {
     private $APP_WP_API_URL;
+    private $Rpi;
 
-    public function __construct()
+    public function __construct(?Rpi $Rpi)
     {
         // $this->User = Auth::check() ? Auth::user() : session('logged_user');
 
@@ -29,7 +30,9 @@ class ExternalRPIController extends Controller
         //     $this->$Company;
         // }
 
-        $this->APP_WP_API_URL = env('APP_WP_API_URL', 'http://shrpialberto.sa.ngrok.io.ngrok.io');
+        $this->Rpi = $Rpi ?? $this->getRPI();
+
+        // $this->APP_WP_API_URL = env('APP_WP_API_URL', 'http://shrpialberto.sa.ngrok.io.ngrok.io');
         $this->APP_FILE_PATH = 'public/' . env('APP_FILE_PATH');
     }
 
@@ -82,13 +85,14 @@ class ExternalRPIController extends Controller
     /**
      * Force RPi Update
      */
-    public static function sai_rpi_to_update(Rpi $Rpi = null) //: stdClass
+    public static function sai_rpi_to_update(?Rpi $Rpi) //: stdClass
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
         $response = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
+            $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/update';
 
             $response = $client->request('POST', $url);
@@ -103,13 +107,14 @@ class ExternalRPIController extends Controller
     /**
      * Log Out from whatsapp
      */
-    public static function logout(Rpi $Rpi = null) //: stdClass
+    public static function logout(?Rpi $Rpi) //: stdClass
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
         $response = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
+            $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/logout';
 
             $response = $client->request('POST', $url);
@@ -124,13 +129,14 @@ class ExternalRPIController extends Controller
     /**
      * Get QRCode
      */
-    public static function getQRCode(Rpi $Rpi = null) //: stdClass
+    public static function getQRCode(?Rpi $Rpi) //: stdClass
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
         $QRCode = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
+            $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/qrcode';
 
             $QRCode = $client->request('GET', $url);
@@ -146,12 +152,12 @@ class ExternalRPIController extends Controller
      * Get Contact Info
      */
     // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
-    public function getContactInfo(string $contact_id = '5521976550734') //: stdClass
+    public function getContactInfo(string $contact_id = '5521976550734', ?Rpi $Rpi) //: stdClass
     {
         $contactInfo = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
-            $url = $this->APP_WP_API_URL . '/GetContact';
+            $url = $Rpi->api_tunnel . '/GetContact';
 
             $contactInfo = $client->request('GET', $url, [
                 'query' => ['RemoteJid' => $contact_id],
@@ -220,7 +226,7 @@ class ExternalRPIController extends Controller
      * @return Response
      */
     public function reciveFileMessage(Request $request)
-    {
+    { 
         $input = $request->all();
         Log::debug('reciveFileMessage: ', [$input]);
 
@@ -237,7 +243,7 @@ class ExternalRPIController extends Controller
             ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
             ->first();
 
-        $Chat = $this->messageToChatModel($input, $Contact);
+        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact);
         if (!$Chat) {
             return "Ignored group message!";
         }
@@ -421,6 +427,31 @@ class ExternalRPIController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    /**
+     * Get Rpi model from logged User
+     *
+     * @return Rpi|null
+     */
+    public static function getRPI() : ?Rpi
+    {
+        $RPI = null;
+        try {
+            $User = Auth::check() ? Auth::user() : session('logged_user');
+            Log::debug('getRPI -> Loged User: ', [$User]);
+
+            if ($User) {
+                $Company = Company::with('rpi')->where(['id' => $User->company_id])->whereHas('rpi')->first();    
+                Log::debug('getRPI -> Company: ', [$Company]);
+                
+                $RPI = $Company ? $Company->rpi : null;  
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        return $RPI;
     }
 
 }
