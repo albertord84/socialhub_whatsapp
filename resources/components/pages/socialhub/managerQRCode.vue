@@ -113,8 +113,8 @@
                 }
                 console.log("Requesting new QRCode request");
                 this.duringRequest=true;
-                var This =this;
-                ApiService.get(This.url,{ 'reload':1})
+                var This = this;
+                ApiService.get(This.url)
                     .then(response => {
                         console.log(response.data);
                         This.rpi = response.data;
