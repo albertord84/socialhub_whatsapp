@@ -125,13 +125,8 @@ class Contact extends Model
      **/
     public function latestAttendant()
     {
-        $latestAttendantContact = $this->latestAttendantContact()->get();
-        $latestAttendant = null;
-        if ($latestAttendantContact && $latestAttendantContact->attendant_id) {
-            $latestAttendant = UsersAttendant::find($latestAttendantContact->attendant_id);
-        }
-        
-        return $latestAttendant;
+        return $this->hasOne(\App\Models\AttendantsContact::class, 'contact_id', 'id')->latest();
+
         // $AttendantContact = $this->hasOne(\App\Models\AttendantsContact::class, 'contact_id', 'id')->latest();
         // dd("OK");
         // $Attendant = $AttendantContact->get();
