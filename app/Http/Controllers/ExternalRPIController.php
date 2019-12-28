@@ -134,14 +134,17 @@ class ExternalRPIController extends Controller
             $client = new \GuzzleHttp\Client();
             $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/logout';
-
+            Log::debug('RPI/Logout URL', [$url]);
+            
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
-            $response = json_decode($response);
-            return $response;
+            Log::debug('RPI/Logout $response', [$response]);
+            // $response = json_decode($response);
         } catch (\Throwable $th) {
             throw $th;
         }
+
+        return $response;
     }
 
     /**
@@ -156,6 +159,7 @@ class ExternalRPIController extends Controller
             $client = new \GuzzleHttp\Client();
             $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/qrcode';
+            Log::debug('getQRCode: ', [$url]);
 
             $QRCode = $client->request('GET', $url);
             $QRCode = $QRCode->getBody()->getContents();
