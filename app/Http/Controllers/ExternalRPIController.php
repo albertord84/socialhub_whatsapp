@@ -190,7 +190,7 @@ class ExternalRPIController extends Controller
             ->first();
         Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
-        $Chat = $this->messageToChatModel($input, $Contact);
+        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact);
         if (!$Chat) {
             return "Ignored group message!";
         }
