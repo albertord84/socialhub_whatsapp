@@ -246,7 +246,7 @@
                 if(value){
                     this.beforeRequest = false; 
                     this.duringRequest = false; 
-                    this.qrcodebase64 = true; //is it
+                    // this.qrcodebase64 = true; //is it
                     this.isLoggued = false;
                     this.isError = false;
                     this.statusMessage='Escanee o QRCode';

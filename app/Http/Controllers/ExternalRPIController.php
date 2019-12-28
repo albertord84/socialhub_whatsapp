@@ -164,6 +164,7 @@ class ExternalRPIController extends Controller
             $QRCode = $client->request('GET', $url);
             $QRCode = $QRCode->getBody()->getContents();
             $QRCode = json_decode($QRCode);
+            Log::debug('getQRCode $QRCode', [$QRCode]);
             return $QRCode;
         } catch (\Throwable $th) {
             throw $th;

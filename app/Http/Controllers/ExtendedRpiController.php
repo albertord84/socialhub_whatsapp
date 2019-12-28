@@ -30,6 +30,9 @@ class ExtendedRpiController extends RpiController
         if ($rpis) {
             if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
                 $QRCode = ExternalRPIController::getQRCode($rpis);
+                if (!$QRCode) {
+                    throw new Exception('Empty QRCode from whatsapp', 1);
+                }
 
                 $rpis->QRCode = $QRCode;
             }
