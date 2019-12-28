@@ -113,8 +113,8 @@
                 }
                 console.log("Requesting new QRCode request");
                 this.duringRequest=true;
-                var This =this;
-                ApiService.get(This.url,{ 'reload':1})
+                var This = this;
+                ApiService.get(This.url)
                     .then(response => {
                         This.rpi = response.data;
                         if(This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
