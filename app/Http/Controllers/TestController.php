@@ -34,6 +34,11 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
+        //testing enmails from laravel -Jose R
+        
+
+
+
         // TEST WITH REPOSITORY
         // $extContRepo = new ExtendedContactRepository(app());
         // $Contacts = $extContRepo->fullContacts(1, 4);
@@ -94,10 +99,10 @@ class TestController extends AppBaseController
         // }
 
         // MESSAGE TO ATTENDANT
-        $ExtendedChat = new ExtendedChat();
-        $ExtendedChat->table = '4';
-        $Chat = $ExtendedChat->find(1);
-        $pendingBC = broadcast(new MessageToAttendant($Chat));
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = '4';
+        // $Chat = $ExtendedChat->find(1);
+        // $pendingBC = broadcast(new MessageToAttendant($Chat));
         // dd($pendingBC);
         // var_dump($pendingBC);
 
