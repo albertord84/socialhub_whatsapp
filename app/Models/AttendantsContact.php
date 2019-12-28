@@ -26,7 +26,6 @@ class AttendantsContact extends Model
     public $fillable = [
         'attendant_id',
         'contact_id',
-        'selected_contact_id',
     ];
 
     /**
@@ -38,7 +37,6 @@ class AttendantsContact extends Model
         'id' => 'integer',
         'attendant_id' => 'integer',
         'contact_id' => 'integer',
-        'selected_contact_id' => 'integer',
     ];
 
     /**
