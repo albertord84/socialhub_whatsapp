@@ -88,7 +88,7 @@ class ExtendedContactController extends ContactController
         //um atendente: atualiza dados do contato, status, atendente
         //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
 
-        // unset($input["created_at"]);
+        // unset($input["status_id"]);
         // unset($input["updated_at"]);
 
         if (empty($contact)) {
