@@ -1243,20 +1243,20 @@
             },
 
             muteNotifications(){
-                this.mutedNotifications = !this.mutedNotifications;
-                // ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {"mute_notifications":!this.mutedNotifications})
-                // .then(response => {     
-                //     if(this.mutedNotifications)
-                //         miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
-                //     else
-                //         miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
-                //     this.mutedNotifications = !this.mutedNotifications;
-                // })
-                // .catch(function(error) {
-                //     ApiService.process_request_error(error);
-                //     miniToastr.error(error, "Erro adicionando contato");
-                // })
-                // .finally(() => this.isUpdatingContact = false);
+                // this.mutedNotifications = !this.mutedNotifications;
+                ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {"mute_notifications":!this.mutedNotifications})
+                .then(response => {     
+                    if(this.mutedNotifications)
+                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
+                    else
+                        miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
+                    this.mutedNotifications = !this.mutedNotifications;
+                })
+                .catch(function(error) {
+                    ApiService.process_request_error(error);
+                    miniToastr.error(error, "Erro adicionando contato");
+                })
+                .finally(() => this.isUpdatingContact = false);
             },
 
             Height(val){
@@ -1314,10 +1314,20 @@
             },
            
             logout() {
-                window.localStorage.removeItem('token');
-                window.localStorage.removeItem('user');
-                delete axios.defaults.headers.common['Authorization'];
-                this.$router.push({name: "login"});          
+                ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
+                    'user_id':this.logguedAttendant.id,
+                    'selected_contact_id':0
+                })
+                .then(response => {
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('user');
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.$router.push({name: "login"});                    
+                })
+                .catch(function(error) {
+                    miniToastr.error(error, "Error carregando os contatos");   
+                });
+
             },
 
             copyContact(){

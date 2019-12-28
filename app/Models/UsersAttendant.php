@@ -31,7 +31,8 @@ class UsersAttendant extends Model
     public $fillable = [
         'user_id',
         'user_manager_id',
-        'code'
+        'code',
+        'selected_contact_id'
     ];
 
     /**
@@ -42,7 +43,8 @@ class UsersAttendant extends Model
     protected $casts = [
         'user_id' => 'integer',
         'user_manager_id' => 'integer',
-        'code' => 'integer'
+        'code' => 'integer',
+        'selected_contact_id' => 'integer'
     ];
 
     /**
