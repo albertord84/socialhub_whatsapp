@@ -7,16 +7,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-use App\User;
-use App\Company;
-use App\SystemConfig;
+use App\Models\User;
+use App\Models\Company;
+use App\ModeSystemConfig;
 
 class EmailSiginCompany extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $Seller;
-    public $userManager;
+    public $User;
     public $Company;
 
     /**
@@ -24,10 +24,10 @@ class EmailSiginCompany extends Mailable
      *
      * @return void
      */
-    public function __construct(User $Seller, User $userManager, Company $Company)
+    public function __construct(User $Seller, User $User, Company $Company)
     {
         $this->Seller=$Seller;
-        $this->userManager=$userManager;
+        $this->User=$User;
         $this->Company=$Company;
     }
 
@@ -41,10 +41,12 @@ class EmailSiginCompany extends Mailable
         // return $this->view('view.SiginCompany');
 
         return $this
-            ->from('system@socialhub.pro') //pegar desde a tabela system_config
-            ->view('view.emails.SiginCompany')
-            ->with([
+            ->from('system@socialhub.pro') //pegar desde o .env  env("MAIL_USERNAME")
+            ->view('mails.SiginCompany', ['Seller' => $this->Seller,'User' => $this->User, 'Company' => $this->Company])
+            /*->with([
                 'Seller' => $this->Seller,
-            ]);
+                'userManager' => $this->User,
+                'Company' => $this->Company,
+            ])*/;
     }
 }
