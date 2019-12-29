@@ -82,6 +82,16 @@ export default {
             this.$refs.content.scrollTop = 0;
         },
 
+        scrolltopercent(percent) {
+            this.$refs.content.scrollTop = ((this.$refs.content.scrollHeight * percent)/100)-200;
+            console.log('percent');
+            console.log(percent);
+            console.log('new scrollTop');
+            console.log(this.$refs.content.scrollTop);
+            console.log('scrollHeight');
+            console.log(this.$refs.content.scrollHeight);
+        },
+
         scrolltobottom() {
             this.$refs.content.scrollTop = this.$refs.content.scrollHeight;
         }
@@ -97,6 +107,7 @@ export default {
         position: relative;
         z-index: 1;
         float: left;
+        left: -10px;
     }
 
     .ss-content {

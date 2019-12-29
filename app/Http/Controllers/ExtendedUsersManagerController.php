@@ -52,14 +52,14 @@ class ExtendedUsersManagerController extends UsersManagerController
 
         
         //enviar email de cadastro de companhia e manager para o manager e o seller que está fazendo a venda
-        $Seller = Auth::check()? Auth::user():session('logged_user');
-        $UserManager = User::find($usersManager->user_id);
-        $Company = Company::find($UserManager->company_id);
-        Mail::to($UserManager->email)
-            ->bcc($Seller->email)
-            ->send(new EmailSiginCompany($Seller, $UserManager, $Company));
+        // $Seller = Auth::check()? Auth::user():session('logged_user');
+        // $UserManager = User::find($usersManager->user_id);
+        // $Company = Company::find($UserManager->company_id);
+        // Mail::to($UserManager->email)
+        //     ->bcc($Seller->email)
+        //     ->send(new EmailSiginCompany($Seller, $UserManager, $Company));
 
-        return $usersManager->toJson();
+        // return $usersManager->toJson();
 
     }
 
