@@ -6,6 +6,8 @@ use App\Business\ChatsBusiness;
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
+use App\Mail\EmailSiginCompany;
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Repositories\ExtendedChatRepository;
@@ -35,9 +37,12 @@ class TestController extends AppBaseController
     public function index(Request $request)
     {
         //testing enmails from laravel -Jose R
-        
-
-
+        $Company = Company::find(1);
+        $Seller = User::find(2);
+        $UserManager = User::find(3);
+        Mail::to($UserManager->email)
+            ->bcc($Seller->email)
+            ->send(new EmailSiginCompany($Seller, $UserManager, $Company));
 
         // TEST WITH REPOSITORY
         // $extContRepo = new ExtendedContactRepository(app());
