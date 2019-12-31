@@ -1389,7 +1389,7 @@
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
                 wsHost: process.env.MIX_APP_HOST,
-                // wsHost: window.location.hostname,
+                wssHost: process.env.MIX_APP_HOST,
                 wsPort: 6001,
                 wssPort: 6001,
                 // enabledTransports: ['ws'],
@@ -1398,6 +1398,8 @@
                 encrypted: false,
                 disableStats: false
             });
+
+            console.log(window.Echo);
 
             window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
