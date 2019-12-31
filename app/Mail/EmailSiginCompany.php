@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-use App\Models\User;
+use App\User;
 use App\Models\Company;
 use App\ModeSystemConfig;
 

@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateUsersManagerRequest;
 use App\Mail\EmailSiginCompany;
 use App\Models\Company;
 use App\Models\UsersManager;
-use App\Models\User;
+use App\User;
 use App\Repositories\ExtendedUsersManagerRepository;
 use Illuminate\Http\Request;
 use Auth;
@@ -51,16 +51,15 @@ class ExtendedUsersManagerController extends UsersManagerController
         Flash::success('Users Manager saved successfully.');
         
         //enviar email de cadastro de companhia e manager para o manager e o seller que está fazendo a venda
-        // $Seller = Auth::check()? Auth::user():session('logged_user');
-        // $User = User::find($usersManager->user_id);
-        // var_dump($User);
-        // $User->password = rand(100000,999999);
-        // $Company = Company::find($User->company_id);
-        // Mail::to($User->email)
-        //     ->bcc($Seller->email)
-        //     ->send(new EmailSiginCompany($Seller, $User, $Company));
-        // $User->password = bcrypt($usersManager->password);
-        // $User->save();
+        $Seller = Auth::check()? Auth::user():session('logged_user');
+        $User = User::find($input['user_id']);
+        $User->password = rand(100000,999999);
+        $Company = Company::find($User->company_id);
+        Mail::to($User->email)
+            ->bcc($Seller->email)
+            ->send(new EmailSiginCompany($Seller, $User, $Company));
+        $User->password = bcrypt($User->password);
+        $User->save();
         
         return $usersManager->toJson();
 
