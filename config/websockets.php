@@ -109,7 +109,8 @@ return [
          * certificate chain of issuers. The private key also may be contained
          * in a separate file specified by local_pk.
          */
-        'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullcert.crt'),
+        'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullchain.pem'),
+        // 'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullcert.crt'),
 
         /*
          * Path to local private key file on filesystem in case of separate files for
