@@ -671,7 +671,7 @@
             <v-scroll :height="Height(100)" class="pl-0" color="#ccc" style="background-color:white" bar-width="8px">
                 <ul style="margin-left:-35px">
                     <li v-for="(message,index) in messagesWhereLike" class="chat_block pt-3 pb-3 founded-messages" :key="index">
-                        <a href="javascript:void()" @click.prevent="findAroundMessageId;">
+                        <a href="javascript:void()" @click.prevent="/*findAroundMessageId = message.id,*/ scrollAroundMessageId(message)">
                             <div class="">
                                 <span class="mt-2 text-muted" style="font-size:0.8em">{{getLastMessageTime(message.created_at)}}</span>
                                 <div class="media-body mb-2 mt-1 chat_content"><span class="text-muted">{{ message.message}}</span></div>
@@ -788,7 +788,7 @@
                 messages:[],
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
-                findAroundMessageId:null,
+                findAroundMessageId:null, //for find in database when the clicked and founded message is not in actual page
                 pageNumber:0,
                 messageTimeDelimeter:'',
                 file:null,
@@ -984,7 +984,7 @@
                 this.selectedContactIndex = contact.index;
                 ApiService.get(this.chat_url,{
                     'contact_id':contact.id,
-                    'message_id': this.findAroundMessageId,
+                    'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
                     'page':this.pageNumber
                 })
                     .then(response => {
@@ -1017,7 +1017,7 @@
                         });
                         This.messages = This.messages_copy;
                         This.selectedContact = This.contacts[This.selectedContactIndex];
-                        This.selectedContactToEdit = Object.assign({}, This.selectedContact);
+                        This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
 
                         // This.$refs.chatCenterSide
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
@@ -1035,7 +1035,7 @@
                 document.getElementById("chat-center-side").classList.remove("chat-center-side-open");
             },
             
-            getContactChatWhereLike: function() {
+            getContactChatWhereLike: function(cont) {
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
                 if (this.searchMessageByStringInput.length > 1){
                     ApiService.get(this.chat_url,{
@@ -1053,15 +1053,14 @@
                     this.messagesWhereLike = [];
                 }
             },
-
+            
             updateContact: function() {
                 if(!this.selectedContactToEdit.whatsapp_id || this.selectedContactToEdit.whatsapp_id.trim() =='' || this.selectedContactToEdit.first_name.trim() ==''){
                     miniToastr.error(error, "Confira os dados fornecidos");
                     return;
                 }
                 this.isUpdatingContact = true;
-                delete this.selectedContactToEdit.created_at;
-                delete this.selectedContactToEdit.updated_at;                
+                delete this.selectedContactToEdit.status_id;
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
                     if(this.isEditingContact)
@@ -1331,7 +1330,34 @@
 
             copyContact(){
                 this.item= Object.assign({}, this.selectedContact);
-            }
+            },
+
+            getContactInfoToEdit(cont){
+                var tmp = Object.assign({}, cont);
+                delete tmp.count_unread_messagess;
+                delete tmp.index;
+                delete tmp.last_message;
+                delete tmp.latest_attendant;
+                delete tmp.latest_attendant_contact;
+                delete tmp.created_at;
+                delete tmp.updated_at;
+                delete tmp.deleted_at;
+                return tmp;
+            },
+
+            scrollAroundMessageId(message){
+                var percent =- 1, total = this.messages.length;
+                for (var i = 0; i < total; i++) {
+                    if (this.messages[i].id == message.id) {
+                        percent = i;
+                        break; 
+                    }
+                }
+                if(percent > -1){
+                    percent = (percent*100)/total;
+                    this.$refs.message_scroller.scrolltopercent(percent);
+                }
+            },
         },
 
         updated(){

@@ -274,7 +274,7 @@
             },
             timeCounter: function(value){
                 if(value>=0 && this.qrcodebase64){
-                    this.statusMessage= value/1000 + 'segundos restantes';                    
+                    this.statusMessage= value/1000 + ' segundos restantes';                    
                 }
             },
 

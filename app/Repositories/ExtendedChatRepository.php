@@ -23,7 +23,7 @@ class ExtendedChatRepository extends ChatRepository
             $Attendants = $extAttContRepo->getAttendants($contact_id);
 
             foreach ($Attendants as $key => $Attendant) {
-                $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id);
+                $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput);
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
             
@@ -111,20 +111,13 @@ class ExtendedChatRepository extends ChatRepository
     public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
+        
         if (!$searchMessageByStringInput) {
             $ChastMessages = $chatModel->where('contact_id', $contact_id)->get();
-            // $chatModel->where('contact_id', $contact_id)
-            //           ->where('status_id', MessagesStatusController::UNREADED)
-            //           ->update(['status_id' => MessagesStatusController::READED]);
-            Log::debug('Chat Messages -> All: ', [$ChastMessages->count]);
         } else {
             $ChastMessages = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
-            Log::debug('Chat Messages -> for match: ', [$searchMessageByStringInput, $ChastMessages->count]);
         }
-        // $cities = $chatModel->model::whereHas('state', function($query) {
-        //         $query->whereId($attendant_id);
-        //     })
-        //     ->pluck('name', 'id');
+
         return $ChastMessages;
     }
 

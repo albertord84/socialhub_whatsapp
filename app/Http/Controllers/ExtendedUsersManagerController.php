@@ -7,8 +7,8 @@ use App\Http\Requests\UpdateUsersManagerRequest;
 use App\Mail\EmailSiginCompany;
 use App\Models\Company;
 use App\Models\UsersManager;
-use App\Repositories\ExtendedUsersManagerRepository;
 use App\User;
+use App\Repositories\ExtendedUsersManagerRepository;
 use Illuminate\Http\Request;
 use Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -49,16 +49,18 @@ class ExtendedUsersManagerController extends UsersManagerController
         $usersManager = $this->usersManagerRepository->create($input);
 
         Flash::success('Users Manager saved successfully.');
-
         
         //enviar email de cadastro de companhia e manager para o manager e o seller que está fazendo a venda
         $Seller = Auth::check()? Auth::user():session('logged_user');
-        $UserManager = User::find($usersManager->user_id);
-        $Company = Company::find($UserManager->company_id);
-        Mail::to($UserManager->email)
+        $User = User::find($input['user_id']);
+        $User->password = rand(100000,999999);
+        $Company = Company::find($User->company_id);
+        Mail::to($User->email)
             ->bcc($Seller->email)
-            ->send(new EmailSiginCompany($Seller, $UserManager, $Company));
-
+            ->send(new EmailSiginCompany($Seller, $User, $Company));
+        $User->password = bcrypt($User->password);
+        $User->save();
+        
         return $usersManager->toJson();
 
     }

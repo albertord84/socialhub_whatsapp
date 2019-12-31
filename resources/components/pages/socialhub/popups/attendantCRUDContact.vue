@@ -291,7 +291,8 @@
                 }
                 
                 this.isSendingUpdate = true;
-                // delete this.model.updated_at;                    
+                delete this.model.updated_at;                
+                delete this.model.status_id;                
                 ApiService.put(this.url+'/'+this.item.id, this.model)
                 .then(response => {
                     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
@@ -421,7 +422,7 @@
             },
 
             editclose() {                
-               this.$emit('onclose');
+                this.$emit('onclose');
             },
         },
 
