@@ -5,7 +5,7 @@
 
     # TODO: Alberto
     #RewriteCond %{HTTPS} on
-    #RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
     RewriteEngine On
 
