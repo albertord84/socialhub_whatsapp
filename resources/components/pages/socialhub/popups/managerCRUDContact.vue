@@ -354,7 +354,7 @@
                     }
                 }
                 if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
-                    check = validation.check('phone', this.model.whatsapp_id)
+                    check = validation.check('whatsapp', this.model.whatsapp_id)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;

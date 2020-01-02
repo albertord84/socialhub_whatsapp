@@ -23,11 +23,13 @@ var regexp={
     },
     'phone':{
         // 'regexp':'^(([5]{2} [1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([5]{2}[1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}))$',
-        'regexp':'^([5]{2} [1-9]{2} [9][0-9]{4}-[0-9]{4})|([5]{2} [1-9]{2} [2-7][0-9]{3}-[0-9]{4})$',
-        'error':'Número de telefone inválido. Confira se o DDD foi inserido'
+        'regexp':'^([5]{2} [1-9]{2} [2-7][0-9]{3}-[0-9]{4})$',
+        'error':'Número de telefone inválido. Confira se o número inserido corresponde a um telefone fixo e que o DDD seja válido'
     },
-
-
+    'whatsapp':{
+        'regexp':'^([5]{2} [1-9]{2} [9][0-9]{4}-[0-9]{4})$',
+        'error':'Número de whatsapp inválido. Confira se o número inserido corresponde a um telefone celular e que o DDD seja válido'
+    },
     'date':{
         'regexp':'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}$',
         'error':'Data inválida'

@@ -667,7 +667,7 @@
                 }
 
                 if(this.modelCompany.whatsapp && this.modelCompany.whatsapp !=''){
-                    check = validation.check('phone', this.modelCompany.whatsapp)
+                    check = validation.check('whatsapp', this.modelCompany.whatsapp)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
@@ -760,7 +760,7 @@
                 }
 
                 if(this.modelManager.whatsapp_id && this.modelManager.whatsapp_id !=''){
-                    check = validation.check('phone', this.modelManager.whatsapp_id)
+                    check = validation.check('whatsapp', this.modelManager.whatsapp_id)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;

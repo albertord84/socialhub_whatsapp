@@ -1339,10 +1339,10 @@
                     }
                 }
                 if(this.selectedContactToEdit.whatsapp_id && this.selectedContactToEdit.whatsapp_id !=''){
-                    check = validation.check('phone', this.selectedContactToEdit.whatsapp_id)
+                    check = validation.check('whatsapp', this.selectedContactToEdit.whatsapp_id)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
+                        this.flagReference = false;s
                     }
                 }else{
                     miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
