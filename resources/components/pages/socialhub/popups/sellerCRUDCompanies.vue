@@ -53,18 +53,18 @@
 
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)" disabled="" class="form-control"/>                            
+                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
                         </div>                                                      
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.estado" title="Ex: RJ" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)" disabled="" class="form-control"/>                            
+                            <input v-model="modelCompany.estado" title="Ex: RJ" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)"  class="form-control"/>                            
                         </div> 
                     </div>
 
                     <div class="row">
                         <div class="col-lg-8 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida (*)" disabled="" class="form-control"/>
+                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida (*)"  class="form-control"/>
                         </div>
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
@@ -79,7 +79,7 @@
                         </div> 
                         <div class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.bairro" title="Ex: centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" disabled="" class="form-control"/>
+                            <input v-model="modelCompany.bairro" title="Ex: centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
                         </div>
                     </div>
 
@@ -379,7 +379,7 @@
                 this.trimDataModels();
                 this.validateDataModelCompany();
                 this.validateDataModelManager();
-                // this.validateDataModelRpi();
+                this.validateDataModelRpi();
                 if (this.flagReference == false){
                     miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
                     this.isSendingUpdate = false;
@@ -607,13 +607,13 @@
                 if(this.modelManager.instagram_id) this.modelManager.instagram_id = this.modelManager.instagram_id.trim();
                 if(this.modelManager.linkedin_id) this.modelManager.linkedin_id = this.modelManager.linkedin_id.trim();
 
-                // if(this.modelRpi.api_user) this.modelRpi.api_user = this.modelRpi.api_user.trim();
-                // if(this.modelRpi.api_user) this.modelRpi.api_password = this.modelRpi.api_password.trim();
-                // if(this.modelRpi.root_user) this.modelRpi.root_user = this.modelRpi.root_user.trim();
-                // if(this.modelRpi.root_password) this.modelRpi.root_password = this.modelRpi.root_password.trim();
+                if(this.modelRpi.api_user) this.modelRpi.api_user = this.modelRpi.api_user.trim();
+                if(this.modelRpi.api_user) this.modelRpi.api_password = this.modelRpi.api_password.trim();
+                if(this.modelRpi.root_user) this.modelRpi.root_user = this.modelRpi.root_user.trim();
+                if(this.modelRpi.root_password) this.modelRpi.root_password = this.modelRpi.root_password.trim();
                 // if(this.modelRpi.tcp_tunnel) this.modelRpi.tcp_tunnel = this.modelRpi.tcp_tunnel.trim();
                 // if(this.modelRpi.tcp_port) this.modelRpi.tcp_port = this.modelRpi.tcp_port.trim();
-                // if(this.modelRpi.mac) this.modelRpi.mac = this.modelRpi.mac.trim();
+                if(this.modelRpi.mac) this.modelRpi.mac = this.modelRpi.mac.trim();
                 // if(this.modelRpi.api_tunnel) this.modelRpi.api_tunnel = this.modelRpi.api_tunnel.trim();
                 // if(this.modelRpi.soft_version) this.modelRpi.soft_version = this.modelRpi.soft_version.trim();
                 // if(this.modelRpi.soft_version_date) this.modelRpi.soft_version_date = this.modelRpi.soft_version_date.trim();  
@@ -808,21 +808,21 @@
                     }
                 }
 
-                if(this.modelRpi.tcp_tunnel && this.modelRpi.tcp_tunnel!=''){
-                    check = validation.check('tcp_tunnel', this.modelRpi.tcp_tunnel);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.tcp_tunnel && this.modelRpi.tcp_tunnel!=''){
+                //     check = validation.check('tcp_tunnel', this.modelRpi.tcp_tunnel);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
 
-                if(this.modelRpi.tcp_port && this.modelRpi.tcp_port!=''){
-                    check = validation.check('tcp_port', this.modelRpi.tcp_port);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.tcp_port && this.modelRpi.tcp_port!=''){
+                //     check = validation.check('tcp_port', this.modelRpi.tcp_port);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
                 
                 if(this.modelRpi.mac && this.modelRpi.mac !=''){
                     check = validation.check('mac', this.modelRpi.mac)
@@ -830,37 +830,34 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O endereço MAC é obrigatorio" );
-                    this.flagReference = false;
                 }
 
-                if(this.modelRpi.api_tunnel && this.modelRpi.api_tunnel !=''){
-                    check = validation.check('tunnel', this.modelRpi.api_tunnel)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O Tunel da API é obrigatorio" );
-                    this.flagReference = false;
-                }
+                // if(this.modelRpi.api_tunnel && this.modelRpi.api_tunnel !=''){
+                //     check = validation.check('tunnel', this.modelRpi.api_tunnel)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O Tunel da API é obrigatorio" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.modelRpi.soft_version && this.modelRpi.soft_version !=''){
-                    check = validation.check('version', this.modelRpi.soft_version)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.soft_version && this.modelRpi.soft_version !=''){
+                //     check = validation.check('version', this.modelRpi.soft_version)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
 
-                if(this.modelRpi.soft_version_date && this.modelRpi.soft_version_date!=''){
-                    check =  validation.check('date', this.modelRpi.soft_version_date);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.soft_version_date && this.modelRpi.soft_version_date!=''){
+                //     check =  validation.check('date', this.modelRpi.soft_version_date);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
             }
         },
 
