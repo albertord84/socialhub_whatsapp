@@ -563,7 +563,7 @@
                 }
 
                 // Validando CEP inserido
-                axios.get('cep/'+this.modelCompany.CEP)
+                ApiService.get('cep/'+this.modelCompany.CEP)
                     .then(response => {
                         console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
