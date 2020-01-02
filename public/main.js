@@ -260,8 +260,7 @@ window.axios = __webpack_require__(86);
 var ApiService = {
     init: function init() {
         __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_axios___default.a, __WEBPACK_IMPORTED_MODULE_1_axios___default.a);
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.defaults.baseURL = '';
-        // Vue.axios.defaults.baseURL = 'api/';
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.defaults.baseURL = ''; // Vue.axios.defaults.baseURL = 'api/';
         __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
         //Jose R: Vue.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     },

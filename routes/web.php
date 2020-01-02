@@ -59,6 +59,7 @@ Route::post('usersManagers/{company_id}/getManager', 'ExtendedUsersManagerContro
 
 Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
 Route::resource('usersSellers', 'ExtendedUsersSellerController');
+Route::get('cep/{cep}', 'ExtendedUsersSellerController@cep');
 Route::resource('passwordResets', 'PasswordResetController');
 
 // Route::resource('contacts', 'ContactController');
