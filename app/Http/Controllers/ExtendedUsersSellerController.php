@@ -104,4 +104,11 @@ class ExtendedUsersSellerController extends UsersSellerController
 
         return redirect(route('usersSellers.index'));
     }
+
+    public function cep($cep){
+        $datas = file_get_contents('https://viacep.com.br/ws/'.$cep.'/json/');
+        if(!strpos($datas,'erro')>0)
+            return $datas; //ja esta em json
+        return null;
+    }
 }

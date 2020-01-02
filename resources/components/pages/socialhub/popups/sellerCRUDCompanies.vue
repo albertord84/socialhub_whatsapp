@@ -563,8 +563,14 @@
                 }
 
                 // Validando CEP inserido
-                ApiService.get('https://viacep.com.br/ws/'+this.modelCompany.CEP+'/json')
+                // var saveHeader = Object.assign({}, Vue.axios.defaults.headers);
+                // Vue.axios.defaults.headers.post['Access-Control-Allow-Origin'] ='*';
+                // Vue.axios.defaults.baseURL = "https://viacep.com.br/";
+                // axios.get('ws/'+this.modelCompany.CEP+'/json')
+                
+                axios.get('cep/'+this.modelCompany.CEP)
                     .then(response => {
+                        console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
                             miniToastr.error("Confira os dados fornecidos", "O CEP inserido não existe"); 
                             return;
@@ -576,8 +582,12 @@
                         this.modelCompany.rua = response.data.logradouro;
                     })
                     .catch(function(error) {
+                        console.log(error);
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro validando CEP"); 
+                    }).finally(() => {
+                        Vue.axios.defaults.baseURL = "";
+                        // Vue.axios.defaults.headers = saveHeader;
                     });
             },
 
@@ -868,7 +878,6 @@
             if(this.action!='insert')
                 this.editCompany();
             this.logued_user = JSON.parse(window.localStorage.getItem('user'));
-            
         },
 
         created() {

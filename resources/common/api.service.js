@@ -8,8 +8,7 @@ window.axios = require('axios');
 const ApiService = {
     init() {
         Vue.use(VueAxios, axios);
-        Vue.axios.defaults.baseURL = '';
-        // Vue.axios.defaults.baseURL = 'api/';
+        Vue.axios.defaults.baseURL = ''; // Vue.axios.defaults.baseURL = 'api/';
         Vue.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
         //Jose R: Vue.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     },
