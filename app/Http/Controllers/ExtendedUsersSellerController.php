@@ -11,6 +11,7 @@ use Response;
 use Auth;
 
 use App\Repositories\ExtendedUsersSellerRepository;
+use stdClass;
 
 class ExtendedUsersSellerController extends UsersSellerController
 {
@@ -106,9 +107,22 @@ class ExtendedUsersSellerController extends UsersSellerController
     }
 
     public function cep($cep){
-        $datas = file_get_contents('https://viacep.com.br/ws/'.$cep.'/json/');
-        if(!strpos($datas,'erro')>0)
-            return $datas; //ja esta em json
-        return null;
+        try{
+            $datas = file_get_contents('https://viacep.com.br/ws/'.$cep.'/json/');
+            if(!strpos($datas,'erro')>0){
+                return $datas; //ja esta em json
+            }else{
+                $obj = new stdClass();
+                $obj->message = "CEP not found";
+                return $obj->toJson();
+            }
+        } catch (\Throwable $th) {
+            $obj = new stdClass();
+            $obj->message = "An error occurr";
+            return $obj->toJson();
+            // throw $th;
+        }
+
+        
     }
 }
