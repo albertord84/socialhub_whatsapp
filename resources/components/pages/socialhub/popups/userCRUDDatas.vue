@@ -37,7 +37,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.CPF}}</span>
-                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" placeholder="CPF (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -49,7 +49,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.phone}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.phone" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" placeholder="Telefone fixo (*)" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -61,7 +61,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.whatsapp_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -145,9 +145,10 @@
     import vScroll from "components/plugins/scroll/vScroll.vue"
     import ApiService from "resources/common/api.service";    
     import miniToastr from "mini-toastr";
+    import validation from "src/common/validation.service";
     miniToastr.init();
 
-     export default {
+    export default {
         name: "userCRUDDatas",
 
         props:{
@@ -171,6 +172,8 @@
                 repeat_password:'',
                 watchPassword:false,
                 watchRepeatPassword:false,
+
+                flagReference: true,
             }
         },
 
@@ -189,7 +192,26 @@
                     this.model.password = this.password;
                 }
                 this.isSending = true;
-                ApiService.put(this.url+'/'+this.model.id, this.model)
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSending = false;
+                    this.flagReference = true;
+                    return;
+                }
+
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                
+
+                // ApiService.put(this.url+'/'+this.model.id, this.model)
+                ApiService.put(this.url+'/'+this.model.id, model_cpy)               //ECR
                 .then(response => {
                     // window.location.reload(false);
                     this.user = response.data;
@@ -260,6 +282,97 @@
                     This.editMode = false;
                 }
             },
+
+            trimDataModel: function(){
+                if(this.model.CPF) this.model.CPF = this.model.CPF.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+
+                this.password= this.password.trim();
+                this.repeat_password = this.repeat_password.trim();
+            },
+
+            validateData: function(){
+                // Validação dos dados do manager
+                var check;
+
+                if(this.model.CPF && this.model.CPF !=''){
+                    check = validation.check('cpf', this.model.CPF)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O CPF do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O telefone do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                    check = validation.check('whatsapp', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    this.flagReference = false;
+                }
+
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.password && this.password !=''){
+                    check = validation.check('password', this.password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.repeat_password && this.repeat_password !=''){
+                    check = validation.check('password', this.repeat_password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
+
         },
 
         beforeMount(){
@@ -296,13 +409,7 @@
 
         }
 
-       
-
-
-     }
-
-
-
+    }
 
 </script>
 

@@ -87,3 +87,4 @@ Route::resource('messagesTypes', 'MessagesTypeController');
 
 
 Route::resource('rpis', 'ExtendedRpiController');
+
