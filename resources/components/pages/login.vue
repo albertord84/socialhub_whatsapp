@@ -195,13 +195,10 @@
     }
     .img_backgrond {
         /* background-image: url("../../img/socialhub/background2.jpg"); */
-        background-color: #eaedf2;
-        /* background-size: cover;
-        background-repeat: no-repeat; */
+        /* background-color: #eaedf2; */
+        background-size: cover;
+        background-repeat: no-repeat;
         width: 100%;
-        /* min-height: 100% !important; */
-        /* height: 100%; */
-        /* padding: 75px 15px; */
     }
     label {
         font-size: 1.1rem !important;
