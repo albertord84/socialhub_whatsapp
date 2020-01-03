@@ -125,12 +125,21 @@ I tried almost all combinations:
 
 ## Create command abreviators
 alias pu='clear && vendor/bin/phpunit'
-pu
 alias pf='clear && vendor/bin/phpunit --filter'
 
+// Git commit with message
+function gcm() { git add . && git commit -m "$1"; }
 
-function gacm() { git add . && git commit -m "$1"; }
-
-alias gac='git add . && git commit -m "Auto message"'
+alias gc='git add . && git commit -m "Auto message"'
 alias gp='git add . && git commit -m "Auto message" && git pull origin develop'
 alias gpp='git add . && git commit -m "Auto message" && git pull origin develop && git push origin develop'
+
+## Auto create laravel project .bash script
+https://gist.github.com/DCzajkowski/9ebaeaa09d136e77497e060449b03171
+
+
+## InfyonLabs skip options
+php artisan infyom:scaffold User --skip=migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,menu,dump-autoload
+
+skip options:
+migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload
