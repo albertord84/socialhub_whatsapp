@@ -346,9 +346,25 @@
                         <div v-if="file!=null" class="input-group-prepend">
                             <i class="mdi mdi-file-cancel-outline fa-1_5x pr-4 input-group-text border border-left-0 container-icons-action-message pointer-hover" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Remover o arquivo" style="color:red"></i>
                         </div>
-                        <!-- <div class="input-group-prepend">
-                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Mensagem de audio" ></i>
-                        </div> -->
+                        
+                        
+                        <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
+                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopRecordVoice()">
+                                    <i class="input-group-text mdi mdi-close-circle-outline pr-4 fa-1_5x text-danger border border-left-0 container-icons-action-message pointer-hover" title="Excluir" ></i>
+                                </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
+                                </div>
+                                <div class="input-group-prepend" @click.prevent="stopRecordVoice()">
+                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
+                                </div>
+                        </div>
+
+                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startRecordVoice">
+                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
+                        </div>
+
+
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
                              <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                 <template v-slot:button-content>
@@ -739,7 +755,6 @@
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
                 </div>
         </b-modal>
-
         
     </div>
 </template>
@@ -757,6 +772,7 @@
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
+    import MicRecorder from "mic-recorder-to-mp3"; const recorder = new MicRecorder({bitRate: 128});
 
     export default {
         components: {
@@ -817,6 +833,11 @@
                 isEditingContactSummary:false,
                 isSendingNewMessage:false,
                 isUpdatingContact:false,
+
+                isRecordingAudio:false,
+                timeRecordingAudio:"00:00",
+                recordingTime:0,
+                handleTimerCounter:null,
 
                 modalRemoveSelectedFile:false,
                 modalSendMessageFiles:false,
@@ -896,6 +917,12 @@
                             // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
+
+                            if(this.recordingTime>0){
+                                this.timeRecordingAudio = "00:00";
+                                this.recordingTime = 0;
+                                this.isRecordingAudio = false;
+                            }
                         })
                         .catch(function(error) {                            
                             if (error.response) {
@@ -1357,6 +1384,54 @@
                     percent = (percent*100)/total;
                     this.$refs.message_scroller.scrolltopercent(percent);
                 }
+            },
+
+            timer(){
+                this.recordingTime ++;
+                var minutes = parseInt(this.recordingTime / 60);
+                var seconds = this.recordingTime % 60;
+                this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+            },
+
+            startRecordVoice: function() {
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                recorder.start()
+                    .then(() => {
+                        console.log('starting record audio');
+                        th6is.timeRecordingAudio = "00:00";
+                        this.recordingTime = 0;
+                        this.isRecordingAudio = true;
+                        this.handleTimerCounter = setInterval(this.timer, 1000);
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{this.isRecordingAudio = true;});
+            },
+
+            stopRecordVoice: function() {
+                clearInterval(this.handleTimerCounter);
+                recorder.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(this.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            this.file = file;
+                            this.sendMessage();
+                        }else{
+                            this.timeRecordingAudio = "00:00";
+                            this.recordingTime = 0;
+                            this.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
             },
         },
 
