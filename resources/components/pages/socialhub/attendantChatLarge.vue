@@ -800,7 +800,7 @@
                     'message':'',
                     'source':0,
                     'type_id':1,
-                    'status_id':1,
+                    'status_id':4,
                     'socialnetwork_id':1, //Whatsapp
                 },
 
