@@ -1402,7 +1402,7 @@
                 this.recorder.start()
                     .then(() => {
                         console.log('starting record audio');
-                        th6is.timeRecordingAudio = "00:00";
+                        this.timeRecordingAudio = "00:00";
                         this.recordingTime = 0;
                         this.isRecordingAudio = true;
                         this.handleTimerCounter = setInterval(this.timer, 1000);
