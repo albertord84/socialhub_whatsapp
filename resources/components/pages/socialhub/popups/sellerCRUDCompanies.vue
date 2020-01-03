@@ -305,7 +305,7 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
-                isSendingValidationCEP: false,
+                // isSendingValidationCEP: false,
                 flagReference: true,
             }
         },
@@ -567,7 +567,7 @@
             },
 
             getAddressByCEP: function(){
-                isSendingValidationCEP = true;
+                // isSendingValidationCEP = true;
                 // Validando CEP inserido
                 this.modelCompany.CEP = this.modelCompany.CEP.trim();
                 this.modelCompany.CEP = this.modelCompany.CEP.replace(/-/i, '');
@@ -597,7 +597,7 @@
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
 
-                        isSendingValidationCEP = false;
+                        // isSendingValidationCEP = false;
                     })
                     .catch(function(error) {
                         console.log(error);
