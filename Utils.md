@@ -123,6 +123,23 @@ I tried almost all combinations:
         'verify_peer' => false,
     ],
 
-Clear all laravel cache, npm run dev, composer dump-autoload -o, clear navigator cache, restart supervisor and websockets, and I still having websocket with https erros like:
+## Create command abreviators
+alias pu='clear && vendor/bin/phpunit'
+alias pf='clear && vendor/bin/phpunit --filter'
 
-WebSocket connection to 'wss://[MYDOMINE]:6001/app/NNN?protocol=7&client=js&version=5.0.3&flash=false' failed: WebSocket is closed before the connection is established. 
+// Git commit with message
+function gcm() { git add . && git commit -m "$1"; }
+
+alias gc='git add . && git commit -m "Auto message"'
+alias gp='git add . && git commit -m "Auto message" && git pull origin develop'
+alias gpp='git add . && git commit -m "Auto message" && git pull origin develop && git push origin develop'
+
+## Auto create laravel project .bash script
+https://gist.github.com/DCzajkowski/9ebaeaa09d136e77497e060449b03171
+
+
+## InfyonLabs skip options
+php artisan infyom:scaffold User --skip=migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,menu,dump-autoload
+
+skip options:
+migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload
