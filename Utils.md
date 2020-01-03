@@ -127,3 +127,11 @@ I tried almost all combinations:
 alias pu='clear && vendor/bin/phpunit'
 pu
 alias pf='clear && vendor/bin/phpunit --filter'
+
+
+alias gacm='git add . && git commit -m $1'
+function gacm() { git add . && git commit -m "$1"; }
+
+alias gac='git add . && git commit -m "Auto message"'
+alias gp='git add . && git commit -m "Auto message" && git pull origin develop'
+alias gpp='git add . && git commit -m "Auto message" && git pull origin develop && git push origin develop'
