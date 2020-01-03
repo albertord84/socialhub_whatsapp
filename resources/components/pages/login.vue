@@ -65,12 +65,13 @@
                             </validate>
                         </div> -->
 
-                        <!-- <div class="col-lg-6 text-right">
+                        <div class="col-sm-12 text-right">
                             <div class="form-group">
                                 <div class="login-text">
-                                <router-link tag="a" to="/forgotpassword" class="">Esqueceu sua senha?</router-link></div>
+                                    <router-link tag="a" to="/forgotpassword" class="">Esqueceu sua senha?</router-link>
+                                </div>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="col-lg-12 text-right">
                             <div class="form-group">
@@ -196,10 +197,10 @@
     .img_backgrond {
         /* background-image: url("../../img/socialhub/background2.jpg"); */
         background-color: #eaedf2;
-        /* background-size: cover;
-        background-repeat: no-repeat; */
+        background-size: cover;
+        background-repeat: no-repeat;
         width: 100%;
-        /* min-height: 100% !important; */
+        min-height: 100% !important;
         /* height: 100%; */
         /* padding: 75px 15px; */
     }
@@ -219,7 +220,7 @@
         background-color: #ced4da !important;
     }
     .login-text{
-        font-size:1.1rem;
+        font-size:1rem;
     }
     body{
         background-color: #eaedf2;
