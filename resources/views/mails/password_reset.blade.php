@@ -8,6 +8,7 @@
             }
             .mail-body{
                 min-height: 300px;
+                background-color: white;
             }
             .mail-footer{
                 background-color: #F4F8FB;
@@ -24,8 +25,8 @@
             .content{
                 font-size: 1rem;
                 margin: 2rem;
-                margin-left: 30px;
-                margin-right: 30px;
+                left: 30px;
+                right: 30px;
                 text-align: justify;
             }
             .credentials{
@@ -34,7 +35,7 @@
         </style>
     </head>
     <body>
-        <div class="row">
+        <div >
             <div class="mail-header text-center">
                 <h1 class="logo">SocialHub</h1>                
             </div>

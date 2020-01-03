@@ -8,9 +8,13 @@ const menu_items = [
         link: '/manager/attendant',
         icon: ' fa fa-headphones'
      }, {
-        name: 'Código QR',
+        name: 'QRCode',
         link: '/manager/qrcode',
         icon: ' fa fa-qrcode'
+     }, {
+        name: 'Hardware',
+        link: '/manager/hardware',
+        icon: 'mdi mdi-chip'
      }, 
      
 
@@ -20,17 +24,7 @@ const menu_items = [
     //     link: '/manager',
     //     icon: ' fa fa-home'
     // },{
-    //     name: 'Contatos',
-    //     link: '/manager/contacts',
-    //     icon: 'fa fa-address-book-o'
-    // },{
-    //     name: 'Atendentes',
-    //     link: '/manager/attendant',
-    //     icon: ' fa fa-headphones'
-    //  }, {
-    //     name: 'Código QR',
-    //     link: '/manager/qrcode',
-    //     icon: ' fa fa-headphones'
+    
     //  }, {
     //      name: 'Empresa',
     //      link: '/manager/company',

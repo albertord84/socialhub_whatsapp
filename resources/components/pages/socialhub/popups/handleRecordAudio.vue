@@ -2,7 +2,9 @@
     <div>
         <p>Audio record by JR</p>
         <label for="">Press button to record</label>
-        <button class="btn btn-primary" @mousedown="startRecord" @mouseup="stopRecord"><i class="fa fa-microphone"> Record</i></button>
+        <button class="btn btn-primary" @mousedown="startRecord" @mouseup="stopRecord">
+            <i class="fa fa-microphone"> Record</i>
+        </button>
     </div>
         
 </template>
@@ -48,7 +50,6 @@
                         console.error(e);
                     });             
             },
-
             stopRecord: function() {
                 recorder.stop().getMp3()
                     .then(([buffer, blob]) => {
