@@ -240,15 +240,15 @@
                 this.companies_id = value.id;
                 this.rpi_id = value.rpi_id;
                 this.model_rpi={};
-                console.log('aqui 1');
+                // console.log('aqui 1');
 
                 //manager data
                 ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
                     .then(response => {
                         try {
                             
-                            console.log('aqui 2');
-                            console.log(response.data);
+                            // console.log('aqui 2');
+                            // console.log(response.data);
 
                             this.model_manager  = response.data[0];
                             for (var key in this.model_manager.user) { //pasar los campos del usuraio para el manager

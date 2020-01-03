@@ -46,6 +46,7 @@ class Company extends Model
         'numero',
         'complemento',
         'bairro',
+        'amount_attendants',
 
 
 
@@ -74,6 +75,8 @@ class Company extends Model
         'numero'=> 'string',
         'complemento'=> 'string',
         'bairro'=> 'string',
+        
+        'amount_attendants'=> 'string',
 
 
     ];
