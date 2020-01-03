@@ -772,7 +772,7 @@
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
-    import MicRecorder from "mic-recorder-to-mp3"; const recorder = new MicRecorder({bitRate: 128});
+    import MicRecorder from "mic-recorder-to-mp3"; 
 
     export default {
         components: {
@@ -838,6 +838,7 @@
                 timeRecordingAudio:"00:00",
                 recordingTime:0,
                 handleTimerCounter:null,
+                recorder:null,
 
                 modalRemoveSelectedFile:false,
                 modalSendMessageFiles:false,
@@ -1398,7 +1399,7 @@
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
                     return;
                 }
-                recorder.start()
+                this.recorder.start()
                     .then(() => {
                         console.log('starting record audio');
                         th6is.timeRecordingAudio = "00:00";
@@ -1413,7 +1414,7 @@
 
             stopRecordVoice: function() {
                 clearInterval(this.handleTimerCounter);
-                recorder.stop().getMp3()
+                this.recorder.stop().getMp3()
                     .then(([buffer, blob]) => {
                         if(this.isRecordingAudio){
                             const file = new File(buffer, 'me-at-thevoice.mp3', {
@@ -1459,6 +1460,8 @@
         },
 
         mounted(){
+            this.recorder = new MicRecorder({bitRate: 128})
+
             window.Echo = new Echo({
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
