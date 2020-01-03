@@ -1077,9 +1077,11 @@
                 var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
                 selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
-                selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
-                         
+                if(selectedContactToEdit_cpy.phone){
+                    selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
+                    selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                }
+                        
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
                 .then(response => {
                     if(this.isEditingContact)
