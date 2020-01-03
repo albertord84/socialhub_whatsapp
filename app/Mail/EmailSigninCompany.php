@@ -40,6 +40,6 @@ class EmailSigninCompany extends Mailable
     {
         return $this
             ->from('system@socialhub.pro') //pegar desde o .env  env("MAIL_USERNAME")
-            ->view('mails.SigninCompany', ['Seller' => $this->Seller,'User' => $this->User, 'Company' => $this->Company])            ;
+            ->view('mails.SigninCompany', ['Seller' => $this->Seller,'User' => $this->User, 'Company' => $this->Company]);
     }
 }

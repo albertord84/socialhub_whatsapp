@@ -85,7 +85,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', request(['email']))->first();
         if (is_null($user)) {
-            return response()->json(['error' => 'No user exists'], 401);
+            return response()->json(['error' => 'O usuário não existe'], 401);
         }
         $token = str_random(16);
         DB::table('password_resets')->insert(['token' => $token, 'email' => $user->email]);

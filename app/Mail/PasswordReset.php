@@ -32,6 +32,10 @@ class PasswordReset extends Mailable
         return $this->markdown('mails.password_reset')
             ->to($this->data['email'])
             ->subject("Redefinir senha");
-            // ->subject(trans('emails.password_reset'));
+
+            // return $this
+            // ->from('system@socialhub.pro') //pegar desde o .env  env("MAIL_USERNAME")
+            // ->view('mails.password_reset', ['data' => $this->data])
+            // ->subject("Redefinir senha");;
     }
 }
