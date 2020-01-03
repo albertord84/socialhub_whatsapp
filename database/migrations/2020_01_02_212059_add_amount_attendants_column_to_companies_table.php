@@ -14,19 +14,9 @@ class AddAmountAttendantsColumnToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            //
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('companies', function (Blueprint $table) {
             $table->integer('amount_attendants')->nullable()->default(3);
         });
     }
+
+    
 }
