@@ -40,14 +40,17 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
+        var_dump(env('APP_NAME'));
+        var_dump(env('APP_ENV'));
+
         //testing emails from laravel -Jose R
-        $Company = Company::find(1); 
-        $Seller = User::find(2); 
-        $UserManager = User::find(5); 
-        $UserManager->password = rand(100000,999999);
-        Mail::to($UserManager->email)
+        // $Company = Company::find(1); 
+        // $Seller = User::find(2); 
+        // $UserManager = User::find(5); 
+        // $UserManager->password = rand(100000,999999);
+        // Mail::to($UserManager->email)
             // ->bcc($Seller->email)
-            ->send(new EmailSigninCompany($Seller, $UserManager, $Company));
+            // ->send(new EmailSigninCompany($Seller, $UserManager, $Company));
         
         // $Manager = User::find(3); 
         // $User = User::find(5);
