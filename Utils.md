@@ -129,7 +129,6 @@ pu
 alias pf='clear && vendor/bin/phpunit --filter'
 
 
-alias gacm='git add . && git commit -m $1'
 function gacm() { git add . && git commit -m "$1"; }
 
 alias gac='git add . && git commit -m "Auto message"'
