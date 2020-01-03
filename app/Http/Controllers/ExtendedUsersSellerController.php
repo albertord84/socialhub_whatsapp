@@ -108,12 +108,13 @@ class ExtendedUsersSellerController extends UsersSellerController
 
     public function cep($cep){
         try{
-            $datas = file_get_contents('https://viacep1.com.br/ws/'.$cep.'/json/');
+            $datas = file_get_contents('https://viacep.com.br/ws/'.$cep.'/json/');
             return $datas; //ja esta em json
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Erro validando CEP'], 401);
         }
     }
+
     // public function cep($cep){
     //     try{
     //         $datas = file_get_contents('https://viacep.com.br/ws/'.$cep.'/json/');
@@ -133,4 +134,5 @@ class ExtendedUsersSellerController extends UsersSellerController
     //         // throw $th;
     //     }
     // }
+    
 }

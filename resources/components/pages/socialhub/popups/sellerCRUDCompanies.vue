@@ -46,7 +46,26 @@
                             <div class="input-group">
                                 <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
                                     <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
-                                    <div class="input-group-text" id="btnGroupAddon" @click.prevent="getAddressByCEP"><i class="fa fa-search" aria-hidden="true"></i></div>
+                                    <div class="input-group-text" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                                        <!-- <i v-show="isSendingValidationCEP==true" class="fa fa-spinner fa-spin" style="color:blue" ></i> -->
+                                    </div>
+
+                                    <!-- <div class="input-group-text" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
+                                        <i class="fa fa-search" aria-hidden="true" :disabled="isSendingValidationCEP==true"></i>
+
+                                        <i v-show="isSendingValidationCEP==true" class="fa fa-spinner fa-spin" style="color:blue" ></i>
+                                    </div> -->
+
+                                    <!-- <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
+                                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
+                                    </button> -->
+
+
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -286,6 +305,7 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
+                isSendingValidationCEP: false,
                 flagReference: true,
             }
         },
@@ -547,6 +567,7 @@
             },
 
             getAddressByCEP: function(){
+                isSendingValidationCEP = true;
                 // Validando CEP inserido
                 this.modelCompany.CEP = this.modelCompany.CEP.trim();
                 this.modelCompany.CEP = this.modelCompany.CEP.replace(/-/i, '');
@@ -575,6 +596,8 @@
                         this.modelCompany.cidade = response.data.localidade;
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
+
+                        isSendingValidationCEP = false;
                     })
                     .catch(function(error) {
                         console.log(error);
@@ -780,37 +803,37 @@
                 // Validação dos campos do canal de comunicação
                 var check;
                 
-                if(this.modelRpi.api_user && this.modelRpi.api_user!=''){
-                    check = validation.check('user', this.modelRpi.api_user);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.api_user && this.modelRpi.api_user!=''){
+                //     check = validation.check('user', this.modelRpi.api_user);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
 
-                if(this.modelRpi.api_password && this.modelRpi.api_password!=''){
-                    check = validation.check('password', this.modelRpi.api_password);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.api_password && this.modelRpi.api_password!=''){
+                //     check = validation.check('password', this.modelRpi.api_password);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
 
-                if(this.modelRpi.root_user && this.modelRpi.root_user!=''){
-                    check = validation.check('user', this.modelRpi.root_user);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.root_user && this.modelRpi.root_user!=''){
+                //     check = validation.check('user', this.modelRpi.root_user);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
 
-                if(this.modelRpi.root_password && this.modelRpi.root_password!=''){
-                    check = validation.check('password', this.modelRpi.root_password);
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false; 
-                    }
-                }
+                // if(this.modelRpi.root_password && this.modelRpi.root_password!=''){
+                //     check = validation.check('password', this.modelRpi.root_password);
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false; 
+                //     }
+                // }
 
                 // if(this.modelRpi.tcp_tunnel && this.modelRpi.tcp_tunnel!=''){
                 //     check = validation.check('tcp_tunnel', this.modelRpi.tcp_tunnel);
