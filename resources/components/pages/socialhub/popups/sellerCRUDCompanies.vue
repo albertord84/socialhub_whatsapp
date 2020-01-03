@@ -29,6 +29,11 @@
                             <span class="fa fa-whatsapp form-control-feedback"></span>
                             <input v-model="modelCompany.whatsapp" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-info-circle fa-lg form-control-feedback" ></span>
+                            <input v-if='action=="insert"' v-model="modelCompany.amount_attendants"  disabled="" name="amount_attendants" id="amount_attendants" type="text" required placeholder="Atendentes permitidos: 3" class="form-control"/>
+                            <input v-if='action=="edit"' v-model="modelCompany.amount_attendants"  v-mask="'####'" name="amount_attendants" id="amount_attendants" type="text" required placeholder="Atendentes permitidos" class="form-control"/>
+                        </div>
                     </div>
 
 
@@ -46,26 +51,10 @@
                             <div class="input-group">
                                 <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
                                     <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
-                                    <div class="input-group-text" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
-                                        <i class="fa fa-search" aria-hidden="true"></i>
-
-                                        <!-- <i v-show="isSendingValidationCEP==true" class="fa fa-spinner fa-spin" style="color:blue" ></i> -->
+                                    <div class="input-group-text hover-pointer" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
+                                        <i v-if="isSendingValidationCEP==false" class="fa fa-search" aria-hidden="true"></i>
+                                        <i v-else class="fa fa-spinner fa-spin" style="color:blue" ></i>
                                     </div>
-
-                                    <!-- <div class="input-group-text" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
-                                        <i class="fa fa-search" aria-hidden="true" :disabled="isSendingValidationCEP==true"></i>
-
-                                        <i v-show="isSendingValidationCEP==true" class="fa fa-spinner fa-spin" style="color:blue" ></i>
-                                    </div> -->
-
-                                    <!-- <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
-                                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
-                                    </button> -->
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -272,6 +261,7 @@
                     numero: "",
                     complemento: "",
                     bairro: "",
+                    amount_attendants: "",
                 },
 
                 modelRpi:{      //dados do canal de comunicação
@@ -305,7 +295,7 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
-                // isSendingValidationCEP: false,
+                isSendingValidationCEP: false,
                 flagReference: true,
             }
         },
@@ -314,6 +304,7 @@
             addCompany: function() { //C
                 this.modelCompany.id=0;
                 this.modelCompany.user_seller_id=this.logued_user.id;
+                this.modelCompany.amount_attendants=3;
                 this.modelManager.id=0;
                 this.modelManager.role_id=3;
                 this.modelManager.image_path = "images/user.jpg";
@@ -567,7 +558,7 @@
             },
 
             getAddressByCEP: function(){
-                // isSendingValidationCEP = true;
+                this.isSendingValidationCEP = true;
                 // Validando CEP inserido
                 this.modelCompany.CEP = this.modelCompany.CEP.trim();
                 this.modelCompany.CEP = this.modelCompany.CEP.replace(/-/i, '');
@@ -586,7 +577,7 @@
                 // Validando CEP inserido
                 ApiService.get('cep/'+this.modelCompany.CEP)
                     .then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
                             miniToastr.error("Confira os dados fornecidos", "O CEP inserido não existe"); 
                             return;
@@ -597,7 +588,7 @@
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
 
-                        // isSendingValidationCEP = false;
+                        this.isSendingValidationCEP = false;
                     })
                     .catch(function(error) {
                         console.log(error);
@@ -926,5 +917,9 @@
     }
     .text-18{
         font-size: 18px
+    }
+
+    .hover-pointer:hover{
+        cursor: pointer;
     }
 </style>
