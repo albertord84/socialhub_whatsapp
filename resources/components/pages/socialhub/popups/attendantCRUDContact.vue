@@ -451,7 +451,7 @@
             },
 
             editclose() {                
-               this.$emit('onclose');
+                this.$emit('onclose');
             },
 
             trimDataModel: function(){
