@@ -61,7 +61,7 @@
 
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
+                            <input v-model="modelCompany.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
                         </div>                                                      
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
@@ -579,7 +579,7 @@
                     .then(response => {
                         // console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
-                            miniToastr.error("Confira os dados fornecidos", "O CEP inserido não existe"); 
+                            miniToastr.warn("Confira os dados fornecidos", "O CEP inserido não existe"); 
                             return;
                         }
                         this.modelCompany.CEP = response.data.cep;
@@ -587,8 +587,6 @@
                         this.modelCompany.cidade = response.data.localidade;
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
-
-                        this.isSendingValidationCEP = false;
                     })
                     .catch(function(error) {
                         console.log(error);
@@ -596,6 +594,7 @@
                         miniToastr.error(error, "Erro validando CEP"); 
                     }).finally(() => {
                         Vue.axios.defaults.baseURL = "";
+                        this.isSendingValidationCEP = false;
                     });
             },
 
