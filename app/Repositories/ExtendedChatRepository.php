@@ -24,6 +24,7 @@ class ExtendedChatRepository extends ChatRepository
 
             foreach ($Attendants as $key => $Attendant) {
                 $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput);
+
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
             
@@ -112,6 +113,11 @@ class ExtendedChatRepository extends ChatRepository
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
         
+        // Mark all messages read
+        $chatModel->where('contact_id', $contact_id)->update([
+            'status_id' => MessagesStatusController::READED
+        ]);
+
         if (!$searchMessageByStringInput) {
             $ChastMessages = $chatModel->where('contact_id', $contact_id)->get();
         } else {

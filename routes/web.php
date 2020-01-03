@@ -24,6 +24,7 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
     Route::get('getQRCode', 'ExternalRPIController@getQRCode');
     Route::post('update', 'ExternalRPIController@update');
+    Route::post('status', 'ExternalRPIController@status');
     Route::post('logout', 'ExternalRPIController@logout');
 });
 

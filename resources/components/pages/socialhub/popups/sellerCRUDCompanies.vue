@@ -51,7 +51,7 @@
                             <div class="input-group">
                                 <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
                                     <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
-                                    <div class="input-group-text" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
+                                    <div class="input-group-text hover-pointer" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
                                         <i v-if="isSendingValidationCEP==false" class="fa fa-search" aria-hidden="true"></i>
                                         <i v-else class="fa fa-spinner fa-spin" style="color:blue" ></i>
                                     </div>
@@ -916,5 +916,9 @@
     }
     .text-18{
         font-size: 18px
+    }
+
+    .hover-pointer:hover{
+        cursor: pointer;
     }
 </style>
