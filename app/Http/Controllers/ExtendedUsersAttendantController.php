@@ -14,6 +14,7 @@ use Auth;
 use App\User;
 
 use App\Repositories\ExtendedUsersAttendantRepository;
+use Illuminate\Support\Facades\Mail;
 
 class ExtendedUsersAttendantController extends UsersAttendantController
 {
