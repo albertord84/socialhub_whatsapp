@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUsersManagerRequest;
 use App\Http\Requests\UpdateUsersManagerRequest;
-use App\Mail\EmailSiginCompany;
+use App\Mail\EmailSigninCompany;
 use App\Models\Company;
 use App\Models\UsersManager;
 use App\User;
@@ -57,7 +57,7 @@ class ExtendedUsersManagerController extends UsersManagerController
         $Company = Company::find($User->company_id);
         Mail::to($User->email)
             ->bcc($Seller->email)
-            ->send(new EmailSiginCompany($Seller, $User, $Company));
+            ->send(new EmailSigninCompany($Seller, $User, $Company));
         $User->password = bcrypt($User->password);
         $User->save();
         

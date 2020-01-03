@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUsersAttendantRequest;
 use App\Http\Requests\UpdateUsersAttendantRequest;
+use App\Mail\EmailSigninAttendant;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use Auth;
 
+use App\User;
+
 use App\Repositories\ExtendedUsersAttendantRepository;
+use Illuminate\Support\Facades\Mail;
 
 class ExtendedUsersAttendantController extends UsersAttendantController
 {
@@ -86,6 +90,15 @@ class ExtendedUsersAttendantController extends UsersAttendantController
     {
         $usersAttendantController = new UsersAttendantController($this->usersAttendantRepository);
         $usersAttendantController->store($request);
+
+        //enviar email de cadastro de atendente
+        $Manager = Auth::check()? Auth::user():session('logged_user');
+        $User = User::find($request['user_id']);
+        $User->password = rand(100000,999999);
+        Mail::to($User->email)
+            ->send(new EmailSigninAttendant($Manager, $User));
+        $User->password = bcrypt($User->password);
+        $User->save();
 
         $input = $request->all();
         $this->usersAttendantRepository->createAttendantChatTable($input['user_id']);

@@ -45,7 +45,7 @@
                     Prezado {{$User->name}}, 
                     
                     <br><br>                    
-                    O cadastro da sua empresa {{$Company->name}} e da sua conta de GERENTE na <a href="http://app.socialhub.pro">ferramenta SociaHub</a> foi criado com sucesso.
+                    O cadastro da sua empresa {{$Company->name}} e da sua conta de GERENTE na ferramenta <a href="https://app.socialhub.pro"> SociaHub</a> foi criado com sucesso.
                     
                     <br><br>
                     E breve você receberá o hardware no Endereço para correspondência informado. <br>
@@ -53,7 +53,7 @@
                     ou do telefone <b>{{$Seller->phone}}</b> e ele irá orientar você para concluir o processo de <b>CONFIGURAÇÃO</b>.
 
                     <br><br>                    
-                    As suas credenciais de acesso ao nosso <a href="http://app.socialhub.pro">sistema</a> são: 
+                    As suas credenciais para acesso ao nosso <a href="https://app.socialhub.pro">sistema</a> são: 
                     
                     <br><br>                    
                     <b class="credentials">Usuário:</b> <span style="color:black">{{$User->email}}</span><br>

@@ -13,10 +13,10 @@
                     </div>
                 </div>
                 <vue-form :state="formstate" @submit.prevent="onSubmit">
-                    <p v-show="show_success" class="text-danger">O email de redefinição de senha foi enviado.</p>
+                    <p v-show="show_success" class="text-success">O email de redefinição de senha foi enviado.</p>
                     <p v-show="show_error" class="text-danger">Email não existe</p>
                     <div class="col-lg-12">
-                        <p class="user-message ">Digite o e-mail com o qual você está registrado. Uma mensagem será enviada com mais instruções.</p>
+                        <p class="user-message ">Digite o e-mail com o qual você está cadastrado. Uma mensagem será enviada com mais instruções.</p>
                         <div class="form-group">
                             <validate tag="div">
                                 <div class="input-group">
@@ -36,7 +36,10 @@
                     </div>
                     <div class="col-12 mt-4">
                         <div class="form-group">
-                            <input type="submit" value="Enviar Email" class="btn btn-primary btn-block"/>
+                            <button type="submit" class="btn btn-primary btn-block"> 
+                                <i v-show="isSendingEmail" class="fa fa-spinner fa-spin"></i>
+                                Enviar Email
+                            </button>
                         </div>
                     </div>
                 </vue-form>
@@ -61,7 +64,9 @@
                     email: ""
                 },
                 show_success: false,
-                show_error: false
+                show_error: false,
+
+                isSendingEmail:false,
             }
         },
         methods: {
@@ -69,6 +74,7 @@
                 if (this.formstate.$invalid) {
                     return;
                 } else {
+                    this.isSendingEmail = true;
                     ApiService.post('auth/password_reset', this.model)
                         .then(data => {
                             this.show_error = false;
@@ -77,7 +83,7 @@
                         .catch(error => {
                             this.show_error = true;
                             this.show_success = false;
-                        })
+                        }).finally(() => {this.isSendingEmail = false;});
                 }
             }
         },
@@ -108,7 +114,8 @@
 
     .img_backgrond {
         /* background-image: url("../../img/pages/Login-03-01.png"); */
-        background-image: url("../../img/socialhub/background2.jpg");
+        /* background-image: url("../../img/socialhub/background2.jpg"); */
+        background-color: #eaedf2;
         background-size: cover;
         height: 100vh;
         width: 100%;

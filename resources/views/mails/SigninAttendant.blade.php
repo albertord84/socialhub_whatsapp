@@ -8,7 +8,6 @@
             }
             .mail-body{
                 min-height: 300px;
-                background-color: white;
             }
             .mail-footer{
                 background-color: #F4F8FB;
@@ -25,8 +24,8 @@
             .content{
                 font-size: 1rem;
                 margin: 2rem;
-                left: 30px;
-                right: 30px;
+                margin-left: 30px;
+                margin-right: 30px;
                 text-align: justify;
             }
             .credentials{
@@ -35,24 +34,25 @@
         </style>
     </head>
     <body>
-        <div >
+        <div class="row">
             <div class="mail-header text-center">
                 <h1 class="logo">SocialHub</h1>                
             </div>
             <div class="mail-body">
                 <br>
-                <h2 class="text-center">Redefinição de senha</h2>                 
+                <h2 class="text-center">Cadastro satisfatório</h2>                 
                 <p class="content">
-                    Prezado {{$data['name']}}, 
+                    Prezado {{$User->name}}, 
                     
                     <br><br>                    
-                    Para redefinir sua senha:
+                    O cadastro da sua conta de ATENDENTE na ferramenta <a href="https://app.socialhub.pro"> SociaHub </a> foi criado com sucesso.
                     
-                    <br><br>
-                    @component('mail::button', ['url' => url('/#reset_password/'.$data['token'])])
-                        Clique aqui e preencha o formulário
-                    @endcomponent
+                    <br><br>                    
+                    As suas credenciais para acesso ao nosso <a href="https://app.socialhub.pro">sistema</a> são: 
                     
+                    <br><br>                    
+                    <b class="credentials">Usuário:</b> <span style="color:black">{{$User->email}}</span><br>
+                    <b class="credentials">Senha:</b> {{$User->password}}
                 
                     <br><br>
                     Muito obrigado por usar nosso serviço.<br>
