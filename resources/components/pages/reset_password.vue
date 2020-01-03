@@ -5,11 +5,11 @@
                 <div class="row">
                     <div class="col-sm-12 mt-4">
                         <h2 class="text-center">
-                            <img src="~img/logo_black.png" alt="Logo">
+                            <img width="200px" src="~img/socialhub/Logo roxo.png" alt="Logo">
                         </h2>
                     </div>
                     <div class="col-sm-12 mt-4">
-                        <h3 class="page-name text-center">Reset Password</h3>
+                        <h3 class="page-name text-center">Redefinir Senha</h3>
                     </div>
                 </div>
                 <v-layout v-show="errorShow">
@@ -17,7 +17,7 @@
                 </v-layout>
                 <v-layout v-show="successShow">
                     <span style="color:green; text-align:center;">{{message}}</span><br>
-                    <router-link tag="a" to="/login" class="">Go to Login page</router-link>
+                    <router-link tag="a" to="/" class="mt-3">Ir à página de login</router-link>
                 </v-layout>
                 <vue-form :state="formstate" @submit.prevent="onSubmit" v-show="!successShow">
                     <input type="hidden"
@@ -26,7 +26,7 @@
                             required
                     />
                     <div class="col-md-12">
-                        <p class="user-message"> * The Password is case sensitive.</p>
+                        <p class="user-message"> * A senha é sensível a maiúsculas.</p>
                         <div class="form-group">
                             <validate tag="div">
 
@@ -34,15 +34,14 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                     </div>
-                                    <input v-model="model.password" name="password" type="password" required placeholder="Password" class="form-control" minlength="4"
-                                           maxlength="10" />
+                                    <input v-model="model.password" name="password" type="password" required placeholder="Senha" class="form-control" />
                                 </div>
 
 
                                 <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                                    <div slot="required">Password is required</div>
-                                    <div slot="minlength">Password should be atleast 4 characters long</div>
-                                    <div slot="maxlength">Password should be atmost 10 characters long</div>
+                                    <div slot="required">A senha é obrigatória</div>
+                                    <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
+                                    <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
                                 </field-messages>
                             </validate>
                         </div>
@@ -55,21 +54,22 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                     </div>
-                                    <input v-model="model.password_confirmation" name="repeatpassword" type="password" required placeholder="Confirm Password" class="form-control"
-                                           :sameas="model.password">
+                                    <input v-model="model.password_confirmation" name="repeatpassword" type="password" required placeholder="Repetir senha" class="form-control" :sameas="model.password">
                                 </div>
 
-
                                 <field-messages name="repeatpassword" show="$invalid && $submitted" class="text-danger">
-                                    <div slot="required">Password confirmatoin is required</div>
-                                    <div slot="sameas">Password and Confirm password should match</div>
+                                    <div slot="required">Confirmação de senha é obrigatória</div>
+                                    <div slot="sameas">As senhas não coincidem</div>
                                 </field-messages>
                             </validate>
                         </div>
                     </div>
                     <div class="col-12 mt-4">
                         <div class="form-group">
-                            <input type="submit" value="Reset Password" class="btn btn-primary btn-block" />
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i v-show="isSendingResetPassword" class="fa fa-spinner fa-spin"></i>
+                                Redefinir senha
+                            </button>
                         </div>
                     </div>
                 </vue-form>
@@ -96,6 +96,9 @@
                     password_confirmation: "",
                     token: ""
                 },
+
+                isSendingResetPassword:false,
+
             }
         },
         methods: {
@@ -105,23 +108,30 @@
                 } else {
                     let component = this;
                     component.message = '';
+                    this.isSendingResetPassword = true;
                     ApiService.post('/auth/password_save', this.model)
                         .then(response => {
                             if (!!response.data.success) {
                                 component.model = {};
-                                component.message = "You can login now with new password!";
+                                component.message = "Você pode logar com a sua nova senha!";
                                 component.errorShow = false;
                                 component.successShow = true;
                                 component.showLoginPage = true;
                             } else {
                                 component.model.password = '';
                                 component.model.password_confirmation = '';
-                                component.message = "Some data is not valid!";
+                                component.message = "Alguns dados incorreto!";
                                 component.errorShow = true;
                                 component.successShow = false;
                                 component.showLoginPage = false;
                             }
-                        });
+                        })
+                        .catch(error => {
+                            this.show_error = true;
+                            this.show_success = false;
+                        })
+                        .finally(() => {this.isSendingResetPassword = false;});
+                        ;
                 }
             }
         },
@@ -149,7 +159,8 @@
 
     .img_backgrond {
         /* background-image: url("../../img/pages/Login-03-01.png"); */
-        background-image: url("../../img/socialhub/background2.jpg");
+        /* background-image: url("../../img/socialhub/background2.jpg"); */
+        background-color: #eaedf2;
         background-size: cover;
         height: 100vh;
         width: 100%;

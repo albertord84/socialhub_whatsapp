@@ -11,7 +11,7 @@ use App\User;
 use App\Models\Company;
 use App\ModeSystemConfig;
 
-class EmailSiginCompany extends Mailable
+class EmailSigninCompany extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -38,15 +38,8 @@ class EmailSiginCompany extends Mailable
      */
     public function build()
     {
-        // return $this->view('view.SiginCompany');
-
         return $this
             ->from('system@socialhub.pro') //pegar desde o .env  env("MAIL_USERNAME")
-            ->view('mails.SiginCompany', ['Seller' => $this->Seller,'User' => $this->User, 'Company' => $this->Company])
-            /*->with([
-                'Seller' => $this->Seller,
-                'userManager' => $this->User,
-                'Company' => $this->Company,
-            ])*/;
+            ->view('mails.SigninCompany', ['Seller' => $this->Seller,'User' => $this->User, 'Company' => $this->Company]);
     }
 }
