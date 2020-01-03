@@ -123,6 +123,7 @@ I tried almost all combinations:
         'verify_peer' => false,
     ],
 
-Clear all laravel cache, npm run dev, composer dump-autoload -o, clear navigator cache, restart supervisor and websockets, and I still having websocket with https erros like:
-
-WebSocket connection to 'wss://[MYDOMINE]:6001/app/NNN?protocol=7&client=js&version=5.0.3&flash=false' failed: WebSocket is closed before the connection is established. 
+## Create command abreviators
+alias pu='clear && vendor/bin/phpunit'
+pu
+alias pf='clear && vendor/bin/phpunit --filter'
