@@ -1422,6 +1422,7 @@
                                 lastModified: Date.now()
                             });
                             // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            this.newMessage.type_id = 3;
                             this.file = file;
                             this.sendMessage();
                         }else{
