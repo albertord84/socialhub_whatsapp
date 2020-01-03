@@ -115,7 +115,7 @@ class ExtendedChatRepository extends ChatRepository
         
         // Mark all messages read
         $chatModel->where('contact_id', $contact_id)->update([
-            'status' => MessagesStatusController::READED
+            'status_id' => MessagesStatusController::READED
         ]);
 
         if (!$searchMessageByStringInput) {
