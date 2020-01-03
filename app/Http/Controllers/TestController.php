@@ -39,7 +39,7 @@ class TestController extends AppBaseController
     }
 
     public function index(Request $request)
-    {
+    { 
         //testing emails from laravel -Jose R
         $Company = Company::find(1); 
         $Seller = User::find(2); 
