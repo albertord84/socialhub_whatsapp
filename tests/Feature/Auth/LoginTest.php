@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\UsersAttendant;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -60,6 +61,17 @@ class LoginTest extends MyTestCase
         $response->assertSuccessful();
         $response->assertViewIs('welcome');
         // $response->assertRedirect($this->guestMiddlewareRoute());
+    }
+
+    public function testAttendanstCompanyLoad()
+    {
+        $company_id = 1;
+
+        $attendants = UsersAttendant::with('user')->whereHas('user', function($query) use ($company_id) {
+            $query->where(['company_id' => $company_id]);
+        })->get();
+
+        $this->assertCount(2, $attendants);
     }
 
     // public function testUserCanLoginWithCorrectCredentials()
