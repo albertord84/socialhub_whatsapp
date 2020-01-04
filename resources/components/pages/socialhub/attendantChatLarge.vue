@@ -1006,6 +1006,7 @@
             }, 
 
             getContactChat: function(contact) {
+                if (this.isSendingNewMessage) return;  
                 if(this.showChatRightSide) this.displayChatRightSide();
                 if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
