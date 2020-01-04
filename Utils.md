@@ -130,6 +130,8 @@ alias pf='clear && vendor/bin/phpunit --filter'
 // Git commit with message
 function gcm() { git add . && git commit -m "$1"; }
 
+alias npmd='npm run dev'
+
 alias gc='git add . && git commit -m "Auto message"'
 alias gp='git add . && git commit -m "Auto message" && git pull origin develop'
 alias gpp='git add . && git commit -m "Auto message" && git pull origin develop && git push origin develop'
