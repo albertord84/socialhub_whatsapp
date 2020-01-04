@@ -44,7 +44,6 @@ class LoginTest extends MyTestCase
     public function testUserCanViewALoginForm()
     {
         $response = $this->get($this->loginGetRoute());
-        
 
         $response->assertSuccessful();
         $response->assertViewIs('welcome');
