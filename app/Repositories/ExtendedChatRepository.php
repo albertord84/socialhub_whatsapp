@@ -39,7 +39,7 @@ class ExtendedChatRepository extends ChatRepository
         try {
             // First message from Bag
             $attendantUser = User::find($attendant_id);
-            $ChastMessages = $this->where('company_id', $attendantUser->company_id)->first();
+            $ChastMessages = $this->model()::where('company_id', $attendantUser->company_id)->first();
 
             $Contact = null;
             if ($ChastMessages) {
