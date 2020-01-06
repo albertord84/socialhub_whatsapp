@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Repositories\ExtendedCompanyRepository;
-use App\Http\Controllers\AppBaseController;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laracasts\Flash\Flash;
@@ -41,7 +41,7 @@ class ExtendedCompanyController extends CompanyController
             $companies = $this->companyRepository->all();
         }
 
-        return $companies->toJson();
+        return ($companies instanceof Collection) ? $companies->toJson() : null;
         
         // return view('companies.index')
         //     ->with('companies', $companies);
