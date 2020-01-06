@@ -61,7 +61,10 @@ class ExtendedChatRepository extends ChatRepository
                 $AttendantsContact->save();
                 
                 // Move from Chats table to Attendant Table
-                $Chats = $this->findWhere(['contact_id' => $ChastMessages->contact_id])->all();
+                $Chats = $this->findWhere([
+                            'company_id' => $attendantUser->company_id, 
+                            'contact_id' => $ChastMessages->contact_id
+                        ])->all();
                 foreach ($Chats as $key => $Chat) {
                     $newChat = $Chat->replicate();
                     $newChat->table = (string)$attendant_id;
