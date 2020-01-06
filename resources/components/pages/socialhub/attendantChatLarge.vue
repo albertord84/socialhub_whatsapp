@@ -751,7 +751,10 @@
         <b-modal v-model="modalNewContactFromBag" :hide-footer="true" title="Informação">
             Você adicionará um novo contato automático na sua lista de contatos.
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">Adicionar</button>
+                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">
+                        <i v-if="isAddingContactFromBag==true" class="fa fa-spinner fa-spin"></i>
+                        Adicionar
+                    </button>
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
                 </div>
         </b-modal>
@@ -832,9 +835,10 @@
                 isEditingContact:false,
                 isEditingContactSummary:false,
                 isSendingNewMessage:false,
-                isUpdatingContact:false,
-
+                isUpdatingContact:false,                
+                isAddingContactFromBag:false,                
                 isRecordingAudio:false,
+
                 timeRecordingAudio:"00:00",
                 recordingTime:0,
                 handleTimerCounter:null,
@@ -898,7 +902,7 @@
                             
                             //--------------clear the field inputs ----------------------------------
                             this.newMessage.message = "";
-                            this.file = null;                            
+                            this.file = null;
                             
                             //---------------set the target contact as the first----------------------
                             var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
@@ -912,10 +916,7 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             //----------update the message list and the last message of the contact-----
-                            console.log(this.messages.length);
                             this.messages.push(Object.assign({}, message));
-                            console.log(this.messages.length);
-                            // this.messages[this.messages.length+1]=Object.assign({}, message);
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
 
@@ -988,6 +989,7 @@
                     miniToastr.info("Informação", "Não existem novos contatos para adicionar a sua lista");  
                     return;
                 }
+                this.isAddingContactFromBag = true;
                 ApiService.get(this.contacts_bag_url)
                     .then(response => {
                         this.modalNewContactFromBag = !this.modalNewContactFromBag;
@@ -1002,7 +1004,7 @@
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Erro adicionando o contato");   
-                    });
+                    }).finally(()=>{this.isAddingContactFromBag = false;});
             }, 
 
             getContactChat: function(contact) {
@@ -1089,7 +1091,7 @@
                     return;
                 }
                 this.isUpdatingContact = true;
-                delete this.selectedContactToEdit.status_id;
+                delete this.selectedContactToEdit.status;
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, this.selectedContactToEdit)
                 .then(response => {
                     if(this.isEditingContact)
@@ -1468,24 +1470,18 @@
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-
-                host: process.env.MIX_APP_HOST,
-                
+                host: process.env.MIX_APP_HOST,                
                 wsPort: 6001,
                 wsHost: process.env.MIX_APP_HOST,
                 // enabledTransports: ['ws'],
                 // encrypted: false,
-
                 wssHost: process.env.MIX_APP_HOST,
                 wssPort: 6001,
                 enabledTransports: ['ws', 'wss'],
                 forceTLS: true,
                 encrypted: true,
-
                 disableStats: false,
             });
-
-            console.log(window.Echo);
 
             window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
@@ -1501,6 +1497,8 @@
                     } catch (error) {
                         console.log(error);
                     }
+                    
+                    console.log(this.selectedContact);
 
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
