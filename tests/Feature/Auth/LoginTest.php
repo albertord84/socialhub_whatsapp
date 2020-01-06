@@ -8,7 +8,6 @@ use Tests\MyTestCase;
 
 class LoginTest extends MyTestCase
 {
-    // use RefreshDatabase;
 
     protected function successfulLoginRoute()
     {
@@ -54,8 +53,6 @@ class LoginTest extends MyTestCase
 
         $response = $this->actingAs($user)->get($this->loginGetRoute());
 
-        // var_dump($response);
-
         $response->assertSuccessful();
         $response->assertViewIs('welcome');
         // $response->assertRedirect($this->guestMiddlewareRoute());
@@ -91,6 +88,7 @@ class LoginTest extends MyTestCase
     public function testMockUserCanLoginWithCorrectCredentials()
     {
         $user = factory(User::class)->create([
+            'id' => 100,
             'password' => bcrypt($password = 'i-love-laravel'),
         ]);
 
@@ -102,14 +100,13 @@ class LoginTest extends MyTestCase
         $response->assertSuccessful();
         // $response->assertRedirect($this->successfulLoginRoute());
         $this->assertAuthenticatedAs($user);
-        
-        $user->delete();
+
     }
 
     public function testRememberMeFunctionality()
     {
         $user = factory(User::class)->create([
-            'id' => random_int(10, 100),
+            'id' => 100,
             'password' => bcrypt($password = 'i-love-laravel'),
         ]);
 
@@ -127,25 +124,26 @@ class LoginTest extends MyTestCase
         ]));
         $this->assertAuthenticatedAs($user);
 
-        $user->delete();
     }
 
     public function testUserCannotLoginWithIncorrectPassword()
     {
         $user = factory(User::class)->create([
+            'id' => 100,
             'password' => bcrypt('i-love-laravel'),
         ]);
 
-        $response = $this->post($this->loginPostRoute(), [
+        $response = $this->from($this->loginGetRoute())->post($this->loginPostRoute(), [
             'email' => $user->email,
             'password' => 'invalid-password',
         ]);
+
+        $user->delete();
 
         $response->assertStatus(401);
         // $response->assertSessionHasErrors('email');
         $this->assertGuest();
 
-        $user->delete();
     }
 
     public function testUserCannotLoginWithEmailThatDoesNotExist()
@@ -159,23 +157,16 @@ class LoginTest extends MyTestCase
         $this->assertGuest();
     }
 
-    // public function testUserCanLogout()
-    // {
-    //     $this->be(factory(User::class)->create());
+    public function testUserCanLogout()
+    {
+        $user = User::find(1);
+        $this->be($user);
 
-    //     $response = $this->post($this->logoutRoute());
+        $response = $this->post($this->logoutRoute());
 
-    //     $response->assertRedirect($this->successfulLogoutRoute());
-    //     $this->assertGuest();
-    // }
-
-    // public function testUserCannotLogoutWhenNotAuthenticated()
-    // {
-    //     $response = $this->post($this->logoutRoute());
-
-    //     $response->assertRedirect($this->successfulLogoutRoute());
-    //     $this->assertGuest();
-    // }
+        $response->assertSuccessful();
+        $this->assertGuest();
+    }
 
     // public function testUserCannotMakeMoreThanFiveAttemptsInOneMinute()
     // {
@@ -206,4 +197,5 @@ class LoginTest extends MyTestCase
     //     $this->assertFalse(session()->hasOldInput('password'));
     //     $this->assertGuest();
     // }
+
 }

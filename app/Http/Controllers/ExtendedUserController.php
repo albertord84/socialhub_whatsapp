@@ -44,8 +44,7 @@ class ExtendedUserController extends UserController
         $this->userRepository->pushCriteria(new RequestCriteria($request));
         $users = $this->userRepository->all();
 
-        return view('users.index')
-            ->with('users', $users);
+        return $users->toJson();
     }
 
     /**
