@@ -300,7 +300,7 @@
                 var check;
 
                 if(this.model.CPF && this.model.CPF !=''){
-                    check = validation.check('cpf', this.model.CPF)
+                    check = validation.validate_cpf('cpf', this.model.CPF)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;

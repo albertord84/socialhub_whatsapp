@@ -24,7 +24,13 @@ class ExtendedCompanyRepository extends CompanyRepository
         return $Attentands;
     }
 
-    
+    public function getCompany(int $company_id)
+    {
+        $Company = $this->findWhere(['id' => $company_id]);
+        return $Company;
+    }
+
+
     /**
      * Configure the Model
      **/
