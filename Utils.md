@@ -130,6 +130,8 @@ alias pf='clear && vendor/bin/phpunit --filter'
 // Git commit with message
 function gcm() { git add . && git commit -m "$1"; }
 
+alias npmd='npm run dev'
+
 alias gc='git add . && git commit -m "Auto message"'
 alias gp='git add . && git commit -m "Auto message" && git pull origin develop'
 alias gpp='git add . && git commit -m "Auto message" && git pull origin develop && git push origin develop'
@@ -143,3 +145,17 @@ php artisan infyom:scaffold User --skip=migration,repository,model,controllers,a
 
 skip options:
 migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload
+
+
+# Testing Laravel APP
+CREATE DATABASE `socialhub_mvp.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
+php artisan migrate:refresh --database=socialhub_mvp.test --seed
+
+CREATE DATABASE `socialhub_mvp.chats.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
+Create base chats table
+Create attendants base chats table
+
+Configure test db connections into laravel database.php
+
+## Add this to phpunit.xml between php tags
+    <env name="DB_CONNECTION" value="socialhub_mvp.test"/>

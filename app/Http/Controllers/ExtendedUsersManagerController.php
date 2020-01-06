@@ -6,7 +6,6 @@ use App\Http\Requests\CreateUsersManagerRequest;
 use App\Http\Requests\UpdateUsersManagerRequest;
 use App\Mail\EmailSigninCompany;
 use App\Models\Company;
-use App\Models\UsersManager;
 use App\User;
 use App\Repositories\ExtendedUsersManagerRepository;
 use Illuminate\Http\Request;

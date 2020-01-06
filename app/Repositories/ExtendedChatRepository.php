@@ -7,10 +7,10 @@ use App\Models\AttendantsContact;
 use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class ExtendedChatRepository extends ChatRepository
 {    
@@ -38,8 +38,9 @@ class ExtendedChatRepository extends ChatRepository
     public function getBagContact(int $attendant_id): Contact{
         try {
             // First message from Bag
-            $ChastMessages = $this->first();
-            
+            $attendantUser = User::find($attendant_id);
+            $ChastMessages = $this->model()::where('company_id', $attendantUser->company_id)->first();
+
             $Contact = null;
             if ($ChastMessages) {
                 // Get Logged User
@@ -60,7 +61,10 @@ class ExtendedChatRepository extends ChatRepository
                 $AttendantsContact->save();
                 
                 // Move from Chats table to Attendant Table
-                $Chats = $this->findWhere(['contact_id' => $ChastMessages->contact_id])->all();
+                $Chats = $this->findWhere([
+                            'company_id' => $attendantUser->company_id, 
+                            'contact_id' => $ChastMessages->contact_id
+                        ])->all();
                 foreach ($Chats as $key => $Chat) {
                     $newChat = $Chat->replicate();
                     $newChat->table = (string)$attendant_id;
@@ -103,8 +107,8 @@ class ExtendedChatRepository extends ChatRepository
     }
 
     // 
-    public function getBagContactsCount(): int{
-        $count = $this->model()::select('contact_id')->distinct()->get();
+    public function getBagContactsCount(int $company_id): int{
+        $count = $this->model()::where('company_id', $company_id)->select('contact_id')->distinct()->get();
 
         return $count->count();
     }

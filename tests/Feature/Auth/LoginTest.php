@@ -2,19 +2,16 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\UsersAttendant;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\MyTestCase;
 
 class LoginTest extends MyTestCase
 {
-    // use RefreshDatabase;
 
     protected function successfulLoginRoute()
     {
-        return route('home');
+        return '/home';
     }
 
     protected function loginGetRoute()
@@ -24,12 +21,12 @@ class LoginTest extends MyTestCase
 
     protected function loginPostRoute()
     {
-        return route('login');
+        return '/auth/login';
     }
 
     protected function logoutRoute()
     {
-        return route('logout');
+        return '/auth/logout';
     }
 
     protected function successfulLogoutRoute()
@@ -39,7 +36,7 @@ class LoginTest extends MyTestCase
 
     protected function guestMiddlewareRoute()
     {
-        return route('home');
+        return '/home';
     }
 
     public function testUserCanViewALoginForm()
@@ -56,110 +53,120 @@ class LoginTest extends MyTestCase
 
         $response = $this->actingAs($user)->get($this->loginGetRoute());
 
-        // var_dump($response);
-
         $response->assertSuccessful();
         $response->assertViewIs('welcome');
         // $response->assertRedirect($this->guestMiddlewareRoute());
     }
 
-    public function testAttendanstCompanyLoad()
+    public function testUserCanDoLoginFromAuthFeature()
     {
-        $company_id = 1;
+        $user_id = 1;
 
-        $attendants = UsersAttendant::with('user')->whereHas('user', function($query) use ($company_id) {
-            $query->where(['company_id' => $company_id]);
-        })->get();
+        $User1 = User::find($user_id);
 
-        $this->assertCount(2, $attendants);
+        Auth::login($User1);
+
+        $logguedUser = Auth::user();
+
+        $this->assertInstanceOf(User::class, $logguedUser);
+        $this->assertEquals($logguedUser->id, 1);
+        $this->assertEquals($logguedUser->email, 'admin@socialhub.pro');
     }
 
-    // public function testUserCanLoginWithCorrectCredentials()
-    // {
-    //     $user = factory(User::class)->create([
-    //         'password' => bcrypt($password = 'i-love-laravel'),
-    //     ]);
+    public function testAdmin1CanDoLoginFromLoginForm()
+    {
+        $response = $this->post('/auth/login', ['email' => 'admin@socialhub.pro', 'password' => 'admin']);
 
-    //     $response = $this->post($this->loginPostRoute(), [
-    //         'email' => $user->email,
-    //         'password' => $password,
-    //     ]);
+        $logguedUser = Auth::user();
 
-    //     $response->assertRedirect($this->successfulLoginRoute());
-    //     $this->assertAuthenticatedAs($user);
-    // }
+        $response->assertSuccessful();
+        $this->assertInstanceOf(User::class, $logguedUser);
+        $this->assertEquals($logguedUser->id, 1);
+        $this->assertEquals($logguedUser->email, 'admin@socialhub.pro');
+    }
 
-    // public function testRememberMeFunctionality()
-    // {
-    //     $user = factory(User::class)->create([
-    //         'id' => random_int(1, 100),
-    //         'password' => bcrypt($password = 'i-love-laravel'),
-    //     ]);
+    public function testMockUserCanLoginWithCorrectCredentials()
+    {
+        $user = factory(User::class)->create([
+            'id' => 100,
+            'password' => bcrypt($password = 'i-love-laravel'),
+        ]);
 
-    //     $response = $this->post($this->loginPostRoute(), [
-    //         'email' => $user->email,
-    //         'password' => $password,
-    //         'remember' => 'on',
-    //     ]);
+        $response = $this->post($this->loginPostRoute(), [
+            'email' => $user->email,
+            'password' => $password,
+        ]);
 
-    //     $response->assertRedirect($this->successfulLoginRoute());
-    //     $response->assertCookie(Auth::guard()->getRecallerName(), vsprintf('%s|%s|%s', [
-    //         $user->id,
-    //         $user->getRememberToken(),
-    //         $user->password,
-    //     ]));
-    //     $this->assertAuthenticatedAs($user);
-    // }
+        $response->assertSuccessful();
+        // $response->assertRedirect($this->successfulLoginRoute());
+        $this->assertAuthenticatedAs($user);
 
-    // public function testUserCannotLoginWithIncorrectPassword()
-    // {
-    //     $user = factory(User::class)->create([
-    //         'password' => bcrypt('i-love-laravel'),
-    //     ]);
+    }
 
-    //     $response = $this->from($this->loginGetRoute())->post($this->loginPostRoute(), [
-    //         'email' => $user->email,
-    //         'password' => 'invalid-password',
-    //     ]);
+    public function testRememberMeFunctionality()
+    {
+        $user = factory(User::class)->create([
+            'id' => 100,
+            'password' => bcrypt($password = 'i-love-laravel'),
+        ]);
 
-    //     $response->assertRedirect($this->loginGetRoute());
-    //     $response->assertSessionHasErrors('email');
-    //     $this->assertTrue(session()->hasOldInput('email'));
-    //     $this->assertFalse(session()->hasOldInput('password'));
-    //     $this->assertGuest();
-    // }
+        $response = $this->post($this->loginPostRoute(), [
+            'email' => $user->email,
+            'password' => $password,
+            'remember' => 'on',
+        ]);
 
-    // public function testUserCannotLoginWithEmailThatDoesNotExist()
-    // {
-    //     $response = $this->from($this->loginGetRoute())->post($this->loginPostRoute(), [
-    //         'email' => 'nobody@example.com',
-    //         'password' => 'invalid-password',
-    //     ]);
+        $response->assertSuccessful();
+        $response->assertCookie(Auth::guard()->getRecallerName(), vsprintf('%s|%s|%s', [
+            $user->id,
+            $user->getRememberToken(),
+            $user->password,
+        ]));
+        $this->assertAuthenticatedAs($user);
 
-    //     $response->assertRedirect($this->loginGetRoute());
-    //     $response->assertSessionHasErrors('email');
-    //     $this->assertTrue(session()->hasOldInput('email'));
-    //     $this->assertFalse(session()->hasOldInput('password'));
-    //     $this->assertGuest();
-    // }
+    }
 
-    // public function testUserCanLogout()
-    // {
-    //     $this->be(factory(User::class)->create());
+    public function testUserCannotLoginWithIncorrectPassword()
+    {
+        $user = factory(User::class)->create([
+            'id' => 100,
+            'password' => bcrypt('i-love-laravel'),
+        ]);
 
-    //     $response = $this->post($this->logoutRoute());
+        $response = $this->from($this->loginGetRoute())->post($this->loginPostRoute(), [
+            'email' => $user->email,
+            'password' => 'invalid-password',
+        ]);
 
-    //     $response->assertRedirect($this->successfulLogoutRoute());
-    //     $this->assertGuest();
-    // }
+        $user->delete();
 
-    // public function testUserCannotLogoutWhenNotAuthenticated()
-    // {
-    //     $response = $this->post($this->logoutRoute());
+        $response->assertStatus(401);
+        // $response->assertSessionHasErrors('email');
+        $this->assertGuest();
 
-    //     $response->assertRedirect($this->successfulLogoutRoute());
-    //     $this->assertGuest();
-    // }
+    }
+
+    public function testUserCannotLoginWithEmailThatDoesNotExist()
+    {
+        $response = $this->from($this->loginGetRoute())->post($this->loginPostRoute(), [
+            'email' => 'nobody@example.com',
+            'password' => 'invalid-password',
+        ]);
+
+        $response->assertStatus(401);
+        $this->assertGuest();
+    }
+
+    public function testUserCanLogout()
+    {
+        $user = User::find(1);
+        $this->be($user);
+
+        $response = $this->post($this->logoutRoute());
+
+        $response->assertSuccessful();
+        $this->assertGuest();
+    }
 
     // public function testUserCannotMakeMoreThanFiveAttemptsInOneMinute()
     // {
@@ -190,4 +197,5 @@ class LoginTest extends MyTestCase
     //     $this->assertFalse(session()->hasOldInput('password'));
     //     $this->assertGuest();
     // }
+
 }

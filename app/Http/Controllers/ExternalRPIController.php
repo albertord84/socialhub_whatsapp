@@ -189,7 +189,7 @@ class ExternalRPIController extends Controller
 
             $contactInfo = $contactInfo->getBody()->getContents();
             // $contactInfo = json_decode($contactInfo);
-            Log::debug('getContactFromBag Response: ', [$contactInfo]);
+            Log::debug('getContactInfo Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
             throw $th;
         }
