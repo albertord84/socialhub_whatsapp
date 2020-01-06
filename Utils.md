@@ -149,6 +149,13 @@ migration,repository,model,controllers,api_controller,scaffold_controller,scaffo
 
 # Testing Laravel APP
 CREATE DATABASE `socialhub_mvp.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
-CREATE DATABASE `socialhub_mvp.chats.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
-
 php artisan migrate:refresh --database=socialhub_mvp.test --seed
+
+CREATE DATABASE `socialhub_mvp.chats.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
+Create base chats table
+Create attendants base chats table
+
+Configure test db connections into laravel database.php
+
+## Add this to phpunit.xml between php tags
+    <env name="DB_CONNECTION" value="socialhub_mvp.test"/>
