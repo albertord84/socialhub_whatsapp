@@ -145,3 +145,10 @@ php artisan infyom:scaffold User --skip=migration,repository,model,controllers,a
 
 skip options:
 migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload
+
+
+# Testing Laravel APP
+CREATE DATABASE `socialhub_mvp.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE `socialhub_mvp.chats.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+php artisan migrate:refresh --database=socialhub_mvp.test --seed

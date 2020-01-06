@@ -1485,8 +1485,6 @@
                 disableStats: false,
             });
 
-            console.log(window.Echo);
-
             window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
