@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Storage;
 
 class TestController extends AppBaseController
 {
@@ -40,6 +41,9 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
+        // dd(Storage::disk('chats_files'));
+        dd(Storage::disk('chats_files')->getDriver()->getAdapter()->getPathPrefix());
+
         var_dump(env('APP_NAME'));
         var_dump(env('APP_ENV'));
 
