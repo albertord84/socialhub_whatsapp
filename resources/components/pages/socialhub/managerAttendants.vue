@@ -18,7 +18,7 @@
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddAttendant = !modalAddAttendant" title="Novo atendente">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="handleAddAttendant" title="Novo atendente">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
@@ -92,6 +92,7 @@
 
     </div>
 </template>
+
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
@@ -131,14 +132,18 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                // logguedManager:{},
                 attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
                 first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
+
+                company_url:'companies',  //route to controller
                 
                 // model:{},
                 //---------Specific properties-----------------------------
                 attendant_id: "",
                 model:{},
+                modelCompany:{},
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -219,6 +224,24 @@
                         miniToastr.error(error, "Error carregando os atendentes");   
                     });
             }, 
+
+            getCompanyOFManager(){ //TODO-Egberto
+                ApiService.get(this.company_url)
+                    .then(response => {
+                        this.modelCompany = response.data[0];
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando a empresa do manager logado");   
+                    });
+            }, 
+
+            handleAddAttendant(){ //TODO-Egberto
+                if(this.modelCompany.amount_attendants > this.rows.length){
+                    this.modalAddAttendant = !this.modalAddAttendant;
+                }else{
+                    miniToastr.warn("Para inserir mais atentendente você deve contatar nossa equipe atendimento", "Atenção"); 
+                }
+            },
 
             reloadDatas(){
                 this.getAttendants();
@@ -344,7 +367,9 @@
         },
 
         beforeMount(){
+            // this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
+            this.getCompanyOFManager();
         },
 
         mounted() {
