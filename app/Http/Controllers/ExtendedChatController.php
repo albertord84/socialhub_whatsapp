@@ -142,7 +142,15 @@ class ExtendedChatController extends ChatController
             $json_data = FileUtils::SavePostFile($request->file, $filePath, $fileName);
             if ($json_data) { // Save file to disk (public/app/..)
                 // $fileContent = Storage::disk('chats_files')->get("$json_data->FullPath"); // Retrive file like file_get_content(...) 
-                $fileContent = Storage::disk('chats_files')->get("$json_data->SavedFilePath/$json_data->SavedFileName"); // Retrive file like file_get_content(...) 
+                $FileName = "$json_data->SavedFilePath/$json_data->SavedFileName";
+                // Convet From mp3 to ogg
+                if ($json_data->ClientOriginalExtension == 'mp3') {
+                    $BaseDir = Storage::disk('chats_files')->getDriver()->getAdapter()->getPathPrefix();
+                    $FileNameOgg = "$json_data->SavedFilePath/$json_data->SavedFileName.ogg";
+                    $code = exec("ffmpeg -y -i $BaseDir/$FileName -acodec libvorbis $BaseDir/$FileNameOgg");
+                    $FileName = $FileNameOgg;
+                }
+                $fileContent = Storage::disk('chats_files')->get($FileName); // Retrive file like file_get_content(...) 
                 $response = $externalRPiController->sendFileMessage(
                     $fileContent, $json_data->SavedFileName, $input['type_id'], 
                     $input['message'], $Contact

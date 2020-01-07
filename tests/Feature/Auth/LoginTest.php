@@ -130,7 +130,7 @@ class LoginTest extends MyTestCase
     {
         $user = factory(User::class)->create([
             'id' => 100,
-            'password' => bcrypt('i-love-laravel'),
+            'password' => 'i-love-laravel',
         ]);
 
         $response = $this->from($this->loginGetRoute())->post($this->loginPostRoute(), [
