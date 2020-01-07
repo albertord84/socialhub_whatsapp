@@ -14,6 +14,7 @@ class AddAddressColumnToCompanyTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
+            $table->string('CEP', 10)->nullable();
             $table->string('estado', 2)->nullable();
             $table->string('cidade', 100)->nullable();
             $table->string('rua', 100)->nullable();
