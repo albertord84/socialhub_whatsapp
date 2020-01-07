@@ -230,12 +230,6 @@
 
                 this.isSendingUpdate = true;
 
-                if(this.contact_atendant_id==0){
-                    miniToastr.warn("Escolha um dos atendentes cadastrados", 'Atenção' );
-                    this.isSendingUpdate = false;
-                    return;
-                }
-
                 // Validando dados
                 this.trimDataModel();
                 this.validateData();
@@ -261,21 +255,27 @@
                 ApiService.put(this.url+'/'+this.model.id, model_cpy) //ecr this.item.contact_id       //ECR
                     .then(response => {
                         if (this.contact_atendant_id && this.contact_atendant_id != this.item.contact_atendant_id) {
-                            ApiService.post(this.secondUrl,{
-                                    'id':0,
-                                    'contact_id':this.model.id,
-                                    'attendant_id':this.contact_atendant_id,                            
-                                })
-                                .then(response => {
-                                    miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                                    this.reload();
-                                    this.formCancel();
-                                })
-                                .catch(function(error) {
-                                    ApiService.process_request_error(error); 
-                                    miniToastr.error(error, "Erro atualizando contato");  
-                                })
-                                .finally(() => this.isSendingUpdate = false);     
+                            if(this.contact_atendant_id>0){
+                                ApiService.post(this.secondUrl,{
+                                        'id':0,
+                                        'contact_id':this.model.id,
+                                        'attendant_id':this.contact_atendant_id,                            
+                                    })
+                                    .then(response => {
+                                        miniToastr.success("Contato atualizado com sucesso","Sucesso");
+                                        this.reload();
+                                        this.formCancel();
+                                    })
+                                    .catch(function(error) {
+                                        ApiService.process_request_error(error); 
+                                        miniToastr.error(error, "Erro atualizando contato");  
+                                    })
+                                    .finally(() => {this.isSendingUpdate = false;});
+                            }else{
+                                this.reload();
+                                this.formCancel();
+                                this.isSendingUpdate = false;
+                            }
                         }else{
                             miniToastr.success("Contato atualizado com sucesso","Sucesso");
                             this.reload();
