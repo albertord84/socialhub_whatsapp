@@ -63,7 +63,9 @@ Route::resource('usersSellers', 'ExtendedUsersSellerController');
 Route::resource('passwordResets', 'PasswordResetController');
 
 // Route::resource('contacts', 'ContactController');
+Route::post('contactsFromCSV', 'ExtendedContactController@contactsFromCSV');
 Route::resource('contacts', 'ExtendedContactController');
+
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
 

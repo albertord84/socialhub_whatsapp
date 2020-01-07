@@ -18,9 +18,11 @@
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Importar contatos">
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="triggerEvent()" title="Importar contatos">
                         <i class="fa fa-id-card-o"></i>
                     </a>
+
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
@@ -95,6 +97,18 @@
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
+        <!-- Confirm import cantacts Modal -->
+        <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Confirmação de importação de contatos">
+            Você adicionará novos contatos a partir do arquivo selecionado.
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
+                        <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
+                        Enviar
+                    </button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, file=null">Cancelar</button>
+                </div>
+        </b-modal>
+
     </div>
 </template>
 <script>
@@ -144,6 +158,9 @@
                 contact_id: "",
                 contact_atendant_id: 0,
                 model:{},
+                
+                isSendingContactFromCSV:false,
+                file:null,
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -152,6 +169,7 @@
                 modalAddContact: false,
                 modalEditContact: false,
                 modalDeleteContact: false,
+                showModalFileUploadCSV: false,
 
                 //---------Externals properties-----------------------------
                 attendants:null,
@@ -223,10 +241,12 @@
             }, 
 
             reloadDatas(){
+
                 this.getContacts();
             },
             
             closeModals(){
+
                 this.modalAddContact = false;
                 this.modalEditContact = false;
                 this.modalDeleteContact = false;
@@ -247,6 +267,34 @@
                 this.model = value;
                 this.contact_id = value.id;
                 this.modalDeleteContact = !this.modalDeleteContact;
+            },
+
+            addContactsFromCSV:function(){
+                this.file = null;
+                if(!this.$refs.fileInputCSV.files[0].name.includes('.csv')){
+                    miniToastr.error("O arquivo selecionado deve estar em formato .CSV", "Erro"); 
+                    return;
+                }
+                if(this.$refs.fileInputCSV.files[0].size < 5*1024*1024) {
+                    this.file = this.$refs.fileInputCSV.files[0];
+                    if(this.file){
+                        let formData = new FormData();
+                        formData.append("id",'0');
+                        formData.append("file",this.file);
+                        this.isSendingContactFromCSV = true;
+                        ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
+                            .then(response => {
+                                this.getContacts();
+                                miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso"); 
+                            })
+                            .catch(function(error) {
+                                miniToastr.error(error, "Error carregando os contatos");   
+                            })
+                            .finally(()=>{this.isSendingContactFromCSV=false;});
+                    }
+                } else{
+                    miniToastr.error("O arquivo deve ter tamanho inferior a 5MB", "Erro"); 
+                }
             },
 
             //------ externals methods--------------------
@@ -364,6 +412,10 @@
             mycheck(){
                 alert("hi");
             },
+
+            triggerEvent () {
+                this.$refs.fileInputCSV.click();
+            }
         },
 
         beforeMount(){
