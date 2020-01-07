@@ -59,6 +59,8 @@ Route::resource('usersManagers', 'ExtendedUsersManagerController');
 Route::post('usersManagers/{company_id}/getManager', 'ExtendedUsersManagerController@getManager');
 
 Route::resource('usersAttendants', 'ExtendedUsersAttendantController');
+// Route::delete('deleteAllByManagerId/{user_manager_id}', 'ExtendedUsersAttendantController@deleteAllByManagerId');    //ECR
+
 Route::resource('usersSellers', 'ExtendedUsersSellerController');
 Route::get('cep/{cep}', 'ExtendedUsersSellerController@cep');
 Route::resource('passwordResets', 'PasswordResetController');
@@ -67,6 +69,8 @@ Route::resource('passwordResets', 'PasswordResetController');
 Route::resource('contacts', 'ExtendedContactController');
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
+// Route::delete('deleteAllByCompanyId/{company_id}', 'ExtendedContactController@deleteAllByCompanyId');    //ECR
+
 
 Route::resource('attendantsContacts', 'ExtendedAttendantsContactController');
 Route::delete('deleteAllByAttendantId/{id}', 'ExtendedAttendantsContactController@deleteAllByAttendantId');

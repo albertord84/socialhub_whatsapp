@@ -132,15 +132,18 @@
         data() {
             return {
                 //---------General properties-----------------------------
-                logguedManager:{},
+                // logguedManager:{},
                 attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
                 first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
+
+                company_url:'companies',  //route to controller
                 
                 // model:{},
                 //---------Specific properties-----------------------------
                 attendant_id: "",
                 model:{},
+                modelCompany:{},
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -223,7 +226,13 @@
             }, 
 
             getCompanyOFManager(){ //TODO-Egberto
-                this.modelCompany = response.data;
+                ApiService.get(this.company_url)
+                    .then(response => {
+                        this.modelCompany = response.data[0];
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando a empresa do manager logado");   
+                    });
             }, 
 
             handleAddAttendant(){ //TODO-Egberto
@@ -358,7 +367,7 @@
         },
 
         beforeMount(){
-            this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
+            // this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
             this.getCompanyOFManager();
         },

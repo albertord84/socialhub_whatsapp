@@ -61,7 +61,7 @@
 
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.cidade" title="Ex: Noterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
+                            <input v-model="modelCompany.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
                         </div>                                                      
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
@@ -83,11 +83,11 @@
                     <div class="row">
                         <div  class="col-lg-8 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.complemento" title="Ex: Casa 00 / Bloco 00, Apto 00" id="complemento" name="complemento" type="text" required placeholder="Complemento (*)" class="form-control"/>
+                            <input v-model="modelCompany.complemento" title="Ex: Casa 00 / Bloco 00, Apto 00" id="complemento" name="complemento" type="text" required placeholder="Complemento" class="form-control"/>
                         </div> 
                         <div class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.bairro" title="Ex: centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
+                            <input v-model="modelCompany.bairro" title="Ex: Centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
                         </div>
                     </div>
 
@@ -232,6 +232,10 @@
         name: 'sellersCRUDCompanies',
 
         props: {
+                // contact_url:'contacts',
+                // attendant_url:'usersAttendants',
+                // attendantsContacts_url:'attendantsContacts',
+            
             companies_url:'',
             users_url:'',
             usersManager_url:'',
@@ -361,14 +365,14 @@
                             .catch(function(error) {
                                 miniToastr.error(error, "Erro adicionando Manager");  
                                 ApiService.process_request_error(error); 
-                            })
-                            .finally(() => this.isSendingInsert = false);
+                            });
+                            // .finally(() => this.isSendingInsert = false);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Erro adicionando Empresa");  
                         ApiService.process_request_error(error); 
-                    })
-                    .finally(() => this.isSendingInsert = false);
+                    });
+                    // .finally(() => this.isSendingInsert = false);
             },
             
             editCompany: function() { //U
@@ -429,7 +433,7 @@
                                                     ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
                                                         .then(response => {
                                                                 miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
-                                                                this.isSendingUpdate = false;
+                                                                // this.isSendingUpdate = false;
                                                                 this.reload();
                                                                 this.closeModals();
                                                             })
@@ -456,12 +460,14 @@
                                             alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
                                         else
                                             miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                    }).finally(() => this.isSendisSendingUpdateingInsert = false);
+                                    });
+                                    // .finally(() => this.isSendingUpdate = false);
                         })
                     .catch(function(error) {
-                        this.isSendingUpdate = false; 
+                        // this.isSendingUpdate = false; 
                         miniToastr.error(error, "Erro atualizando companhia"); 
-                    }).finally(() => this.isSendingUpdate = false);
+                    });
+                    // .finally(() => this.isSendingUpdate = false);
             },
 
             deleteCompany: function(){
@@ -567,10 +573,12 @@
                     var check = validation.check('cep', this.modelCompany.CEP)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
+                        this.isSendingValidationCEP = false;
                         return;
                     }
                 }else{
                     miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    this.isSendingValidationCEP = false;
                     return;
                 }
 
@@ -579,7 +587,7 @@
                     .then(response => {
                         // console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
-                            miniToastr.error("Confira os dados fornecidos", "O CEP inserido não existe"); 
+                            miniToastr.warn("Confira os dados fornecidos", "O CEP inserido não existe");
                             return;
                         }
                         this.modelCompany.CEP = response.data.cep;
@@ -587,8 +595,6 @@
                         this.modelCompany.cidade = response.data.localidade;
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
-
-                        this.isSendingValidationCEP = false;
                     })
                     .catch(function(error) {
                         console.log(error);
@@ -596,6 +602,7 @@
                         miniToastr.error(error, "Erro validando CEP"); 
                     }).finally(() => {
                         Vue.axios.defaults.baseURL = "";
+                        this.isSendingValidationCEP = false;
                     });
             },
 
@@ -718,16 +725,44 @@
                 }
 
                 if(this.modelCompany.complemento && this.modelCompany.complemento !=''){
-                    check = validation.check('street_address', this.modelCompany.complemento)
+                    check = validation.check('complement_address', this.modelCompany.complemento)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O complemento no endereço da empresa é obrigatorio" );
-                    this.flagReference = false;
                 }
-                //ECR: O resto dos campos do endereço se obtem por validaçao do CEP
+
+                if(this.modelCompany.estado && this.modelCompany.estado !=''){
+                    check = validation.check('state_address', this.modelCompany.estado)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.modelCompany.bairro && this.modelCompany.bairro !=''){
+                    check = validation.check('neighborhood_address', this.modelCompany.bairro)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.modelCompany.cidade && this.modelCompany.cidade !=''){
+                    check = validation.check('municipality_address', this.modelCompany.cidade)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.modelCompany.rua && this.modelCompany.rua !=''){
+                    check = validation.check('street_address', this.modelCompany.rua)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
             },
 
             validateDataModelManager: function(){
@@ -756,7 +791,7 @@
                 }
 
                 if(this.modelManager.CPF && this.modelManager.CPF !=''){
-                    check = validation.check('cpf', this.modelManager.CPF)
+                    check = validation.validate_cpf('cpf', this.modelManager.CPF)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;

@@ -7,7 +7,7 @@ var regexp={
     },
     'cpf':{
         'regexp':'^[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}$',
-        'error':'CPF inválido'
+        'error':'CPF inválido (*)'  //ECR
     },
     'cnpj':{
         'regexp':'^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})$',
@@ -130,7 +130,11 @@ var regexp={
     },
     'street_address':{
         'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
-        'error':''
+        'error':'Comfira o nome da rua do endereço fornecido'
+    },
+    'complement_address':{
+        'regexp':'^[a-zA-Z0-9.,/ áéíóúãõẽâîô]{2,80}$',
+        'error':'Comfira o complemento do endereço fornecido'
     },
     'neighborhood_address':{
         'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
@@ -179,11 +183,18 @@ const validation = {
         return response;
     },
 
-    validate_cpf(cpf, pattern) {
-        if(cpf.match(pattern)){
+    validate_cpf(type, cpf) {
+
+        var response={
+            'success':false,
+            'error':regexp[type].error
+        };
+
+        if(cpf.match(regexp[type].regexp)){
             cpf = cpf.replace(/[^\d]+/g,'');    
+            
             if(cpf == '') {
-                return false;
+                return response;
             }
             // Elimina CPFs invalidos conhecidos    
             if (cpf.length != 11 || 
@@ -191,31 +202,36 @@ const validation = {
                 || cpf == "33333333333" || cpf == "44444444444" || cpf == "55555555555" 
                 || cpf == "66666666666" || cpf == "77777777777" || cpf == "88888888888" 
                 || cpf == "99999999999"){
-                    return false;
-                }
+                return response;
+            }
             // Valida 1o digito 
-            add = 0;
-            for (i=0; i < 9; i ++)       
+            var add = 0;
+            for (var i=0; i < 9; i ++){
                 add += parseInt(cpf.charAt(i)) * (10 - i);  
-                rev = 11 - (add % 11);  
-                if(rev == 10 || rev == 11)     
-                    rev = 0;    
-                if(rev != parseInt(cpf.charAt(9))){
-                    return false;
-                }
+            }    
+            var rev = 11 - (add % 11);  
+            if(rev == 10 || rev == 11)     
+                rev = 0;    
+            if(rev != parseInt(cpf.charAt(9))){
+                return response;
+            }
             // Valida 2o digito 
             add = 0;
-            for (i = 0; i < 10; i ++)
+            for (var i = 0; i < 10; i ++){
                 add += parseInt(cpf.charAt(i)) * (11 - i);  
+            }
             rev = 11 - (add % 11);
             if (rev == 10 || rev == 11)
                 rev = 0;
             if (rev != parseInt(cpf.charAt(10))){
-                return false;
+                return response;
             }   
-            return true;
+            response.success=true;
+            response.error='';
+            return response;
+
         }else{
-            return false;
+            return response;
         }
     }
 
