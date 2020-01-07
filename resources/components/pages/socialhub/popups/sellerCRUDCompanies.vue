@@ -232,6 +232,10 @@
         name: 'sellersCRUDCompanies',
 
         props: {
+                // contact_url:'contacts',
+                // attendant_url:'usersAttendants',
+                // attendantsContacts_url:'attendantsContacts',
+            
             companies_url:'',
             users_url:'',
             usersManager_url:'',

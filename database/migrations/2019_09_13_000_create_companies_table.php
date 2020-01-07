@@ -24,12 +24,12 @@ class CreateCompaniesTable extends Migration {
 			$table->string('email', 100)->nullable();
 			$table->string('whatsapp', 30)->nullable();
 			$table->string('CEP', 10)->nullable();
-			$table->string('estado', 5)->nullable();
-			$table->string('cidade', 100)->nullable();
-			$table->string('rua', 100)->nullable();
-			$table->string('numero', 10)->nullable();
-			$table->string('complemento', 100)->nullable();
-			$table->string('bairro', 100)->nullable();
+			// $table->string('estado', 5)->nullable();
+			// $table->string('cidade', 100)->nullable();
+			// $table->string('rua', 100)->nullable();
+			// $table->string('numero', 10)->nullable();
+			// $table->string('complemento', 100)->nullable();
+			// $table->string('bairro', 100)->nullable();
 			$table->string('description', 1000)->nullable();
 			$table->timestamps();
 			$table->softDeletes();
