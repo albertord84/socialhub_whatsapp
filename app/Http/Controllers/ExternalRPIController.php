@@ -12,8 +12,8 @@ use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Rpi;
-use App\Models\User;
 use App\Models\UsersAttendant;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -189,7 +189,7 @@ class ExternalRPIController extends Controller
 
             $contactInfo = $contactInfo->getBody()->getContents();
             // $contactInfo = json_decode($contactInfo);
-            Log::debug('getContactFromBag Response: ', [$contactInfo]);
+            Log::debug('getContactInfo Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -213,16 +213,16 @@ class ExternalRPIController extends Controller
         $company_phone = $input['CompanyPhone'];
 
         $Company = Company::where(['phone' => $company_phone])->first();
-        Log::debug('reciveTextMessage to Company: ', [$Company]);
+        // Log::debug('reciveTextMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
             ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
             ->first();
-        Log::debug('reciveTextMessage to Contact: ', [$Contact]);
+        // Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
         $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact ?? null);
         if (!$Chat) {
-            return "Ignored group message!";
+            return "Error saving text message!";
         }
 
         $Chat->save();
@@ -252,7 +252,7 @@ class ExternalRPIController extends Controller
     public function reciveFileMessage(Request $request)
     {
         $input = $request->all();
-        Log::debug('reciveFileMessage: ', [$input]);
+        // Log::debug('reciveFileMessage: ', [$input]);
 
         $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
         $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
@@ -261,7 +261,7 @@ class ExternalRPIController extends Controller
         $company_phone = $input['CompanyPhone'];
 
         $Company = Company::where(['phone' => $company_phone])->first();
-        Log::debug('reciveFileMessage to Company: ', [$Company]);
+        // Log::debug('reciveFileMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
             ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
@@ -269,7 +269,7 @@ class ExternalRPIController extends Controller
 
         $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact);
         if (!$Chat) {
-            return "Ignored group message!";
+            return "Error saving file message!";
         }
 
         $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
@@ -350,14 +350,11 @@ class ExternalRPIController extends Controller
                 $Contact->first_name = $contact_Jid;
                 $Contact->company_id = $Company->id;
                 $Contact->whatsapp_id = $contact_Jid;
-                $Contact->updated_at = time();
-
-                // TODO Alberto: Get contact info photo
-
-                $Contact->save();
             }
             // else throw new Exception("Error Processing Request", 1);
         }
+        $Contact->updated_at = Carbon::now();
+        $Contact->save();
 
         $Chat->contact_id = $Contact->id;
         $Chat->company_id = $Contact->company_id;

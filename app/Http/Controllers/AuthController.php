@@ -126,7 +126,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth('api')->user());
+        return response()->json(auth()->user());
     }
 
     /**
@@ -137,7 +137,11 @@ class AuthController extends Controller
     public function logout()
     {        
         Log::info('logout');
-        auth('api')->logout();
+        try {
+            auth()->logout();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         return response()->json(['message' => 'Successfully logged out']);
     }   
 
@@ -159,7 +163,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        return $this->respondWithToken(auth()->refresh());
     }
 
     /**

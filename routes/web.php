@@ -66,7 +66,9 @@ Route::get('cep/{cep}', 'ExtendedUsersSellerController@cep');
 Route::resource('passwordResets', 'PasswordResetController');
 
 // Route::resource('contacts', 'ContactController');
+Route::post('contactsFromCSV', 'ExtendedContactController@contactsFromCSV');
 Route::resource('contacts', 'ExtendedContactController');
+
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');
 // Route::delete('deleteAllByCompanyId/{company_id}', 'ExtendedContactController@deleteAllByCompanyId');    //ECR
