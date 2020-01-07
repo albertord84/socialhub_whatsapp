@@ -4,7 +4,7 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome completo" class="form-control"/>
+                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome (*)" class="form-control"/>
                 </div>
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-headphones form-control-feedback"></span>
@@ -21,13 +21,13 @@
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.phone" id="phone" title="Ex: 55(21)559-6918" name="hone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                    <input v-model="model.phone" id="phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                 </div>                                
             </div>
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-whatsapp form-control-feedback"></span>
-                    <input v-model="model.whatsapp_id" title="Ex: 963525397" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                    <input v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-facebook form-control-feedback"></span>
@@ -84,6 +84,8 @@
     import ApiService from "../../../../common/api.service";
     import miniToastr from "mini-toastr";
     miniToastr.init();
+    import validation from "src/common/validation.service";
+
     
     export default {
         name: 'managerCRUDContact',
@@ -125,25 +127,41 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
+
+                flagReference: true,
             
             }
         },
 
         methods:{
             addContact: function() { //C
-                if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error(error, "Alguns dados incompletos");  
+
+                this.isSendingInsert = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingInsert = false;
+                    this.flagReference = true;
                     return;
                 }
+                
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
                     this.model.status_id = 1;                
 
-                this.isSendingInsert = true;
-                
-                console.log(123456789);
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
 
-                ApiService.post(this.url,this.model)
+                // ApiService.post(this.url,this.model)
+                ApiService.post(this.url, model_cpy)            //ECR
                 .then(response => {
                     if (this.contact_atendant_id) {
                         ApiService.post(this.secondUrl,{
@@ -209,42 +227,66 @@
             },
 
             updateContact: function() { //U
-                if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                    miniToastr.error(error, "Erro adicionando contato");  
+
+                this.isSendingUpdate = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingUpdate = false;
+                    this.flagReference = true;
                     return;
                 }
+                 
                 if(this.contact_atendant_id>0)
                     this.model.status_id = 1;
-                this.isSendingUpdate = true;
-                ApiService.put(this.url+'/'+this.model.id, this.model)//ecr this.item.contact_id
-                .then(response => {
-                    if (this.contact_atendant_id && this.contact_atendant_id != this.item.contact_atendant_id) {
-                        ApiService.post(this.secondUrl,{
-                            'id':0,
-                            'contact_id':this.model.id,
-                            'attendant_id':this.contact_atendant_id,                            
-                        })
-                        .then(response => {
+
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
+
+                // ApiService.put(this.url+'/'+this.model.id, this.model) //ecr this.item.contact_id
+                ApiService.put(this.url+'/'+this.model.id, model_cpy) //ecr this.item.contact_id       //ECR
+                    .then(response => {
+                        if (this.contact_atendant_id && this.contact_atendant_id != this.item.contact_atendant_id) {
+                            if(this.contact_atendant_id>0){
+                                ApiService.post(this.secondUrl,{
+                                        'id':0,
+                                        'contact_id':this.model.id,
+                                        'attendant_id':this.contact_atendant_id,                            
+                                    })
+                                    .then(response => {
+                                        miniToastr.success("Contato atualizado com sucesso","Sucesso");
+                                        this.reload();
+                                        this.formCancel();
+                                    })
+                                    .catch(function(error) {
+                                        ApiService.process_request_error(error); 
+                                        miniToastr.error(error, "Erro atualizando contato");  
+                                    })
+                                    .finally(() => {this.isSendingUpdate = false;});
+                            }else{
+                                this.reload();
+                                this.formCancel();
+                                this.isSendingUpdate = false;
+                            }
+                        }else{
                             miniToastr.success("Contato atualizado com sucesso","Sucesso");
                             this.reload();
                             this.formCancel();
-                        })
-                        .catch(function(error) {
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro atualizando contato");  
-                        })
-                        .finally(() => this.isSendingUpdate = false);     
-                    }else{
-                        miniToastr.success("Contato atualizado com sucesso","Sucesso");
-                        this.reload();
-                        this.formCancel();
-                    }
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando contato");  
-                })
-                .finally(() => this.isSendingUpdate = false);   
+                        }
+                    })
+                    .catch(function(error) {
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro adicionando contato");  
+                    })
+                    .finally(() => this.isSendingUpdate = false);   
             },
 
             deleteContact: function() { //D
@@ -296,6 +338,81 @@
                 this.model.instagram_id = "";
                 this.model.linkedin_id = "";
             },
+
+            trimDataModel: function(){
+                if(this.model.first_name) this.model.first_name = this.model.first_name.trim();
+                if(this.model.last_name) this.model.last_name = this.model.last_name.trim();
+                if(this.model.email) this.model.email = this.model.email.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+                if(this.model.remember) this.model.remember = this.model.remember.trim();
+                if(this.model.summary) this.model.summary = this.model.summary.trim();
+                if(this.model.description) this.model.description = this.model.description.trim();
+            },
+
+            validateData: function(){
+                // Validação dos dados do contato
+                var check;
+                if(this.model.first_name && this.model.first_name !=''){
+                    check = validation.check('complete_name', this.model.first_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.model.email && this.model.email !=''){
+                    check = validation.check('email', this.model.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                    check = validation.check('whatsapp', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    this.flagReference = false;
+                }
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
+
         },
 
         beforeUpdate(){

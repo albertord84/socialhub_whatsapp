@@ -37,9 +37,13 @@ class ExtendedCompanyController extends CompanyController
         if($User->role_id==ExtendedContactsStatusController::SELLER){
             $companies = $this->companyRepository->allBySeller($User->id);
         }
-        else if ($User->role_id==ExtendedContactsStatusController::ADMIN) {
+        else if ($User->role_id==ExtendedContactsStatusController::ADMIN){
             $companies = $this->companyRepository->all();
         }
+        else if($User->role_id==ExtendedContactsStatusController::MANAGER){
+            $companies = $this->companyRepository->getCompany($User->company_id);
+        }
+        // return $companies->toJson();
 
         return ($companies instanceof Collection) ? $companies->toJson() : null;
         

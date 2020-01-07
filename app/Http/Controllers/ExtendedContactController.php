@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\FileUtils;
 use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
+use App\Models\Contact;
 use App\Repositories\ExtendedAttendantsContactRepository;
 use App\Repositories\ExtendedContactRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use ParagonIE\Sodium\File;
 use Response;
 
 class ExtendedContactController extends ContactController
@@ -19,6 +22,7 @@ class ExtendedContactController extends ContactController
         parent::__construct($contactRepo);
 
         $this->contactRepository = $contactRepo;
+        $this->APP_FILE_PATH = env('APP_FILE_PATH');
     }
 
     /**
@@ -67,6 +71,53 @@ class ExtendedContactController extends ContactController
         Flash::success('Contact saved successfully.');
 
         return $contact->toJson();
+        //return redirect(route('contacts.index'));
+    }
+
+    public function contactsFromCSV(CreateContactRequest $request)
+    {
+        $input = $request->all();
+
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        if ($file = $request->file('file')) {
+
+            $csv = file_get_contents($file->getRealPath());
+            $array = array_map("str_getcsv", explode("\n", $csv));
+            
+            $json = json_encode($array);
+
+            unlink($file->getRealPath());
+            
+            //insert contacts in database
+            foreach($array as $contact){
+                try{
+                    $Contact = new Contact();
+                    $Contact->first_name = $contact[0];
+                    $Contact->company_id = $User->company_id;                
+                    //TODO-Egberto: conferir patron de telefone en php
+                    $Contact->whatsapp_id = $contact[1];
+                    $Contact->save();
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+            
+        } else {
+            abort(302, "Error uploading file!");
+        }
+
+
+
+
+
+        // $User = Auth::check() ? Auth::user() : session('logged_user');
+        // $input['company_id'] = $User->company_id;
+
+        // $contact = $this->contactRepository->create($input);
+
+        // Flash::success('Contact saved successfully.');
+
+        // return $contact->toJson();
         //return redirect(route('contacts.index'));
     }
 
