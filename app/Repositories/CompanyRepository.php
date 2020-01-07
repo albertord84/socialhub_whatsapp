@@ -28,6 +28,16 @@ class CompanyRepository extends BaseRepository
         'description',
         'rpi_id',
         'user_seller_id',
+
+        'CEP',
+        'estado',
+        'cidade',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+
+
     ];
 
     /**
