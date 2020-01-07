@@ -393,9 +393,11 @@
                 this.isCheckingWhatsapp = true;
                 ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                     .then(response => {
-                        this.model.json_data = JSON.stringify(response.data);
                         this.whatsappDatas = response.data;
+                        if(response.data.picurl.length==0)
+                            response.data.picurl = "images/contacts/default.png";
                         this.model.first_name = response.data.name;
+                        this.model.json_data = JSON.stringify(response.data);
                         this.whatssapChecked = true;
                         this.isCheckingWhatsapp = false;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
