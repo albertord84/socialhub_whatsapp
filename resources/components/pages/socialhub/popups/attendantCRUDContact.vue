@@ -242,7 +242,7 @@
                     return;
                 }
 
-                var model_cpy = Object.assign({}, this.model_cpy);                //ECR: Para eliminar espaços e traços
+                var model_cpy = Object.assign({}, this.model);                //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
@@ -477,10 +477,8 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
-                    this.flagReference = false;
                 }
+                
                 if(this.model.last_name && this.model.last_name !=''){
                     check = validation.check('complete_name', this.model.last_name)
                     if(check.success==false){
