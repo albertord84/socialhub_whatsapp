@@ -23,7 +23,7 @@ class CreateCompaniesTable extends Migration {
 			$table->string('phone', 30)->nullable();
 			$table->string('email', 100)->nullable();
 			$table->string('whatsapp', 30)->nullable();
-			$table->string('CEP', 10)->nullable();
+			// $table->string('CEP', 10)->nullable();
 			
 			$table->string('description', 1000)->nullable();
 			$table->timestamps();
