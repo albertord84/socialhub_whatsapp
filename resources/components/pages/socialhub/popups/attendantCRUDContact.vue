@@ -242,7 +242,7 @@
                     return;
                 }
 
-                var model_cpy = Object.assign({}, this.model_cpy);                //ECR: Para eliminar espaços e traços
+                var model_cpy = Object.assign({}, this.model);                //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
