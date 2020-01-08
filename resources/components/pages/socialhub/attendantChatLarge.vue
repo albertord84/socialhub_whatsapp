@@ -348,25 +348,25 @@
                         </div>
                         
                         
-                        <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
-                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopMP3RecordVoice()">
+                        <!-- <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
+                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopOGGRecordVoice()">
                                     <i class="input-group-text mdi mdi-close-circle-outline pr-4 fa-1_5x text-danger border border-left-0 container-icons-action-message pointer-hover" title="Excluir" ></i>
                                 </div>
                                 <div class="input-group-prepend">
                                     <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
                                 </div>
-                                <div class="input-group-prepend" @click.prevent="stopMP3RecordVoice()">
+                                <div class="input-group-prepend" @click.prevent="stopOGGRecordVoice()">
                                     <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
                         </div>
 
-                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startMP3RecordVoice">
+                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startOGGRecordVoice">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
-                        </div>
+                        </div> -->
 
 
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
-                             <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
+                            <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                 <template v-slot:button-content>
                                     <i class="mdi mdi-paperclip fa-1_5x text-muted" title="Anexar arquivos" aria-hidden="false"></i>
                                 </template>                                
@@ -1522,7 +1522,7 @@
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
                     return;
                 }
-                This = this;
+                var This = this;
                 navigator.mediaDevices.getUserMedia({audio:true}) //getting 
                     .then(stream => {
                         // Crete recorder object
@@ -1535,23 +1535,30 @@
                         This.isRecordingAudio = true;
                         This.handleTimerCounter = setInterval(This.timer, 1000);
                         This.recorderOGG.start();
+
                         // process record audio when recording will be finished
                         This.recorderOGG.addEventListener('dataavailable', (e) => {
+                            console.log(e.data);
                             console.log("audio disponível PARA SER ENVIADO");
                             // audioElement.src = URL.createObjectURL(e.data);
                         });
+
                     }).catch((e) => {
                         console.log('an exception occurr when starting record audio');
                         console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
 
-            stopOGGRecordVoice: function() {
-                
-                This = this;
-                
+            stopOGGRecordVoice: function() {                
+                var This = this;                
                 This.recorderOGG.stop();
                 console.log("stopped audio recorder");
+                // console.log(This.streamOGG);
+                // console.log(This.streamOGG.getAudioTracks());
+                console.log(This.recorderOGG);
+                console.log(This.recorderOGG.stream);
+                console.log(This.recorderOGG.stream.getAudioTracks());
+
                 // Remove “recording” icon from browser tab
                 This.recorderOGG.stream.getTracks().forEach(i => i.stop());
                 return;
@@ -1577,6 +1584,7 @@
                         console.log('We could not retrieve your message');
                         console.log(e);
                     });
+            
             },
         },
 
