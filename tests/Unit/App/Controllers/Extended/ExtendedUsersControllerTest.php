@@ -180,9 +180,8 @@ class ExtendedUsersControllerTest extends MyTestCase
         $responseContent = $response->getContent();
 
         $response->assertSuccessful();
-        var_dump($responseContent);
         $responseContent = str_replace('external_files/', '', $responseContent);
-        Storage::disk('chats_files')->assertExists("$responseContent");
+        Storage::disk('chats_files')->assertExists($responseContent);
     }
 
 
