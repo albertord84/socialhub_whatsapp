@@ -1458,6 +1458,52 @@
                 this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
             },
 
+            createMP3Recorder(){
+                return new MicRecorder({bitRate: 128});
+            },
+
+            startMP3RecordVoice: function() {
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                this.recorderMP3.start()
+                    .then(() => {
+                        console.log('starting record audio');
+                        this.timeRecordingAudio = "00:00";
+                        this.recordingTime = 0;
+                        this.isRecordingAudio = true;
+                        this.handleTimerCounter = setInterval(this.timer, 1000);
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{this.isRecordingAudio = true;});
+            },
+
+            stopMP3RecordVoice: function() {
+                clearInterval(this.handleTimerCounter);
+                this.recorderMP3.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(this.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            this.newMessage.type_id = 3;
+                            this.file = file;
+                            this.sendMessage();
+                        }else{
+                            this.timeRecordingAudio = "00:00";
+                            this.recordingTime = 0;
+                            this.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+            },
+
             createOGGRecorder(){
                 const options = { mimeType: 'audio/ogg; codecs=opus' };
                 const workerOptions = {
@@ -1471,14 +1517,13 @@
                 return new MediaRecorder(this.streamOGG, options, workerOptions);
             },
 
-            startRecordVoiceOGG: function() {
-                
+            startRecordVoiceOGG: function() {                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
                     return;
                 }
                 This = this;
-                navigator.mediaDevices.getUserMedia({ audio: true })
+                navigator.mediaDevices.getUserMedia({audio:true}) //getting 
                     .then(stream => {
                         // Crete recorder object
                         This.streamOGG = stream;
@@ -1532,52 +1577,6 @@
                         console.log(e);
                     });
             },
-
-            createMP3Recorder(){
-                return new MicRecorder({bitRate: 128});
-            },
-
-            startMP3RecordVoice: function() {
-                if(!navigator.mediaDevices){
-                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
-                    return;
-                }
-                this.recorderMP3.start()
-                    .then(() => {
-                        console.log('starting record audio');
-                        this.timeRecordingAudio = "00:00";
-                        this.recordingTime = 0;
-                        this.isRecordingAudio = true;
-                        this.handleTimerCounter = setInterval(this.timer, 1000);
-                    }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
-                    }).finally(()=>{this.isRecordingAudio = true;});
-            },
-
-            stopMP3RecordVoice: function() {
-                clearInterval(this.handleTimerCounter);
-                this.recorderMP3.stop().getMp3()
-                    .then(([buffer, blob]) => {
-                        if(this.isRecordingAudio){
-                            const file = new File(buffer, 'me-at-thevoice.mp3', {
-                                type: blob.type,
-                                lastModified: Date.now()
-                            });
-                            // const player = new Audio(URL.createObjectURL(file)); player.play();
-                            this.newMessage.type_id = 3;
-                            this.file = file;
-                            this.sendMessage();
-                        }else{
-                            this.timeRecordingAudio = "00:00";
-                            this.recordingTime = 0;
-                            this.isRecordingAudio = false;
-                        }                     
-                    }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
-                    });
-            },
         },
 
         updated(){
@@ -1605,8 +1604,6 @@
 
         mounted(){
             this.recorderMP3 = this.createMP3Recorder();
-
-            // this.recorderOGG = this.createOGGRecorder();
 
             window.Echo = new Echo({
                 broadcaster: 'pusher',
