@@ -670,7 +670,7 @@
         <!-- Modal to show video-->
         <b-modal v-model="modalShowVideo" :hide-footer="true" centered :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent"  class="m-0 modal-body-bg">
             <div class="">
-                 <video width="100%" height="100%" style="max-height:540px; max-width:700px; padding:0px; text-align:center" controls class="midia-files embed-responsive-item modal-body-bg">
+                <video width="100%" height="100%" style="max-height:540px; max-width:700px; padding:0px; text-align:center" controls class="midia-files embed-responsive-item modal-body-bg">
                     <source :src="modalShowVideoSrc" type="video/mp4">
                     Seu navegador não suporta o elemento de vídeo.
                 </video> 
@@ -1322,7 +1322,7 @@
                 this.modalDeleteContact = false;
                 this.modalTransferContact = false;
             },
-           
+            
             logout() {
                 ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
                     'user_id':this.logguedAttendant.id,
