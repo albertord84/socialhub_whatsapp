@@ -10,6 +10,7 @@ use App\User;
 use Auth;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laracasts\Flash\Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
@@ -72,8 +73,6 @@ class ExtendedUserController extends UserController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
-
-        $input['password'] = bcrypt('123456');
 
         $user = $this->userRepository->create($input);
 

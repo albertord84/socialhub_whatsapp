@@ -9,6 +9,8 @@ abstract class MyTestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    public $faker;
+    
     protected function setUp()
     {
         parent::setUp();
