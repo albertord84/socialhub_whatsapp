@@ -1517,7 +1517,7 @@
                 return new MediaRecorder(this.streamOGG, options, workerOptions);
             },
 
-            startRecordVoiceOGG: function() {                
+            startOGGRecordVoice: function() {                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
                     return;
@@ -1546,11 +1546,12 @@
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
 
-            stopRecordVoiceOGG: function() {
+            stopOGGRecordVoice: function() {
                 
                 This = this;
                 
-                This.recorderOGG.stop().getMp3()
+                This.recorderOGG.stop();
+                console.log("stopped audio recorder");
                 // Remove “recording” icon from browser tab
                 This.recorderOGG.stream.getTracks().forEach(i => i.stop());
                 return;
