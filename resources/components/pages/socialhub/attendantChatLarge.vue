@@ -349,18 +349,18 @@
                         
                         
                         <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
-                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopRecordVoice()">
+                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopMP3RecordVoice()">
                                     <i class="input-group-text mdi mdi-close-circle-outline pr-4 fa-1_5x text-danger border border-left-0 container-icons-action-message pointer-hover" title="Excluir" ></i>
                                 </div>
                                 <div class="input-group-prepend">
                                     <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
                                 </div>
-                                <div class="input-group-prepend" @click.prevent="stopRecordVoice()">
+                                <div class="input-group-prepend" @click.prevent="stopMP3RecordVoice()">
                                     <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
                         </div>
 
-                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startRecordVoice">
+                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startMP3RecordVoice">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div>
 
@@ -396,52 +396,6 @@
                         <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
                     </div>
                 </div>
-
-                <!-- <div class="p-3">
-                    <div class="input-group pb-5 pr-1 " style="color:gray">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
-                                <i v-if="isSendingNewMessage==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
-                                <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
-                            </div>
-                        </div>
-                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
-                            class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
-                        </textarea>
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
-                                <i class="fa fa-clipboard icons-selected-file"></i>
-                                <i style="background-color:withe; color:red; position: relative; height:1.5em; width1.5em; top:-0.25em; left:-1.7em; border-radius:20px;" class="mdi mdi-window-close "></i>
-                            </a>
-                        </div>
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
-                                <i class="fa fa-file-image-o icons-action-message"></i>
-                            </a>
-                        </div>                       
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputAudio')" title="Anexar audio">
-                                <i class="fa fa-file-audio-o icons-action-message"></i>
-                            </a>
-                        </div>
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="triggerEvent('fileInputDocument')" title="Anexar documento">
-                                <i class="fa fa-file-text-o icons-action-message"></i>
-                            </a>
-                        </div>
-
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="sendMessage">
-                                <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
-                            </a>
-                        </div>                        
-                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
-                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
-                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
-                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
-                    </div>
-                </div> -->
-
             </div>
 
             <!-- if not selected contact -->
@@ -777,6 +731,8 @@
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
     import MicRecorder from "mic-recorder-to-mp3"; 
 
+    import OpusMediaRecorder from 'opus-media-recorder';
+
     export default {
         components: {
             vScroll,
@@ -842,7 +798,10 @@
                 timeRecordingAudio:"00:00",
                 recordingTime:0,
                 handleTimerCounter:null,
-                recorder:null,
+                
+                recorderMP3:null,
+                recorderOGG:null,
+                streamOGG:null,
 
                 modalRemoveSelectedFile:false,
                 modalSendMessageFiles:false,
@@ -1499,12 +1458,91 @@
                 this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
             },
 
-            startRecordVoice: function() {
+            createOGGRecorder(){
+                const options = { mimeType: 'audio/ogg; codecs=opus' };
+                const workerOptions = {
+                    encoderWorkerFactory: function () {
+                        return new Worker('opus-media-recorder/encoderWorker.js')
+                    },
+                    OggOpusEncoderWasmPath: 'opus-media-recorder/OggOpusEncoder.wasm',
+                    WebMOpusEncoderWasmPath: 'opus-media-recorder/WebMOpusEncoder.wasm'
+                };
+                window.MediaRecorder = OpusMediaRecorder;
+                return new MediaRecorder(this.streamOGG, options, workerOptions);
+            },
+
+            startRecordVoiceOGG: function() {
+                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
                     return;
                 }
-                this.recorder.start()
+                This = this;
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        // Crete recorder object
+                        This.streamOGG = stream;
+                        This.recorderOGG = This.createOGGRecorder();
+                        // Start recording
+                        console.log('starting record audio');
+                        This.timeRecordingAudio = "00:00";
+                        This.recordingTime = 0;
+                        This.isRecordingAudio = true;
+                        This.handleTimerCounter = setInterval(This.timer, 1000);
+                        This.recorderOGG.start();
+                        // process record audio when recording will be finished
+                        This.recorderOGG.addEventListener('dataavailable', (e) => {
+                            console.log("audio disponível PARA SER ENVIADO");
+                            // audioElement.src = URL.createObjectURL(e.data);
+                        });
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{This.isRecordingAudio = true;});
+            },
+
+            stopRecordVoiceOGG: function() {
+                
+                This = this;
+                
+                This.recorderOGG.stop().getMp3()
+                // Remove “recording” icon from browser tab
+                This.recorderOGG.stream.getTracks().forEach(i => i.stop());
+                return;
+
+                clearInterval(This.handleTimerCounter);
+                This.recorderOGG.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(This.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            This.newMessage.type_id = 3;
+                            This.file = file;
+                            This.sendMessage();
+                        }else{
+                            This.timeRecordingAudio = "00:00";
+                            This.recordingTime = 0;
+                            This.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+            },
+
+            createMP3Recorder(){
+                return new MicRecorder({bitRate: 128});
+            },
+
+            startMP3RecordVoice: function() {
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                this.recorderMP3.start()
                     .then(() => {
                         console.log('starting record audio');
                         this.timeRecordingAudio = "00:00";
@@ -1517,9 +1555,9 @@
                     }).finally(()=>{this.isRecordingAudio = true;});
             },
 
-            stopRecordVoice: function() {
+            stopMP3RecordVoice: function() {
                 clearInterval(this.handleTimerCounter);
-                this.recorder.stop().getMp3()
+                this.recorderMP3.stop().getMp3()
                     .then(([buffer, blob]) => {
                         if(this.isRecordingAudio){
                             const file = new File(buffer, 'me-at-thevoice.mp3', {
@@ -1566,7 +1604,9 @@
         },
 
         mounted(){
-            this.recorder = new MicRecorder({bitRate: 128})
+            this.recorderMP3 = this.createMP3Recorder();
+
+            // this.recorderOGG = this.createOGGRecorder();
 
             window.Echo = new Echo({
                 broadcaster: 'pusher',
