@@ -27,7 +27,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
                                         </div>
-                                        <input v-model="model.email" name="email" id="email" type="email" required
+                                        <input v-model="model.email" name="email" id="email" type="text" required
                                                autofocus placeholder="E-mail" class="form-control"/>
                                     </div>
                                     <field-messages name="email" show="$invalid && $submitted" class="text-danger">
@@ -128,6 +128,8 @@
             onSubmit() {
                 // if (this.formstate.$invalid) {
                 //     return;
+                this.model.email = this.model.email.trim();
+                this.model.password = this.model.password.trim();
                 var check = validation.check('email', this.model.email);
                 if(check.success==false){
                     miniToastr.error("Erro", check.error );   
