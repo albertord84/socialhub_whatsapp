@@ -101,7 +101,9 @@ class ExtendedUsersAttendantController extends UsersAttendantController
         $User->save();
 
         $input = $request->all();
-        $this->usersAttendantRepository->createAttendantChatTable($input['user_id']);
+        $user = $this->usersAttendantRepository->createAttendantChatTable($input['user_id']);
+
+        return $user->toJson();
     }
 
     /**

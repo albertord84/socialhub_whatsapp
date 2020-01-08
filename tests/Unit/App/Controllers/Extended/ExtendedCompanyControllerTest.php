@@ -28,13 +28,13 @@ class ExtendedCompanyControllerTest extends MyTestCase
 
     public function testRouteCompaniesGetNullForNormalUser()
     {
-        $Manager_id = 3;
+        $User_id = 4;
 
-        $Manager = User::find($Manager_id);
+        $User = User::find($User_id);
 
-        Auth::login($Manager);
+        Auth::login($User);
 
-        $response = $this->be($Manager)->get('/companies');
+        $response = $this->be($User)->get('/companies');
         $responseContent = $response->getContent();
         $companies = json_decode($responseContent);
 
