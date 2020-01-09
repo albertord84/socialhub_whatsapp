@@ -9,6 +9,7 @@ use App\Repositories\ExtendedRpiRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ExtendedRpiController extends RpiController
 {
@@ -32,7 +33,7 @@ class ExtendedRpiController extends RpiController
             if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
                 $QRCode = ExternalRPIController::getQRCode($rpis);
                 if (!$QRCode) {
-                    throw new Exception('Empty QRCode from whatsapp', 1);
+                    // throw new Exception('Empty QRCode from whatsapp', 1);
                 }
 
                 $rpis->QRCode = $QRCode;
@@ -56,20 +57,20 @@ class ExtendedRpiController extends RpiController
         $input = $request->all();
         $mac = $request->mac;
         $company_id = $request->company_id;
-
+        
         $rpi = null;
-
+        
         if ($mac) {
             $rpi = $this->rpiRepository->model()::where(['mac' => $mac])->first();
-
+            
             if (!$rpi) {
                 throw new Exception("Esta MAC (Id do dispositivo) no consta no nosso sistema! Por favor contate supporte!", 1);
             }
-
+            
             if ($rpi->id != $id) { // Tentando atuaizar uma MAC que ja existe
                 $id = $rpi->id;
             }
-
+            
         }
 
         if (!empty($rpi)) {
@@ -86,8 +87,10 @@ class ExtendedRpiController extends RpiController
 
                 // Update Company RPi id
                 $Company = Company::find($company_id);
-                $Company->rpi_id = $id;
-                $Company->save();
+                if ($Company) {
+                    $Company->rpi_id = $id;
+                    $Company->save();
+                }
             }
         }
 

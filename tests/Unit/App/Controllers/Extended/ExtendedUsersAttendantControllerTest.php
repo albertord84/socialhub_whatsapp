@@ -27,7 +27,7 @@ class ExtendedUsersAttendantControllerTest extends MyTestCase
 
         $response->assertSuccessful();
         $this->assertJson($responseContent);
-        $this->assertCount(2, $attendants);
+        $this->assertGreaterThanOrEqual(2, count($attendants));
     }
     
     public function testModelUsersAttendantsReturns2AttendantsForCompany1()
@@ -38,7 +38,7 @@ class ExtendedUsersAttendantControllerTest extends MyTestCase
             $query->where(['company_id' => $company_id]);
         })->get();
 
-        $this->assertCount(2, $attendants);
+        $this->assertGreaterThanOrEqual(2, count($attendants));
     }
 
     public function testControllerUsersAttendantsReturns2AttendantsForCompany1()
@@ -56,9 +56,9 @@ class ExtendedUsersAttendantControllerTest extends MyTestCase
         $attendants = json_decode($response);
 
         $this->assertJson($response);
-        $this->assertCount(2, $attendants);
+        $this->assertGreaterThanOrEqual(2, count($attendants));
     }
-
+    
     public function testRoutePostUsersAttendantReturnsCreatedUser()
     {
         // Login Manager
@@ -67,22 +67,91 @@ class ExtendedUsersAttendantControllerTest extends MyTestCase
         Auth::login($Manager);
 
         // Create Mock User Into DB Test
-        $User = new UsersAttendant();
+        if ($UsersAttendant = UsersAttendant::find($manager_id)) {
+            $UsersAttendant->delete();
+        }
+        $UsersAttendant = new UsersAttendant();
+        $UsersAttendant->user_id = $manager_id;
+        $UsersAttendant->user_manager_id = $manager_id;
+        $UsersAttendant->selected_contact_id = 1;
         // Delete Mocked
-        $User->delete();
-
-        // Insert Mocked throw /users Post
-        $response = $this->be($Manager)->post('/users', $User->toArray());
-
+        $UsersAttendant->delete();
+        
+        $response = $this->be($Manager)->post('/usersAttendants', $UsersAttendant->toArray());
+        if ($UsersAttendant = UsersAttendant::find($manager_id)) { // Delete created user
+            $UsersAttendant->delete();
+        }
         $responseContent = $response->getContent();
         $responseUser = json_decode($responseContent);
 
         $response->assertSuccessful();
         $this->assertJson($responseContent);
-        $this->assertEquals($User->id+1, $responseUser->id); // Expected to be the next to be inserted  
-        $this->assertEquals($User->email, $responseUser->email);
-        $this->assertEquals($User->password, $responseUser->password);
-        $this->assertEquals($User->company_id, $responseUser->company_id);
+        $this->assertEquals($UsersAttendant->user_id, $responseUser->id); // Expected to be the next to be inserted  
+        $this->assertEquals($UsersAttendant->user_manager_id, $UsersAttendant->refresh()->user_manager_id);
+        $this->assertEquals($UsersAttendant->selected_contact_id, $UsersAttendant->refresh()->selected_contact_id);
 
     }    
+
+    public function testRoutePutUsersAttendantReturnsUpdatedUser()
+    {
+        // Login Manager
+        $manager_id = 3;
+        $Manager = User::find($manager_id);
+        Auth::login($Manager);
+
+        // Create Mock User Into DB Test
+        if ($UsersAttendant = UsersAttendant::find($manager_id)) {
+            $UsersAttendant->delete();
+        }
+        $UsersAttendant = new UsersAttendant();
+        $UsersAttendant->user_id = $manager_id;
+        $UsersAttendant->user_manager_id = $manager_id;
+        $UsersAttendant->selected_contact_id = 1;
+        $UsersAttendant->save();
+        $UsersAttendant->user_id = $manager_id;  // User Id get lost after save()
+        
+        $UsersAttendantArray = $UsersAttendant->toArray();
+        $UsersAttendantArray['user_id'] = 1;
+        $UsersAttendantArray['user_manager_id'] = 1;
+        $UsersAttendantArray['selected_contact_id'] = 2;
+
+        $response = $this->be($Manager)->put("/usersAttendants/$UsersAttendant->user_id", $UsersAttendantArray);
+        $response->assertSuccessful();
+        UsersAttendant::find($UsersAttendantArray['user_id'])->delete();
+        $responseContent = $response->getContent();
+        $responseUser = json_decode($responseContent);
+
+        $this->assertJson($responseContent);
+        $this->assertEquals($UsersAttendantArray['user_id'], $responseUser->user_id); // Expected to be the next to be inserted  
+        $this->assertEquals($UsersAttendantArray['user_manager_id'], $responseUser->user_manager_id);
+        $this->assertEquals($UsersAttendantArray['selected_contact_id'], $responseUser->selected_contact_id);
+    }
+
+    public function testRouteDestroyUsersAttendantReturnsEmptyAfterDelete()
+    {
+        // Login Manager
+        $manager_id = 3;
+        $Manager = User::find($manager_id);
+        Auth::login($Manager);
+
+        // Create Mock User Into DB Test
+        // Create Mock User Into DB Test
+        if ($UsersAttendant = UsersAttendant::find($manager_id)) {
+            $UsersAttendant->delete();
+        }
+        $UsersAttendant = new UsersAttendant();
+        $UsersAttendant->user_id = $manager_id;  // carefulll, its taking 0 after save()
+        $UsersAttendant->user_manager_id = $manager_id;
+        $UsersAttendant->selected_contact_id = 1;
+        $UsersAttendant->save();
+
+        $response = $this->be($Manager)->delete("/usersAttendants/$manager_id");
+
+        $responseContent = $response->getContent();
+
+        $response->assertSuccessful();
+        $this->assertEmpty($responseContent);
+        $this->assertNull(UsersAttendant::find($manager_id));
+    }
+
 }

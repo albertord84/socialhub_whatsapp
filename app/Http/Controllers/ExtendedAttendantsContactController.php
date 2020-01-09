@@ -49,6 +49,8 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         }
 
         // return redirect(route('attendantsContacts.index'));
+
+        return $attendantsContact->toJson();
     }
 
 }

@@ -135,13 +135,6 @@ class ExtendedContactController extends ContactController
 
         $contact = $this->contactRepository->findWithoutFail($id);
 
-        //TODO-JR-ALBERTO: um contato pode ser atualizado por:
-        //um atendente: atualiza dados do contato, status, atendente
-        //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
-
-        // unset($input["status_id"]);
-        // unset($input["updated_at"]);
-
         if (empty($contact)) {
             Flash::error('Contact not found');
             return redirect(route('contacts.index'));
@@ -152,6 +145,7 @@ class ExtendedContactController extends ContactController
         Flash::success('Contact updated successfully.');
 
         // return redirect(route('contacts.index'));
+        return $contact->toJson();
     }
 
     /**

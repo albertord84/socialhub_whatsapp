@@ -159,3 +159,18 @@ Configure test db connections into laravel database.php
 
 ## Add this to phpunit.xml between php tags
     <env name="DB_CONNECTION" value="socialhub_mvp.test"/>
+
+# Laravel Autocomplete
+
+https://stackoverflow.com/questions/48211622/intellisense-autocompletion-for-model-in-laravel-for-visual-studio-code-or-ano
+
+https://github.com/bmewburn/vscode-intelephense/issues/123
+
+https://github.com/bmewburn/vscode-intelephense/issues/708
+
+https://github.com/barryvdh/laravel-ide-helper
+
+
+# Laravel Maintenance Message
+php artisan down --message="Upgrading Database" --retry=60
+php artisan up
