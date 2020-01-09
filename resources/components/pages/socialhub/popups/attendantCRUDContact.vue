@@ -391,7 +391,13 @@
 
             checkWhatsappNumber:function(){
                 this.isCheckingWhatsapp = true;
-                ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
+
+                var model_cpy = Object.assign({}, this.model);                //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+
+                // ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
+                ApiService.get('RPI/getContactInfo/'+model_cpy.whatsapp_id)
                     .then(response => {
                         this.whatsappDatas = response.data;
                         if(response.data.picurl.length==0)
