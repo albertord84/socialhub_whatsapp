@@ -15,7 +15,7 @@ class ExtendedContactControllerTest extends MyTestCase
     {
         // Create Mock Into DB Test
         $Contact = new Contact();
-        $Contact->id = 100;
+        $Contact->id = 1000000000;
         $Contact->first_name = 'Alberto teste';
         $Contact->company_id = 1;
         $Contact->whatsapp_id = 'whatsapp_id test';
@@ -73,14 +73,14 @@ class ExtendedContactControllerTest extends MyTestCase
         Auth::login($Manager);
 
         // Create Mock Into DB Test
-        if ($Contact = Contact::find(100)) { // Delete created user
+        if ($Contact = Contact::find(1000000000)) { // Delete created user
             $Contact->delete();
         }
         $Contact = $this->newMockObject();
         $Contact->save();
         
         $ContactArray = $Contact->toArray();
-        $ContactArray['id'] = 100;
+        $ContactArray['id'] = 1000000000;
         $ContactArray['first_name'] = 'Test Contact new';
         $ContactArray['company_id'] = 1;
         $ContactArray['whatsapp_id'] = 'new whatsapp_id';
@@ -106,7 +106,7 @@ class ExtendedContactControllerTest extends MyTestCase
         Auth::login($Manager);
 
         // Create Mock Into DB Test
-        if ($Contact = Contact::find(100)) { // Delete created user
+        if ($Contact = Contact::find(1000000000)) { // Delete created user
             $Contact->delete();
         }
         $Contact = $this->newMockObject();
