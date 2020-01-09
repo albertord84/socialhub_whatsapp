@@ -158,8 +158,10 @@
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                model_cpy.phone = model_cpy.phone.replace(/ /g, '');    //ECR
-                model_cpy.phone = model_cpy.phone.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');    //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');    //ECR
+                }
 
                 //isert user
                 ApiService.post(this.first_url, model_cpy)
@@ -224,9 +226,10 @@
 
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
-                model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
-
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
                 ApiService.put(this.first_url+'/'+this.attendant_id, model_cpy)
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");

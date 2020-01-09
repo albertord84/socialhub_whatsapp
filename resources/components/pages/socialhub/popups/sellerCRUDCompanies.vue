@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phoneManager" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelManager.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phoneManager" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                     </div> 
                     <div class="row">
@@ -328,14 +328,18 @@
                 var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                if(modelCompany_cpy.phone){
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                }
 
                 var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                if(modelManager_cpy.phone){
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                }
 
                 // inserindo company
                 // ApiService.post(this.companies_url, this.modelCompany)
@@ -405,15 +409,18 @@
                 var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                if(modelCompany_cpy.phone){
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                }
                 
                 var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
-
+                if(modelCompany_cpy.phone){
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                }
                 //1. atualizando company
                 // ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)   //ECR
@@ -675,9 +682,6 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O telefone da empresa é obrigatorio" );
-                    this.flagReference = false;
                 }
 
                 if(this.modelCompany.email && this.modelCompany.email !=''){
@@ -807,9 +811,6 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O telefone do manager da empresa é obrigatorio" );
-                    this.flagReference = false;
                 }
 
                 if(this.modelManager.whatsapp_id && this.modelManager.whatsapp_id !=''){
