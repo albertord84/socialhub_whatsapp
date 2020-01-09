@@ -1463,7 +1463,7 @@
                     check = validation.check('whatsapp', this.selectedContactToEdit.whatsapp_id)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
-                        this.flagReference = false;s
+                        this.flagReference = false;
                     }
                 }else{
                     miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
