@@ -131,10 +131,11 @@ class ExtendedChatRepository extends ChatRepository
         return $ChastMessages;
     }
 
-    public function createMessage(array $attributes)
+    public function createMessage(array $attributes, bool $testing = false)
     {   
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
+        if ($testing) $chatModel->connection = 'socialhub_mvp.chats.test';
         $chatModel->table = (string)$attendant_id;
 
         //updating contact

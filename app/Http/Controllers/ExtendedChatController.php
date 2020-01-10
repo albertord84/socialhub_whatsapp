@@ -20,8 +20,6 @@ use function GuzzleHttp\json_encode;
 
 class ExtendedChatController extends ChatController
 {
-    private $APP_WP_API_URL;
-
     public function __construct(ExtendedChatRepository $chatRepo)
     {
         parent::__construct($chatRepo);
@@ -129,11 +127,12 @@ class ExtendedChatController extends ChatController
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $input = $request->all();
         $input['attendant_id'] = $User->id;
+        $testing = $input['testing'] ?? false;
 
         $Contact = Contact::findOrFail($input['contact_id']);
         $externalRPiController = new ExternalRPIController(null);
 
-        $chat = $this->chatRepository->createMessage($input);
+        $chat = $this->chatRepository->createMessage($input, $testing);
         
         if (isset($input['file'])) {
             $fileName = $chat->id; // Laravel Auto gerated file name

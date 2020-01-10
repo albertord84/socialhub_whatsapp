@@ -322,43 +322,49 @@ class ExternalRPIController extends Controller
         }
 
         $Chat = new ExtendedChat();
-        $Chat->source = 1;
-        $Chat->message = $input['Msg'];
-        $Chat->type_id = $type_id;
-        $Chat->status_id = MessagesStatusController::UNREADED;
-        $Attendnat = isset($AttendantsContact->attendant_id) ? UsersAttendant::find($AttendantsContact->attendant_id) : null;
-        if ($Attendnat && $Contact && $Attendnat->selected_contact_id == $Contact->id) {
-            $Chat->status_id = MessagesStatusController::READED;
-        }
-        $Chat->socialnetwork_id = 1; // WhatsApp
-        $Chat->message = $input['Msg'];
-        // $Chat->created_at = $input['Date'];
-        if ($Contact) {
-            if ($Contact->latestAttendantContact) {
-                $Chat->table = $Contact->latestAttendantContact->attendant_id;
-                $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
+
+        try {
+            
+            $Chat->source = 1;
+            $Chat->message = $input['Msg'];
+            $Chat->type_id = $type_id;
+            $Chat->status_id = MessagesStatusController::UNREADED;
+            $Attendnat = isset($AttendantsContact->attendant_id) ? UsersAttendant::find($AttendantsContact->attendant_id) : null;
+            if ($Attendnat && $Contact && $Attendnat->selected_contact_id == $Contact->id) {
+                $Chat->status_id = MessagesStatusController::READED;
             }
-        } else {
-            // Find Company by Phone Number
-            $company_phone = $input['CompanyPhone'];
-            $Company = Company::where(['phone' => $company_phone])->first();
+            $Chat->socialnetwork_id = 1; // WhatsApp
+            $Chat->message = $input['Msg'];
+            // $Chat->created_at = $input['Date'];
+            if ($Contact) {
+                if ($Contact->latestAttendantContact) {
+                    $Chat->table = $Contact->latestAttendantContact->attendant_id;
+                    $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
+                }
+            } else {
+                // Find Company by Phone Number
+                $company_phone = $input['CompanyPhone'];
+                $Company = Company::where(['phone' => $company_phone])->first();
 
-            $Contact = new Contact();
-            if ($Company) {
-                // Create Mock Contact
-                $Contact->first_name = $contact_Jid;
-                $Contact->company_id = $Company->id;
-                $Contact->whatsapp_id = $contact_Jid;
+                $Contact = new Contact();
+                if ($Company) {
+                    // Create Mock Contact
+                    $Contact->first_name = $contact_Jid;
+                    $Contact->company_id = $Company->id;
+                    $Contact->whatsapp_id = $contact_Jid;
+                }
+                // else throw new Exception("Error Processing Request", 1);
             }
-            // else throw new Exception("Error Processing Request", 1);
+            $Contact->updated_at = Carbon::now();
+            $Contact->save();
+
+            $Chat->contact_id = $Contact->id;
+            $Chat->company_id = $Contact->company_id;
+            $Chat->save();
+
+        } catch (\Throwable $th) {
+            throw $th;
         }
-        $Contact->updated_at = Carbon::now();
-        $Contact->save();
-
-        $Chat->contact_id = $Contact->id;
-        $Chat->company_id = $Contact->company_id;
-        $Chat->save();
-
         return $Chat;
     }
 
@@ -460,11 +466,9 @@ class ExternalRPIController extends Controller
         $RPI = null;
         try {
             $User = Auth::check() ? Auth::user() : session('logged_user');
-            Log::debug('getRPI -> Loged User: ', [$User]);
 
             if ($User) {
                 $Company = Company::with('rpi')->where(['id' => $User->company_id])->whereHas('rpi')->first();
-                Log::debug('getRPI -> Company: ', [$Company]);
 
                 $RPI = $Company ? $Company->rpi : null;
             }
