@@ -24,7 +24,8 @@ class ExtendedRpiController extends RpiController
     public function index(Request $request)
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
-        if (!$User || $User->role_id > 2) {
+        if (!$User || $User->role_id != ExtendedUserController::MANAGER) {
+            Log::debug('ExtendedRpiController index', [$User]);
             throw new Exception("Method not allowed to user", 1);
         }
 
