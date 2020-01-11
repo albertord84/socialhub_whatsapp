@@ -25,13 +25,13 @@ class ExtendedRpiControllerTest extends MyTestCase
 
     public function testRouteRpisReturnsOneOrMoreRpisForSeller()
     {
-        $Admin_id = 1;
+        $Manager_id = 3;
 
-        $Admin = User::find($Admin_id);
+        $Manager = User::find($Manager_id);
 
-        Auth::login($Admin);
+        Auth::login($Manager);
 
-        $response = $this->be($Admin)->get('/rpis');
+        $response = $this->be($Manager)->get('/rpis');
         $responseContent = $response->getContent();
         $Rpi = json_decode($responseContent);
 
