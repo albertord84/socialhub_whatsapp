@@ -13,6 +13,7 @@ use App\Repositories\ExtendedChatRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Response;
 
@@ -20,11 +21,14 @@ use function GuzzleHttp\json_encode;
 
 class ExtendedChatController extends ChatController
 {
-    public function __construct(ExtendedChatRepository $chatRepo)
+    public $externalRPiController = null;
+
+    public function __construct(ExtendedChatRepository $chatRepo, ExternalRPIController $externalRPiController = null)
     {
         parent::__construct($chatRepo);
 
         $this->chatRepository = $chatRepo;
+        $this->externalRPiController = $externalRPiController ?? new ExternalRPIController();
     }
 
     /**
@@ -74,14 +78,14 @@ class ExtendedChatController extends ChatController
         $page = (int) $request['page'];
         $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
         
-        $Contact = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput);
+        $ContactChats = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput);
         
         // Update selected_contact_id
         $userAttendant = UsersAttendant::find($User->id);
         $userAttendant->selected_contact_id = $contact_id;
         $userAttendant->save();
 
-        return $Contact->toJson();
+        return $ContactChats->toJson();
     }
     
     public function getBagContactsCount(Request $request) //
@@ -127,12 +131,11 @@ class ExtendedChatController extends ChatController
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $input = $request->all();
         $input['attendant_id'] = $User->id;
-        $testing = $input['testing'] ?? false;
 
         $Contact = Contact::findOrFail($input['contact_id']);
         $externalRPiController = new ExternalRPIController(null);
 
-        $chat = $this->chatRepository->createMessage($input, $testing);
+        $chat = $this->chatRepository->createMessage($input);
         
         if (isset($input['file'])) {
             $fileName = $chat->id; // Laravel Auto gerated file name
@@ -162,7 +165,8 @@ class ExtendedChatController extends ChatController
                 // $chat = $this->chatRepository->updateMessage($input, $chat->id);
             }
         } else {
-            $response = $externalRPiController->sendTextMessage($input['message'], $Contact);
+            // $response = $externalRPiController->sendTextMessage($input['message'], $Contact);
+            $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
         }
 
         Flash::success('Chat saved successfully.');
@@ -178,19 +182,24 @@ class ExtendedChatController extends ChatController
      */
     public function update($id, UpdateChatRequest $request)
     {
+        $input = $request->all();
         $chat = $this->chatRepository->findWithoutFail($id);
 
         if (empty($chat)) {
             Flash::error('Chat not found');
 
-            return redirect(route('chats.index'));
+            // return redirect(route('chats.index'));
+            return null;
         }
 
+        // $chat = $this->chatRepository->updateMessage($request->all(), $id);
         $chat = $this->chatRepository->update($request->all(), $id);
 
         Flash::success('Chat updated successfully.');
 
-        return redirect(route('chats.index'));
+        // return redirect(route('chats.index'));
+
+        return $chat->toJson();
     }
 
     /**
@@ -212,7 +221,6 @@ class ExtendedChatController extends ChatController
 
         Flash::success('Chat deleted successfully.');
 
-        return redirect(route('chats.index'));
     }
 
 
