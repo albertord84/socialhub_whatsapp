@@ -26,6 +26,8 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('update', 'ExternalRPIController@update');
     Route::post('status', 'ExternalRPIController@status');
     Route::post('logout', 'ExternalRPIController@logout');
+    
+    Route::post('tests/{option}', 'ExternalRPIController@tests');
 });
 
 Route::get('/', 'AuthController@index');

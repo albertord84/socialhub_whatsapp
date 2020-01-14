@@ -134,7 +134,6 @@ class ExternalRPIController extends Controller
             $client = new \GuzzleHttp\Client();
             $Rpi = $Rpi ?? self::getRPI();
             $url = $Rpi->api_tunnel . '/logout';
-            Log::debug('RPI/Logout URL', [$url]);
             
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
@@ -479,4 +478,18 @@ class ExternalRPIController extends Controller
         return $RPI;
     }
 
+    public function tests(string $option)
+    {
+        app('debugbar')->disable();
+        switch ($option) {
+            case 'logout':
+                $response = '{"Message": "Logout feito"}';
+                break;
+            default:
+                $response = null;
+            break;
+        }
+
+        return $response;
+    }
 }

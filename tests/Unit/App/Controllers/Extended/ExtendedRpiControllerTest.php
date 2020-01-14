@@ -4,7 +4,6 @@ namespace Tests\Unit\App\Controllers\Extended;
 
 use App\Models\Rpi;
 use App\User;
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Tests\MyTestCase;
 
@@ -40,18 +39,18 @@ class ExtendedRpiControllerTest extends MyTestCase
         $this->assertEquals(1, $Rpi->id);
     }
 
-    // public function testRouteRpisGetNullForNormalUser()
-    // {
-    //     $User_id = 4;
+    public function testRouteRpisGetNullForNormalUser()
+    {
+        $User_id = 4;
 
-    //     $User = User::find($User_id);
+        $User = User::find($User_id);
 
-    //     Auth::login($User);
+        Auth::login($User);
 
-    //     $response = $this->be($User)->get('/rpis');
+        $response = $this->be($User)->get('/rpis');
 
-    //     $response->assertSeeText('Method not allowed to user');
-    // }
+        $response->assertSeeText('Method not allowed to user');
+    }
 
     public function testRoutePostRpiReturnsCreatedRpi()
     {
