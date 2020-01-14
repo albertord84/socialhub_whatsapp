@@ -388,7 +388,7 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
-            return $response;
+            return $response->getBody()->getContents();
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -449,7 +449,7 @@ class ExternalRPIController extends Controller
             ]);
 
             Log::debug('sendFileMessage to Contact Response: ', [$response]);
-            return $response;
+            return $response->getBody()->getContents();
         } catch (\Throwable $th) {
             throw $th;
         }

@@ -169,6 +169,7 @@ class ExtendedChatController extends ChatController
             $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
         }
 
+        Log::debug('message', [$response]);
         $responseJson = json_decode($response);
         if (isset($responseJson->MsgID)) {
             Flash::success('Chat saved successfully.');
@@ -176,7 +177,7 @@ class ExtendedChatController extends ChatController
             return $chat->toJson();
         }
 
-        return null;
+        return "Erro enviando messagem, conferir aparelho ou conexão a internet!";
     }
 
     /**
