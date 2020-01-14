@@ -35,7 +35,7 @@ class ExternalRpiControllerTest extends MyTestCase
         Auth::login($Manager);
 
         $Rpi = Rpi::find(1);
-        $Rpi->api_tunnel = url('/') . '/RPI/tests';
+        // $Rpi->api_tunnel = url('/') . '/RPI/tests';
 
         $response = ExternalRPIController::logout($Rpi);
         $this->assertJson($response);
