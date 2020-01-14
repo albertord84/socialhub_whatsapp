@@ -10,6 +10,7 @@ use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Chat;
 use App\Models\Contact;
+use App\Models\ExtendedChat;
 use App\Models\UsersAttendant;
 use App\Repositories\ExtendedChatRepository;
 use Auth;
@@ -182,7 +183,11 @@ class ExtendedChatController extends ChatController
                 throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
             }
         } catch (\Throwable $th) {
-            if (isset($chat->id)) $this->chatRepository->delete($chat->id);
+            if (isset($chat->id)) {
+                $ExtendedChat = new ExtendedChat();
+                $ExtendedChat->table = $chat->attendant_id;
+                $ExtendedChat->delete($chat->id);
+            }
             // return MyHandler::toJson($th, 500);
             return $th;
         }
