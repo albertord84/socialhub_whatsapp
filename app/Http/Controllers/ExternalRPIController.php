@@ -30,14 +30,21 @@ class ExternalRPIController extends Controller
         $this->Rpi = $Rpi ?? $this->getRPI();
     }
 
+    public function index(Request $request)
+    {
+
+    }
+
     /**
      * Display a listing of the Chat.
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function test(Request $request)
     {
-        dd("ok");
+        return response()->json([
+            'status' => true
+        ]);
     }
 
     /**
