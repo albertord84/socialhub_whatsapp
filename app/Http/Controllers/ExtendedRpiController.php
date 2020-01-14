@@ -29,9 +29,9 @@ class ExtendedRpiController extends RpiController
         try {
             // code...
             $User = Auth::check() ? Auth::user() : session('logged_user');
-            // if (!$User || $User->role_id > 3) {
-            //     throw new Exception("Method not allowed to user", 1);
-            // }
+            if (!$User || $User->role_id > 3) {
+                throw new Exception("Method not allowed to user", 1);
+            }
 
             $rpis = $this->rpiRepository->rpiOfCompany((int) $User->company_id);
             if ($rpis) {
