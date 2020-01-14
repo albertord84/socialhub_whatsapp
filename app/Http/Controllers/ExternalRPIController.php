@@ -28,9 +28,6 @@ class ExternalRPIController extends Controller
         parent::__construct();
 
         $this->Rpi = $Rpi ?? $this->getRPI();
-
-        // $this->APP_WP_API_URL = env('APP_WP_API_URL', 'http://shrpialberto.sa.ngrok.io.ngrok.io');
-        $this->APP_FILE_PATH = 'public/' . env('APP_FILE_PATH');
     }
 
     /**
@@ -83,7 +80,6 @@ class ExternalRPIController extends Controller
      * Force RPi Update
      */
     public static function sai_rpi_to_update(?Rpi $Rpi = null) //: stdClass
-
     {
         // $Rpi = new stdClass();
         // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';

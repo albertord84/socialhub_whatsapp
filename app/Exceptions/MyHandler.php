@@ -7,13 +7,28 @@ use Throwable;
 
 class MyHandler extends Handler
 {
-    static function toJson(Throwable $e = null)
+
+    public $exception;
+
+    /**
+     * Class constructor.
+     */
+    public function __construct(Throwable $e = null, int $status = 500)
     {
-        $exception = new stdClass();
-        $exception->code = $e->getCode();
-        $exception->message = $e->getMessage();
-        $exception->file = $e->getFile();
-        $exception->line = $e->getLine();
-        return json_encode($exception);
+        $this->exception = new stdClass;
+        $this->exception->status = $status;
+        if ($e) {
+            $this->exception->code = $e->getCode();
+            $this->exception->message = $e->getMessage();
+            $this->exception->file = $e->getFile();
+            $this->exception->line = $e->getLine();
+        }
+    }
+
+    public static function toJson(Throwable $e = null, int $status = 500)
+    {
+        $myHandler = new MyHandler($e, $status);
+
+        return json_encode($myHandler->exception);
     }
 }
