@@ -181,7 +181,8 @@ class ExtendedChatController extends ChatController
                 
             }
         } catch (\Throwable $th) {
-            return MyHandler::toJson($th, 500);
+            // return MyHandler::toJson($th, 500);
+            return $th;
         }
     }
 
