@@ -66,14 +66,14 @@ class ExtendedChatControllerTest extends MyTestCase
         $mockExternalRPIController->shouldReceive('sendTextMessage')
                                 ->with(Mockery::any(), Mockery::any())
                                 ->once()
-                                ->andReturn('{"MsgID" : "msgIdTest"}');
+                                ->andReturn('{"MsgID": "msgIdTest"}');
 
         $ExtendedChatRepository = new ExtendedChatRepository(app());
         $ExtendedChatController = new ExtendedChatController($ExtendedChatRepository, $mockExternalRPIController);
         $this->app->instance(ExtendedChatController::class, $ExtendedChatController);
         $response = $this->be($Attenndant)->post('/chats', $Chat->toArray());
         $response->assertSuccessful();
-
+        
         $responseContent = $response->getContent();
         $this->assertJson($responseContent);
         $responseChat = json_decode($responseContent);

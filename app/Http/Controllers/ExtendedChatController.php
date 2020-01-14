@@ -169,9 +169,14 @@ class ExtendedChatController extends ChatController
             $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
         }
 
-        Flash::success('Chat saved successfully.');
+        $responseJson = json_decode($response);
+        if (isset($responseJson->MsgID)) {
+            Flash::success('Chat saved successfully.');
+    
+            return $chat->toJson();
+        }
 
-        return $chat->toJson();
+        return null;
     }
 
     /**
