@@ -116,7 +116,7 @@ class ExtendedChatRepository extends ChatRepository
 
     public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
         $chatModel = new $this->model();
-        $chatModel->table = $_SESSION['TESTING'] ? 'chats' : (string)$attendant_id;
+        $chatModel->table = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? 'chats' : (string)$attendant_id;
         
         // Mark all messages read
         $chatModel->where('contact_id', $contact_id)->update([

@@ -77,6 +77,6 @@ class Chat extends Model
     {
         parent::__construct($attributes);
 
-        $this->connection = $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
+        $this->connection = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
     }
 }
