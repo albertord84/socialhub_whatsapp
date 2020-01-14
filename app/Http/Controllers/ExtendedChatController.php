@@ -8,6 +8,7 @@ use App\Events\NewContactMessage;
 use App\Exceptions\MyHandler;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
+use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\UsersAttendant;
 use App\Repositories\ExtendedChatRepository;
@@ -177,7 +178,7 @@ class ExtendedChatController extends ChatController
 
                 return $chat->toJson();
             } else {
-                $chat->delete();
+                Chat::delete($chat->id);
                 throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
             }
         } catch (\Throwable $th) {
