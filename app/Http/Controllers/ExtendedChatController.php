@@ -178,7 +178,7 @@ class ExtendedChatController extends ChatController
 
                 return $chat->toJson();
             } else {
-                Chat::delete($chat->id);
+                $this->chatRepository->delete($chat->id);
                 throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
             }
         } catch (\Throwable $th) {
