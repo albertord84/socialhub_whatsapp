@@ -182,7 +182,7 @@ class ExtendedChatController extends ChatController
                 throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
             }
         } catch (\Throwable $th) {
-            return MyHandler::toJson($th, 500);
+            // return MyHandler::toJson($th, 500);
             // return $th;
         }
     }
