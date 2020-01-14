@@ -18,6 +18,7 @@ use Exception;
 use Flash;
 use function GuzzleHttp\json_encode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Response;
 
@@ -186,7 +187,9 @@ class ExtendedChatController extends ChatController
             if (isset($chat->id)) {
                 $ExtendedChat = new ExtendedChat();
                 $ExtendedChat->table = $chat->attendant_id;
+                $ExtendedChat = $ExtendedChat->find($chat->id);
                 $ExtendedChat->delete($chat->id);
+                Log::debug('Delete message', [$ExtendedChat]);
             }
             // return MyHandler::toJson($th, 500);
             return $th;
