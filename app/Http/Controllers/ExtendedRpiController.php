@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\MyHandler;
 use App\Http\Requests\UpdateRpiRequest;
 use App\Models\Company;
 use App\Models\Rpi;
@@ -10,6 +11,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\ErrorHandler\ThrowableUtils;
+use Throwable;
 
 class ExtendedRpiController extends RpiController
 {
@@ -23,23 +26,28 @@ class ExtendedRpiController extends RpiController
 
     public function index(Request $request)
     {
-        $User = Auth::check() ? Auth::user() : session('logged_user');
-        // if (!$User || $User->role_id > 3) {
-        //     throw new Exception("Method not allowed to user", 1);
-        // }
+        try {
+            // code...
+            $User = Auth::check() ? Auth::user() : session('logged_user');
+            // if (!$User || $User->role_id > 3) {
+            //     throw new Exception("Method not allowed to user", 1);
+            // }
 
-        $rpis = $this->rpiRepository->rpiOfCompany((int) $User->company_id);
-        if ($rpis) {
-            if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                $QRCode = ExternalRPIController::getQRCode($rpis);
-                if (!$QRCode) {
-                    // throw new Exception('Empty QRCode from whatsapp', 1);
+            $rpis = $this->rpiRepository->rpiOfCompany((int) $User->company_id);
+            if ($rpis) {
+                if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
+                    $QRCode = ExternalRPIController::getQRCode($rpis);
+                    if (!$QRCode) {
+                        // throw new Exception('Empty QRCode from whatsapp', 1);
+                    }
+
+                    $rpis->QRCode = $QRCode;
                 }
 
-                $rpis->QRCode = $QRCode;
+                return $rpis->toJson();
             }
-
-            return $rpis->toJson();
+        } catch (\Throwable $e) {
+            return MyHandler::toJson($e);
         }
         return null;
     }
