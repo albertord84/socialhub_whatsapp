@@ -161,7 +161,7 @@ class ExtendedChatController extends ChatController
                         $input['message'], $Contact
                     );
 
-                    $chat->data = json_encode($json_data);
+                    $chat->data = json_encode($json_data); 
 
                     $chat->save();
                     // $chat = $this->chatRepository->updateMessage($input, $chat->id);
