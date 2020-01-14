@@ -77,26 +77,39 @@ class ExtendedContactController extends ContactController
     public function contactsFromCSV(CreateContactRequest $request)
     {
         $input = $request->all();
-
         $User = Auth::check() ? Auth::user() : session('logged_user');
+
         if ($file = $request->file('file')) {
 
             $csv = file_get_contents($file->getRealPath());
             $array = array_map("str_getcsv", explode("\n", $csv));
-            
             $json = json_encode($array);
-
             unlink($file->getRealPath());
             
             //insert contacts in database
             foreach($array as $contact){
                 try{
+
+                    $name = $contact[0];
+                    $name = trim($name);
+                    $whatsapp = $contact[1];
+                    $whatsapp= trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
+
                     $Contact = new Contact();
-                    $Contact->first_name = $contact[0];
-                    $Contact->company_id = $User->company_id;                
-                    //TODO-Egberto: conferir patron de telefone en php
-                    $Contact->whatsapp_id = $contact[1];
-                    $Contact->save();
+                    $Contact->company_id = $User->company_id;
+                
+                    if ($contact[2] && filter_var(trim($contact[2]), FILTER_VALIDATE_EMAIL)) {
+                        $Contact->email = trim($contact[2]);
+                    }
+                    if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
+                        $Contact->first_name = $name;
+                    }
+                    if (preg_match("/^[5]{2}[1-9]{2}[9][0-9]{8}$/", $whatsapp) ) {
+                        $Contact->whatsapp_id = $whatsapp;
+                    }
+                    if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
+                        $Contact->save();
+                    }
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
