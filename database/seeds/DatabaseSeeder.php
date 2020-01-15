@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AttendantsContactsTableSeeder::class);
         $this->call(SocialnetworksTableSeeder::class);
         $this->call(ChatsTableSeeder::class);
+        $this->call(ChatsTestsTableSeeder::class);
         $this->call(RpisTableSeeder::class);
     }
 }

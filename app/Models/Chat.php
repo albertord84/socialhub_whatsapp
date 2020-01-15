@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Chat
@@ -27,7 +28,7 @@ class Chat extends Model
     const UPDATED_AT = 'updated_at';
 
 
-    public $connection = "socialhub_mvp.chats";
+    public $connection;
 
     public $fillable = [
         'contact_id',
@@ -69,5 +70,13 @@ class Chat extends Model
         'attendant_id' => 'required'
     ];
 
-    
+    /**
+     * Class constructor.
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->connection = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
+    }
 }

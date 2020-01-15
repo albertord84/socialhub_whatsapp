@@ -66,7 +66,6 @@ class AuthController extends Controller
      */
     public function login()
     {        
-        Log::info('login');
         $credentials = request(['email', 'password']);
         $remember = true;
         $token = Auth::attempt($credentials, $remember);
@@ -136,7 +135,6 @@ class AuthController extends Controller
      */
     public function logout()
     {        
-        Log::info('logout');
         try {
             auth()->logout();
         } catch (\Throwable $th) {

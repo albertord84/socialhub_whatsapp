@@ -349,24 +349,24 @@
                         
                         
                         <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
-                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopRecordVoice()">
+                                <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopNativeRecordVoice()">
                                     <i class="input-group-text mdi mdi-close-circle-outline pr-4 fa-1_5x text-danger border border-left-0 container-icons-action-message pointer-hover" title="Excluir" ></i>
                                 </div>
                                 <div class="input-group-prepend">
                                     <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
                                 </div>
-                                <div class="input-group-prepend" @click.prevent="stopRecordVoice()">
+                                <div class="input-group-prepend" @click.prevent="stopNativeRecordVoice()">
                                     <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
                         </div>
 
-                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startRecordVoice">
+                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div>
 
 
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
-                             <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
+                            <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                 <template v-slot:button-content>
                                     <i class="mdi mdi-paperclip fa-1_5x text-muted" title="Anexar arquivos" aria-hidden="false"></i>
                                 </template>                                
@@ -396,52 +396,6 @@
                         <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
                     </div>
                 </div>
-
-                <!-- <div class="p-3">
-                    <div class="input-group pb-5 pr-1 " style="color:gray">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text pl-2 pr-2  border border-right-0 border-left-message container-icons-action-message">
-                                <i v-if="isSendingNewMessage==false" class="fa fa-keyboard-o icons-no-action" title="Digite uma mensagem"></i>
-                                <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
-                            </div>
-                        </div>
-                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
-                            class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
-                        </textarea>
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" v-if="file!=null" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Click para remover o arquivo">
-                                <i class="fa fa-clipboard icons-selected-file"></i>
-                                <i style="background-color:withe; color:red; position: relative; height:1.5em; width1.5em; top:-0.25em; left:-1.7em; border-radius:20px;" class="mdi mdi-window-close "></i>
-                            </a>
-                        </div>
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputImage')" title="Anexar imagem">
-                                <i class="fa fa-file-image-o icons-action-message"></i>
-                            </a>
-                        </div>                       
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text border border-left-0 container-icons-action-message" @click.prevent="triggerEvent('fileInputAudio')" title="Anexar audio">
-                                <i class="fa fa-file-audio-o icons-action-message"></i>
-                            </a>
-                        </div>
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text pr-2 border border-left-0 border-right-message container-icons-action-message" @click.prevent="triggerEvent('fileInputDocument')" title="Anexar documento">
-                                <i class="fa fa-file-text-o icons-action-message"></i>
-                            </a>
-                        </div>
-
-                        <div class="input-group-prepend">
-                            <a href="javascript:void()" class="input-group-text pl-2 pr-3 border-0  container-icons-action-message" @click.prevent="sendMessage">
-                                <i class="mdi mdi-send fa-2x icons-action-send ql-color-blue"></i>
-                            </a>
-                        </div>                        
-                        <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
-                        <input id="fileInputAudio" ref="fileInputAudio" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="audio/*"/>
-                        <input id="fileInputVideo" ref="fileInputVideo" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="video/*"/>
-                        <input id="fileInputDocument" ref="fileInputDocument" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept=".doc, .docx, ppt, pptx, .txt, .pdf"/>
-                    </div>
-                </div> -->
-
             </div>
 
             <!-- if not selected contact -->
@@ -716,7 +670,7 @@
         <!-- Modal to show video-->
         <b-modal v-model="modalShowVideo" :hide-footer="true" centered :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent"  class="m-0 modal-body-bg">
             <div class="">
-                 <video width="100%" height="100%" style="max-height:540px; max-width:700px; padding:0px; text-align:center" controls class="midia-files embed-responsive-item modal-body-bg">
+                <video width="100%" height="100%" style="max-height:540px; max-width:700px; padding:0px; text-align:center" controls class="midia-files embed-responsive-item modal-body-bg">
                     <source :src="modalShowVideoSrc" type="video/mp4">
                     Seu navegador não suporta o elemento de vídeo.
                 </video> 
@@ -763,6 +717,7 @@
 </template>
 
 
+
 <script>
     import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";
@@ -776,6 +731,17 @@
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
     import MicRecorder from "mic-recorder-to-mp3"; 
+    
+    // import OpusMediaRecorder from 'opus-media-recorder';
+
+    // import OpusMediaRecorder from 'opus-media-recorder';
+    // // Use worker-loader
+    // import Worker from 'opus-media-recorder/encoderWorker.js';
+    // // You should use file-loader in webpack.config.js.
+    // // See webpack example link in the above section for more detail.
+    // import OggOpusWasm from 'opus-media-recorder/OggOpusEncoder.wasm';
+    // import WebMOpusWasm from 'opus-media-recorder/WebMOpusEncoder.wasm';
+    
 
     export default {
         components: {
@@ -842,7 +808,12 @@
                 timeRecordingAudio:"00:00",
                 recordingTime:0,
                 handleTimerCounter:null,
-                recorder:null,
+                
+                recorderMP3:null,
+                recorderOGG:null,
+                streamOGG:null,
+                dataChunks:[],
+                rec:null,
 
                 modalRemoveSelectedFile:false,
                 modalSendMessageFiles:false,
@@ -1363,7 +1334,7 @@
                 this.modalDeleteContact = false;
                 this.modalTransferContact = false;
             },
-           
+            
             logout() {
                 ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
                     'user_id':this.logguedAttendant.id,
@@ -1499,12 +1470,16 @@
                 this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
             },
 
-            startRecordVoice: function() {
+            createMP3Recorder(){
+                return new MicRecorder({bitRate: 128});
+            },
+
+            startMP3RecordVoice: function() {
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
                     return;
                 }
-                this.recorder.start()
+                this.recorderMP3.start()
                     .then(() => {
                         console.log('starting record audio');
                         this.timeRecordingAudio = "00:00";
@@ -1517,9 +1492,9 @@
                     }).finally(()=>{this.isRecordingAudio = true;});
             },
 
-            stopRecordVoice: function() {
+            stopMP3RecordVoice: function() {
                 clearInterval(this.handleTimerCounter);
-                this.recorder.stop().getMp3()
+                this.recorderMP3.stop().getMp3()
                     .then(([buffer, blob]) => {
                         if(this.isRecordingAudio){
                             const file = new File(buffer, 'me-at-thevoice.mp3', {
@@ -1539,6 +1514,216 @@
                         console.log('We could not retrieve your message');
                         console.log(e);
                     });
+            },
+            
+            stopMP3RecordVoiceORG: function() {
+                clearInterval(this.handleTimerCounter);
+                this.recorderMP3.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        console.log(buffer);
+                        console.log(blob);
+                        let blobOGG = new Blob(buffer, {'type': 'audio/ogg; codecs=opus' });
+                        console.log(blobOGG);
+                        if(this.isRecordingAudio){
+                            const file = new File(buffer, 'audio.ogg', {
+                                type: blobOGG.type,
+                                lastModified: Date.now()
+                            });
+                            // const file = new File(buffer, 'me-at-thevoice.mp3', {
+                            //     type: blob.type,
+                            //     lastModified: Date.now()
+                            // });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            this.newMessage.type_id = 3;
+                            this.file = file;
+                            this.sendMessage();
+                        }else{
+                            this.timeRecordingAudio = "00:00";
+                            this.recordingTime = 0;
+                            this.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+            },
+
+            createOGGRecorder(stream) {
+                const options = { mimeType: 'audio/ogg; codecs=opus' };
+                const workerOptions = {
+                    encoderWorkerFactory: function () {
+                        return new Worker('opus-media-recorder/encoderWorker.js')
+                    },
+                    OggOpusEncoderWasmPath: 'opus-media-recorder/OggOpusEncoder.wasm',
+                    WebMOpusEncoderWasmPath: 'opus-media-recorder/WebMOpusEncoder.wasm'
+                };
+                window.MediaRecorder = OpusMediaRecorder;
+                this.rec = new MediaRecorder(stream, options, workerOptions);
+                console.log("created recorderOGG object");
+                console.log(this.rec);
+
+                var that = this;
+                this.rec.start = () => {
+                    console.log("started audio recorder");                    
+                    
+                };
+
+                this.rec.dataavailable = (e) => {
+                    console.log('dataChunk available');
+                    this.dataChunks.push(e.data);                            
+                };
+
+                this.rec.stop = () => {
+                    console.log('stopped audio recorder');
+                    let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
+                    this.rec.stream.getTracks().forEach(i => i.stop());
+                    console.log(blob);
+                };
+
+                this.rec.error = (e) => {
+                    console.log('an error in worker ocurr');                    
+                    console.log(e);                    
+                    this.rec.stream.getTracks().forEach(i => i.stop());
+                };
+
+                this.dataChunks = [];
+                this.rec.start();
+            },
+
+            startOGGRecordVoice: function() {                
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                var This = this;
+                console.log("requesting permission to browser");
+                navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
+                    .then(stream => {
+                        This.createOGGRecorder(stream);
+                        This.timeRecordingAudio = "00:00";
+                        This.recordingTime = 0;
+                        This.isRecordingAudio = true;
+                        This.handleTimerCounter = setInterval(This.timer, 1000);
+                        // This.recorderOGG.addEventListener('dataavailable', (e) => {
+                        //     console.log(e.data);
+                        //     // audioElement.src = URL.createObjectURL(e.data);
+                        // });
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{This.isRecordingAudio = true;});
+            },
+
+            stopOGGRecordVoice: function() {                                
+                this.rec.stop();
+                return;
+
+                clearInterval(This.handleTimerCounter);
+                This.recorderOGG.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(This.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            This.newMessage.type_id = 3;
+                            This.file = file;
+                            This.sendMessage();
+                        }else{
+                            This.timeRecordingAudio = "00:00";
+                            This.recordingTime = 0;
+                            This.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+
+            },
+
+            createNativeRecorder(stream) {
+                this.rec = new MediaRecorder(stream);
+                console.log("created recorderOGG object");
+
+                var that = this;
+                this.rec.start = () => {
+                    console.log("started audio recorder");                    
+                };
+
+                this.rec.addEventListener('dataavailable', function(e) { 
+                    console.log(e.data);
+                    this.dataChunks.push(e.data);
+                });
+
+                this.rec.dataavailable = (e) => {
+                    console.log('dataChunk available');
+                    this.dataChunks.push(e.data);                            
+                };
+
+                this.rec.ondataavailable = (e) => {
+                    console.log('dataChunk on available');
+                    this.dataChunks.push(e.data);                            
+                };
+
+                this.rec.stop = (e) => {
+                    console.log('stopped audio recorder');
+                    let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
+                    this.rec.stream.getTracks().forEach(i => i.stop());
+                    console.log(this.dataChunks);
+                    console.log(blob);
+                };
+
+                this.dataChunks = [];
+                this.rec.start();
+            },
+
+            startNativeRecordVoice: function() {                
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                var This = this;
+                console.log("requesting permission to browser");
+                navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
+                    .then(stream => {
+                        This.createNativeRecorder(stream);
+                        This.timeRecordingAudio = "00:00";
+                        This.recordingTime = 0;
+                        This.isRecordingAudio = true;
+                        This.handleTimerCounter = setInterval(This.timer, 1000);
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{This.isRecordingAudio = true;});
+            },
+
+            stopNativeRecordVoice: function() {                                
+                this.rec.stop();
+                return;
+
+                clearInterval(This.handleTimerCounter);
+                This.recorderOGG.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(This.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            This.newMessage.type_id = 3;
+                            This.file = file;
+                            This.sendMessage();
+                        }else{
+                            This.timeRecordingAudio = "00:00";
+                            This.recordingTime = 0;
+                            This.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+
             },
         },
 
@@ -1566,7 +1751,7 @@
         },
 
         mounted(){
-            this.recorder = new MicRecorder({bitRate: 128})
+            this.recorderMP3 = this.createMP3Recorder();
 
             window.Echo = new Echo({
                 broadcaster: 'pusher',
@@ -1662,6 +1847,7 @@
                     }
                     miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
             });
+
         },
 
         created() {
@@ -1711,7 +1897,7 @@
                     console.log('sended message');
                     //enable new message, and upload and send buttons
                 }
-            }
+            },            
         }
 
     }
@@ -2222,8 +2408,8 @@
         }
     }
 
-     @media screen and (max-width: 700px) {
-         .receivedMessageText{
+    @media screen and (max-width: 700px) {
+        .receivedMessageText{
             color: black;
             background-color:white; 
             padding:1em; 

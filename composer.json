@@ -28,6 +28,8 @@
         "tymon/jwt-auth": "1.0.0-rc.3"
     },
     "require-dev": {
+        "albertord84/auth-tests": "1.0",
+        "barryvdh/laravel-ide-helper": "^2.6",
         "beyondcode/laravel-dump-server": "^1.0",
         "composer/composer": "^1.9",
         "filp/whoops": "^2.0",
@@ -36,8 +38,7 @@
         "nunomaduro/collision": "^2.0",
         "phpunit/phpunit": "^7.0",
         "squizlabs/php_codesniffer": "^3.4",
-        "xethron/migrations-generator": "^2.0",
-        "albertord84/auth-tests": "1.0"
+        "xethron/migrations-generator": "^2.0"
     },
     "autoload": {
         "classmap": [
