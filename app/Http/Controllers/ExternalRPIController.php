@@ -213,7 +213,8 @@ class ExternalRPIController extends Controller
         $contact_Jid = $input['Jid'];
         $company_phone = $input['CompanyPhone'];
 
-        $Company = Company::where(['phone' => $company_phone])->first();
+        $Company = Company::where(['whatsapp' => $company_phone])->first();
+        // $Company = Company::where(['whatsapp' => $company_phone])->first();
         // Log::debug('reciveTextMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
@@ -261,7 +262,7 @@ class ExternalRPIController extends Controller
         $contact_Jid = $input['Jid'];
         $company_phone = $input['CompanyPhone'];
 
-        $Company = Company::where(['phone' => $company_phone])->first();
+        $Company = Company::where(['whatsapp' => $company_phone])->first();
         // Log::debug('reciveFileMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
@@ -346,7 +347,7 @@ class ExternalRPIController extends Controller
             } else {
                 // Find Company by Phone Number
                 $company_phone = $input['CompanyPhone'];
-                $Company = Company::where(['phone' => $company_phone])->first();
+                $Company = Company::where(['whatsapp' => $company_phone])->first();
 
                 $Contact = new Contact();
                 if ($Company) {
