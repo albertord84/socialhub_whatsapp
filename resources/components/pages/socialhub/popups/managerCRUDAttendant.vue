@@ -26,7 +26,7 @@
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phone" name="phone" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
+                        <input v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
                     </div>  
                 </div>
                 <div class="row">
@@ -158,8 +158,10 @@
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                model_cpy.phone = model_cpy.phone.replace(/ /g, '');    //ECR
-                model_cpy.phone = model_cpy.phone.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');    //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');    //ECR
+                }
 
                 //isert user
                 ApiService.post(this.first_url, model_cpy)
@@ -224,9 +226,10 @@
 
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
-                model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
-
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
                 ApiService.put(this.first_url+'/'+this.attendant_id, model_cpy)
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");
@@ -358,10 +361,8 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O telefone do usuário é obrigatorio" );
-                    this.flagReference = false;
                 }
+
                 if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
                     check = validation.check('whatsapp', this.model.whatsapp_id)
                     if(check.success==false){

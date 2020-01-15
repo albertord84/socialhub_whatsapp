@@ -14,13 +14,15 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                        <i class="fa fa-download"></i>
+                        <i class="mdi mdi-file-export fa-lg"  ></i>
+                        <!-- <i class="fa fa-download"></i> -->
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="triggerEvent()" title="Importar contatos">
-                        <i class="fa fa-id-card-o"></i>
+                        <i class="mdi mdi-file-import fa-lg"  ></i>
+                        <!-- <i class="fa fa-id-card-o"></i> -->
                     </a>
 
                 </div>
@@ -99,7 +101,20 @@
 
         <!-- Confirm import cantacts Modal -->
         <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Confirmação de importação de contatos">
-            Você adicionará novos contatos a partir do arquivo selecionado.
+            <!-- Você adicionará novos contatos a partir do arquivo selecionado.
+            Atenção: 
+               1. Para adicionar os contatos, o nome de usuario e o número de Whatsapp são obrigatorios.
+               2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato correto.
+                  Ex: João Silva | 55 11 999999999 | joao@gmail.com |
+            Os dados que nao cumpram com os itens 1 e 2 nã serão adicionados. -->
+
+            <h6>Você adicionará novos contatos a partir do arquivo selecionado.</h6>
+            <h5>Atenção:</h5>
+            <p>   1. Para adicionar os contatos, o nome de usuario e o número de Whatsapp são obrigatorios.</p>
+            <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato correto.</p>
+            <p>      Ex: João Silva | 55 11 99999-9999 | joao@gmail.com |</p>
+            <p>Os contatos que não cumpram com os itens 1 e 2 nã serão adicionados.</p>
+
                 <div class="col-lg-12 mt-5 text-center">
                     <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
                         <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
@@ -290,11 +305,14 @@
                             .catch(function(error) {
                                 miniToastr.error(error, "Error carregando os contatos");   
                             })
-                            .finally(()=>{this.isSendingContactFromCSV=false;});
+                            .finally(()=>{this.isSendingContactFromCSV=false;
+                                          this.showModalFileUploadCSV=!this.showModalFileUploadCSV });
+                                        //   this.showModalFileUploadCSV=false;});
                     }
                 } else{
                     miniToastr.error("O arquivo deve ter tamanho inferior a 5MB", "Erro"); 
                 }
+
             },
 
             //------ externals methods--------------------

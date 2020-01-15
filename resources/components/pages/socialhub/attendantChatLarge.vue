@@ -1094,8 +1094,12 @@
                     this.getContacts();
                 })
                 .catch(function(error) {
-                    ApiService.process_request_error(error);
-                    miniToastr.error(error, "Erro adicionando contato");
+                    if (error.response && error.response.data.message.includes("Duplicate entry")){
+                        miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
+                    }else{
+                        ApiService.process_request_error(error);
+                        miniToastr.error(error, "Erro adicionando contato");
+                    }
                 })
                 .finally(() => this.isUpdatingContact = false);
             },
@@ -1434,7 +1438,7 @@
                     check = validation.check('whatsapp', this.selectedContactToEdit.whatsapp_id)
                     if(check.success==false){
                         miniToastr.error("Erro", check.error );
-                        this.flagReference = false;s
+                        this.flagReference = false;
                     }
                 }else{
                     miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
