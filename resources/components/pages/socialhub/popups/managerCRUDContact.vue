@@ -207,8 +207,12 @@
                     }
                 })
                 .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando contato");  
+                    if (error.response && error.response.data.message.includes("Duplicate entry")){
+                        miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
+                    }else{
+                        ApiService.process_request_error(error); 
+                        miniToastr.error(error, "Erro adicionando contato");  
+                    }
                 })
                 .finally(() => this.isSendingInsert = false);   
             },
@@ -282,8 +286,12 @@
                         }
                     })
                     .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando contato");  
+                        if (error.response && error.response.data.message.includes("Duplicate entry")){
+                            miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
+                        }else{
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro adicionando contato");
+                        }
                     })
                     .finally(() => this.isSendingUpdate = false);   
             },

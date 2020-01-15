@@ -89,7 +89,6 @@ class ExtendedContactController extends ContactController
             //insert contacts in database
             foreach($array as $contact){
                 try{
-
                     $name = $contact[0];
                     $name = trim($name);
                     $whatsapp = $contact[1];

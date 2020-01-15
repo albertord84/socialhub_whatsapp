@@ -417,7 +417,7 @@
                 var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
-                if(modelCompany_cpy.phone){
+                if(modelManager_cpy.phone){
                     modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
                     modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
                 }
