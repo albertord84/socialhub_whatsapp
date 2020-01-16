@@ -112,7 +112,7 @@
             <h5>Atenção:</h5>
             <p>   1. Para adicionar os contatos, o nome de usuario e o número de Whatsapp são obrigatorios.</p>
             <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato correto.</p>
-            <p>      Ex: João Silva | 55 11 99999-9999 | joao@gmail.com |</p>
+            <p>      Ex: Nome | Whatsapp | email | facebook | instagram | linkedin </p>
             <p>Os contatos que não cumpram com os itens 1 e 2 nã serão adicionados.</p>
 
                 <div class="col-lg-12 mt-5 text-center">

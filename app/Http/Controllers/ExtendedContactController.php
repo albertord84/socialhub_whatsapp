@@ -89,23 +89,34 @@ class ExtendedContactController extends ContactController
             //insert contacts in database
             foreach($array as $contact){
                 try{
-                    $name = $contact[0];
-                    $name = trim($name);
+                    // $name = $contact[0];
+                    // $name = trim($name);
                     $whatsapp = $contact[1];
                     $whatsapp= trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
 
                     $Contact = new Contact();
                     $Contact->company_id = $User->company_id;
-                
+                    
+                    if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
+                        $Contact->first_name = trim($contact[0]);
+                    }
+                    if (preg_match("/^[5]{2}[1-9]{2}[1-9][0-9]{8}$/", $whatsapp) ) {
+                        $Contact->whatsapp_id = $whatsapp;
+                    }
                     if ($contact[2] && filter_var(trim($contact[2]), FILTER_VALIDATE_EMAIL)) {
                         $Contact->email = trim($contact[2]);
                     }
-                    if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
-                        $Contact->first_name = $name;
+
+                    if ($contact[3] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[3])) {
+                        $Contact->facebook_id = trim($contact[3]);
                     }
-                    if (preg_match("/^[5]{2}[1-9]{2}[9][0-9]{8}$/", $whatsapp) ) {
-                        $Contact->whatsapp_id = $whatsapp;
+                    if ($contact[4] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[4])) {
+                        $Contact->instagram_id = trim($contact[4]);
                     }
+                    if ($contact[5] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[5])) {
+                        $Contact->linkedin_id = trim($contact[5]);
+                    }
+
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
                         $Contact->save();
                     }
