@@ -108,12 +108,12 @@
                   Ex: João Silva | 55 11 999999999 | joao@gmail.com |
             Os dados que nao cumpram com os itens 1 e 2 nã serão adicionados. -->
 
-            <h6>Você adicionará novos contatos a partir do arquivo selecionado.</h6>
+            <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
             <h5>Atenção:</h5>
-            <p>   1. Para adicionar os contatos, o nome de usuario e o número de Whatsapp são obrigatorios.</p>
-            <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato correto.</p>
+            <p>   1. Para adicionar os contatos, o nome de usuário e o número de Whatsapp são obrigatórios.</p>
+            <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato corretos.</p>
             <p>      Ex: Nome | Whatsapp | email | facebook | instagram | linkedin </p>
-            <p>Os contatos que não cumpram com os itens 1 e 2 nã serão adicionados.</p>
+            <p>Os contatos que não cumpram com os itens 1 e 2 não serão adicionados na lista de contatos.</p>
 
                 <div class="col-lg-12 mt-5 text-center">
                     <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
