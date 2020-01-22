@@ -100,6 +100,8 @@
     import sellerCRUDCompanies from "./popups/sellerCRUDCompanies";
     // import sellerCRUDCompanies from "./popups/sellerCRUDCompaniesWizzard";
 
+    import routes from '../../../router/index'; //ECR
+    
     export default {
         props: {
             title: {
@@ -199,6 +201,13 @@
 
         methods: {  
             getCompanies: function() { //R
+                //  console.log(navigator.onLine);   
+                // if(!navigator.onLine){
+                //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                    
+                    
+                //     routes.push({name:'login'}); 
+                // }
                 ApiService.get(this.companies_url)
                     .then(response => {
                         this.rows = response.data;
@@ -217,7 +226,14 @@
                         });
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando as empresas");   
+                        if (error.response && error.response.data.message.includes("of non-object")){
+                            //  redireccionar para a pagina de login
+                            routes.push({name:'login'}); 
+                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            
+                        }else{
+                            miniToastr.error(error, "Error carregando as empresas");
+                        }
                     });
             }, 
 

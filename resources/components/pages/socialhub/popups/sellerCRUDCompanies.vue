@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="modelCompany.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-info-circle fa-lg form-control-feedback" ></span>
@@ -120,13 +120,13 @@
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phoneManager" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="modelManager.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phoneManager" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                     </div>                                  
                 </div> 
