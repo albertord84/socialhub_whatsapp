@@ -183,7 +183,8 @@
                         })
                         .finally(() => this.isSendingInsert = false);
                     })
-                    .catch(function(error) {
+                    // .catch(function(error) {
+                    .catch(error => {
                         
                         if(error.response.data.message.includes("Duplicate entry")){
                             miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
@@ -191,8 +192,9 @@
                             ApiService.process_request_error(error); 
                             miniToastr.error(error, "Erro adicionando usuáio");  
                         }
-                    })
-                    .finally(() => this.isSendingInsert = false);
+                        this.isSendingInsert = false;
+                    });
+                    // .finally(() => this.isSendingInsert = false);
             },
             
             editAttendant: function() { //U

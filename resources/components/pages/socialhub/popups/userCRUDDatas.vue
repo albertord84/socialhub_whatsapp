@@ -49,7 +49,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.phone}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -61,7 +61,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.whatsapp_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
