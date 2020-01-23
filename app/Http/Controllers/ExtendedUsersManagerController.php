@@ -53,13 +53,16 @@ class ExtendedUsersManagerController extends UsersManagerController
         $Seller = Auth::check()? Auth::user():session('logged_user');
         $User = User::find($input['user_id']);
         $User->password = rand(100000,999999);
+        
         $Company = Company::find($User->company_id);
         Mail::to($User->email)
-            ->bcc($Seller->email)
-            ->send(new EmailSigninCompany($Seller, $User, $Company));
+        ->bcc($Seller->email)
+        ->send(new EmailSigninCompany($Seller, $User, $Company));
+        // dd($User);
         $User->password = bcrypt($User->password);
         $User->save();
-        
+        // dd('estou aqui');
+
         return ($User)? $User->toJson() : null;
 
     }

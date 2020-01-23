@@ -308,9 +308,11 @@ var ApiService = {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.put("" + resource, params);
     },
     delete: function _delete(resource) {
-        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.delete(resource).catch(function (error) {
-            throw new Error("[RWV] ApiService " + error);
-        });
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.delete(resource);
+
+        // return Vue.axios.delete(resource).catch(error => {
+        //     throw new Error(`[RWV] ApiService ${error}`);
+        // });
     },
     process_request_error: function process_request_error(error) {
         alert('An error exception occurred in PHP-Laravel, please open developer console and try again');

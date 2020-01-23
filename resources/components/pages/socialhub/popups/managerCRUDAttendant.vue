@@ -183,18 +183,16 @@
                         })
                         .finally(() => this.isSendingInsert = false);
                     })
-                    // .catch(function(error) {
                     .catch(error => {
-                        
-                        if(error.response.data.message.includes("Duplicate entry")){
+                        if(error.response && error.response.data.message.includes("Duplicate entry")){
                             miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                        }else{
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando usuáio");  
+                        }else if(error.response && error.response.data.message.includes("")){
+                            this.reload();
+                        }else {
+                            miniToastr.error(error, "Erro adicionando Atendente");
                         }
                         this.isSendingInsert = false;
                     });
-                    // .finally(() => this.isSendingInsert = false);
             },
             
             editAttendant: function() { //U
@@ -221,7 +219,6 @@
                     this.flagReference = true;
                     return;
                 }
-
                 
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
@@ -244,15 +241,15 @@
                             this.reload();
                             this.closeModals();
                     })
-                    .catch(function(error) {
-                        // ApiService.process_request_error(error);  
-                        // miniToastr.error(error, "Erro atualizando Atendente"); 
-                        if(error.response.data.message.includes("Duplicate entry")){
+                    .catch(error => {
+                        if(error.response && error.response.data.message.includes("Duplicate entry")){
                             miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                        }else{
-                            ApiService.process_request_error(error); 
+                        }else if(error.response && error.response.data.message.includes("")){
+                            this.reload();
+                        }else {
                             miniToastr.error(error, "Erro adicionando Atendente");
                         }
+
                     })
                     .finally(() => this.isSendingUpdate = false);
             },
@@ -279,9 +276,13 @@
                                 miniToastr.error(error, "Erro eliminando Atendente"); 
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Atendente"); 
+                    .catch(error => {
+                        if(error.response && error.response.data.message.includes("")){
+                            //  redireccionar para a pagina de login
+                            this.reload();
+                        }else{
+                            miniToastr.error(error, "Erro eliminando Atendente");   
+                        }
                     })
                     .finally(() => this.isSendingDelete = false);
             },

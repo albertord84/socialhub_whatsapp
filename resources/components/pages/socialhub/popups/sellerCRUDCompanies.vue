@@ -360,6 +360,9 @@
                                             this.closeModals();
                                         })
                                         .catch(error => {
+                                            console.log("estou aqui agora");
+                                            // TODO: ECR=> aqui se deveria tratar a execção de seação expirado, quando se add uma empressa.
+                                            // ECR=> esta generando un error porque no se valia el email. preguntar a jose
                                             miniToastr.error(error, "Erro adicionando Manager");  
                                             ApiService.process_request_error(error);
                                         })

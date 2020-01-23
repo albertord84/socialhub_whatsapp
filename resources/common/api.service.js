@@ -59,9 +59,11 @@ const ApiService = {
     },
 
     delete(resource) {
-        return Vue.axios.delete(resource).catch(error => {
-            throw new Error(`[RWV] ApiService ${error}`);
-        });
+        return Vue.axios.delete(resource);
+        
+        // return Vue.axios.delete(resource).catch(error => {
+        //     throw new Error(`[RWV] ApiService ${error}`);
+        // });
     },
 
     process_request_error(error) {

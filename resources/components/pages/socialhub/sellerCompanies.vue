@@ -287,15 +287,18 @@
                             }else{
                                 this.modalEditCompanies = !this.modalEditCompanies;
                             }
-
-
                             
                         } catch (error) {
                             console.log(error);
                         }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                    .catch(error => {
+                        if (error.response && error.response.data.message.includes("")){
+                            //  redireccionar para a pagina de login
+                            this.reloadDatas();
+                        }else{
+                            miniToastr.error(error, "Erro obtendo Manager");   
+                        }
                     });
             },
 
@@ -337,8 +340,14 @@
                             console.log(error);
                         }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                    .catch(error => {
+                        if (error.response && error.response.data.message.includes("")){
+                            //  redireccionar para a pagina de login
+                            this.reloadDatas();
+                        }else{
+                            miniToastr.error(error, "Erro obtendo Manager");   
+                        }
+
                     });
             },
 
