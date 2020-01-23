@@ -153,7 +153,7 @@ class ExtendedChatController extends ChatController
                     $FileName = "$json_data->SavedFilePath/$json_data->SavedFileName";
                     // Convet From mp3 to ogg
                     if ($json_data->ClientOriginalExtension == 'mp3') {
-                        $BaseDir = Storage::disk('chats_files')->getDriver()->getAdapter()->getPathPrefix();
+                        $BaseDir = StorageFlash::disk('chats_files')->getDriver()->getAdapter()->getPathPrefix();
                         $FileNameOgg = "$json_data->SavedFilePath/$json_data->SavedFileName.ogg";
                         $code = exec("ffmpeg -y -i $BaseDir/$FileName -acodec libvorbis $BaseDir/$FileNameOgg");
                         $FileName = $FileNameOgg;
@@ -177,6 +177,8 @@ class ExtendedChatController extends ChatController
             $responseJson = json_decode($response);
             if (isset($responseJson->MsgID)) {
                 Flash::success('Chat saved successfully.');
+
+                
 
                 return $chat->toJson();
             } else {
