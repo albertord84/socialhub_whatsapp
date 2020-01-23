@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-info-circle fa-lg form-control-feedback" ></span>
@@ -120,13 +120,13 @@
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phoneManager" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelManager.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phoneManager" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                     </div>                                  
                 </div> 
@@ -328,14 +328,18 @@
                 var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                if(modelCompany_cpy.phone){
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                }
 
                 var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                if(modelManager_cpy.phone){
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                }
 
                 // inserindo company
                 // ApiService.post(this.companies_url, this.modelCompany)
@@ -343,36 +347,46 @@
                     .then(response => {
                         // this.modelManager.company_id = response.data.id;
                         modelManager_cpy.company_id = response.data.id;         //ECR
-
                         // inserindo user
                         // ApiService.post(this.users_url, this.modelManager)
                         ApiService.post(this.users_url, modelManager_cpy)       //ECR
                             .then(response => {
-                                //inserindo userManager
-                                ApiService.post(this.usersManager_url, {'user_id':response.data.id})
-                                    .then(response => {
-                                        miniToastr.success("Empresa adicionada com sucesso","Sucesso");
-                                        this.formReset();
-                                        this.reload();
-                                        this.closeModals();
-                                    })
-                                    .catch(function(error) {
-                                        miniToastr.error(error, "Erro adicionando Manager");  
-                                        ApiService.process_request_error(error); 
-                                    })
-                                    .finally(() => this.isSendingInsert = false);
-                                })
-                            .catch(function(error) {
-                                miniToastr.error(error, "Erro adicionando Manager");  
-                                ApiService.process_request_error(error); 
+                                    //inserindo userManager
+                                    ApiService.post(this.usersManager_url, {'user_id':response.data.id})
+                                        .then(response => {
+                                            miniToastr.success("Empresa adicionada com sucesso","Sucesso");
+                                            this.formReset();
+                                            this.reload();
+                                            this.closeModals();
+                                        })
+                                        .catch(error => {
+                                            miniToastr.error(error, "Erro adicionando Manager");  
+                                            ApiService.process_request_error(error);
+                                        })
+                                        .finally(() => this.isSendingInsert = false);
+                            })
+                            .catch(error => {
+                                if(error.response.data.message.includes("Duplicate entry")){
+                                    miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
+                                }else{
+                                    miniToastr.error(error, "Erro adicionando Manager");  
+                                    ApiService.process_request_error(error); 
+                                }
+                                this.isSendingInsert = false;
+                                // TODO. ECR=> Aqui deveria ser eliminada do BD a acompanhia adicionada no passo anterior.
+                                //              Para que não fiquem inconsistensias no BD. 
+                                
                             });
                             // .finally(() => this.isSendingInsert = false);
                     })
-                    .catch(function(error) {
+                    // .catch(function(error) {
+                    .catch(error => {
                         miniToastr.error(error, "Erro adicionando Empresa");  
-                        ApiService.process_request_error(error); 
+                        ApiService.process_request_error(error);
+                        this.isSendingInsert = false; 
                     });
                     // .finally(() => this.isSendingInsert = false);
+
             },
             
             editCompany: function() { //U
@@ -405,69 +419,79 @@
                 var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
                 modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
-                modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                if(modelCompany_cpy.phone){
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
+                    modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
+                }
                 
                 var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
-
+                if(modelManager_cpy.phone){
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                }
                 //1. atualizando company
                 // ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)   //ECR
                     .then(response => {
-                                //2. atualizando usuario
-                                // delete this.modelManager.password;
-                                delete modelManager_cpy.password;
-                                // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                                ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
-                                    .then(response => {
-                                                    //3. atualizando rpi
-                                                    this.modelRpi.company_id = this.modelCompany.id;
-                                                    if(!this.modelRpi.id) {
-                                                        this.modelRpi.id=0;
-                                                    }
-                                                    var This=this;
-                                                    ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
-                                                        .then(response => {
-                                                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
-                                                                // this.isSendingUpdate = false;
-                                                                this.reload();
-                                                                this.closeModals();
-                                                            })
-                                                        .catch(function (error) {
-                                                            if (error.response) {
-                                                                // Request made and server responded
-                                                                // console.log(error.response.data);
-                                                                // console.log(error.response.data.message);
-                                                                miniToastr.warn(error.response.data.message, "Atenção"); 
-                                                                // console.log(error.response.status);
-                                                                // console.log(error.response.headers);
-                                                            } else if (error.request) {
-                                                                // The request was made but no response was received
-                                                                // console.log(error.request);
-                                                            } else {
-                                                                // Something happened in setting up the request that triggered an Error
-                                                                // console.log('Error', error.message);
-                                                            }
-                                                        }).finally(() => this.isSendingUpdate = false);
-                                
-                                    })
-                                    .catch(function(error) {
-                                        if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                            alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                        else
-                                            miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                    });
-                                    // .finally(() => this.isSendingUpdate = false);
+                            //2. atualizando usuario
+                            // delete this.modelManager.password;
+                            delete modelManager_cpy.password;
+                            // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
+                            ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
+                                .then(response => {
+                                        //3. atualizando rpi
+                                        this.modelRpi.company_id = this.modelCompany.id;
+                                        if(!this.modelRpi.id) {
+                                            this.modelRpi.id=0;
+                                        }
+                                        var This=this;
+                                        ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                                            .then(response => {
+                                                    miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                                    this.reload();
+                                                    this.closeModals();
+                                                })
+                                            .catch(function (error) {
+                                                if (error.response) {
+                                                    // Request made and server responded
+                                                    // console.log(error.response.data);
+                                                    // console.log(error.response.data.message);
+                                                    miniToastr.warn(error.response.data.message, "Atenção"); 
+                                                    // console.log(error.response.status);
+                                                    // console.log(error.response.headers);
+                                                } else if (error.request) {
+                                                    // The request was made but no response was received
+                                                    // console.log(error.request);
+                                                } else {
+                                                    // Something happened in setting up the request that triggered an Error
+                                                    // console.log('Error', error.message);
+                                                }
+                                            })
+                                            .finally(() => this.isSendingUpdate = false);
+                            
+                                })
+                                .catch(error => {
+                                    if(error.response.data.message.includes("Duplicate entry")){
+                                        miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
+                                    }else{
+                                        ApiService.process_request_error(error); 
+                                        miniToastr.error(error, "Erro adicionando Manager");  
+                                    }
+
+                                    // if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                    //     alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                    // else{
+                                    //     miniToastr.error(error, "Erro atualizando canal de comunicação"); 
+                                    // }
+                                    this.isSendingUpdate = false;
+                                });
                         })
-                    .catch(function(error) {
-                        // this.isSendingUpdate = false; 
+                    .catch(error => {
                         miniToastr.error(error, "Erro atualizando companhia"); 
+                        this.isSendingUpdate = false; 
                     });
-                    // .finally(() => this.isSendingUpdate = false);
             },
 
             deleteCompany: function(){
@@ -501,25 +525,23 @@
                                         //     this.closeModals();
                                         // }
                                     })
-                                    .catch(function(error) {
+                                    .catch(error => {
                                         ApiService.process_request_error(error);  
                                         miniToastr.error(error, "Erro eliminando empresa");                                        
                                     })
                                     .finally(() => this.isSendingDelete = false);
                             })
-                            .catch(function(error) {
+                            .catch(error => {
                                 ApiService.process_request_error(error);  
                                 miniToastr.error(error, "Erro eliminando o usuário"); 
                                 this.isSendingDelete = false;
-                            })
-                            .finally(() => this.isSendingDelete = false);
+                            });
                     })
-                    .catch(function(error) {
+                    .catch(error => {
                         ApiService.process_request_error(error); 
                         miniToastr.error(error, "Erro eliminando o usuário");  
                         this.isSendingDelete = false;
-                    })
-                    .finally(() => this.isSendingDelete = false);
+                    });
             },
 
             formReset:function(){
@@ -597,7 +619,7 @@
                         this.modelCompany.rua = response.data.logradouro;
                     })
                     .catch(function(error) {
-                        console.log(error);
+                        // console.log(error);
                         ApiService.process_request_error(error);  
                         miniToastr.error(error, "Erro validando CEP"); 
                     }).finally(() => {
@@ -675,9 +697,6 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O telefone da empresa é obrigatorio" );
-                    this.flagReference = false;
                 }
 
                 if(this.modelCompany.email && this.modelCompany.email !=''){
@@ -807,9 +826,6 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O telefone do manager da empresa é obrigatorio" );
-                    this.flagReference = false;
                 }
 
                 if(this.modelManager.whatsapp_id && this.modelManager.whatsapp_id !=''){

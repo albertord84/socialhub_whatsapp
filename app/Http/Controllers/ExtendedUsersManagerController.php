@@ -60,7 +60,7 @@ class ExtendedUsersManagerController extends UsersManagerController
         $User->password = bcrypt($User->password);
         $User->save();
         
-        return $usersManager->toJson();
+        return ($User)? $User->toJson() : null;
 
     }
 

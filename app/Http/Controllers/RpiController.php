@@ -159,6 +159,5 @@ class RpiController extends AppBaseController
         Flash::success('Rpi deleted successfully.');
 
         // return redirect(route('rpis.index'));
-        return $rpi->toJson();
     }
 }

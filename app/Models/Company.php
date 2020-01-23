@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string name
  * @property string phone
  * @property string email
+ * @property string rpi_id
  * @property string description
  */
 class Company extends Model
@@ -47,9 +48,6 @@ class Company extends Model
         'complemento',
         'bairro',
         'amount_attendants',
-
-
-
     ];
 
     /**
@@ -77,8 +75,6 @@ class Company extends Model
         'bairro'=> 'string',
         
         'amount_attendants'=> 'string',
-
-
     ];
 
     /**

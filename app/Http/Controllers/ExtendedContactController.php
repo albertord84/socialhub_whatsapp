@@ -77,26 +77,49 @@ class ExtendedContactController extends ContactController
     public function contactsFromCSV(CreateContactRequest $request)
     {
         $input = $request->all();
-
         $User = Auth::check() ? Auth::user() : session('logged_user');
+
         if ($file = $request->file('file')) {
 
             $csv = file_get_contents($file->getRealPath());
             $array = array_map("str_getcsv", explode("\n", $csv));
-            
             $json = json_encode($array);
-
             unlink($file->getRealPath());
             
             //insert contacts in database
             foreach($array as $contact){
                 try{
+                    // $name = $contact[0];
+                    // $name = trim($name);
+                    $whatsapp = $contact[1];
+                    $whatsapp= trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
+
                     $Contact = new Contact();
-                    $Contact->first_name = $contact[0];
-                    $Contact->company_id = $User->company_id;                
-                    //TODO-Egberto: conferir patron de telefone en php
-                    $Contact->whatsapp_id = $contact[1];
-                    $Contact->save();
+                    $Contact->company_id = $User->company_id;
+                    
+                    if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
+                        $Contact->first_name = trim($contact[0]);
+                    }
+                    if (preg_match("/^[5]{2}[1-9]{2}[1-9][0-9]{8}$/", $whatsapp) ) {
+                        $Contact->whatsapp_id = $whatsapp;
+                    }
+                    if ($contact[2] && filter_var(trim($contact[2]), FILTER_VALIDATE_EMAIL)) {
+                        $Contact->email = trim($contact[2]);
+                    }
+
+                    if ($contact[3] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[3])) {
+                        $Contact->facebook_id = trim($contact[3]);
+                    }
+                    if ($contact[4] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[4])) {
+                        $Contact->instagram_id = trim($contact[4]);
+                    }
+                    if ($contact[5] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[5])) {
+                        $Contact->linkedin_id = trim($contact[5]);
+                    }
+
+                    if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
+                        $Contact->save();
+                    }
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
@@ -135,13 +158,6 @@ class ExtendedContactController extends ContactController
 
         $contact = $this->contactRepository->findWithoutFail($id);
 
-        //TODO-JR-ALBERTO: um contato pode ser atualizado por:
-        //um atendente: atualiza dados do contato, status, atendente
-        //um admin: onde devo enviar o contact_atendant_id, por url ou nos dados?
-
-        // unset($input["status_id"]);
-        // unset($input["updated_at"]);
-
         if (empty($contact)) {
             Flash::error('Contact not found');
             return redirect(route('contacts.index'));
@@ -152,6 +168,7 @@ class ExtendedContactController extends ContactController
         Flash::success('Contact updated successfully.');
 
         // return redirect(route('contacts.index'));
+        return $contact->toJson();
     }
 
     /**

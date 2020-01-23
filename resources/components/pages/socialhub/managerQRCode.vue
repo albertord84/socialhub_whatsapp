@@ -167,7 +167,7 @@
             },
 
             logoutWhatsapp(){
-                ApiService.get('RPI/logout')
+                ApiService.post('RPI/logout')
                     .then(response => {
                         this.beforeRequest=true;
                         this.duringRequest=false;

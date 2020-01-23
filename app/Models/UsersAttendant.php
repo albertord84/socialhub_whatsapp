@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property \App\Models\User userManager
  * @property \Illuminate\Database\Eloquent\Collection attendantsContacts
  * @property \Illuminate\Database\Eloquent\Collection 
+ * @property integer user_id
+ * @property integer code
+ * @property integer selected_contact_id
  * @property integer user_manager_id
  * @property integer code
  */

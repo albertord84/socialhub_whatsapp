@@ -2,7 +2,7 @@
 
 var regexp={
     'complete_name':{
-        'regexp':'^[a-z A-ZáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.-]{2,150}$',
+        'regexp':'^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$',
         'error':'Confira a escrita do nome'
     },
     'cpf':{
@@ -23,11 +23,14 @@ var regexp={
     },
     'phone':{
         // 'regexp':'^(([5]{2} [1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([5]{2}[1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}))$',
-        'regexp':'^([5]{2} [1-9]{2} [2-7][0-9]{3}-[0-9]{4})$',
+        // 'regexp':'^([5]{2} [1-9]{2} [1-9][0-9]{3}-[0-9]{4})$',
+        'regexp':'^([5]{2} [1-9]{2} [1-9][0-9]{7})|([5]{2} [1-9]{2} [1-9][0-9]{8})$',
         'error':'Número de telefone inválido. Confira se o número inserido corresponde a um telefone fixo e que o DDD seja válido'
     },
     'whatsapp':{
-        'regexp':'^([5]{2} [1-9]{2} [9][0-9]{4}-[0-9]{4})$',
+        // 'regexp':'^(([5]{2} [1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([5]{2}[1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}))$',
+        // 'regexp':'^([5]{2} [1-9]{2} [1-9][0-9]{4}-[0-9]{4})$',
+        'regexp':'^([5]{2} [1-9]{2} [1-9][0-9]{7})|([5]{2} [1-9]{2} [1-9][0-9]{8})$',
         'error':'Número de whatsapp inválido. Confira se o número inserido corresponde a um telefone celular e que o DDD seja válido'
     },
     'date':{
@@ -45,11 +48,13 @@ var regexp={
     },
 
     'user':{
-        'regexp':'^[a-zA-Z0-9\._]{1,100}$',
+        // 'regexp':'^[a-zA-Z0-9\._]{1,100}$',
+        'regexp':'^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._]{1,100}$',
         'error':'Usuario inválido'
     },
     'password':{
-        'regexp':'^[a-zA-Z0-9\._]{4,15}$',
+        // 'regexp':'^[a-zA-Z0-9\._]{4,15}$',
+        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{4,15}$',
         'error':'Insira uma senha de entre 4 e 15 carateres, contendo letras e números'
     },
     
@@ -129,24 +134,28 @@ var regexp={
         'error':''
     },
     'street_address':{
-        'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
-        'error':'Comfira o nome da rua do endereço fornecido'
+        // 'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
+        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{2,80}$',
+        'error':'Confira o nome da rua do endereço fornecido'
     },
     'complement_address':{
-        'regexp':'^[a-zA-Z0-9.,/ áéíóúãõẽâîô]{2,80}$',
-        'error':'Comfira o complemento do endereço fornecido'
+        // 'regexp':'^[a-zA-Z0-9.,/ áéíóúãõẽâîô]{2,80}$',
+        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{2,80}$',
+        'error':'Confira o complemento do endereço fornecido'
     },
     'neighborhood_address':{
-        'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
-        'error':'Confira os dados do endereço'
+        // 'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
+        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{2,80}$',
+        'error':'Confira o nome do bairro do endereço fornecido'
     },
     'municipality_address':{
-        'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
-        'error':''
+        // 'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
+        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{2,80}$',
+        'error':'Confira o nome da cidade do endereço fornecido'
     },
     'state_address':{
         'regexp':'^[A-Z]{2}$',
-        'error':''
+        'error':'Confira que o estado do endereço fornecido esteje correto'
     },
     'house_number':{
         'regexp':'^[0-9]{1,7}$',

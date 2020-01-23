@@ -34,8 +34,10 @@ class ChatController extends AppBaseController
         $this->chatRepository->pushCriteria(new RequestCriteria($request));
         $chats = $this->chatRepository->all();
 
-        return view('chats.index')
-            ->with('chats', $chats);
+        // return view('chats.index')
+        //     ->with('chats', $chats);
+
+        $chats->toJson();
     }
 
     /**

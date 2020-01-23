@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCompanyRequest;
-use App\Http\Requests\UpdateCompanyRequest;
 use App\Repositories\ExtendedCompanyRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laracasts\Flash\Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
@@ -51,22 +50,22 @@ class ExtendedCompanyController extends CompanyController
         //     ->with('companies', $companies);
     }
 
-    public function store(CreateCompanyRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
-
         
         $company = $this->companyRepository->create($input);
-
+        
         Flash::success('Company saved successfully.');
 
         return $company->toJson();
         // return redirect(route('companies.index'));
     }
 
-    public function update($id, UpdateCompanyRequest $request)
+    public function update($id, Request $request)
     {
         $company = $this->companyRepository->findWithoutFail($id);
+        
 
         if (empty($company)) {
             // Flash::error('Company not found');
@@ -78,7 +77,7 @@ class ExtendedCompanyController extends CompanyController
 
         // Flash::success('Company updated successfully.');
 
-        // return redirect(route('companies.index'));
+        return $company->toJson();
     }
 
 
