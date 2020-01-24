@@ -309,13 +309,50 @@ var ApiService = {
     },
     delete: function _delete(resource) {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.delete(resource);
-
-        // return Vue.axios.delete(resource).catch(error => {
-        //     throw new Error(`[RWV] ApiService ${error}`);
-        // });
     },
-    process_request_error: function process_request_error(error) {
-        alert('An error exception occurred in PHP-Laravel, please open developer console and try again');
+    process_request_error: function process_request_error(error, url) {
+
+        var object = {
+            erro: "",
+            typeException: "", // "duplicateEntry", "expiredSection", 
+            typeMessage: "", // "error", "warn", "info", "succes",
+            message: ""
+        };
+
+        object.erro = error;
+
+        if (error.response) {
+
+            if (error.response.data.message.includes("Duplicate entry")) {
+
+                object.typeException = "duplicateEntry";
+                object.typeMessage = "warn";
+                if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
+                if (url == "contacts") object.message = "Onúmero de Whatsapp informado já está cadastrado.";
+            } else if (error.response.data.message.includes("of non-object")) {
+
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+            } else if (error.response.data.message.includes("")) {
+
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+            } else {
+
+                object.typeMessage = "error";
+                object.message = "Não foi possível finalizar a acção realizada!";
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            // console.log(error.request);
+        } else {
+                // Something happened in setting up the request that triggered an Error
+                // console.log('Error', error.message);
+            }
+
+        return object;
     }
 };
 

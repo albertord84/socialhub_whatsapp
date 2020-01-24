@@ -201,13 +201,6 @@
 
         methods: {  
             getCompanies: function() { //R
-                //  console.log(navigator.onLine);   
-                // if(!navigator.onLine){
-                //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                    
-                    
-                //     routes.push({name:'login'}); 
-                // }
                 ApiService.get(this.companies_url)
                     .then(response => {
                         this.rows = response.data;
@@ -225,15 +218,9 @@
                             // }
                         });
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("of non-object")){
-                            //  redireccionar para a pagina de login
-                            routes.push({name:'login'}); 
-                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
-                        }else{
-                            miniToastr.error(error, "Error carregando as empresas");
-                        }
+                    .catch(error => {
+                        // miniToastr.error(error, "Error carregando as empresas");
+                        this.processMessageError(error);
                     });
             }, 
 
@@ -257,16 +244,11 @@
                 this.companies_id = value.id;
                 this.rpi_id = value.rpi_id;
                 this.model_rpi={};
-                // console.log('aqui 1');
 
                 //manager data
                 ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
                     .then(response => {
                         try {
-                            
-                            // console.log('aqui 2');
-                            // console.log(response.data);
-
                             this.model_manager  = response.data[0];
                             for (var key in this.model_manager.user) { //pasar los campos del usuraio para el manager
                                 this.model_manager[key] = this.model_manager.user[key];
@@ -275,13 +257,15 @@
                             
                             //rpi datas
                             if(this.rpi_id){
+
                                 ApiService.get(this.rpi_url+'/'+this.rpi_id)
                                 .then(response => {
                                     this.model_rpi = response.data;
                                     this.modalEditCompanies = !this.modalEditCompanies;    
                                 })
-                                .catch(function(error) {
-                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                .catch(error => {
+                                    // miniToastr.error(error, "Erro obtendo canal de comunicação");
+                                    this.processMessageError(error);   
                                 });
 
                             }else{
@@ -293,12 +277,8 @@
                         }
                     })
                     .catch(error => {
-                        if (error.response && error.response.data.message.includes("")){
-                            //  redireccionar para a pagina de login
-                            this.reloadDatas();
-                        }else{
-                            miniToastr.error(error, "Erro obtendo Manager");   
-                        }
+                    //    miniToastr.error(error, "Erro obtendo Manager");   
+                        this.processMessageError(error);
                     });
             },
 
@@ -326,27 +306,22 @@
                                     this.model_rpi = response.data;
                                     this.modalDeleteCompanies = !this.modalDeleteCompanies;    
                                 })
-                                .catch(function(error) {
-                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                .catch(error => {
+                                    // miniToastr.error(error, "Erro obtendo canal de comunicação");
+                                    this.processMessageError(error);
                                 });
 
                             }else{
                                 this.modalDeleteCompanies = !this.modalDeleteCompanies;
                             }
-
-
                             
                         } catch (error) {
                             console.log(error);
                         }
                     })
                     .catch(error => {
-                        if (error.response && error.response.data.message.includes("")){
-                            //  redireccionar para a pagina de login
-                            this.reloadDatas();
-                        }else{
-                            miniToastr.error(error, "Erro obtendo Manager");   
-                        }
+                        // miniToastr.error(error, "Erro obtendo Manager");   
+                        this.processMessageError(error);
 
                     });
             },
@@ -448,6 +423,47 @@
             mycheck(){
                 alert("hi");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error) {
+                // // addCompany
+                // if (error.response && error.response.data.message.includes("of non-object")){
+                //     //  redireccionar para a pagina de login
+                //     routes.push({name:'login'}); 
+                //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                    
+                // }else{
+                //     miniToastr.error(error, "Error carregando as empresas");
+                // }
+                // //edit
+                // if (error.response && error.response.data.message.includes("")){
+                //     //  redireccionar para a pagina de login
+                //     this.reloadDatas();
+                // }else{
+                //     miniToastr.error(error, "Erro obtendo Manager");   
+                // }
+                // // delete
+                // if (error.response && error.response.data.message.includes("")){
+                //     //  redireccionar para a pagina de login
+                //     this.reloadDatas();
+                // }else{
+                //     miniToastr.error(error, "Erro obtendo Manager");   
+                // }
+
+                if (error.response && error.response.data.message.includes("of non-object")){
+                    //  redireccionar para a pagina de login
+                    routes.push({name:'login'}); 
+                    miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                    
+                }else if (error.response && error.response.data.message.includes("")){
+                    //  redireccionar para a pagina de login
+                    this.reloadDatas();
+                }else{
+                    miniToastr.error(error, "Não foi possível finalizar a acção realizada!"); 
+                }
+
+            }
+
         },
 
         beforeMount(){
