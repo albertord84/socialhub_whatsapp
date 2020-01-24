@@ -444,7 +444,7 @@
             },
 
             toggle_right() {
-               this.$store.commit('rightside_bar', "toggle");
+                this.$store.commit('rightside_bar', "toggle");
             },
 
             formCancel(){
