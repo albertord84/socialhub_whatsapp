@@ -25,6 +25,12 @@ const layout = [
         title: "Consultar o hardware",
     }
 },{
+    path: '/manager/bling',
+    component: resolve => require(['pages/socialhub/managerIntegrateBling'], resolve),
+    meta: {
+        title: "Integração com o Bling",
+    }
+},{
     path: '/manager/audio',
     component: resolve => require(['pages/socialhub/popups/handleRecordAudio'], resolve),
     meta: {
