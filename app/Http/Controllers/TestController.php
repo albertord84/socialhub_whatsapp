@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TestController extends AppBaseController
@@ -148,6 +149,11 @@ class TestController extends AppBaseController
         // $Controller = new ExtendedUsersSellerController($this->repository);
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
+    }
+
+    public function testsalesbling(Request $request)
+    {
+        Log::debug('Bling Test Sales: ', [$request->all()]);
     }
 
     public function getGuzzleRequest()
