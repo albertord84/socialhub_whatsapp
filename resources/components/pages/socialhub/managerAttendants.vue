@@ -100,6 +100,9 @@
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDAttendant from "./popups/managerCRUDAttendant";
+    
+    import routes from '../../../router/index'; // ECR
+
 
     export default {
         props: {
@@ -222,7 +225,14 @@
                         });
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os atendentes");   
+                        if (error.response && error.response.data.message.includes("of non-object")){
+                            //  redireccionar para a pagina de login
+                            routes.push({name:'login'}); 
+                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            
+                        }else{
+                            miniToastr.error(error, "Error carregando os atendentes");   
+                        }
                     });
             }, 
 
@@ -232,11 +242,18 @@
                         this.modelCompany = response.data[0];
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando a empresa do manager logado");   
+                        if (error.response && error.response.data.message.includes("of non-object")){
+                            //  redireccionar para a pagina de login
+                            routes.push({name:'login'}); 
+                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            
+                        }else{
+                            miniToastr.error(error, "Error carregando a empresa do manager logado");   
+                        }
                     });
             }, 
 
-            handleAddAttendant(){ //TODO-Egberto
+            handleAddAttendant(){ //TODO-Egberto (OK)
                 if(this.modelCompany.amount_attendants > this.rows.length){
                     this.modalAddAttendant = !this.modalAddAttendant;
                 }else{

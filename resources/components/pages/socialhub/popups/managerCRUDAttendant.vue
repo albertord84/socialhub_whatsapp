@@ -26,13 +26,13 @@
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                        <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
                     </div>  
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
@@ -165,28 +165,36 @@
 
                 //isert user
                 ApiService.post(this.first_url, model_cpy)
-                .then(response => {
-                    //isert userAttendant
-                    ApiService.post(this.url, { 
-                        'user_id':response.data.id,
-                        'user_manager_id':JSON.parse(localStorage.user).id
+                    .then(response => {
+                        //isert userAttendant
+                        ApiService.post(this.url, { 
+                            'user_id':response.data.id,
+                            'user_manager_id':JSON.parse(localStorage.user).id
+                            })
+                            .then(response => {
+                                miniToastr.success("Atendente adicionado com sucesso","Sucesso");
+                                this.formReset();
+                                this.reload();
+                                this.closeModals();
+                            })
+                        .catch(function(error) {
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro adicionando Atendente");
                         })
-                        .then(response => {
-                            miniToastr.success("Atendente adicionado com sucesso","Sucesso");
-                            this.formReset();
-                            this.reload();
-                            this.closeModals();
-                        })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando Atendente");  
+                        .finally(() => this.isSendingInsert = false);
                     })
-                    .finally(() => this.isSendingInsert = false);
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
-                });
+                    // .catch(function(error) {
+                    .catch(error => {
+                        
+                        if(error.response.data.message.includes("Duplicate entry")){
+                            miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
+                        }else{
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro adicionando usuáio");  
+                        }
+                        this.isSendingInsert = false;
+                    });
+                    // .finally(() => this.isSendingInsert = false);
             },
             
             editAttendant: function() { //U
@@ -237,8 +245,14 @@
                             this.closeModals();
                     })
                     .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando Atendente"); 
+                        // ApiService.process_request_error(error);  
+                        // miniToastr.error(error, "Erro atualizando Atendente"); 
+                        if(error.response.data.message.includes("Duplicate entry")){
+                            miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
+                        }else{
+                            ApiService.process_request_error(error); 
+                            miniToastr.error(error, "Erro adicionando Atendente");
+                        }
                     })
                     .finally(() => this.isSendingUpdate = false);
             },

@@ -133,6 +133,8 @@
     import ApiService from "../../../common/api.service";
     import managerCRUDContact from "./popups/managerCRUDContact";
 
+    import routes from '../../../router/index'; //ECR
+
     export default {
         props: {
             title: {
@@ -251,7 +253,14 @@
                         });
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                        if (error.response && error.response.data.message.includes("of non-object")){
+                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            //  redireccionar para a pagina de login
+                            routes.push({name:'login'}); 
+                            
+                        }else{
+                            miniToastr.error(error, "Error carregando os contatos");
+                        }
                     });
             }, 
 
@@ -331,7 +340,14 @@
                         });
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os atendentes");   
+                        if (error.response && error.response.data.message.includes("of non-object")){
+                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            //  redireccionar para a pagina de login
+                            routes.push({name:'login'}); 
+                            
+                        }else{
+                            miniToastr.error(error, "Error carregando os atendentes");   
+                        } 
                     });
             }, 
 

@@ -485,14 +485,14 @@
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-phone fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <div v-show="isEditingContact">
@@ -731,6 +731,8 @@
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
     import MicRecorder from "mic-recorder-to-mp3"; 
+
+    import routes from '../../../router/index'; //ECR
     
     // import OpusMediaRecorder from 'opus-media-recorder';
 
@@ -931,7 +933,7 @@
             getContacts: function() { //R
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken
-                })
+                    })
                     .then(response => {
                         this.contacts = response.data;
                         var This = this, i = 0;
@@ -953,7 +955,15 @@
                         this.amountContactsInBag = response.data;                        
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                        if (error.response && error.response.data.message.includes("of non-object")){
+                            //  redireccionar para a pagina de login
+                            routes.push({name:'login'}); 
+                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            
+                        }else{
+                            miniToastr.error(error, "Error carregando os contatos");
+                            // miniToastr.error(error, "Error carregando as empresas");
+                        }
                     });
             },
 
@@ -1085,23 +1095,23 @@
                 }
                         
                 ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
-                .then(response => {
-                    if(this.isEditingContact)
-                        this.isEditingContact = false;
-                    if(this.isEditingContactSummary)
-                        this.isEditingContactSummary = false;
-                    miniToastr.success("Contato atualizado com sucesso.","Sucesso");
-                    this.getContacts();
-                })
-                .catch(function(error) {
-                    if (error.response && error.response.data.message.includes("Duplicate entry")){
-                        miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
-                    }else{
-                        ApiService.process_request_error(error);
-                        miniToastr.error(error, "Erro adicionando contato");
-                    }
-                })
-                .finally(() => this.isUpdatingContact = false);
+                    .then(response => {
+                        if(this.isEditingContact)
+                            this.isEditingContact = false;
+                        if(this.isEditingContactSummary)
+                            this.isEditingContactSummary = false;
+                        miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                        this.getContacts();
+                    })
+                    .catch(function(error) {
+                        if (error.response && error.response.data.message.includes("Duplicate entry")){
+                            miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
+                        }else{
+                            ApiService.process_request_error(error);
+                            miniToastr.error(error, "Erro adicionando contato");
+                        }
+                    })
+                    .finally(() => this.isUpdatingContact = false);
             },
 
             chatMessageScroling: function(value){
