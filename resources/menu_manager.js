@@ -16,21 +16,13 @@ const menu_items = [
         link: '/manager/hardware',
         icon: 'mdi mdi-chip'
     }, {
-        name: 'Bling',
-        icon: 'mdi mdi-exclamation-thick mdi-rotate-45',
+        name: 'Integrações',
+        icon: 'mdi mdi-settings-transfer-outline',
         child: [
             {
-                name: 'Integração',
+                name: 'Bling',
                 link: '/manager/bling',
-                icon: 'fa fa-angle-double-right'
-            }, {
-                name: 'Mensagens',
-                link: '/cart_details',
-                icon: 'fa fa-angle-double-right'
-            }, {
-                name: 'Vendas',
-                link: '/cart_details',
-                icon: 'fa fa-angle-double-right'
+                icon: 'mdi mdi-exclamation-thick mdi-rotate-45'
             }
         ]
 },
