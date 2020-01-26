@@ -219,8 +219,13 @@
                         });
                     })
                     .catch(error => {
-                        // miniToastr.error(error, "Error carregando as empresas");
-                        this.processMessageError(error);
+                        var info = ApiService.process_request_error(error, this.companies_url,"get");
+                        if(info.typeException == "expiredSection"){
+                            miniToastr.warn(info.message,"Atenção");
+                            routes.push({name:'login'}); 
+                        }else{
+                            this.processMessageError(error, this.companies_url,"get");
+                        }
                     });
             }, 
 
@@ -264,8 +269,7 @@
                                     this.modalEditCompanies = !this.modalEditCompanies;    
                                 })
                                 .catch(error => {
-                                    // miniToastr.error(error, "Erro obtendo canal de comunicação");
-                                    this.processMessageError(error);   
+                                    this.processMessageError(error, this.rpi_url, "get");   
                                 });
 
                             }else{
@@ -277,8 +281,7 @@
                         }
                     })
                     .catch(error => {
-                    //    miniToastr.error(error, "Erro obtendo Manager");   
-                        this.processMessageError(error);
+                        this.processMessageError(error, this.usersManager_url, "get");
                     });
             },
 
@@ -307,8 +310,7 @@
                                     this.modalDeleteCompanies = !this.modalDeleteCompanies;    
                                 })
                                 .catch(error => {
-                                    // miniToastr.error(error, "Erro obtendo canal de comunicação");
-                                    this.processMessageError(error);
+                                    this.processMessageError(error, this.rpi_url, "get");
                                 });
 
                             }else{
@@ -320,12 +322,9 @@
                         }
                     })
                     .catch(error => {
-                        // miniToastr.error(error, "Erro obtendo Manager");   
-                        this.processMessageError(error);
-
+                        this.processMessageError(error, this.usersManager_url, "get");
                     });
             },
-
 
 
             //------ Specific DataTable methods------------
@@ -425,43 +424,20 @@
             },
 
             //------ Specific exceptions methods------------
-            processMessageError: function(error) {
-                // // addCompany
-                // if (error.response && error.response.data.message.includes("of non-object")){
-                //     //  redireccionar para a pagina de login
-                //     routes.push({name:'login'}); 
-                //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                    
-                // }else{
-                //     miniToastr.error(error, "Error carregando as empresas");
-                // }
-                // //edit
-                // if (error.response && error.response.data.message.includes("")){
-                //     //  redireccionar para a pagina de login
-                //     this.reloadDatas();
-                // }else{
-                //     miniToastr.error(error, "Erro obtendo Manager");   
-                // }
-                // // delete
-                // if (error.response && error.response.data.message.includes("")){
-                //     //  redireccionar para a pagina de login
-                //     this.reloadDatas();
-                // }else{
-                //     miniToastr.error(error, "Erro obtendo Manager");   
-                // }
+            processMessageError: function(error, url, action) {
+                
+                var info = ApiService.process_request_error(error, url, action);
 
-                if (error.response && error.response.data.message.includes("of non-object")){
-                    //  redireccionar para a pagina de login
-                    routes.push({name:'login'}); 
-                    miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                    
-                }else if (error.response && error.response.data.message.includes("")){
-                    //  redireccionar para a pagina de login
-                    this.reloadDatas();
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    // this.reloadDatas(); // ECR eliminar esto, encontrar otra solicion
+                    this.$router.push({name:'login'});
+                    // this.$router.push({name: link});
+                }else if(info.typeException == "duplicateEntry"){
+                    miniToastr.warn(info.message,"Atenção");
                 }else{
-                    miniToastr.error(error, "Não foi possível finalizar a acção realizada!"); 
+                    miniToastr.error(info.erro, info.message); 
                 }
-
             }
 
         },

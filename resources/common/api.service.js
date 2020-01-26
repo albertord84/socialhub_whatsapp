@@ -64,7 +64,7 @@ const ApiService = {
         return Vue.axios.delete(resource);
     },
 
-    process_request_error(error, url) {
+    process_request_error(error, url, action) {
 
         var object = {
             erro: "",
@@ -82,25 +82,61 @@ const ApiService = {
                 object.typeException = "duplicateEntry";
                 object.typeMessage = "warn";
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
-                if (url == "contacts") object.message = "Onúmero de Whatsapp informado já está cadastrado.";
-   
+                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
+                
             }else if (error.response.data.message.includes("of non-object")){
-
+                
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
                 object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
-            
+                
             }else if (error.response.data.message.includes("")){
-
+                
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
                 object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
-
+                
             }else{
-
+                
                 object.typeMessage = "error";
-                object.message = "Não foi possível finalizar a acção realizada!";
+                if (url == "users" && action == "get") object.message = "Erro carregando usuário.";
+                if (url == "users" && action == "add") object.message = "Erro adicionando usuário.";
+                if (url == "users" && action == "update") object.message = "Erro atualizando usuário.";
+                if (url == "users" && action == "delete") object.message = "Erro eliminando usuário.";
 
+                if (url == "usersSeller" && action == "get") object.message = "Erro carregando seller.";
+                if (url == "usersSeller" && action == "add") object.message = "Erro adicionando seller.";
+                if (url == "usersSeller" && action == "update") object.message = "Erro atualizando seller.";
+                if (url == "usersSeller" && action == "delete") object.message = "Erro eliminando seller.";
+
+                if (url == "usersManagers" && action == "get") object.message = "Erro obtendo manager.";
+                if (url == "usersManagers" && action == "add") object.message = "Erro adicionando manager.";
+                if (url == "usersManagers" && action == "update") object.message = "Erro atualizando manager.";
+                if (url == "usersManagers" && action == "delete") object.message = "Erro eliminando manager.";
+
+                if (url == "usersAttendants" && action == "get") object.message = "Erro carregando attendente.";
+                if (url == "usersAttendants" && action == "add") object.message = "Erro adicionando attendente.";
+                if (url == "usersAttendants" && action == "update") object.message = "Erro atualizando attendente.";
+                if (url == "usersAttendants" && action == "delete") object.message = "Erro eliminando attendente.";
+
+                if (url == "contacts" && action == "get") object.message = "Erro carregando contato.";
+                if (url == "contacts" && action == "add") object.message = "Erro adicionando contato.";
+                if (url == "contacts" && action == "update") object.message = "Erro atualizando contato.";
+                if (url == "contacts" && action == "delete") object.message = "Erro eliminando contato.";
+                
+                if (url == "companies" && action == "get") object.message = "Erro carregando empresa";
+                if (url == "companies" && action == "add") object.message = "Erro adicionando empresa";
+                if (url == "companies" && action == "update") object.message = "Erro atualizando empresa";
+                if (url == "companies" && action == "delete") object.message = "Erro eliminando empresa";
+                
+                if (url == "rpis" && action == "get") object.message = "Erro obtendo canal de comunicação";
+                if (url == "rpis" && action == "add") object.message = "Erro adicionando canal de comunicação";
+                if (url == "rpis" && action == "update") object.message = "Erro atualizando canal de comunicação";
+                if (url == "rpis" && action == "delete") object.message = "Erro eliminando canal de comunicação";
+
+                if (url == "cep" && action == "get") object.message = "Erro validando CEP.";
+                
+                // if (url == "attendantsContacts") object.message = "Error carregando as empresas.";
             }
 
         } else if (error.request) {

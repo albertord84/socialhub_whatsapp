@@ -177,7 +177,7 @@
                             this.reload();
                             this.formCancel();
                         })
-                        .catch(function(error) {
+                        .catch(error => {
                             console.log(error);
                             if (error.response) {
                                 console.log('error.response');
@@ -282,7 +282,7 @@
                                         this.reload();
                                         this.formCancel();
                                     })
-                                    .catch(function(error) {
+                                    .catch(error => {
                                         ApiService.process_request_error(error); 
                                         miniToastr.error(error, "Erro atualizando contato");  
                                     })

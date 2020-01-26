@@ -224,15 +224,23 @@
                             //TODO-JR: adicionar o nome do status a cada registro
                         });
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("of non-object")){
-                            //  redireccionar para a pagina de login
+                    .catch(error => {
+                        var info = ApiService.process_request_error(error, this.url,"get");
+                        if(info.typeException == "expiredSection"){
+                            miniToastr.warn(info.message,"Atenção");
                             routes.push({name:'login'}); 
-                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
                         }else{
-                            miniToastr.error(error, "Error carregando os atendentes");   
+                            this.processMessageError(error, this.url,"get");
                         }
+
+                        // if (error.response && error.response.data.message.includes("of non-object")){
+                        //     //  redireccionar para a pagina de login
+                        //     routes.push({name:'login'}); 
+                        //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                            
+                        // }else{
+                        //     miniToastr.error(error, "Error carregando os atendentes");   
+                        // }
                     });
             }, 
 
@@ -241,15 +249,24 @@
                     .then(response => {
                         this.modelCompany = response.data[0];
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("of non-object")){
-                            //  redireccionar para a pagina de login
-                            routes.push({name:'login'}); 
-                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
+                    .catch(error => {
+                        // if (error.response && error.response.data.message.includes("of non-object")){
+                        //     //  redireccionar para a pagina de login
+                        //     routes.push({name:'login'}); 
+                        //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
                             
+                        // }else{
+                        //     miniToastr.error(error, "Error carregando a empresa do manager logado");   
+                        // }
+
+                        var info = ApiService.process_request_error(error, this.company_url,"get");
+                        if(info.typeException == "expiredSection"){
+                            miniToastr.warn(info.message,"Atenção");
+                            routes.push({name:'login'}); 
                         }else{
-                            miniToastr.error(error, "Error carregando a empresa do manager logado");   
+                            this.processMessageError(error, this.company_url,"get");
                         }
+
                     });
             }, 
 
@@ -382,6 +399,21 @@
             mycheck(){
                 alert("hi");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                
+                var info = ApiService.process_request_error(error, url, action);
+
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.reloadDatas();
+                }else if(info.typeException == "duplicateEntry"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         beforeMount(){

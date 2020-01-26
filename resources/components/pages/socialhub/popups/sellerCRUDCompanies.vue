@@ -360,36 +360,23 @@
                                             this.closeModals();
                                         })
                                         .catch(error => {
-                                            // console.log("estou aqui agora");
-                                            // miniToastr.error(error, "Erro adicionando Manager");  
-                                            // ApiService.process_request_error(error);
-                                            
                                             // TODO: ECR=> aqui se deveria tratar a execção de seação expirado, quando se add uma empressa.
                                             // ECR=> esta generando un error porque no se valia el email. preguntar a jose
                                             
-                                            this.processMessageError(error);
+                                            this.processMessageError(error, this.usersManager_url, "add");
                                         })
                                         .finally(() => this.isSendingInsert = false);
                             })
                             .catch(error => {
-                                // if(error.response.data.message.includes("Duplicate entry")){
-                                //     miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                                // }else{
-                                //     miniToastr.error(error, "Erro adicionando Manager");  
-                                //     ApiService.process_request_error(error); 
-                                // }
                                 // TODO. ECR=> Aqui deveria ser eliminada do BD a acompanhia adicionada no passo anterior.
                                 //              Para que não fiquem inconsistensias no BD. 
                                 
-                                this.processMessageError(error);
+                                this.processMessageError(error, this.users_url, "add");
                                 this.isSendingInsert = false;
                             });
                     })
                     .catch(error => {
-                        // miniToastr.error(error, "Erro adicionando Empresa");  
-                        // ApiService.process_request_error(error);
-
-                        this.processMessageError(error);
+                        this.processMessageError(error, this.companies_url, "add");
                         this.isSendingInsert = false; 
 
                     });
@@ -461,35 +448,14 @@
                                                 this.closeModals();
                                             })
                                         .catch(error => {
-                                            // if (error.response) {
-                                            //     // Request made and server responded
-                                            //     // console.log(error.response.data);
-                                            //     // console.log(error.response.data.message);
-                                            //     miniToastr.warn(error.response.data.message, "Atenção"); 
-                                            //     // console.log(error.response.status);
-                                            //     // console.log(error.response.headers);
-                                            // } else if (error.request) {
-                                            //     // The request was made but no response was received
-                                            //     // console.log(error.request);
-                                            // } else {
-                                            //     // Something happened in setting up the request that triggered an Error
-                                            //     // console.log('Error', error.message);
-                                            // }
-
-                                            this.processMessageError(error);
+                                            this.processMessageError(error, this.rpi_url, "update");
                                         })
                                         .finally(() => this.isSendingUpdate = false);
-                        
                             })
                             .catch(error => {
-                                // //ECR
-                                // if(error.response.data.message.includes("Duplicate entry")){
-                                //     miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                                // }else{
-                                //     ApiService.process_request_error(error); 
-                                //     miniToastr.error(error, "Erro adicionando Manager");  
-                                // }
-                                
+                                this.processMessageError(error, this.users_url, "update");
+                                this.isSendingUpdate = false;
+
                                 //JOSE
                                 // if(!this.modelRpi.id && this.modelRpi.mac!='')
                                 //     alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
@@ -497,13 +463,10 @@
                                 //     miniToastr.error(error, "Erro atualizando canal de comunicação"); 
                                 // }
 
-                                this.processMessageError(error, this.users_url);
-                                this.isSendingUpdate = false;
                             });
                     })
                     .catch(error => {
-                        // miniToastr.error(error, "Erro atualizando companhia"); 
-                        this.processMessageError(error, this.companies_url);
+                        this.processMessageError(error, this.companies_url, "update");
                         this.isSendingUpdate = false; 
                     });
             },
@@ -530,8 +493,7 @@
                                                     this.closeModals();
                                         //         })
                                         //         .catch(error => {
-                                                    // ApiService.process_request_error(error);  
-                                                    // miniToastr.error(error, "Erro eliminando canal de comunicação"); 
+                                                    // this.processMessageError(error, this.rpi_url, "delete");
                                         //         });
                                         // }else{
                                         //     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
@@ -540,26 +502,17 @@
                                         // }
                                     })
                                     .catch(error => {
-                                        // ApiService.process_request_error(error);  
-                                        // miniToastr.error(error, "Erro eliminando empresa");     
-                                        
-                                        this.processMessageError(error);
+                                        this.processMessageError(error,this.companies_url, "delete");
                                     })
                                     .finally(() => this.isSendingDelete = false);
                             })
                             .catch(error => {
-                                // ApiService.process_request_error(error);  
-                                // miniToastr.error(error, "Erro eliminando o usuário");
-                                
-                                this.processMessageError(error);
+                                this.processMessageError(error, this.users_url, "delete");
                                 this.isSendingDelete = false;
                             });
                     })
                     .catch(error => {
-                        // ApiService.process_request_error(error); 
-                        // miniToastr.error(error, "Erro eliminando o usuário");  
-
-                        this.processMessageError(error);
+                        this.processMessageError(error, this.usersManager_url, "delete");
                         this.isSendingDelete = false;
                     });
             },
@@ -644,11 +597,10 @@
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
                     })
-                    .catch(function(error) {
-                        // console.log(error);
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro validando CEP"); 
-                    }).finally(() => {
+                    .catch(error => {
+                        this.processMessageError(error, "cep", "get");
+                    })
+                    .finally(() => {
                         Vue.axios.defaults.baseURL = "";
                         this.isSendingValidationCEP = false;
                     });
@@ -956,47 +908,18 @@
             },
 
             //------ Specific exceptions methods------------
-            processMessageError: function(error, url){
+            processMessageError: function(error, url, action){
 
-                var info = ApiService.process_request_error(error, url); 
-                console.log("info");
-                console.log(info);
+                var info = ApiService.process_request_error(error, url, action);
 
-                // // if (error.response) {
-                //     console.log(error);
-                //     console.log(error.response);
-                //     console.log(error.response.data);
-                //     console.log(error.response.data.message);
-                //     // if (error.response && error.response.data.message.includes("of non-object")){
-                //     //     //  redireccionar para a pagina de login
-                //     //     routes.push({name:'login'}); 
-                //     //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                        
-                //     // }else if (error.response && error.response.data.message.includes("")){
-
-                //     //     //  redireccionar para a pagina de login
-                //     //     this.reload();
-
-                //     // }else
-                //      if(error.response &&  error.response.data.message.includes("Duplicate entry")){
-
-                //         miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-
-                //     }else{
-
-                //         miniToastr.error(error, "Não foi possível finalizar a acção realizada!");  
-                //         // ApiService.process_request_error(error); 
-
-                //     }
-
-                // } else if (error.request) {
-                //     // The request was made but no response was received
-                //     // console.log(error.request);
-                // } else {
-                //     // Something happened in setting up the request that triggered an Error
-                //     // console.log('Error', error.message);
-                // }
-
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.reload();
+                }else if(info.typeException == "duplicateEntry"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
             }
         },
 
