@@ -7,11 +7,11 @@ const menu_items = [
         name: 'Atendentes',
         link: '/manager/attendant',
         icon: ' fa fa-headphones'
-     }, {
+    }, {
         name: 'QRCode',
         link: '/manager/qrcode',
         icon: ' fa fa-qrcode'
-     }, {
+    }, {
         name: 'Hardware',
         link: '/manager/hardware',
         icon: 'mdi mdi-chip'
@@ -28,7 +28,7 @@ const menu_items = [
 },
      
 
-     
+    
     // {
     //     name: 'Dashboard',
     //     link: '/manager',
@@ -40,8 +40,6 @@ const menu_items = [
     //      link: '/manager/company',
     //      icon: ' fa fa-building-o'
     //  },
-
-   
     
 ];
 export default menu_items;

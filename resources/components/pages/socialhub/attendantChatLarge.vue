@@ -505,7 +505,7 @@
                         <!-- Nota resumo -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="container-fluid">
-                                <div class="row flex-baseline" >
+                                <div class="row flex-baseline">
                                     <div class="col-1 pt-2 pb-2">
                                         <i class="mdi mdi-account-badge-horizontal-outline fa-1_5x text-muted" aria-hidden="true"></i>
                                     </div>
