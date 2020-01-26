@@ -106,14 +106,22 @@
             "vue"
         ],
         "transform": {
-            ".*\\.(vue)$": "vue-jest",
+            ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
             "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
         },
         "moduleNameMapper": {
             "^@/(.*)$": "<rootDir>/src/$1"
         },
         "snapshotSerializers": [
-            "jest-serializer-vue"
+            "<rootDir>/node_modules/jest-serializer-vue"
+        ],
+        "moduleDirectories": [
+            "node_modules",
+            "src"
+        ],
+        "transformIgnorePatterns": [
+            "/node_modules/(?!vue-awesome)",
+            "/node_modules/(?!mini-toastr)"
         ]
     }
 }

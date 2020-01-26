@@ -20,24 +20,21 @@ window.axios.defaults.headers.common = {
 }
 
 // Google Analytics
-const google_analytics_key = store.state.google_analytics_key
-
-if (google_analytics_key && google_analytics_key.length) {
-
-    Vue.use(VueAnalytics, {
-        id: google_analytics_key,
-        router,
-        checkDuplicatedScript: true,
-        autoTracking: {
-            pageviewTemplate(route) {
-                return {
-                    page: 'default/' + route.path
-                }
-            }
-        }
-    })
-
-}
+// const google_analytics_key = store.state.google_analytics_key
+// if (google_analytics_key && google_analytics_key.length) {
+//     Vue.use(VueAnalytics, {
+//         id: google_analytics_key,
+//         router,
+//         checkDuplicatedScript: true,
+//         autoTracking: {
+//             pageviewTemplate(route) {
+//                 return {
+//                     page: 'default/' + route.path
+//                 }
+//             }
+//         }
+//     })
+// }
 
 // Remove the productionTip in dev tool console
 Vue.config.productionTip = false

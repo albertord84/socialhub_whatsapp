@@ -102,8 +102,8 @@
     import Vue from 'vue'
 
     import VueForm from "vue-form";
-    import options from "src/validations/validations.js";
-    import ApiService from "../../common/api.service";
+    import options from "../../validations/validations.js";
+    import ApiService from "../../common/api.service.js";
 
     import miniToastr from "mini-toastr";
     miniToastr.init();
@@ -116,7 +116,7 @@
         data() {
             return {
                 formstate: {},
-                show_error: false,
+                show_error: falsevalidations,
                 model: {
                     email: "",
                     password: ""

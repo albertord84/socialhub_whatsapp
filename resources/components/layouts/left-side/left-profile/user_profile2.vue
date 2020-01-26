@@ -11,7 +11,7 @@
                         <div class="col-md-3"><a href="#/user_profile" title="User Profile"><i class="fa fa-user-o"></i></a></div>
                         <div class="col-md-3"><a href="#/lockscreen" title="Lock screen"><i class="fa fa-lock"  aria-hidden="true"></i></a></div>
                         <div class="col-md-3"><a href="#/edit_profile"
-                                                 title="E-mail"><i class="fa fa-cog"></i></a></div>
+                                                title="E-mail"><i class="fa fa-cog"></i></a></div>
                         <div class="col-md-3 logout_padd"><a href="#/login" title="Logout"><i class="fa fa-sign-out"></i></a></div>
                     </div>
                 </div>

@@ -7,8 +7,12 @@
     import Vue from "vue";
     import BootstrapVue from 'bootstrap-vue';
     import ToggleButton from 'vue-js-toggle-button';
-    Vue.use(ToggleButton)
+    Vue.use(ToggleButton);
     Vue.use(BootstrapVue);
+    
+    import VueRouter from 'vue-router';
+    Vue.use(VueRouter);
+
 
     export default {
         name: 'app'
