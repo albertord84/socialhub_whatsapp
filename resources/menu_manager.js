@@ -15,7 +15,17 @@ const menu_items = [
         name: 'Hardware',
         link: '/manager/hardware',
         icon: 'mdi mdi-chip'
-     }, 
+     }, {
+        name: 'Integrações',
+        icon: 'mdi mdi-settings-transfer-outline',
+        child: [
+            {
+                name: 'Bling',
+                link: '/manager/bling',
+                icon: 'mdi mdi-exclamation-thick mdi-rotate-45'
+            }
+        ]
+},
      
 
      
