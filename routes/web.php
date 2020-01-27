@@ -16,6 +16,10 @@
 //     die("ok");
 // });
 
+// https://app.socialhub.pro/testsalesbling
+Route::post('testsalesbling', 'TestController@testsalesbling');
+Route::get('testsalesbling', 'TestController@testsalesbling');
+
 Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
     Route::post('reciveTextMessage', 'ExternalRPIController@reciveTextMessage');

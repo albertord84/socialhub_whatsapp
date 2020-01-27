@@ -35,9 +35,11 @@ const ApiService = {
             params = '?' + _.keys(slug).filter(key => (slug[key] != null && slug[key] !== 'null'))
                 .map(key => key + '=' + slug[key]).join('&');
         }
-        return Vue.axios.get(`${resource}${params}`).catch(error => {
-            throw new Error(`[RWV] ApiService ${error}`);
-        });
+        return Vue.axios.get(`${resource}${params}`);
+        //ECR
+        // return Vue.axios.get(`${resource}${params}`).catch(error => {
+        //     throw new Error(`[RWV] ApiService ${error}`);
+        // });
     },
 
     post(resource, params) {

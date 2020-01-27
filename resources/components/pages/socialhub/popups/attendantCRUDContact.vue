@@ -24,7 +24,7 @@
                     <div class="input-group-prepend">
                         <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp (*)" style="background-color:white"></span>
                     </div>
-                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ## #####-####'" title="Ex: 55 11 98888-8888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
+                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
                     <div class="input-group-append" title="Conferir número">
                         <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber">
                             <span v-if="!isCheckingWhatsapp" class="fa fa-check"></span>
@@ -60,7 +60,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" v-mask="'55 ## ####-####'" title="Ex: 55 11 8888-8888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
+                            <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
                         </div>
                     </div>
                 </div>                
@@ -247,55 +247,55 @@
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
                 ApiService.post(this.url,model_cpy)
-                .then(response => {
-                    if (this.contact_atendant_id) {
-                        ApiService.post(this.secondUrl,{
-                            'id':1, //TODO: el id debe ser autoincremental, no devo estar mandandolo
-                            'contact_id':response.data.id,
-                            'attendant_id':this.contact_atendant_id,
-                        })
-                        .then(response => {
-                            this.whatssapChecked = false;
-                            miniToastr.success("Contato adicionado com sucesso.","Sucesso");
-                            this.formReset();
-                            this.toggle_left('close');
+                    .then(response => {
+                        if (this.contact_atendant_id) {
+                            ApiService.post(this.secondUrl,{
+                                'id':1, //TODO: el id debe ser autoincremental, no devo estar mandandolo
+                                'contact_id':response.data.id,
+                                'attendant_id':this.contact_atendant_id,
+                            })
+                            .then(response => {
+                                this.whatssapChecked = false;
+                                miniToastr.success("Contato adicionado com sucesso.","Sucesso");
+                                this.formReset();
+                                this.toggle_left('close');
+                                this.reload();
+                            })
+                            .catch(function(error) {
+                                ApiService.process_request_error(error); 
+                                miniToastr.error(error, "Erro adicionando contato");  
+                            })
+                            .finally(() => this.isSendingInsert = false);
+                        }else{
                             this.reload();
-                        })
-                        .catch(function(error) {
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando contato");  
-                        })
-                        .finally(() => this.isSendingInsert = false);
-                    }else{
-                        this.reload();
-                        this.formCancel();
-                    }
-                })
-                .catch(function(error) {
-                    if (error.response) {
-                        console.log('error.response');
-                        console.log(error.response.data);
-                        console.log(error.response.data.message);
-                        if(error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Erro");
+                            this.formCancel();
                         }
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
+                    })
+                    .catch(function(error) {
+                        if (error.response) {
+                            console.log('error.response');
+                            console.log(error.response.data);
                             console.log(error.response.data.message);
+                            if(error.response.data.message.includes("Duplicate entry")){
+                                miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
+                            }
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                            if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
+                                console.log(error.response.data.message);
+                            }
+                        } else
+                        if (error.request) {
+                            console.log('error.request');
+                            console.log(error.request);
+                        } else{
+                            console.log('some another error');
+                            console.log(error.message);
                         }
-                    } else
-                    if (error.request) {
-                        console.log('error.request');
-                        console.log(error.request);
-                    } else{
-                        console.log('some another error');
-                        console.log(error.message);
-                    }
-                    console.log('error config');
-                    console.log(error.config);
-                })
-                .finally(() => this.isSendingInsert = false);
+                        console.log('error config');
+                        console.log(error.config);
+                    })
+                    .finally(() => this.isSendingInsert = false);
             },
 
             editContact: function(){
@@ -391,7 +391,13 @@
 
             checkWhatsappNumber:function(){
                 this.isCheckingWhatsapp = true;
-                ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
+
+                var model_cpy = Object.assign({}, this.model);                //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+
+                // ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
+                ApiService.get('RPI/getContactInfo/'+model_cpy.whatsapp_id)
                     .then(response => {
                         this.whatsappDatas = response.data;
                         if(response.data.picurl.length==0)
@@ -438,7 +444,7 @@
             },
 
             toggle_right() {
-               this.$store.commit('rightside_bar', "toggle");
+                this.$store.commit('rightside_bar', "toggle");
             },
 
             formCancel(){
@@ -479,10 +485,8 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
-                    this.flagReference = false;
                 }
+                
                 if(this.model.last_name && this.model.last_name !=''){
                     check = validation.check('complete_name', this.model.last_name)
                     if(check.success==false){

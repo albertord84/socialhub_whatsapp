@@ -246,43 +246,54 @@ class ExternalRPIController extends Controller
     {
         try {
             $input = $request->all();
-            // Log::debug('reciveTextMessage: ', [$input]);
-    
+            Log::debug('reciveTextMessage: ', [$input]);
+
             $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
             $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
-    
+
             $contact_Jid = $input['Jid'];
             $company_phone = $input['CompanyPhone'];
-    
-            $Company = Company::where(['phone' => $company_phone])->first();
+
+            $Company = Company::where(['whatsapp' => $company_phone])->first();
+            // $Company = Company::where(['whatsapp' => $company_phone])->first();
             // Log::debug('reciveTextMessage to Company: ', [$Company]);
-    
+
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
                 ->first();
             // Log::debug('reciveTextMessage to Contact: ', [$Contact]);
-    
+
             $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact ?? null);
             if (!$Chat) {
                 return "Error saving text message!";
             }
-    
+
             $Chat->save();
-    
+
             if ($Contact) {
                 $Chat->contact_name = $Contact->first_name;
                 if ($Contact->latestAttendantContact) {
                     $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
                     $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
                 }
-                // Send event to attendants with new chat message
-                if (!$input['Testing'])
-                    broadcast(new MessageToAttendant($Chat));
-            } else {
-                // Send event to all attendants with new bag contact count
-                $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
-                if (!$input['Testing'])
-                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+        
+                $Chat->save();
+        
+                if ($Contact) {
+                    $Chat->contact_name = $Contact->first_name;
+                    if ($Contact->latestAttendantContact) {
+                        $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+                        $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+                    }
+                    // Send event to attendants with new chat message
+                    if (!$input['Testing'])
+                        broadcast(new MessageToAttendant($Chat));
+                } else {
+                    // Send event to all attendants with new bag contact count
+                    $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
+                    if (!$input['Testing'])
+                        broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+                }
             }
         } catch (\Throwable $th) {
             // Log::debug('reciveTextMessage to Contact: ', [$th]);
@@ -308,7 +319,7 @@ class ExternalRPIController extends Controller
         $contact_Jid = $input['Jid'];
         $company_phone = $input['CompanyPhone'];
 
-        $Company = Company::where(['phone' => $company_phone])->first();
+        $Company = Company::where(['whatsapp' => $company_phone])->first();
         // Log::debug('reciveFileMessage to Company: ', [$Company]);
 
         $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
@@ -399,7 +410,7 @@ class ExternalRPIController extends Controller
             } else {
                 // Find Company by Phone Number
                 $company_phone = $input['CompanyPhone'];
-                $Company = Company::where(['phone' => $company_phone])->first();
+                $Company = Company::where(['whatsapp' => $company_phone])->first();
 
                 $Contact = new Contact();
                 if ($Company) {
