@@ -29,6 +29,7 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::get('test', 'ExternalRPIController@test');
     
     Route::post('tests/{option}', 'ExternalRPIController@tests');
+    Route::get('tests/{option}', 'ExternalRPIController@tests');
 });
 
 Route::get('/', 'AuthController@index');
