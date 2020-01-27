@@ -99,9 +99,8 @@
     import ApiService from "../../../common/api.service";
     import sellerCRUDCompanies from "./popups/sellerCRUDCompanies";
     // import sellerCRUDCompanies from "./popups/sellerCRUDCompaniesWizzard";
-
-    import routes from '../../../router/index'; //ECR
     
+
     export default {
         props: {
             title: {
@@ -203,6 +202,8 @@
             getCompanies: function() { //R
                 ApiService.get(this.companies_url)
                     .then(response => {
+                        console.log("entro aqui");
+                        console.log(response.data);
                         this.rows = response.data;
                         var This = this;
                         response.data.forEach(function(item, i){
@@ -213,19 +214,15 @@
                             // var name = "";
                             // item.contact_atendant_id = 0;
                             // if(item.latestAttendant){
-                            //     item.attendant_name = item.latestAttendant.user.name;
+                                //     item.attendant_name = item.latestAttendant.user.name;
                             //     item.contact_atendant_id = item.latestAttendant.user.id;
                             // }
                         });
                     })
                     .catch(error => {
-                        var info = ApiService.process_request_error(error, this.companies_url,"get");
-                        if(info.typeException == "expiredSection"){
-                            miniToastr.warn(info.message,"Atenção");
-                            routes.push({name:'login'}); 
-                        }else{
-                            this.processMessageError(error, this.companies_url,"get");
-                        }
+                        console.log("entro en el catch");
+                        console.log(error);
+                        this.processMessageError(error, this.companies_url,"get");
                     });
             }, 
 
@@ -425,15 +422,12 @@
 
             //------ Specific exceptions methods------------
             processMessageError: function(error, url, action) {
-                
                 var info = ApiService.process_request_error(error, url, action);
-
                 if(info.typeException == "expiredSection"){
                     miniToastr.warn(info.message,"Atenção");
-                    // this.reloadDatas(); // ECR eliminar esto, encontrar otra solicion
                     this.$router.push({name:'login'});
-                    // this.$router.push({name: link});
-                }else if(info.typeException == "duplicateEntry"){
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
                     miniToastr.warn(info.message,"Atenção");
                 }else{
                     miniToastr.error(info.erro, info.message); 

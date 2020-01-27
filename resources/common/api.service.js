@@ -68,7 +68,7 @@ const ApiService = {
 
         var object = {
             erro: "",
-            typeException: "", // "duplicateEntry", "expiredSection", 
+            typeException: "", // "duplicateEntry", "expiredSection", "WithoutConnection",
             typeMessage: "", // "error", "warn", "info", "succes",
             message: "",
         }
@@ -84,6 +84,20 @@ const ApiService = {
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
                 if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
                 
+            }else if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){ // ECR => tratar bem ainda esta excepção 
+                
+                console.log(error.response.data.message);
+                object.typeException = "WithoutConnection";
+                object.typeMessage = "warn";
+                object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
+
+            }else if (error.response.data.message.includes("of non-object")){
+                
+                console.log(error.response.data.message);
+                object.typeException = "WithoutConnection";
+                object.typeMessage = "warn";
+                object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
+
             }else if (error.response.data.message.includes("of non-object")){
                 
                 object.typeException = "expiredSection";
@@ -92,9 +106,9 @@ const ApiService = {
                 
             }else if (error.response.data.message.includes("")){
                 
-                object.typeException = "expiredSection";
-                object.typeMessage = "warn";
-                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+                // object.typeException = "expiredSection";
+                // object.typeMessage = "warn";
+                // object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
                 
             }else{
                 
@@ -103,6 +117,7 @@ const ApiService = {
                 if (url == "users" && action == "add") object.message = "Erro adicionando usuário.";
                 if (url == "users" && action == "update") object.message = "Erro atualizando usuário.";
                 if (url == "users" && action == "delete") object.message = "Erro eliminando usuário.";
+                if (url == "users" && action == "mute_notifications") object.message = "Erro atualizando notificações de som.";
 
                 if (url == "usersSeller" && action == "get") object.message = "Erro carregando seller.";
                 if (url == "usersSeller" && action == "add") object.message = "Erro adicionando seller.";
@@ -135,17 +150,28 @@ const ApiService = {
                 if (url == "rpis" && action == "delete") object.message = "Erro eliminando canal de comunicação";
 
                 if (url == "cep" && action == "get") object.message = "Erro validando CEP.";
+                if (url == "getContactInfo" && action == "get") object.message = "Número de Whatsapp incorreto ou não existe.";
+                if (url == "chats" && action == "send") object.message = "Erro enviando mensagem.";
+                if (url == "chats" && action == "get") object.message = "Error carregando os contatos.";
+
+                if (url == "getBagContact" && action == "get") object.message = "Error carregando os contatos da sacola.";
+                if (url == "getBagContact" && action == "add") object.message = "Error adicionando o contato da sacola.";
                 
-                // if (url == "attendantsContacts") object.message = "Error carregando as empresas.";
+                if (url == "attendantsContacts" && action == "add") object.message = "Error adicionando contato na tabela attendantsContacts."; 
+                if (url == "attendantsContacts" && action == "update") object.message = "Error atualizando contato na tabela attendantsContacts."; 
             }
 
         } else if (error.request) {
             // The request was made but no response was received
-            // console.log(error.request);
+            console.log("error.request");
+            console.log(error.request);
         } else {
             // Something happened in setting up the request that triggered an Error
-            // console.log('Error', error.message);
+            console.log('some another error');
+            console.log('Error', error.message);
         }
+
+        // console.log(error.config);
         
         return object;
 

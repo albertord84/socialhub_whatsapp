@@ -15,7 +15,7 @@ var regexp={
     },
     'cep':{
         'regexp':'^([0-9]{5}[\-]?[0-9]{3})|([0-9]{8})$',  
-        'error':'CEP inválido. Botar CEP sem traço'
+        'error':'CEP inválido.'
     },
     'email':{
         'regexp':'^[a-zA-Z0-9\._-]+@([a-zA-Z0-9-]{2,}[.])*[a-zA-Z]{2,}$',
@@ -31,7 +31,7 @@ var regexp={
         // 'regexp':'^(([5]{2} [1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([5]{2}[1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2} (?:[2-8]|9[1-9])[0-9]{3}[0-9]{4})|([1-9]{2}(?:[2-8]|9[1-9])[0-9]{3}[0-9]{4}))$',
         // 'regexp':'^([5]{2} [1-9]{2} [1-9][0-9]{4}-[0-9]{4})$',
         'regexp':'^([5]{2} [1-9]{2} [1-9][0-9]{7})|([5]{2} [1-9]{2} [1-9][0-9]{8})|([5]{2}[1-9]{2}[1-9][0-9]{7})|([5]{2}[1-9]{2}[1-9][0-9]{8})$',
-        'error':'Número de whatsapp inválido. Confira se o número inserido corresponde a um telefone celular e que o DDD seja válido'
+        'error':'Número de whatsapp inválido. Confira o número inserido.'
     },
     'date':{
         'regexp':'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}$',

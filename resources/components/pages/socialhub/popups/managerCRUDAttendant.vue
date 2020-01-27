@@ -177,20 +177,13 @@
                                 this.reload();
                                 this.closeModals();
                             })
-                        .catch(function(error) {
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando Atendente");
+                        .catch(error => {
+                            this.processMessageError(error, this.url,"add");
                         })
                         .finally(() => this.isSendingInsert = false);
                     })
                     .catch(error => {
-                        if(error.response && error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                        }else if(error.response && error.response.data.message.includes("")){
-                            this.reload();
-                        }else {
-                            miniToastr.error(error, "Erro adicionando Atendente");
-                        }
+                        this.processMessageError(error, this.first_url,"add");
                         this.isSendingInsert = false;
                     });
             },
@@ -242,14 +235,7 @@
                             this.closeModals();
                     })
                     .catch(error => {
-                        if(error.response && error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                        }else if(error.response && error.response.data.message.includes("")){
-                            this.reload();
-                        }else {
-                            miniToastr.error(error, "Erro adicionando Atendente");
-                        }
-
+                        this.processMessageError(error, this.first_url,"update");
                     })
                     .finally(() => this.isSendingUpdate = false);
             },
@@ -266,25 +252,20 @@
                                         this.reload();
                                         this.closeModals();
                                     })
-                                    .catch(function(error) {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Atendente"); 
-                                    });
+                                    .catch(error => {
+                                        this.processMessageError(error, this.first_url, "delete");
+                                    })
+                                    .finally(() => this.isSendingDelete = false);
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando Atendente"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.url, "delete");
+                                this.isSendingDelete = false;
                             });
                     })
                     .catch(error => {
-                        if(error.response && error.response.data.message.includes("")){
-                            //  redireccionar para a pagina de login
-                            this.reload();
-                        }else{
-                            miniToastr.error(error, "Erro eliminando Atendente");   
-                        }
-                    })
-                    .finally(() => this.isSendingDelete = false);
+                        this.processMessageError(error, this.url, "delete");
+                        this.isSendingDelete = false;
+                    });
             },
 
             formReset:function(){
@@ -425,6 +406,21 @@
                     }
                 }
             },
+
+            
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
 
         },
 

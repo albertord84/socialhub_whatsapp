@@ -732,8 +732,6 @@
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
     import MicRecorder from "mic-recorder-to-mp3"; 
 
-    import routes from '../../../router/index'; //ECR
-    
     // import OpusMediaRecorder from 'opus-media-recorder';
 
     // import OpusMediaRecorder from 'opus-media-recorder';
@@ -901,27 +899,8 @@
                                 this.isRecordingAudio = false;
                             }
                         })
-                        .catch(function(error) {                            
-                            if (error.response) {
-                                console.log('error.response');
-                                console.log(error.response.data);
-                                console.log(error.response.data.message);
-                                console.log(error.response.status);
-                                console.log(error.response.headers);
-                                if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
-                                    console.log(error.response.data.message);
-                                    miniToastr.warn("Verifique a conexão do seu computador e  do hardware à Internet.", "Atenção");                                     
-                                }
-                            } else
-                            if (error.request) {
-                                console.log('error.request');
-                                console.log(error.request);
-                            } else{
-                                console.log('some another error');
-                                console.log(error.message);
-                            }
-                            console.log('error config');
-                            console.log(error.config);
+                        .catch(error => {
+                            this.processMessageError(error, this.chat_url,"send");
                         }).finally(() => {This.isSendingNewMessage = false;});
                     } catch (error) {
                         This.newMessage.message = "";
@@ -944,8 +923,8 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
                         }                        
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_url,"get");
                     });
             },
 
@@ -954,16 +933,8 @@
                     .then(response => {
                         this.amountContactsInBag = response.data;                        
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("of non-object")){
-                            //  redireccionar para a pagina de login
-                            routes.push({name:'login'}); 
-                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
-                        }else{
-                            miniToastr.error(error, "Error carregando os contatos");
-                            // miniToastr.error(error, "Error carregando as empresas");
-                        }
+                    .catch(error => {
+                        this.processMessageError(error, "getBagContact","get");
                     });
             },
 
@@ -985,9 +956,10 @@
                         });
                         miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro adicionando o contato");   
-                    }).finally(()=>{this.isAddingContactFromBag = false;});
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_bag_url,"add");
+                    })
+                    .finally(()=>{this.isAddingContactFromBag = false;});
             }, 
 
             getContactChat: function(contact) {
@@ -1000,7 +972,7 @@
                     'contact_id':contact.id,
                     'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
                     'page':this.pageNumber
-                })
+                    })
                     .then(response => {
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess =0;
@@ -1036,8 +1008,8 @@
                         // This.$refs.chatCenterSide
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                    .catch(error => {
+                        this.processMessageError(error, this.chat_url,"get");
                     });
 
                 // setTimeout(() => {
@@ -1060,8 +1032,8 @@
                         .then(response => {
                             this.messagesWhereLike = response.data;
                         })
-                        .catch(function(error) {
-                            miniToastr.error(error, "Error carregando os contatos");   
+                        .catch(error => {
+                            this.processMessageError(error, this.chat_url,"get");
                         });
                 } else{
                     this.messagesWhereLike = [];
@@ -1103,13 +1075,8 @@
                         miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                         this.getContacts();
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
-                        }else{
-                            ApiService.process_request_error(error);
-                            miniToastr.error(error, "Erro adicionando contato");
-                        }
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_url, "update");
                     })
                     .finally(() => this.isUpdatingContact = false);
             },
@@ -1289,8 +1256,8 @@
                         miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
                     this.logguedAttendant.mute_notifications = val;
                 })
-                .catch(function(error) {
-                    miniToastr.error(error, "Erro atualizando notificações de som.");
+                .catch(error => {
+                    this.processMessageError(error, this.users_url, "mute_notifications");
                 })
                 .finally(() => this.isUpdatingContact = false);
             },
@@ -1360,8 +1327,8 @@
                     delete axios.defaults.headers.common['Authorization'];
                     this.$router.push({name: "login"});                    
                 })
-                .catch(function(error) {
-                    miniToastr.error(error, "Error carregando os contatos");   
+                .catch(error => {
+                    this.processMessageError(error, "contacts", "get");
                 });
             },
 
@@ -1739,6 +1706,20 @@
                     });
 
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         updated(){
@@ -1759,8 +1740,8 @@
             })
             .then(response => {                            
             })
-            .catch(function(error) {
-                miniToastr.error(error, "Error carregando os contatos");   
+            .catch(error => {
+                this.processMessageError(error, "contacts", "get");
             });
         },
 

@@ -101,8 +101,6 @@
     import ApiService from "../../../common/api.service";
     import managerCRUDAttendant from "./popups/managerCRUDAttendant";
     
-    import routes from '../../../router/index'; // ECR
-
 
     export default {
         props: {
@@ -225,22 +223,7 @@
                         });
                     })
                     .catch(error => {
-                        var info = ApiService.process_request_error(error, this.url,"get");
-                        if(info.typeException == "expiredSection"){
-                            miniToastr.warn(info.message,"Atenção");
-                            routes.push({name:'login'}); 
-                        }else{
-                            this.processMessageError(error, this.url,"get");
-                        }
-
-                        // if (error.response && error.response.data.message.includes("of non-object")){
-                        //     //  redireccionar para a pagina de login
-                        //     routes.push({name:'login'}); 
-                        //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
-                        // }else{
-                        //     miniToastr.error(error, "Error carregando os atendentes");   
-                        // }
+                        this.processMessageError(error, this.url,"get");
                     });
             }, 
 
@@ -250,23 +233,7 @@
                         this.modelCompany = response.data[0];
                     })
                     .catch(error => {
-                        // if (error.response && error.response.data.message.includes("of non-object")){
-                        //     //  redireccionar para a pagina de login
-                        //     routes.push({name:'login'}); 
-                        //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
-                        // }else{
-                        //     miniToastr.error(error, "Error carregando a empresa do manager logado");   
-                        // }
-
-                        var info = ApiService.process_request_error(error, this.company_url,"get");
-                        if(info.typeException == "expiredSection"){
-                            miniToastr.warn(info.message,"Atenção");
-                            routes.push({name:'login'}); 
-                        }else{
-                            this.processMessageError(error, this.company_url,"get");
-                        }
-
+                        this.processMessageError(error, this.company_url,"get");
                     });
             }, 
 
@@ -402,13 +369,12 @@
 
             //------ Specific exceptions methods------------
             processMessageError: function(error, url, action) {
-                
                 var info = ApiService.process_request_error(error, url, action);
-
                 if(info.typeException == "expiredSection"){
                     miniToastr.warn(info.message,"Atenção");
-                    this.reloadDatas();
-                }else if(info.typeException == "duplicateEntry"){
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
                     miniToastr.warn(info.message,"Atenção");
                 }else{
                     miniToastr.error(info.erro, info.message); 

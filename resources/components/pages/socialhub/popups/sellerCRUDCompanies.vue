@@ -342,13 +342,10 @@
                 }
 
                 // inserindo company
-                // ApiService.post(this.companies_url, this.modelCompany)
                 ApiService.post(this.companies_url, modelCompany_cpy)           //ECR
                     .then(response => {
-                        // this.modelManager.company_id = response.data.id;
                         modelManager_cpy.company_id = response.data.id;         //ECR
                         // inserindo user
-                        // ApiService.post(this.users_url, this.modelManager)
                         ApiService.post(this.users_url, modelManager_cpy)       //ECR
                             .then(response => {
                                     //inserindo userManager
@@ -426,13 +423,10 @@
                     modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
                 }
                 //1. atualizando company
-                // ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)   //ECR
                     .then(response => {
                         //2. atualizando usuario
-                        // delete this.modelManager.password;
                         delete modelManager_cpy.password;
-                        // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
                         ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
                             .then(response => {
                                     //3. atualizando rpi
@@ -448,21 +442,17 @@
                                                 this.closeModals();
                                             })
                                         .catch(error => {
-                                            this.processMessageError(error, this.rpi_url, "update");
+                                            if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                                alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                            else{
+                                                this.processMessageError(error, this.rpi_url, "update");
+                                            }
                                         })
                                         .finally(() => this.isSendingUpdate = false);
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.users_url, "update");
                                 this.isSendingUpdate = false;
-
-                                //JOSE
-                                // if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                //     alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                // else{
-                                //     miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                // }
-
                             });
                     })
                     .catch(error => {
@@ -566,10 +556,8 @@
                     this.isSendingValidationCEP = false;
                     return;
                 }
-
                 this.modelCompany.CEP = this.modelCompany.CEP.trim();
                 this.modelCompany.CEP = this.modelCompany.CEP.replace(/-/i, '');
-                
                 if(this.modelCompany.CEP !=''){
                     var check = validation.check('cep', this.modelCompany.CEP)
                     if(check.success==false){
@@ -583,10 +571,8 @@
                     return;
                 }
 
-                // Validando CEP inserido
                 ApiService.get('cep/'+this.modelCompany.CEP)
                     .then(response => {
-                        // console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
                             miniToastr.warn("Confira os dados fornecidos", "O CEP inserido não existe");
                             return;
@@ -908,14 +894,13 @@
             },
 
             //------ Specific exceptions methods------------
-            processMessageError: function(error, url, action){
-
+            processMessageError: function(error, url, action) {
                 var info = ApiService.process_request_error(error, url, action);
-
                 if(info.typeException == "expiredSection"){
                     miniToastr.warn(info.message,"Atenção");
-                    this.reload();
-                }else if(info.typeException == "duplicateEntry"){
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
                     miniToastr.warn(info.message,"Atenção");
                 }else{
                     miniToastr.error(info.erro, info.message); 
