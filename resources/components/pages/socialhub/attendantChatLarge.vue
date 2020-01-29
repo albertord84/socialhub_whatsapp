@@ -348,7 +348,7 @@
                         </div>
                         
                         
-                        <!-- <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
+                        <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
                                 <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopNativeRecordVoice()">
                                     <i class="input-group-text mdi mdi-close-circle-outline pr-4 fa-1_5x text-danger border border-left-0 container-icons-action-message pointer-hover" title="Excluir" ></i>
                                 </div>
@@ -358,11 +358,11 @@
                                 <div class="input-group-prepend" @click.prevent="stopNativeRecordVoice()">
                                     <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
-                        </div> -->
+                        </div>
 
-                        <!-- <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
+                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
-                        </div> -->
+                        </div>
 
 
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
