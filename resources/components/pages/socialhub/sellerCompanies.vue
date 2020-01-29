@@ -278,6 +278,10 @@
                         }
                     })
                     .catch(error => {
+                        console.log(error);
+                        console.log(error.response);
+                        console.log(error.response.data);
+
                         this.processMessageError(error, this.usersManager_url, "get");
                     });
             },

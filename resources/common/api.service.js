@@ -75,6 +75,13 @@ const ApiService = {
 
         object.erro = error;
 
+        if (error.includes("Network Error")){
+            // Quando não existe conexão à Internet
+            object.typeException = "WithoutConnection";
+            object.typeMessage = "warn";
+            object.message = "Verifique a conexão do seu computador à Internet.";
+        }
+
         if (error.response) {
             
             if(error.response.data.message.includes("Duplicate entry")){
@@ -84,10 +91,14 @@ const ApiService = {
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
                 if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
                 
-            }else if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){ // ECR => tratar bem ainda esta excepção 
+            }else if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
                 
-                console.log(error.response.data.message);
                 object.typeException = "WithoutConnection";
+                object.typeMessage = "warn";
+                object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
+
+            }else if (error.response.data.message.includes("Trying to get property 'api_tunnel' of non-object")){
+                // Quando tenta verificar número de whatsapp e o hardware está desconectado
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
 
@@ -97,7 +108,7 @@ const ApiService = {
                 object.typeException = "WithoutConnection";
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
-
+            
             }else if (error.response.data.message.includes("of non-object")){
                 
                 object.typeException = "expiredSection";
@@ -118,6 +129,7 @@ const ApiService = {
                 if (url == "users" && action == "update") object.message = "Erro atualizando usuário.";
                 if (url == "users" && action == "delete") object.message = "Erro eliminando usuário.";
                 if (url == "users" && action == "mute_notifications") object.message = "Erro atualizando notificações de som.";
+                if (url == "users" && action == "update_image") object.message = "Erro atualizando a foto do perfil";
 
                 if (url == "usersSeller" && action == "get") object.message = "Erro carregando seller.";
                 if (url == "usersSeller" && action == "add") object.message = "Erro adicionando seller.";

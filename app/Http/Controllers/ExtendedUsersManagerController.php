@@ -36,8 +36,13 @@ class ExtendedUsersManagerController extends UsersManagerController
 
     public function getManager(int $company_id, Request $request)
     {
+        // dd($request);
+        
         $this->usersManagerRepository->pushCriteria(new RequestCriteria($request));
         $usersManagers = $this->usersManagerRepository->Managers_User($company_id);
+        
+        dd($usersManagers);
+        
         return $usersManagers->toJson();
     }
 
