@@ -74,9 +74,9 @@
                 var constraints = {audio: true};
 
                 //Disable the record button until we get a success or fail from getUserMedia() 
-                recordButton.disabled = true;
-                stopButton.disabled = false;
-                pauseButton.disabled = false
+                this.recordButton.disabled = true;
+                this.stopButton.disabled = false;
+                this.pauseButton.disabled = false
 
                 /*We're using the standard promise based getUserMedia() 
                 https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia*/
