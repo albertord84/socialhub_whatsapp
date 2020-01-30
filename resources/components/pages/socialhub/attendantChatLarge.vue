@@ -1032,6 +1032,8 @@
 
                         // This.$refs.chatCenterSide
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
+
+                        console.log(This.messages);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   

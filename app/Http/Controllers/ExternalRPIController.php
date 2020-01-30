@@ -322,6 +322,12 @@ class ExternalRPIController extends Controller
             case 'audio':
                 $type_id = 3;
                 break;
+            case 'video':
+                $type_id = 4;
+                break;
+            case 'document':
+                $type_id = 5;
+                break;
         }
 
         $Chat = new ExtendedChat();
