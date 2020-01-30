@@ -715,8 +715,6 @@
     </div>
 </template>
 
-
-
 <script>
     import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";

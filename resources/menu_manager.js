@@ -17,8 +17,6 @@ const menu_items = [
         icon: 'mdi mdi-chip'
      }, 
      
-
-     
     // {
     //     name: 'Dashboard',
     //     link: '/manager',

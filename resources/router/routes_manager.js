@@ -25,31 +25,32 @@ const layout = [
         title: "Consultar o hardware",
     }
 },{
-    path: '/manager/audio',
-    component: resolve => require(['pages/socialhub/popups/handleRecordAudio'], resolve),
-    meta: {
-        title: "Audio test",
-    }
-},/*{
-    path: '/manager/company',
-    component: resolve => require(['pages/socialhub/managerCompany'], resolve),
-    meta: {
-        title: "Empresa",
-    }
-},*/{
     path: '/manager/user_profile',    
     component: resolve => require(['pages/socialhub/user_profile'], resolve),
     meta: {
         title: "Perfil",
     }
-}
-// {
-//     path: '/manager',
-//     name: 'manager',
-//     component: resolve => require(['pages/socialhub/managerDashboard'], resolve),
-//     meta: {
-//         title: "Dashboard",
-//     }
+},{
+    path: '/manager/audio',
+    component: resolve => require(['pages/socialhub/popups/handleRecordAudio'], resolve),
+    meta: {
+        title: "Audio test",
+    }
+},
+/*{
+    path: '/manager/company',
+    component: resolve => require(['pages/socialhub/managerCompany'], resolve),
+    meta: {
+        title: "Empresa",
+    }
+},{
+    path: '/manager',
+    name: 'manager',
+    component: resolve => require(['pages/socialhub/managerDashboard'], resolve),
+    meta: {
+        title: "Dashboard",
+    }
+}*/
 
 
 ]
