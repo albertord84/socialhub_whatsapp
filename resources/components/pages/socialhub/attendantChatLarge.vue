@@ -716,8 +716,6 @@
     </div>
 </template>
 
-
-
 <script>
     import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";
@@ -734,7 +732,7 @@
 
     import routes from '../../../router/index'; //ECR
     
-    // import OpusMediaRecorder from 'opus-media-recorder';
+    import OpusMediaRecorder from 'opus-media-recorder';
 
     // import OpusMediaRecorder from 'opus-media-recorder';
     // // Use worker-loader
