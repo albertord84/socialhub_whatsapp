@@ -75,51 +75,58 @@ const ApiService = {
 
         object.erro = error;
 
-        if (error.includes("Network Error")){
-            // Quando não existe conexão à Internet
-            object.typeException = "WithoutConnection";
+        if (error.response.status == 401 && error.response.data.error.includes("Unauthorized")){
+            // Quando dados de login errados
             object.typeMessage = "warn";
-            object.message = "Verifique a conexão do seu computador à Internet.";
+            object.message = "Confira os dados fornecidos para login.";
+            return object;
         }
 
         if (error.response) {
-            
-            if(error.response.data.message.includes("Duplicate entry")){
 
+            // console.log("error");
+            // console.log(error);
+            // console.log("error.response");
+            // console.log(error.response);
+            // console.log("error.response.data");
+            // console.log(error.response.data);
+            // console.log("error.response.data.message");
+            // console.log(error.response.data.message);
+            // console.log("error.response.data.exception");
+            // console.log(error.response.data.exception);
+            // console.log("error.response.status");
+            // console.log(error.response.status);
+            // console.log("error.response.headers");
+            // console.log(error.response.headers);
+
+            if(error.response.data.message && error.response.data.message.includes("Duplicate entry")){
+                // Entrada duplicada no BD. 
                 object.typeException = "duplicateEntry";
                 object.typeMessage = "warn";
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
                 if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
-                
+
             }else if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
                 
                 object.typeException = "WithoutConnection";
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
 
-            }else if (error.response.data.message.includes("Trying to get property 'api_tunnel' of non-object")){
+            }else if (error.response.data.message && error.response.data.message.includes("Trying to get property 'api_tunnel' of non-object")){
                 // Quando tenta verificar número de whatsapp e o hardware está desconectado
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
-
-            }else if (error.response.data.message.includes("of non-object")){
                 
-                console.log(error.response.data.message);
-                object.typeException = "WithoutConnection";
-                object.typeMessage = "warn";
-                object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
-            
-            }else if (error.response.data.message.includes("of non-object")){
-                
+            }else if (error.response.status == 419 && error.response.data.message.includes("")){
+                // Secção expirada.
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
                 object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
-                
-            }else if (error.response.data.message.includes("")){
-                
-                // object.typeException = "expiredSection";
-                // object.typeMessage = "warn";
-                // object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+
+            }else if (error.response.data.message && error.response.data.message.includes("Erro enviando mensagem")){
+                // Quando não se pode enviar mensagem
+                object.typeMessage = "warn";
+                object.message = "Não foi possível enviar a mensagem! Verifique a conexão do seu computador e do hardware à Internet.";
                 
             }else{
                 
@@ -160,11 +167,14 @@ const ApiService = {
                 if (url == "rpis" && action == "add") object.message = "Erro adicionando canal de comunicação";
                 if (url == "rpis" && action == "update") object.message = "Erro atualizando canal de comunicação";
                 if (url == "rpis" && action == "delete") object.message = "Erro eliminando canal de comunicação";
+                
+                if (url == "RPI" && action == "logout") object.message = "Erro fechando o canal de comunicação";
 
                 if (url == "cep" && action == "get") object.message = "Erro validando CEP.";
                 if (url == "getContactInfo" && action == "get") object.message = "Número de Whatsapp incorreto ou não existe.";
                 if (url == "chats" && action == "send") object.message = "Erro enviando mensagem.";
                 if (url == "chats" && action == "get") object.message = "Error carregando os contatos.";
+                if (url == "login" && action == "get") object.message = "Error realizando loging.";
 
                 if (url == "getBagContact" && action == "get") object.message = "Error carregando os contatos da sacola.";
                 if (url == "getBagContact" && action == "add") object.message = "Error adicionando o contato da sacola.";
@@ -175,15 +185,23 @@ const ApiService = {
 
         } else if (error.request) {
             // The request was made but no response was received
-            console.log("error.request");
-            console.log(error.request);
+            
+            // console.log("error.request");
+            // console.log(error.request);
         } else {
             // Something happened in setting up the request that triggered an Error
-            console.log('some another error');
-            console.log('Error', error.message);
+            // console.log('some another error');
+            // console.log('Error', error.message);
         }
 
+
+        // console.log("error.request");
+        // console.log(error.request);
+
+        // console.log("error.config");
         // console.log(error.config);
+
+        
         
         return object;
 

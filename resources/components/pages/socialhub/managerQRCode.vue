@@ -116,7 +116,15 @@
                 var This = this;
                 ApiService.get(This.url)
                     .then(response => {
-                        console.log(response.data);
+                        
+                        // console.log(response.data);
+                        // console.log(response.data.status);
+                        // console.log(response.data.message);
+
+                        // if(response.data.status==500 && response.data.message.includes("No query results for model") ){
+                        //     miniToastr.warn("Erro solicitando QRCode","Atenção");
+                        // }
+
                         This.rpi = response.data;
                         console.log(This.rpi);
                         if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
@@ -128,26 +136,10 @@
                             This.isError=true;
                         }
                     })
-                    .catch(function(error) {
+                    .catch(error => {
                         This.duringRequest=false;
                         This.isError=true;
-                        if (error.response) {
-                            // console.log('error.response');
-                            // console.log(error.response.data);
-                            // console.log(error.response.data.message);
-                            // console.log(error.response.status);
-                            // console.log(error.response.headers);
-                            miniToastr.warn(error.response.data.message, "Atenção"); 
-                        } else
-                        if (error.request) {
-                            // console.log('error.request');
-                            // console.log(error.request);
-                        } else{
-                            // console.log('some another error');
-                            // console.log(error.message);
-                        }
-                        // console.log('error config');
-                        // console.log(error.config);
+                        this.processMessageError(error, This.url,"get");
                     })
                     .finally(() => {                        
                         if(This.handleTimerCounter == null && !This.isLoggued){
@@ -176,10 +168,25 @@
                         this.isError=false;
                         this.erroMessage='';
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro adicionando o contato");   
+                    .catch(error => {
+                        this.processMessageError(error, "RPI","logout");
                     });
             },
+
+            
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         beforeMount: function() {

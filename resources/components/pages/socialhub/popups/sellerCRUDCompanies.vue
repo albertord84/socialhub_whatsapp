@@ -325,20 +325,20 @@
                     return;
                 }
 
-                var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                var modelCompany_cpy = Object.assign({}, this.modelCompany);                    //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');        //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');        //ECR
                 if(modelCompany_cpy.phone){
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
                 }
 
-                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
+                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
                 if(modelManager_cpy.phone){
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');          //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');          //ECR
                 }
 
                 // inserindo company
@@ -357,17 +357,16 @@
                                             this.closeModals();
                                         })
                                         .catch(error => {
-                                            // TODO: ECR=> aqui se deveria tratar a execção de seação expirado, quando se add uma empressa.
-                                            // ECR=> esta generando un error porque no se valia el email. preguntar a jose
-                                            
                                             this.processMessageError(error, this.usersManager_url, "add");
                                         })
                                         .finally(() => this.isSendingInsert = false);
                             })
                             .catch(error => {
-                                // TODO. ECR=> Aqui deveria ser eliminada do BD a acompanhia adicionada no passo anterior.
-                                //              Para que não fiquem inconsistensias no BD. 
-                                
+                                ApiService.delete(this.companies_url+'/'+modelManager_cpy.company_id)
+                                    .then(response => {
+                                    })
+                                    .catch(error => {
+                                    })
                                 this.processMessageError(error, this.users_url, "add");
                                 this.isSendingInsert = false;
                             });
@@ -375,9 +374,7 @@
                     .catch(error => {
                         this.processMessageError(error, this.companies_url, "add");
                         this.isSendingInsert = false; 
-
                     });
-
             },
             
             editCompany: function() { //U
@@ -407,20 +404,20 @@
                     return;
                 }
 
-                var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                var modelCompany_cpy = Object.assign({}, this.modelCompany);                    //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');        //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');        //ECR
                 if(modelCompany_cpy.phone){
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
                 }
                 
-                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
+                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
                 if(modelManager_cpy.phone){
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');          //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');          //ECR
                 }
                 //1. atualizando company
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)   //ECR
