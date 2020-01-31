@@ -382,7 +382,7 @@ class ExternalRPIController extends Controller
             case 'video':
                 $type_id = 4;
                 break;
-            case 'documents':
+            case 'document':
                 $type_id = 5;
                 break;
         }
