@@ -182,7 +182,7 @@ class ExternalRpiControllerTest extends MyTestCase
         $Request = new Request();
         $Request['Jid'] = '5521965536174@s.whatsapp.net';
         $Request['CompanyPhone'] = '5521965536174@c.us';
-        $Request['Type'] = 1;
+        $Request['Type'] = 'text';
         $Request['Msg'] = 'test message';
         $Request['Testing'] = true;
 

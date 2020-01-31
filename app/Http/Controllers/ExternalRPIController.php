@@ -271,16 +271,16 @@ class ExternalRPIController extends Controller
             $Chat->save();
 
             if ($Contact) {
-                $Chat->contact_name = $Contact->first_name;
+                // $Chat->contact_name = $Contact->first_name;
                 if ($Contact->latestAttendantContact) {
                     $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                    $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+                    // $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
                 }
         
                 $Chat->save();
         
                 if ($Contact) {
-                    $Chat->contact_name = $Contact->first_name;
+                    // $Chat->contact_name = $Contact->first_name;
                     if ($Contact->latestAttendantContact) {
                         $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
                         $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
