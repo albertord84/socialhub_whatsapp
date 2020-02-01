@@ -177,7 +177,7 @@
                         this.erroMessage='';
                     })
                     .catch(function(error) {
-                        miniToastr.error(error, "Erro adicionando o contato");   
+                        miniToastr.error(error, "Erro no logout do whatsapp desde o aparelho");   
                     });
             },
         },

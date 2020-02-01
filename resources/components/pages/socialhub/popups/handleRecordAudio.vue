@@ -6,13 +6,14 @@
         <p>At the moment the MediaStream Recorder API is only supported by Chrome, Firefox, Opera and Edge 79 (Chromium). Please comment on <a target="_blank" href="https://bugs.webkit.org/show_bug.cgi?id=85851">this Safari/WebKit feature request</a> to request Safari support.</p>
         <div style="max-width: 28em;">
             <div id="controls">
-                <button ref="recordButton"  id="recordButton" @click="startRecording()">Record</button>
-                <button ref="pauseButton" id="pauseButton" disabled @click="pauseRecording()">Pause</button>
-                <button ref="stopButton" id="stopButton" disabled @click="stopRecording()">Stop</button>
+                <button id="recordButton" ref="recordButton" @click="startRecording()">Record</button>
+                <button id="pauseButton" ref="pauseButton" disabled @click="pauseRecording()">Pause</button>
+                <button id="stopButton" ref="stopButton" disabled @click="stopRecording()">Stop</button>
             </div>
             <div id="formats">{{formats}}</div>
             <p><strong>Recordings:</strong></p>
-            <ol ref="recordingsList" id="recordingsList"></ol>
+            <ol id="recordingsList" ref="recordingsList" ></ol>
+            <input id="fileInputImage" ref="fileInputImage" style="display:none"   type="file" @change.prevent="handleFileUploadContent" accept="image/*"/>
         </div>
         <h2>Resources</h2>
         <ul>
@@ -46,11 +47,6 @@
                 chunks:[],					//Array of chunks of audio data from the browser
                 extension:'',
                 formats:'',
-
-                recordButton:null,
-                stopButton:null,
-                pauseButton:null,
-                recordingsList:null,
             }
         },
 
@@ -62,25 +58,25 @@
                 // false on chrome, true on firefox
                 console.log("audio/ogg:"+MediaRecorder.isTypeSupported('audio/ogg;codecs=opus'));
 
-                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')){
-                    this.extension="webm";
+                if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')){
+                    this.extension="ogg";
                 }else{
-                    this.extension="ogg"
+                    this.extension="webm";
                 }
             },  
 
             startRecording() {
-                console.log("recordButton clicked");                
-                var constraints = {audio: true};
+                console.log("recordButton clicked");
+                var constraints = {audio: true};                
 
                 //Disable the record button until we get a success or fail from getUserMedia() 
-                this.recordButton.disabled = true;
-                this.stopButton.disabled = false;
-                this.pauseButton.disabled = false
+                this.$refs.recordButton.disabled = true;
+                this.$refs.stopButton.disabled = false;
+                this.$refs.pauseButton.disabled = false;
 
                 /*We're using the standard promise based getUserMedia() 
                 https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia*/
-                navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                navigator.mediaDevices.getUserMedia(constraints).then((stream)=> {
                     console.log("getUserMedia() success, stream created, initializing MediaRecorder");
                     /*  assign to gumStream for later use  */
                     this.gumStream = stream;
@@ -88,12 +84,11 @@
                         audioBitsPerSecond :  256000,
                         videoBitsPerSecond : 2500000,
                         bitsPerSecond:       2628000,
-                        mimeType : 'audio/'+extension+';codecs=opus'
+                        mimeType : 'audio/'+this.extension+';codecs=opus'
                     }
 
                     //update the format 
-                    this.formats ='Sample rate: 48kHz, MIME: audio/'+extension+';codecs=opus';
-
+                    this.formats ='Sample rate: 48kHz, MIME: audio/'+this.extension+';codecs=opus';
                     //Create the MediaRecorder object
                     this.recorder = new MediaRecorder(stream, options);
 
@@ -109,7 +104,7 @@
                         // if recorder is 'inactive' then recording has finished
                         if (this.recorder.state == 'inactive') {
                             // convert stream data chunks to a 'webm' audio format as a blob
-                            const blob = new Blob(chunks, { type: 'audio/'+extension, bitsPerSecond:128000});
+                            const blob = new Blob(this.chunks, { type: 'audio/'+this.extension, bitsPerSecond:128000});
                             this.createDownloadLink(blob);
                         }
                     };
@@ -123,9 +118,9 @@
                     this.recorder.start(1000);
                 }).catch((err)=> {
                     //enable the record button if getUserMedia() fails
-                    this.recordButton.disabled = false;
-                    this.stopButton.disabled = true;
-                    this.pauseButton.disabled = true
+                    this.$refs.recordButton.disabled = false;
+                    this.$refs.stopButton.disabled = true;
+                    this.$refs.pauseButton.disabled = true
                 });
             },
 
@@ -134,24 +129,24 @@
                 if (this.recorder.state=="recording"){
                     //pause
                     this.recorder.pause();
-                    this.pauseButton.innerHTML="Resume";
+                    this.$refs.pauseButton.innerHTML="Resume";
                 }else 
                 if (this.recorder.state=="paused"){
                     //resume
                     this.recorder.resume();
-                    this.pauseButton.innerHTML="Pause";
+                    this.$refs.pauseButton.innerHTML="Pause";
                 }
             },
 
             stopRecording() {
                 console.log("stopButton clicked");
                 //disable the stop button, enable the record too allow for new recordings
-                this.stopButton.disabled = true;
-                this.recordButton.disabled = false;
-                this.pauseButton.disabled = true;
+                this.$refs.stopButton.disabled = true;
+                this.$refs.recordButton.disabled = false;
+                this.$refs.pauseButton.disabled = true;
 
                 //reset button just in case the recording is stopped while paused
-                this.pauseButton.innerHTML="Pause";
+                this.$refs.pauseButton.innerHTML="Pause";
                 
                 //tell the recorder to stop the recording
                 this.recorder.stop();
@@ -172,7 +167,7 @@
 
                 //link the a element to the blob
                 link.href = url;
-                link.download = new Date().toISOString() + '.'+extension;
+                link.download = new Date().toISOString() + '.'+this.extension;
                 link.innerHTML = link.download;
 
                 //add the new audio and a elements to the li element
@@ -180,16 +175,11 @@
                 li.appendChild(link);
 
                 //add the li element to the ordered list
-                this.recordingsList.appendChild(li);
+                this.$refs.recordingsList.appendChild(li);
             }
         },
 
-        created() {
-            this.recordButton = this.$refs.recordButton;
-            this.stopButton = this.$refs.stopButton;
-            this.pauseButton = this.$refs.pauseButton; 
-            this.recordingsList = this.$refs.recordingsList; 
-            
+        mounted() {            
             this.checkBrowser();
         },
 
@@ -197,98 +187,7 @@
 </script>
 
 <style lang="scss">
-    html {
-        font-size: 100%;
-    }
-    body {
-        line-height: 1.5;
-        font-family: sans-serif;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        color:black;
-        margin:2em;
-    }
-    h1 {
-        text-decoration: underline red;
-        text-decoration-thickness: 3px;
-        text-underline-offset: 6px;
-        font-size: 220%;
-        font-weight: bold;
-    }
-    h2 {
-        font-weight: bold;
-        color: #005A9C;
-        font-size: 140%;
-        text-transform: uppercase;
-    }
-    p {
-        margin: 1em 0;
-    }
-    pre {
-        padding: 0px;
-        border:0px;
-        border-radius: 0px;
-    }
-    red {
-        color: red;
-    }
-    a {
-        color: #337ab7;
-    }
-    a:visited {
-        color: #8d75a3;
-    }
-    a:hover {
-        color:#23527c;
-    }
-    #controls {
-        display: flex;
-        margin-top: 2rem;
-    }
-    button {
-        flex-grow: 1;
-        height: 2.5rem;
-        min-width: 2rem;
-        border: none;
-        border-radius: 0.15rem;
-        background: #ed341d;
-        margin-left: 2px;
-        box-shadow: inset 0 -0.15rem 0 rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color:#ffffff;
-        font-weight: bold;
-        font-size: 1rem;
-    }
-    button:hover, button:focus {
-        outline: none;
-        background: #c72d1c;
-    }
-    button::-moz-focus-inner {
-        border: 0;
-    }
-    button:active {
-        box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.2);
-        line-height: 3rem;
-    }
-    button:disabled {
-        pointer-events: none;
-        background: lightgray;
-    }
-    button:first-child {
-        margin-left: 0;
-    }
-    audio {
-        display: block;
-        width: 100%;
-        margin-top: 0.2rem;
-    }
-    #formats {
-        margin-top: 0.5rem;
-        font-size: 80%;
-    }
+    
 </style>
 
 

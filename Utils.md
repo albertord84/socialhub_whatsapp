@@ -134,7 +134,7 @@ alias npmd='npm run dev'
 
 alias gc='git add . && git commit -m "Auto message"'
 alias gp='git add . && git commit -m "Auto message" && git pull origin develop'
-alias gpp='git add . && git commit -m "Auto message" && git pull origin develop && git push origin develop'
+alias gpp='git pull origin develop && git push origin develop'
 
 ## Auto create laravel project .bash script
 https://gist.github.com/DCzajkowski/9ebaeaa09d136e77497e060449b03171
