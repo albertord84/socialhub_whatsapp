@@ -115,8 +115,6 @@ class ExtendedChatController extends ChatController
                 $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
                 $Contact->json_data = $contactInfo;
 
-                Log::debug('$ContactChats', [$contactInfo]);
-    
                 $Contact->Save();
             // }
         }

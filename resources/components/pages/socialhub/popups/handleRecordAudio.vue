@@ -66,7 +66,7 @@
             },  
 
             startRecording() {
-                console.log("recordButton clicked");                
+                console.log("recordButton clicked");
                 var constraints = {audio: true};                
 
                 //Disable the record button until we get a success or fail from getUserMedia() 

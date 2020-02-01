@@ -286,12 +286,12 @@ class ExternalRPIController extends Controller
                         $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
                     }
                     // Send event to attendants with new chat message
-                    if (!$input['Testing'])
+                    if (!isset($input['Testing']))
                         broadcast(new MessageToAttendant($Chat));
                 } else {
                     // Send event to all attendants with new bag contact count
                     $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
-                    if (!$input['Testing'])
+                    if (!isset($input['Testing']))
                         broadcast(new NewContactMessage($Company->id, $bagContactsCount));
                 }
             }
@@ -326,7 +326,7 @@ class ExternalRPIController extends Controller
             ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
             ->first();
 
-        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact);
+        $Chat = $this->messageToChatModel($input, $Contact);
         if (!$Chat) {
             return "Error saving file message!";
         }
@@ -364,9 +364,10 @@ class ExternalRPIController extends Controller
      * @param array Request $input
      * @return Chat
      */
-    public function messageToChatModel(array $input, ?Contact $Contact, ?AttendantsContact $AttendantsContact): ExtendedChat
+    public function messageToChatModel(array $input, ?Contact $Contact): ExtendedChat
     {
         // if (strpos("@g.us", $input['Msg']) !== false) return null;
+        $AttendantsContact = $Contact ? $Contact->latestAttendantContact : null;
 
         $contact_Jid = $input['Jid'];
         $input['Type'] = isset($input['Type']) ? $input['Type'] : 'text';
