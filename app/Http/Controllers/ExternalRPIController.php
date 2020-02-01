@@ -263,7 +263,7 @@ class ExternalRPIController extends Controller
                 ->first();
             // Log::debug('reciveTextMessage to Contact: ', [$Contact]);
 
-            $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact ?? null);
+            $Chat = $this->messageToChatModel($input, $Contact);
             if (!$Chat) {
                 return "Error saving text message!";
             }
