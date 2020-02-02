@@ -11,7 +11,6 @@ use App\Repositories\ExtendedContactRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
-use ParagonIE\Sodium\File;
 use Response;
 
 class ExtendedContactController extends ContactController
