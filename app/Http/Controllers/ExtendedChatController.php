@@ -111,11 +111,11 @@ class ExtendedChatController extends ChatController
             // $picture = file_get_contents("$picurl");
 
             // if ($picture && strpos('expired', $picture) !== null) {
-                $Controller = new ExternalRPIController(null);
-                $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
-                $Contact->json_data = $contactInfo;
+                // $Controller = new ExternalRPIController(null);
+                // $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
+                // $Contact->json_data = $contactInfo;
 
-                $Contact->Save();
+                // $Contact->Save();
             // }
         }
 
