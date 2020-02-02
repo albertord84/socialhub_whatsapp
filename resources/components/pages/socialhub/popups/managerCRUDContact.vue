@@ -38,7 +38,7 @@
                 <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-instagram form-control-feedback"></span>
                         <input v-model="model.instagram_id" title="Ex: instagram_id" id="instagram_id" name="instagram_id" type="text" placeholder="Instagram" class="form-control"/>
-                    </div>
+                </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-linkedin form-control-feedback"></span>
                     <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
