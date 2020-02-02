@@ -325,30 +325,27 @@
                     return;
                 }
 
-                var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                var modelCompany_cpy = Object.assign({}, this.modelCompany);                    //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');        //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');        //ECR
                 if(modelCompany_cpy.phone){
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
                 }
 
-                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
+                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
                 if(modelManager_cpy.phone){
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');          //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');          //ECR
                 }
 
                 // inserindo company
-                // ApiService.post(this.companies_url, this.modelCompany)
                 ApiService.post(this.companies_url, modelCompany_cpy)           //ECR
                     .then(response => {
-                        // this.modelManager.company_id = response.data.id;
                         modelManager_cpy.company_id = response.data.id;         //ECR
                         // inserindo user
-                        // ApiService.post(this.users_url, this.modelManager)
                         ApiService.post(this.users_url, modelManager_cpy)       //ECR
                             .then(response => {
                                     //inserindo userManager
@@ -360,33 +357,24 @@
                                             this.closeModals();
                                         })
                                         .catch(error => {
-                                            miniToastr.error(error, "Erro adicionando Manager");  
-                                            ApiService.process_request_error(error);
+                                            this.processMessageError(error, this.usersManager_url, "add");
                                         })
                                         .finally(() => this.isSendingInsert = false);
                             })
                             .catch(error => {
-                                if(error.response.data.message.includes("Duplicate entry")){
-                                    miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                                }else{
-                                    miniToastr.error(error, "Erro adicionando Manager");  
-                                    ApiService.process_request_error(error); 
-                                }
+                                ApiService.delete(this.companies_url+'/'+modelManager_cpy.company_id)
+                                    .then(response => {
+                                    })
+                                    .catch(error => {
+                                    })
+                                this.processMessageError(error, this.users_url, "add");
                                 this.isSendingInsert = false;
-                                // TODO. ECR=> Aqui deveria ser eliminada do BD a acompanhia adicionada no passo anterior.
-                                //              Para que não fiquem inconsistensias no BD. 
-                                
                             });
-                            // .finally(() => this.isSendingInsert = false);
                     })
-                    // .catch(function(error) {
                     .catch(error => {
-                        miniToastr.error(error, "Erro adicionando Empresa");  
-                        ApiService.process_request_error(error);
+                        this.processMessageError(error, this.companies_url, "add");
                         this.isSendingInsert = false; 
                     });
-                    // .finally(() => this.isSendingInsert = false);
-
             },
             
             editCompany: function() { //U
@@ -416,80 +404,56 @@
                     return;
                 }
 
-                var modelCompany_cpy = Object.assign({}, this.modelCompany);                //ECR: Para eliminar espaços e traços
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');    //ECR
-                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');    //ECR
+                var modelCompany_cpy = Object.assign({}, this.modelCompany);                    //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/ /g, '');        //ECR
+                modelCompany_cpy.whatsapp = modelCompany_cpy.whatsapp.replace(/-/i, '');        //ECR
                 if(modelCompany_cpy.phone){
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/ /g, '');          //ECR
                     modelCompany_cpy.phone = modelCompany_cpy.phone.replace(/-/i, '');          //ECR
                 }
                 
-                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR: Para eliminar espaços e traços
+                var modelManager_cpy = Object.assign({}, this.modelManager);                    //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/ /g, '');  //ECR
                 modelManager_cpy.whatsapp_id = modelManager_cpy.whatsapp_id.replace(/-/i, '');  //ECR
                 if(modelManager_cpy.phone){
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');              //ECR
-                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');              //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/ /g, '');          //ECR
+                    modelManager_cpy.phone = modelManager_cpy.phone.replace(/-/i, '');          //ECR
                 }
                 //1. atualizando company
-                // ApiService.put(this.companies_url+'/'+this.modelCompany.id, this.modelCompany)
                 ApiService.put(this.companies_url+'/'+this.modelCompany.id, modelCompany_cpy)   //ECR
                     .then(response => {
-                            //2. atualizando usuario
-                            // delete this.modelManager.password;
-                            delete modelManager_cpy.password;
-                            // ApiService.put(this.users_url+'/'+this.modelManager.id, this.modelManager)
-                            ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
-                                .then(response => {
-                                        //3. atualizando rpi
-                                        this.modelRpi.company_id = this.modelCompany.id;
-                                        if(!this.modelRpi.id) {
-                                            this.modelRpi.id=0;
-                                        }
-                                        var This=this;
-                                        ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
-                                            .then(response => {
-                                                    miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
-                                                    this.reload();
-                                                    this.closeModals();
-                                                })
-                                            .catch(function (error) {
-                                                if (error.response) {
-                                                    // Request made and server responded
-                                                    // console.log(error.response.data);
-                                                    // console.log(error.response.data.message);
-                                                    miniToastr.warn(error.response.data.message, "Atenção"); 
-                                                    // console.log(error.response.status);
-                                                    // console.log(error.response.headers);
-                                                } else if (error.request) {
-                                                    // The request was made but no response was received
-                                                    // console.log(error.request);
-                                                } else {
-                                                    // Something happened in setting up the request that triggered an Error
-                                                    // console.log('Error', error.message);
-                                                }
-                                            })
-                                            .finally(() => this.isSendingUpdate = false);
-                            
-                                })
-                                .catch(error => {
-                                    if(error.response.data.message.includes("Duplicate entry")){
-                                        miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                                    }else{
-                                        ApiService.process_request_error(error); 
-                                        miniToastr.error(error, "Erro adicionando Manager");  
+                        //2. atualizando usuario
+                        delete modelManager_cpy.password;
+                        ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
+                            .then(response => {
+                                    //3. atualizando rpi
+                                    this.modelRpi.company_id = this.modelCompany.id;
+                                    if(!this.modelRpi.id) {
+                                        this.modelRpi.id=0;
                                     }
-
-                                    // if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                    //     alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                    // else{
-                                    //     miniToastr.error(error, "Erro atualizando canal de comunicação"); 
-                                    // }
-                                    this.isSendingUpdate = false;
-                                });
-                        })
+                                    var This=this;
+                                    ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                                        .then(response => {
+                                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                                this.reload();
+                                                this.closeModals();
+                                            })
+                                        .catch(error => {
+                                            if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                                alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                            else{
+                                                this.processMessageError(error, this.rpi_url, "update");
+                                            }
+                                        })
+                                        .finally(() => this.isSendingUpdate = false);
+                            })
+                            .catch(error => {
+                                this.processMessageError(error, this.users_url, "update");
+                                this.isSendingUpdate = false;
+                            });
+                    })
                     .catch(error => {
-                        miniToastr.error(error, "Erro atualizando companhia"); 
+                        this.processMessageError(error, this.companies_url, "update");
                         this.isSendingUpdate = false; 
                     });
             },
@@ -515,9 +479,8 @@
                                                     this.reload();
                                                     this.closeModals();
                                         //         })
-                                        //         .catch(function(error) {
-                                        //             ApiService.process_request_error(error);  
-                                        //             miniToastr.error(error, "Erro eliminando canal de comunicação"); 
+                                        //         .catch(error => {
+                                                    // this.processMessageError(error, this.rpi_url, "delete");
                                         //         });
                                         // }else{
                                         //     miniToastr.success("Empresa eliminada com sucesso","Sucesso");
@@ -526,20 +489,17 @@
                                         // }
                                     })
                                     .catch(error => {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando empresa");                                        
+                                        this.processMessageError(error,this.companies_url, "delete");
                                     })
                                     .finally(() => this.isSendingDelete = false);
                             })
                             .catch(error => {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando o usuário"); 
+                                this.processMessageError(error, this.users_url, "delete");
                                 this.isSendingDelete = false;
                             });
                     })
                     .catch(error => {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro eliminando o usuário");  
+                        this.processMessageError(error, this.usersManager_url, "delete");
                         this.isSendingDelete = false;
                     });
             },
@@ -588,9 +548,13 @@
             getAddressByCEP: function(){
                 this.isSendingValidationCEP = true;
                 // Validando CEP inserido
+                if(!this.modelCompany.CEP){
+                    miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    this.isSendingValidationCEP = false;
+                    return;
+                }
                 this.modelCompany.CEP = this.modelCompany.CEP.trim();
                 this.modelCompany.CEP = this.modelCompany.CEP.replace(/-/i, '');
-                
                 if(this.modelCompany.CEP !=''){
                     var check = validation.check('cep', this.modelCompany.CEP)
                     if(check.success==false){
@@ -604,10 +568,8 @@
                     return;
                 }
 
-                // Validando CEP inserido
                 ApiService.get('cep/'+this.modelCompany.CEP)
                     .then(response => {
-                        // console.log(response.data);
                         if(response.data.erro && response.data.erro==true ){
                             miniToastr.warn("Confira os dados fornecidos", "O CEP inserido não existe");
                             return;
@@ -618,11 +580,10 @@
                         this.modelCompany.bairro = response.data.bairro;
                         this.modelCompany.rua = response.data.logradouro;
                     })
-                    .catch(function(error) {
-                        // console.log(error);
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro validando CEP"); 
-                    }).finally(() => {
+                    .catch(error => {
+                        this.processMessageError(error, "cep", "get");
+                    })
+                    .finally(() => {
                         Vue.axios.defaults.baseURL = "";
                         this.isSendingValidationCEP = false;
                     });
@@ -927,6 +888,20 @@
                 //         this.flagReference = false; 
                 //     }
                 // }
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
             }
         },
 

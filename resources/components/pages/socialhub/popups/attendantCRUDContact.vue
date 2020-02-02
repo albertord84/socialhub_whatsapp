@@ -222,11 +222,6 @@
                     return;
                 }
 
-                // if(this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                //     miniToastr.error("Confira os dados fornecidos","Alguns dados incompletos");  
-                //     return;
-                // }
-
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 this.model.status_id = 1;
                 this.contact_atendant_id = JSON.parse(localStorage.user).id;
@@ -242,7 +237,7 @@
                     return;
                 }
 
-                var model_cpy = Object.assign({}, this.model);                //ECR: Para eliminar espaços e traços
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
@@ -261,9 +256,8 @@
                                 this.toggle_left('close');
                                 this.reload();
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error); 
-                                miniToastr.error(error, "Erro adicionando contato");  
+                            .catch(error => {
+                                this.processMessageError(error, this.secondUrl, "add");
                             })
                             .finally(() => this.isSendingInsert = false);
                         }else{
@@ -271,29 +265,8 @@
                             this.formCancel();
                         }
                     })
-                    .catch(function(error) {
-                        if (error.response) {
-                            console.log('error.response');
-                            console.log(error.response.data);
-                            console.log(error.response.data.message);
-                            if(error.response.data.message.includes("Duplicate entry")){
-                                miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
-                            }
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
-                            if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
-                                console.log(error.response.data.message);
-                            }
-                        } else
-                        if (error.request) {
-                            console.log('error.request');
-                            console.log(error.request);
-                        } else{
-                            console.log('some another error');
-                            console.log(error.message);
-                        }
-                        console.log('error config');
-                        console.log(error.config);
+                    .catch(error=> {
+                        this.processMessageError(error, this.url, "add");
                     })
                     .finally(() => this.isSendingInsert = false);
             },
@@ -329,9 +302,8 @@
                 //     this.editclose();
                 //     this.reload();
                 // })
-                // .catch(function(error) {
-                //     ApiService.process_request_error(error); 
-                //     miniToastr.error(error, "Erro adicionando contato");  
+                // .catch(error => {
+                //     this.processMessageError(error, this.url, "update");
                 // })
                 // .finally(() => this.isSendingUpdate = false);
             },
@@ -345,9 +317,8 @@
                         this.reload();
                         this.formCancel();
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando o contato"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "delete");
                     })
                     .finally(() => this.isSendingDelete = false);  
             },
@@ -366,12 +337,14 @@
                         'transfering':true
                     })
                     .then(response => {
+                        console.log(response);
                         miniToastr.success("Contato tranferido com sucesso","Sucesso");
                         this.isTransferingContact = false;
                         this.reloadAfterTransferContact();
                         this.formCancel();
                     })
-                    .catch(function(error) {
+                    .catch(error => {
+                        console.log(error);
                         this.isTransferingContact = false;
                         miniToastr.error(error, "Erro tranferindo o contato"); 
                     })
@@ -384,19 +357,31 @@
                     .then(response => {                        
                         this.attendants = response.data;
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro eliminando o contato"); 
+                    .catch(error => {
+                        this.processMessageError(error, "usersAttendants", "get");
                     }); 
             },
 
             checkWhatsappNumber:function(){
                 this.isCheckingWhatsapp = true;
 
-                var model_cpy = Object.assign({}, this.model);                //ECR: Para eliminar espaços e traços
+                if(this.model.whatsapp_id !=''){
+                    var check = validation.check('whatsapp', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.isCheckingWhatsapp = false;
+                        return;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O número de Whatsapp é obrigatorio" );
+                    this.isCheckingWhatsapp = false;
+                    return;
+                }
+
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
 
-                // ApiService.get('RPI/getContactInfo/'+this.model.whatsapp_id)
                 ApiService.get('RPI/getContactInfo/'+model_cpy.whatsapp_id)
                     .then(response => {
                         this.whatsappDatas = response.data;
@@ -408,10 +393,13 @@
                         this.isCheckingWhatsapp = false;
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Número de Whatsapp incorreto ou não existe"); 
-                    }).finally(() => {this.isCheckingWhatsapp = false;});
+                    .catch(error => {
+                        // console.log(error);
+                        // return;
+                        // TODO: ECR => concertar esta excecçaõ, esta coinsidiendo con la de seccion expirada
+                        this.processMessageError(error, "getContactInfo", "get");
+                    })
+                    .finally(() => {this.isCheckingWhatsapp = false;});
             },
 
             formReset:function(){
@@ -454,6 +442,7 @@
             reload(){
                 this.$emit('reloadContacts');
             },
+
             reloadAfterTransferContact(){
                 this.$emit('reloadAfterTransferContact');
             },
@@ -540,6 +529,20 @@
                     }
                 }
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         beforeMount(){
