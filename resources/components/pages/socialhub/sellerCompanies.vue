@@ -19,7 +19,7 @@
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
+                    <a href="javascript:undefined" id="addCompany" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>

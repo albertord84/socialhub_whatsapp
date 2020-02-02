@@ -13,11 +13,12 @@ class LoginTest extends DuskTestCase
      * @return void
      */
     public function testingLoginPage(){
-        echo "\n ";
+        echo "\n--------------------------------------------------------------\n ";
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                    ->assertSee('Email')->assertSee('Senha');
-                echo "OK -- Tested Login Page\n ";
+                ->assertSee('Email')
+                ->assertSee('Senha');
+            echo "OK -- Tested Login Page\n ";
         });
     }
     
@@ -82,7 +83,6 @@ class LoginTest extends DuskTestCase
             echo " OK -- Tested login of non-system user\n";
 
             $browser->visit('/')
-                // ->click('Esqueceu sua senha?')
                 ->click('a[href="#/forgotpassword"]')
                 ->waitForText('Recuperar senha')
                 ->assertSee('Recuperar senha');
@@ -90,22 +90,5 @@ class LoginTest extends DuskTestCase
         });
     }
 
-    /**
-     * * @group login
-     * @return void
-     */
-    public function testingSellerDoLogin(){
-        echo "\n ";
-        $this->browse(function ($browser)  {
-            $browser->visit('/')
-                ->type('email', 'attendant1@socialhub.pro')
-                ->type('password', 'attendant1')
-                ->press('Entrar')
-                ->waitForText('Contatos')
-                ->assertSee('Contatos');
-                echo "OK -- Tested login of user: attendant1@socialhub.pro \n";
-                // ->assertPathIs('/#/attendant');
-        });
-    }
-
+    
 }
