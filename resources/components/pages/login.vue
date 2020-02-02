@@ -68,7 +68,7 @@
                         <div class="col-sm-12 text-right">
                             <div class="form-group">
                                 <div class="login-text">
-                                    <router-link tag="a" to="/forgotpassword" class="">Esqueceu sua senha?</router-link>
+                                    <router-link id="lnk_forgot_pass" tag="a" to="/forgotpassword" class="">Esqueceu sua senha?</router-link>
                                 </div>
                             </div>
                         </div>

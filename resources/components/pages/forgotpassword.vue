@@ -24,8 +24,8 @@
                                         <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i>
                                         </div>
                                     </div>
-                                    <input v-model="model.email" name="email" type="email" required placeholder="E-mail"
-                                           class="form-control"/>
+                                    <input v-model="model.email" id="email" name="email" type="email" required placeholder="E-mail"
+                                        class="form-control"/>
                                 </div>
                                 <field-messages name="email" show="$invalid && $submitted" class="text-danger">
                                     <div slot="required">Email é obrigatório</div>
