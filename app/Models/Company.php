@@ -111,4 +111,20 @@ class Company extends Model
         // return $this->hasOne(\App\Models\Rpi::class, 'rpi_id');
     } 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function manager()
+    {
+        $this->manager = User::where([
+            'company_id' => $this->id, 
+            'role_id' => 3, 
+            'status_id' => 1
+        ])->first();
+
+        return $this;
+        // return $this->hasOne(\App\Models\User::class, 'company_id', 'id');
+        // return $this->hasOne(\App\Models\Rpi::class, 'rpi_id');
+    } 
+
 }

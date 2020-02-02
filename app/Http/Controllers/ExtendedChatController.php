@@ -33,7 +33,7 @@ class ExtendedChatController extends ChatController
         $this->chatRepository = $chatRepo;
         $this->externalRPiController = $externalRPiController ?? new ExternalRPIController();
     }
-
+    
     /**
      * Display a listing of the Chat.
      * @param Request $request
@@ -74,7 +74,6 @@ class ExtendedChatController extends ChatController
      * @return Response
      */
     public function index(Request $request) //
-
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $contact_id = (int) $request['contact_id'];
@@ -84,7 +83,9 @@ class ExtendedChatController extends ChatController
 
         $ContactChats = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput);
 
-        // Update selected_contact_id
+        $this->checkProfilePicture($contact_id);
+
+        // Update selected_contact_id   
         $userAttendant = UsersAttendant::find($User->id);
         $userAttendant->selected_contact_id = $contact_id;
         $userAttendant->save();
@@ -92,8 +93,36 @@ class ExtendedChatController extends ChatController
         return $ContactChats->toJson();
     }
 
-    public function getBagContactsCount(Request $request) //
 
+    public function checkProfilePicture(int $contact_id) : bool
+    {
+        // Get cotact info (profile photo etc..)
+        $Contact = Contact::find($contact_id);
+        if ($Contact) {
+            // Check profile picture
+            // $contactInfo = json_decode($Contact->json_data);
+            // $contactInfo = json_decode($Contact->json_data);
+            // Log::debug('$ContactChats', [$contactInfo]);
+
+            // $picurl = $contactInfo->picurl ?? $contactInfo->picurl;
+            // $picurl = urlencode($picurl);
+            // $picurl = urldecode($picurl);
+
+            // $picture = file_get_contents("$picurl");
+
+            // if ($picture && strpos('expired', $picture) !== null) {
+                // $Controller = new ExternalRPIController(null);
+                // $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
+                // $Contact->json_data = $contactInfo;
+
+                // $Contact->Save();
+            // }
+        }
+
+        return true;
+    }
+
+    public function getBagContactsCount(Request $request) //
     {
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);

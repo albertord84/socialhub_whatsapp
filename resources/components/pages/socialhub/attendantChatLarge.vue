@@ -358,9 +358,8 @@
                                 <div class="input-group-prepend" @click.prevent="stopNativeRecordVoice()">
                                     <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
-                        </div> -->
-
-                        <!-- <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
+                        </div>
+                        <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
 
@@ -716,8 +715,6 @@
     </div>
 </template>
 
-
-
 <script>
     import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";
@@ -730,11 +727,11 @@
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
-    import MicRecorder from "mic-recorder-to-mp3"; 
+    // import MicRecorder from "mic-recorder-to-mp3"; 
 
     import routes from '../../../router/index'; //ECR
     
-    // import OpusMediaRecorder from 'opus-media-recorder';
+    import OpusMediaRecorder from 'opus-media-recorder';
 
     // import OpusMediaRecorder from 'opus-media-recorder';
     // // Use worker-loader
@@ -1035,6 +1032,8 @@
 
                         // This.$refs.chatCenterSide
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
+
+                        console.log(This.messages);
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
@@ -1484,10 +1483,10 @@
                 this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
             },
 
+            //MP3
             createMP3Recorder(){
                 return new MicRecorder({bitRate: 128});
             },
-
             startMP3RecordVoice: function() {
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
@@ -1505,7 +1504,6 @@
                         console.error(e);
                     }).finally(()=>{this.isRecordingAudio = true;});
             },
-
             stopMP3RecordVoice: function() {
                 clearInterval(this.handleTimerCounter);
                 this.recorderMP3.stop().getMp3()
@@ -1530,47 +1528,19 @@
                     });
             },
             
-            stopMP3RecordVoiceORG: function() {
-                clearInterval(this.handleTimerCounter);
-                this.recorderMP3.stop().getMp3()
-                    .then(([buffer, blob]) => {
-                        console.log(buffer);
-                        console.log(blob);
-                        let blobOGG = new Blob(buffer, {'type': 'audio/ogg; codecs=opus' });
-                        console.log(blobOGG);
-                        if(this.isRecordingAudio){
-                            const file = new File(buffer, 'audio.ogg', {
-                                type: blobOGG.type,
-                                lastModified: Date.now()
-                            });
-                            // const file = new File(buffer, 'me-at-thevoice.mp3', {
-                            //     type: blob.type,
-                            //     lastModified: Date.now()
-                            // });
-                            // const player = new Audio(URL.createObjectURL(file)); player.play();
-                            this.newMessage.type_id = 3;
-                            this.file = file;
-                            this.sendMessage();
-                        }else{
-                            this.timeRecordingAudio = "00:00";
-                            this.recordingTime = 0;
-                            this.isRecordingAudio = false;
-                        }                     
-                    }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
-                    });
-            },
-
+            
+            //OGG-OPUS
             createOGGRecorder(stream) {
                 const options = { mimeType: 'audio/ogg; codecs=opus' };
                 const workerOptions = {
                     encoderWorkerFactory: function () {
-                        return new Worker('opus-media-recorder/encoderWorker.js')
+                        return new Worker('opus-media-recorder/encoderWorker.js');
+                        // return new Worker('opus-media-recorder/encoderWorker.umd.js');
                     },
                     OggOpusEncoderWasmPath: 'opus-media-recorder/OggOpusEncoder.wasm',
                     WebMOpusEncoderWasmPath: 'opus-media-recorder/WebMOpusEncoder.wasm'
                 };
+
                 window.MediaRecorder = OpusMediaRecorder;
                 this.rec = new MediaRecorder(stream, options, workerOptions);
                 console.log("created recorderOGG object");
@@ -1579,13 +1549,12 @@
                 var that = this;
                 this.rec.start = () => {
                     console.log("started audio recorder");                    
-                    
                 };
 
-                this.rec.dataavailable = (e) => {
-                    console.log('dataChunk available');
-                    this.dataChunks.push(e.data);                            
-                };
+                // this.rec.dataavailable = (e) => {
+                //     console.log('dataChunk available');
+                //     this.dataChunks.push(e.data);                            
+                // };
 
                 this.rec.stop = () => {
                     console.log('stopped audio recorder');
@@ -1599,11 +1568,12 @@
                     console.log(e);                    
                     this.rec.stream.getTracks().forEach(i => i.stop());
                 };
+                
 
                 this.dataChunks = [];
                 this.rec.start();
-            },
 
+            },
             startOGGRecordVoice: function() {                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
@@ -1627,7 +1597,6 @@
                         console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
-
             stopOGGRecordVoice: function() {                                
                 this.rec.stop();
                 return;
@@ -1656,6 +1625,7 @@
 
             },
 
+            //OGG-OPUS-native
             createNativeRecorder(stream) {
                 this.rec = new MediaRecorder(stream);
                 console.log("created recorderOGG object");
@@ -1665,15 +1635,16 @@
                     console.log("started audio recorder");                    
                 };
 
-                this.rec.addEventListener('dataavailable', function(e) { 
-                    console.log(e.data);
-                    this.dataChunks.push(e.data);
-                });
+                // var This = this;
+                // this.rec.addEventListener('dataavailable', function(e) { 
+                //     console.log(e.data);
+                //     This.dataChunks.push(e.data);
+                // });
 
-                this.rec.dataavailable = (e) => {
-                    console.log('dataChunk available');
-                    this.dataChunks.push(e.data);                            
-                };
+                // this.rec.dataavailable = (e) => {
+                //     console.log('dataChunk available');
+                //     this.dataChunks.push(e.data);                            
+                // };
 
                 this.rec.ondataavailable = (e) => {
                     console.log('dataChunk on available');
@@ -1691,7 +1662,6 @@
                 this.dataChunks = [];
                 this.rec.start();
             },
-
             startNativeRecordVoice: function() {                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
@@ -1711,7 +1681,6 @@
                         console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
-
             stopNativeRecordVoice: function() {                                
                 this.rec.stop();
                 return;
@@ -1765,7 +1734,19 @@
         },
 
         mounted(){
-            this.recorderMP3 = this.createMP3Recorder();
+            // this.recorderMP3 = this.createMP3Recorder();
+
+            // Check if MediaRecorder available.
+            if (!window.MediaRecorder) {
+                console.log('!window.MediaRecorder');
+                window.MediaRecorder = OpusMediaRecorder;
+            }
+            // Check if a target format (e.g. audio/ogg) is supported.
+            else 
+            if (!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+                console.log("!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')");
+                window.MediaRecorder = OpusMediaRecorder;
+            }
 
             window.Echo = new Echo({
                 broadcaster: 'pusher',
