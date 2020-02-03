@@ -80,7 +80,7 @@
         @keyframes sk-bounce {
             0%,
             100% {
-                transform: scale(0.0);
+                transform: scale(0.0);omineo
                 -webkit-transform: scale(0.0);
             }
             50% {
@@ -107,7 +107,7 @@
 
     <script type="text/javascript" src="{{ url(mix('manifest.js'))}}"></script>
     <script type="text/javascript" src="{{ url(mix('vendor.js'))}}"></script>
-    <script type="text/javascript" src="{{ url(mix('main.js'))}}"></script>
+    <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP.ENV') }}"></script>
 
 </body>
 
