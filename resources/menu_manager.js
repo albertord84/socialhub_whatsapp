@@ -15,7 +15,7 @@ const menu_items = [
         name: 'Hardware',
         link: '/manager/hardware',
         icon: 'mdi mdi-chip'
-     }, {
+    }, {
         name: 'Integrações',
         icon: 'mdi mdi-settings-transfer-outline',
         child: [
@@ -26,7 +26,7 @@ const menu_items = [
             }
         ]
 },
-     
+
 
     
     // {

@@ -5356,6 +5356,7 @@ var layout = [{
     component: function component(resolve) {
         return __webpack_require__.e/* require */(13).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(809)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
+    // component: resolve => require(['pages/socialhub/managerIntegrateBling'], resolve),
     meta: {
         title: "Integração com o Bling"
     }

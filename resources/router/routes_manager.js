@@ -27,6 +27,7 @@ const layout = [
     },{
         path: '/manager/bling',
         component: resolve => require(['pages/socialhub/managerIntegrateBling'], resolve),
+        // component: resolve => require(['pages/socialhub/managerIntegrateBling'], resolve),
         meta: {
             title: "Integração com o Bling",
         }
