@@ -52,7 +52,6 @@ class MyResponse
 
     public static function makeExceptionJson(Throwable $th) {
         throw $th;
-        
         Log::error('makeExceptionJson Throwable: ', [$th]);
         return self::makeResponseJson($th->getMessage(), $th->getTrace(), $th->getCode(), false);
     }
