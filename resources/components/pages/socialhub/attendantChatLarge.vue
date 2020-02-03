@@ -1850,7 +1850,7 @@
                 // ECR => ativar/desativar som 
 
                 // return;
-                this.isMuteNotifications =! this.isMuteNotifications;
+                // this.isMuteNotifications =! this.isMuteNotifications;
 
                 console.log("despues de cambiar status_id");
                 console.log(this.isMuteNotifications);

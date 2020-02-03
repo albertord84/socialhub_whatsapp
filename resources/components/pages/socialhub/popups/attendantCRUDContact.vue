@@ -337,16 +337,12 @@
                         'transfering':true
                     })
                     .then(response => {
-                        console.log(response);
                         miniToastr.success("Contato tranferido com sucesso","Sucesso");
-                        this.isTransferingContact = false;
                         this.reloadAfterTransferContact();
                         this.formCancel();
                     })
                     .catch(error => {
-                        console.log(error);
-                        this.isTransferingContact = false;
-                        miniToastr.error(error, "Erro tranferindo o contato"); 
+                        this.processMessageError(error, this.secondUrl, "transferring");
                     })
                     .finally(() => this.isTransferingContact = false);   
                 }
@@ -394,9 +390,6 @@
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
                     })
                     .catch(error => {
-                        // console.log(error);
-                        // return;
-                        // TODO: ECR => concertar esta excecçaõ, esta coinsidiendo con la de seccion expirada
                         this.processMessageError(error, "getContactInfo", "get");
                     })
                     .finally(() => {this.isCheckingWhatsapp = false;});

@@ -189,6 +189,9 @@
 </template>
 <script>
     import screenfull from "screenfull"
+    
+    import ApiService from "../../../common/api.service";
+
 
     export default {
         name: "vueadmin_header",
@@ -219,10 +222,29 @@
                         delete axios.defaults.headers.common['Authorization']
                         this.$router.push({name: "login"})
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error encerrando sessão.");   
-                    });                
+                    .catch(error => {
+                        this.processMessageError(error, "auth/logout", "logout");                
+                    });
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('user');
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.$router.push({name: "login"});
+
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         beforeMount: function () {

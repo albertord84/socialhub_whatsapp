@@ -902,7 +902,7 @@
                 }else{
                     miniToastr.error(info.erro, info.message); 
                 }
-            }
+            },
         },
 
         mounted(){
