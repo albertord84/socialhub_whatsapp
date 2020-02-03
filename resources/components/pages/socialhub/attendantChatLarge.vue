@@ -96,7 +96,7 @@
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
                                     <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" class="contact-picture">
+                                        <img :src="JSON.parse(contact.json_data).picurl" @error="reloadContactPicUrl(contact,index)" class="contact-picture">
                                     </div>
                                     <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
@@ -936,6 +936,13 @@
                         var This = this, i = 0;
                         this.contacts.forEach(function(item, i){
                             item.index = i++;
+                            try {
+                                if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
+                                    item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                                }
+                            } catch (error) {
+                                item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                            }
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
@@ -1042,6 +1049,20 @@
                 // setTimeout(() => {
                 //     this.$refs.input.focus();
                 // }, 20);
+            },
+
+            reloadContactPicUrl(contact,index){
+                console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
+                ApiService.get('updateContactPicture/'+contact.id
+                    )
+                    .then(response => {
+                        console.log(response.data);
+                        this.contacts[index] = response.data;
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                        console.log( "Error atualizando informação do contato os contatos");   
+                    });
             },
 
             chatCenterSideBack(){
@@ -1860,7 +1881,7 @@
         },
 
         computed: {
-            allContacts: function() {
+            allContacts: function() {    
                 var self = this;
                 return this.contacts.filter(
                     function(contact) {
