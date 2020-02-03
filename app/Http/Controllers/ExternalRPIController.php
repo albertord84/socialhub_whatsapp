@@ -149,7 +149,7 @@ class ExternalRPIController extends Controller
                 if (!isset($input['Testing'])) {
                     broadcast(new WhatsappLoggedIn($User->id));
                 }
-                // Log::debug('WhatsappLoggedIn Event to: ', [$User]);
+                // Log::debug('\n\rWhatsappLoggedIn Event to: ', [$User]);
             }
 
         } catch (\Throwable $th) {
@@ -233,7 +233,7 @@ class ExternalRPIController extends Controller
 
             $contactInfo = $contactInfo->getBody()->getContents();
             // $contactInfo = json_decode($contactInfo); // Isso viaja para VUE entao nao pode ir como objeto
-            // Log::debug('getContactInfo Response: ', [$contactInfo]);
+            // Log::debug('\n\rgetContactInfo Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }
@@ -251,7 +251,7 @@ class ExternalRPIController extends Controller
     {
         try {
             $input = $request->all();
-            Log::debug('reciveTextMessage: ', [$input]);
+            Log::debug('\n\r\n\rreciveTextMessage: ', [$input]);
 
             $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
             $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
@@ -262,12 +262,12 @@ class ExternalRPIController extends Controller
             $Company = Company::where(['whatsapp' => $company_phone])->first();
             if (!$Company) throw new MyException("Company phone ($company_phone) not found", MyException::$COMPANY_PHONE_NOT_FOUND);
             // $Company = Company::where(['whatsapp' => $company_phone])->first();
-            // Log::debug('reciveTextMessage to Company: ', [$Company]);
+            // Log::debug('\n\rreciveTextMessage to Company: ', [$Company]);
 
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
                 ->first();
-            // Log::debug('reciveTextMessage to Contact: ', [$Contact]);
+            // Log::debug('\n\rreciveTextMessage to Contact: ', [$Contact]);
 
             $Chat = $this->messageToChatModel($input, $Contact);
             if (!$Chat) {
@@ -303,7 +303,7 @@ class ExternalRPIController extends Controller
     {
         try {
             $input = $request->all();
-            // Log::debug('reciveFileMessage: ', [$input]);
+            // Log::debug('\n\rreciveFileMessage: ', [$input]);
 
             $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
             $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
@@ -312,7 +312,7 @@ class ExternalRPIController extends Controller
             $company_phone = $input['CompanyPhone'];
 
             $Company = Company::where(['whatsapp' => $company_phone])->first();
-            // Log::debug('reciveFileMessage to Company: ', [$Company]);
+            // Log::debug('\n\rreciveFileMessage to Company: ', [$Company]);
 
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
@@ -326,14 +326,14 @@ class ExternalRPIController extends Controller
             $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
             // $envFilePath = env('APP_FILE_PATH', 'external_files');
-            // Log::debug('Storage Disk: ', [Storage::disk('chats_files')]);
+            // Log::debug('\n\rStorage Disk: ', [Storage::disk('chats_files')]);
             // $envFilePath = Storage::disk('chats_files')->root;
 
             $filePath = "companies/$Company->id/contacts/$Chat->contact_id/chat_files";
-            Log::debug('reciveFileMessage File Path: ', [$filePath]);
+            Log::debug('\n\rreciveFileMessage File Path: ', [$filePath]);
 
             $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
-            Log::debug('reciveFileMessage File Response: ', [$file_response]);
+            Log::debug('\n\rreciveFileMessage File Response: ', [$file_response]);
 
             $Chat->data = json_encode($file_response);
             $Chat->save();
@@ -486,7 +486,7 @@ class ExternalRPIController extends Controller
             }
 
             $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
-            Log::debug('sendFileMessage to Contact contact_Jid: ', [$contact_Jid]);
+            Log::debug('\n\rsendFileMessage to Contact contact_Jid: ', [$contact_Jid]);
 
             switch ($file_type) {
                 // case 'image':
@@ -509,7 +509,7 @@ class ExternalRPIController extends Controller
             }
 
             $url = $url . "/$EndPoint";
-            Log::debug('sendFileMessage to Contact RPi URL: ', [$url]);
+            Log::debug('\n\rsendFileMessage to Contact RPi URL: ', [$url]);
 
             $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
             $response = $client->request('POST', $url, [
@@ -525,7 +525,7 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
-            Log::debug('sendFileMessage to Contact Response: ', [$response]);
+            Log::debug('\n\rsendFileMessage to Contact Response: ', [$response]);
             return $response->getBody()->getContents();
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
@@ -563,7 +563,7 @@ class ExternalRPIController extends Controller
      */
     public function tests(string $option)
     {
-        // Log::debug('ExternalRPIController tests: ', [$option]);
+        // Log::debug('\n\rExternalRPIController tests: ', [$option]);
         app('debugbar')->disable();
         switch ($option) {
             case 'logout':
