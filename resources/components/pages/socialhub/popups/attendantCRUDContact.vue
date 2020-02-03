@@ -310,6 +310,9 @@
 
             deleteContact(){
                 this.isSendingDelete = true;
+                
+                console.log("dentro del delete");
+                console.log(this.item);
 
                 ApiService.delete(this.url+'/'+this.item.id)
                     .then(response => {                        
