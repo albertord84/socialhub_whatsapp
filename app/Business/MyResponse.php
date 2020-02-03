@@ -4,10 +4,9 @@ namespace App\Business;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use InfyOm\Generator\Utils\ResponseUtil;
 use Throwable;
 
-class MyResponse extends ResponseUtil
+class MyResponse
 {
     /**
      *  Make Json Response by Request and Erro
