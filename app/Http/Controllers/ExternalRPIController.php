@@ -146,7 +146,9 @@ class ExternalRPIController extends Controller
             $User = $Company->manager()->manager;
             if ($User) {
                 $response->LoggedUser = $User; 
-                broadcast(new WhatsappLoggedIn($User->id));
+                if (!isset($input['Testing'])) {
+                    broadcast(new WhatsappLoggedIn($User->id));
+                }
                 // Log::debug('WhatsappLoggedIn Event to: ', [$User]);
             }
 
@@ -275,29 +277,15 @@ class ExternalRPIController extends Controller
             $Chat->save();
 
             if ($Contact) {
-                // $Chat->contact_name = $Contact->first_name;
-                if ($Contact->latestAttendantContact) {
-                    $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                    // $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+                // Send event to attendants with new chat message
+                if (!isset($input['Testing'])) {
+                    broadcast(new MessageToAttendant($Chat));
                 }
-        
-                $Chat->save();
-        
-                if ($Contact) {
-                    // $Chat->contact_name = $Contact->first_name;
-                    if ($Contact->latestAttendantContact) {
-                        $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                        $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
-                    }
-                    // Send event to attendants with new chat message
-                    if (!isset($input['Testing']))
-                        broadcast(new MessageToAttendant($Chat));
-                } else {
-                    // Send event to all attendants with new bag contact count
-                    $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
-                    if (!isset($input['Testing']))
-                        broadcast(new NewContactMessage($Company->id, $bagContactsCount));
-                }
+            } else {
+                // Send event to all attendants with new bag contact count
+                $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
+                if (!isset($input['Testing']))
+                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
             }
         } catch (\Throwable $th) {
             return MyResponse::makeExceptionJson($th);
@@ -352,11 +340,17 @@ class ExternalRPIController extends Controller
 
             if ($Contact) {
                 // Send event to attendants with new chat message
-                broadcast(new MessageToAttendant($Chat));
+                // Send event to attendants with new chat message
+                if (!isset($input['Testing'])) {
+                    broadcast(new MessageToAttendant($Chat));
+                }
             } else {
                 // Send event to all attendants with new contact
                 $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
-                broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+                // Send event to attendants with new chat message
+                if (!isset($input['Testing'])) {
+                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+                }
             }
         } catch (\Throwable $th) {
             return MyResponse::makeExceptionJson($th);
