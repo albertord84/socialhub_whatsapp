@@ -31,11 +31,19 @@ class SellerFunctionsTest extends DuskTestCase
         $this->browse(function ($browser)  {
             $browser->visit('/')
                 ->type('email', 'seller1@socialhub.pro')
+                ->type('password', 'wrong_pass')
+                ->press('Entrar')
+                ->waitForText('Email ou senha inválido')
+                ->assertSee('Email ou senha inválido');
+            echo "OK -- Tested login of user: seller1@socialhub.pro with incorrect pasword\n";
+
+            $browser->visit('/')
+                ->type('email', 'seller1@socialhub.pro')
                 ->type('password', 'seller1')
                 ->press('Entrar')
                 ->waitForText('Empresas')
                 ->assertSee('Empresas');
-                echo "OK -- Tested login of user: seller1@socialhub.pro\n";
+            echo "OK -- Tested login of user: seller1@socialhub.pro\n";
         });
     }
 
