@@ -2,7 +2,6 @@
 namespace App\Business;
 
 use Exception;
-use Throwable;
 
 class MyException extends Exception
 {
@@ -26,6 +25,6 @@ class MyException extends Exception
 
     public function __toString()
     {
-        MyResponse::makeExceptionJson($this->exception);
+        MyResponse::makeExceptionJson($this);
     }
 }
