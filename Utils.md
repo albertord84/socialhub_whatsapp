@@ -147,13 +147,23 @@ skip options:
 migration,repository,model,controllers,api_controller,scaffold_controller,scaffold_requests,routes,api_routes,scaffold_routes,views,tests,menu,dump-autoload
 
 
-# Testing Laravel APP
+## Testing Laravel APP
 CREATE DATABASE `socialhub_mvp.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
 php artisan migrate:refresh --database=socialhub_mvp.test --seed
+
+# Set RPI 1 NGrok to in
+http://localhost/RPI/tests
+OR
+http://[localdomine]/RPI/tests
+
+# Create attendans tables
+  Copy create dabase script of tables 4 and 5 from socialhub_mvp.chats DB
+and create its into socialhub_mvp.chats.test
 
 CREATE DATABASE `socialhub_mvp.chats.test` /*!40100 DEFAULT CHARACTER SET utf8 */;
 Create base chats table
 Create attendants base chats table
+
 
 Configure test db connections into laravel database.php
 
