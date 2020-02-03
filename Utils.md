@@ -59,12 +59,11 @@ mkdir storage/framework/cache/data
 
 php artisan config:clear
 
-
 php artisan serve --host=192.168.25.6
+
 
 # Advanced Elloquent Querys
 https://m.dotdev.co/writing-advanced-eloquent-search-query-filters-de8b6c2598db
-
 
 
 # Commnads
@@ -123,6 +122,7 @@ I tried almost all combinations:
         'verify_peer' => false,
     ],
 
+
 ## Create command abreviators
 alias pu='clear && vendor/bin/phpunit'
 alias pf='clear && vendor/bin/phpunit --filter'
@@ -157,11 +157,12 @@ Create attendants base chats table
 
 Configure test db connections into laravel database.php
 
+
 ## Add this to phpunit.xml between php tags
     <env name="DB_CONNECTION" value="socialhub_mvp.test"/>
 
-# Laravel Autocomplete
 
+# Laravel Autocomplete
 https://stackoverflow.com/questions/48211622/intellisense-autocompletion-for-model-in-laravel-for-visual-studio-code-or-ano
 
 https://github.com/bmewburn/vscode-intelephense/issues/123
@@ -174,3 +175,7 @@ https://github.com/barryvdh/laravel-ide-helper
 # Laravel Maintenance Message
 php artisan down --message="Upgrading Database" --retry=60
 php artisan up
+
+
+#  Ativar ambiente de test no RPi
+export RPI_DEV=true ele usa o endpoint http://test.app.socialhub.pro/, e para voltar ao endpoint app.socialhub.pro só rodar export RPI_DEV=
