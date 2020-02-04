@@ -107,7 +107,7 @@
 
     <script type="text/javascript" src="{{ url(mix('manifest.js'))}}"></script>
     <script type="text/javascript" src="{{ url(mix('vendor.js'))}}"></script>
-    <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP.ENV') }}"></script>
+    <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP_VERSION') }}"></script>
 
 </body>
 

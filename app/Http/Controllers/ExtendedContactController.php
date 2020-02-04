@@ -171,6 +171,35 @@ class ExtendedContactController extends ContactController
     }
 
     /**
+     * Update the specified Contact in storage.
+     *
+     * @param  int              $id
+     * @param UpdateContactRequest $request
+     *
+     * @return Response
+     */
+    public function updatePicture($id, Request $request)
+    {
+        $Contact = Contact::find($id);
+
+        $Controller = new ExternalRPIController(null);
+        $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
+        $Contact->json_data = $contactInfo;
+        $Contact->timestamps = false;
+        $Contact->save();
+
+        if (empty($Contact)) {
+            Flash::error('Contact not found');
+            return redirect(route('contacts.index'));
+        }
+
+        Flash::success('Contact picture updated.');
+
+        // return redirect(route('contacts.index'));
+        return $Contact->toJson();
+    }
+
+    /**
      * Remove the specified Contact from storage.
      *
      * @param  int $id
@@ -200,4 +229,6 @@ class ExtendedContactController extends ContactController
 
         // return redirect(route('contacts.index'));
     }
+
+
 }

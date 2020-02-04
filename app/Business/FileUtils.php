@@ -49,7 +49,7 @@ class FileUtils extends Business
         } catch (\Throwable $th) {
             $json_data->msg = $th->getMessage();
             $json_data->error = true;
-            Log::debug('reciveFileMessage File Path: ', [$th]);
+            Log::debug('\n\rreciveFileMessage File Path: ', [$th]);
             // Flash::success('Error movendo o arquivo.');
         }
         return $json_data;
