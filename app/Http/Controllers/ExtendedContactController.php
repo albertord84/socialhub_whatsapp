@@ -188,7 +188,7 @@ class ExtendedContactController extends ContactController
         $Contact->timestamps = false;
         $Contact->save();
 
-        if (empty($contact)) {
+        if (empty($Contact)) {
             Flash::error('Contact not found');
             return redirect(route('contacts.index'));
         }
