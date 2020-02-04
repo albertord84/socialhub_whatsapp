@@ -95,10 +95,10 @@
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
-                                    <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
+                                    <div class="col-3 pointer-hover" @click.prevent="message=[],hasMorePageMessage=true, pageNumber=0,getContactChat(contact)">
                                         <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @click="reloadContactPicUrl($event, contact,index)" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture">
                                     </div>
-                                    <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
+                                    <div class="col-7 d-flex" @click.prevent="message=[],hasMorePageMessage=true, pageNumber=0,getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
                                             <div class="row">
                                                 <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
@@ -212,7 +212,7 @@
                 </div>
 
                 <!-- Chat messages -->
-                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @onscrolling="chatMessageScroling">                       
+                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :percent="percent" :seeSrolling="'true'" @onscrolling="chatMessageScroling">                       
                     <ul>
                         <li v-for='(message,index) in messages' :key="index">
                             <!-- Date separator message-->
@@ -790,6 +790,8 @@
                     'socialnetwork_id':1, //Whatsapp
                 },
 
+                percent:0,
+
                 showContactInformation:false,
                 showContactSummary:false,
                 showContactMedia:false,
@@ -997,24 +999,81 @@
             }, 
 
             getContactChat: function(contact) {
-                if(!this.hasMorePageMessage) return;
-                if(this.isSendingNewMessage) return;  
-                if(this.requestingNewPage) return;
+                console.log('contact.index --> '+contact.index);
+                if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
                 this.requestingNewPage=true;
                 if(this.showChatRightSide) this.displayChatRightSide();
                 if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
                 this.selectedContactIndex = contact.index;
-                
-                console.log('requesting a new page number '+this.pageNumber);
+                console.log('requesting a page number '+this.pageNumber);
                 ApiService.get(this.chat_url,{
                     'contact_id':contact.id,
                     'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
                     'page':this.pageNumber
                 })
                     .then(response => {
-                        console.log(response.data);
-                        console.log(typeof(response.data));
+                        if(response.data.length == 0 && this.pageNumber > 0){
+                            this.hasMorePageMessage = false;
+                            this.pageNumber --;
+                            return;
+                        }
+                        this.findAroundMessageId = null;
+                        this.contacts[this.selectedContactIndex].count_unread_messagess =0;
+                        this.messagesWhereLike = [];
+                        this.searchMessageByStringInput = [];
+                        // this.messages = response.data; 
+                        this.messages_copy=new Array();
+                        var This = this;
+                        response.data.forEach(function(item, i){
+                            try {
+                                item.time = This.getMessageTime(item.created_at);
+                                if(item.time.date!=This.messageTimeDelimeter){
+                                    This.messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    This.messageTimeDelimeter = item.time.date;
+                                }
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                This.messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
+                        This.messages = This.messages_copy.concat(This.messages);
+                        This.selectedContact = This.contacts[This.selectedContactIndex];
+                        This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
+
+                        document.getElementById("chat-center-side").classList.add("chat-center-side-open");
+
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error carregando os contatos");   
+                    }).finally(()=>{
+                        this.requestingNewPage=false;
+                    });
+            },
+            
+            getContactChatOld: function(contact) {
+                if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
+                this.requestingNewPage=true;
+                if(this.showChatRightSide) this.displayChatRightSide();
+                if(this.showChatFindMessages) this.displayChatFindMessage();
+                this.messageTimeDelimeter = '';
+                this.selectedContactIndex = contact.index;
+                
+                console.log('requesting a page number '+this.pageNumber);
+                ApiService.get(this.chat_url,{
+                    'contact_id':contact.id,
+                    'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
+                    'page':this.pageNumber
+                })
+                    .then(response => {
                         if(response.data.length == 0){
                             this.hasMorePageMessage = false;
                             this.pageNumber --;
@@ -1051,20 +1110,18 @@
                         This.selectedContact = This.contacts[This.selectedContactIndex];
                         This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
 
-                        // This.$refs.chatCenterSide
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
 
-                        console.log(This.messages);
+                        // if(This.selectedContactIndex >= 0 && This.$refs.message_scroller){
+                        //     This.$refs.message_scroller.scrolltobottom();
+                        // }
+
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
                     }).finally(()=>{
                         this.requestingNewPage=false;
                     });
-
-                // setTimeout(() => {
-                //     this.$refs.input.focus();
-                // }, 20);
             },
 
             reloadContactPicUrl(e,contact,index){
@@ -1160,20 +1217,22 @@
             },
 
             chatMessageScroling: function(value){
-                if(value < 15 && this.hasMorePageMessage){
-                        this.pageNumber ++;
-                        // this.getContactChat(this.selectedContact);
-                        console.log(this.pageNumber);
-                    }
-                else
-                if(value>80){
-                    if(this.pageNumber > 0){
-                        this.hasMorePageMessage = true;
-                        this.pageNumber --;
-                        // this.getContactChat(this.selectedContact);
-                        console.log(this.pageNumber);
-                    }
+                    // console.log('value ---> '+value);
+                if(value < 2 && !this.requestingNewPage && this.hasMorePageMessage){
+                    this.pageNumber ++;
+                    this.getContactChat(this.selectedContact);
+                    console.log('page number ---> '+this.pageNumber);
+                    console.log('value ---> '+value);
+                    this.percent = value + 10;
+                    // this.$refs.message_scroller.scrolltobottom();
                 }
+                // else
+                // if(value>80 && !this.requestingNewPage && this.pageNumber > 0){
+                //     this.hasMorePageMessage = true;
+                //     this.pageNumber --;
+                //     this.getContactChat(this.selectedContact);
+                //     console.log('page number ---> '+this.pageNumber);
+                // }
             },
 
             getLastMessageTime: function(time){
@@ -1763,8 +1822,9 @@
         },
 
         updated(){
-            if(this.selectedContactIndex>=0 && this.$refs.message_scroller)
+            if(this.selectedContactIndex >= 0 && this.$refs.message_scroller && this.pageNumber == 0) {
                 this.$refs.message_scroller.scrolltobottom();
+            }
         },
 
         beforeMount() {

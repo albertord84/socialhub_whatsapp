@@ -19,6 +19,8 @@ export default {
         alwaysvisible: Boolean,
 
         seeSrolling:false,
+
+        percent:0
     },
     mounted() {
         this.dragDealer();
@@ -94,6 +96,12 @@ export default {
 
         scrolltobottom() {
             this.$refs.content.scrollTop = this.$refs.content.scrollHeight;
+        }
+    },
+
+    watch:{
+        percent:function(value){
+            this.scrolltopercent(value);
         }
     }
 }
