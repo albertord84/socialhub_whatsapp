@@ -96,7 +96,7 @@
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
                                     <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="reloadContactPicUrl($event, contact,index)" class="contact-picture">
+                                        <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @click="reloadContactPicUrl($event, contact,index)" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture">
                                     </div>
                                     <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
@@ -774,6 +774,7 @@
                 messagesWhereLike:[],
                 findAroundMessageId:null, //for find in database when the clicked and founded message is not in actual page
                 pageNumber:0,
+                hasMorePageMessage:true,
                 messageTimeDelimeter:'',
                 file:null,
                 pathFiles:'',
@@ -995,6 +996,8 @@
             }, 
 
             getContactChat: function(contact) {
+                if (!this.hasMorePageMessage) return;
+                console.log('requesting a apge number '+this.pageNumber);
                 if (this.isSendingNewMessage) return;  
                 if(this.showChatRightSide) this.displayChatRightSide();
                 if(this.showChatFindMessages) this.displayChatFindMessage();
@@ -1006,6 +1009,11 @@
                     'page':this.pageNumber
                 })
                     .then(response => {
+                        if(response.data.length == 0){
+                            this.hasMorePageMessage = false;
+                            this.pageNumber --;
+                            return;
+                        }
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess =0;
                         this.messagesWhereLike = [];
@@ -1052,19 +1060,26 @@
             },
 
             reloadContactPicUrl(e,contact,index){
-                console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
-                ApiService.get('updateContactPicture/'+contact.id)
-                    .then(response => {
-                        console.log(e.target);
-                        // delete this.contacts[index].json_data;
-                        this.contacts[index].json_data = response.data.json_data;
-                        e.target.src = JSON.parse(response.data.json_data).picurl;
-                        // this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
-                    })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error atualizando informação do contato os contatos");   
-                        console.log( "Error atualizando informação do contato os contatos");   
-                    });
+                // console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
+                if(typeof(this.allContacts[index].broken) != 'undefined' || typeof(this.contacts[index].broken) != 'undefined'){
+                    ApiService.get('updateContactPicture/'+contact.id)
+                        .then(response => {
+                            console.log(e.target);
+                            // delete this.contacts[index].json_data;
+                            this.contacts[index].json_data = response.data.json_data;
+                            e.target.src = JSON.parse(response.data.json_data).picurl;
+                            // this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                        })
+                        .catch(function(error) {
+                            miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                            console.log( "Error atualizando informação do contato os contatos");   
+                        });
+                }
+            },
+
+            markAsBrokenUrl(contact,index){
+                this.contacts[index].broken = true;
+                this.allContacts[index].broken = true;
             },
 
             chatCenterSideBack(){
@@ -1137,13 +1152,21 @@
             },
 
             chatMessageScroling: function(value){
-                if(value<10){
-                    this.pageNumber --;
-                    //get new page of messages
+                console.log(value);
+                if(value < 15){
+                    if(this.pageNumber > 0){
+                        this.hasMorePageMessage = true;
+                        this.pageNumber --;
+                        // this.getContactChat(this.selectedContact);
+                        console.log(this.pageNumber);
+                    }
                 }else
-                if(value>90){
-                    this.pageNumber ++;
-                    //get new page of messages
+                if(value>85){
+                    if(this.hasMorePageMessage){
+                        this.pageNumber ++;
+                        // this.getContactChat(this.selectedContact);
+                        console.log(this.pageNumber);
+                    }
                 }
             },
 
@@ -1915,7 +1938,7 @@
                     console.log('sended message');
                     //enable new message, and upload and send buttons
                 }
-            },            
+            },             
         }
 
     }
