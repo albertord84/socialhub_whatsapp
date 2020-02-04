@@ -1003,6 +1003,7 @@
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
+                            this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
                         }   
                     })
                     .catch(error => {
@@ -1086,7 +1087,7 @@
                         This.messages = This.messages_copy;
                         This.selectedContact = This.contacts[This.selectedContactIndex];
                         This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
-
+                        This.selectedContactToEdit.index = This.selectedContactIndex;
                         // This.$refs.chatCenterSide
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
 
@@ -1157,6 +1158,7 @@
                         if(this.isEditingContactSummary)
                             this.isEditingContactSummary = false;
                         miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                        this.selectedContactIndex = 0;
                         this.getContacts();
                     })
                     .catch(error => {
@@ -1386,13 +1388,6 @@
                 this.getContacts();
                 this.selectedContact={};
                 this.selectedContactIndex = -1;
-            },
-
-            reloadContactsAfterEditNotifications(){
-                // this.displayChatRightSide();
-                this.getContacts();
-                // this.selectedContact={};
-                // this.selectedContactIndex = -1;
             },
 
             reloadAfterTransferContact(){
@@ -1800,7 +1795,14 @@
                         if(response.data.status_id != 6) miniToastr.success("As notificações foram ativadas com sucesso.","Sucesso");
                         if(response.data.status_id == 6) miniToastr.success("As notificações foram silenciadas com sucesso.","Sucesso");
                         this.selectedContactToEdit == this.getContactInfoToEdit(response.data);
-                        this.reloadContactsAfterEditNotifications();
+                        
+                        if(this.selectedContactIndex == this.selectedContactToEditActions.index){
+                            this.selectedContactIndex = 0;
+                        }else
+                        if(this.selectedContactIndex < this.selectedContactToEditActions.index){
+                            this.selectedContactIndex ++;
+                        }
+                        this.getContacts();
                     })
                     .catch(error => {
                         this.processMessageError(error, this.contacts_url, "update");
