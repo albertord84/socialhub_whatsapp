@@ -9,37 +9,25 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class LoginTest extends DuskTestCase
 {
     /**
-     * @group login
-     * @return void
-     */
-    public function testingLoginPage(){
-        echo "\n--------------------------------------------------------------\n ";
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                ->assertSee('Email')
-                ->assertSee('Senha');
-            echo "OK -- Tested Login Page\n ";
-        });
-    }
-    
-    /**
-     * @group login
+     * @group page_login
      * @return void
      */
     public function testingLoginInputsFields(){   
-        echo "\n ";
+        echo "\n--------------------------------------------------------------\n ";
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                 ->assertSee('Email')
                 ->assertSee('Senha')
                 ->assertSee('Esqueceu sua senha?')
-                ->assertSee('Entrar');
+                ->assertSee('Entrar')
+                ->assertPresent('#email')
+                ->assertPresent('#password');
             echo "OK -- Tested Login HTML elements\n ";
         });
     }
 
     /**
-     * @group login
+     * @group page_login
      * @return void
      */
     public function testingLoginInputsValues(){
@@ -48,41 +36,41 @@ class LoginTest extends DuskTestCase
             $browser->visit('/')
                 ->type('email', '') //empty email
                 ->type('password', '') //empty password
-                ->press('Entrar')
+                ->press('#btnEnter')
                 ->assertSee('Email inválido');
             echo "OK -- Tested empty email and empty password\n ";
 
-            $browser->visit('/')
+            $browser//->visit('/')
                 ->type('email', 'invalidEmail') //invalid email
                 ->type('password', '') //empty password
-                ->press('Entrar')
+                ->press('#btnEnter')
                 ->assertSee('Email inválido');
             echo "OK -- Tested invalid email and empty password\n ";
 
-            $browser->visit('/')
+            $browser//->visit('/')
                 ->type('email', 'anyemail@gmail.com') //valid email
                 ->type('password', '')  //empty password
-                ->press('Entrar')
+                ->press('#btnEnter')
                 ->waitForText('Email ou senha inválido')
                 ->assertSee('Email ou senha inválido');
             echo "OK -- Tested valid email and empty password\n";
 
-            $browser->visit('/')
+            $browser//->visit('/')
                 ->type('email', '') //empty email
                 ->type('password', 'anypassword')  //any password
-                ->press('Entrar')
+                ->press('#btnEnter')
                 ->assertSee('Email inválido');
             echo " OK -- Tested empty email and any password\n";
             
-            $browser->visit('/')
+            $browser//->visit('/')
                 ->type('email', 'anyemail@gmail.com') ////non-user valid email
                 ->type('password', 'anypassword')  //non-user password
-                ->press('Entrar')
+                ->press('#btnEnter')
                 ->waitForText('Email ou senha inválido')
                 ->assertSee('Email ou senha inválido');
             echo " OK -- Tested login of non-system user\n";
 
-            $browser->visit('/')
+            $browser//->visit('/')
                 ->click('a[href="#/forgotpassword"]')
                 ->waitForText('Recuperar senha')
                 ->assertSee('Recuperar senha');

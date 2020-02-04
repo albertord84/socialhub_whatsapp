@@ -9,27 +9,11 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ResetpasswordTest extends DuskTestCase
 {
     /**
-     * @group login
-     * @return void
-     */
-    public function testingResetPasswordPage(){
-        echo "\n--------------------------------------------------------------\n ";
-        $this->browse(function (Browser $browser) {
-            $browser->visit('#/reset_password/PJ3JIKv6fGaXpwYX')
-                ->assertSee('Redefinir Senha')
-                ->assertSee('A senha é sensível a maiúsculas.')
-                ->assertPresent('#password')
-                ->assertPresent('#repeatpassword');
-                echo "OK -- Tested Reset Password Page\n ";
-        });
-    }
-    
-    /**
-     * @group login
+     * @group page_reset_password
      * @return void
      */
     public function testingResetPasswordInputsFields(){   
-        echo "\n ";
+        echo "\n--------------------------------------------------------------\n ";
         $this->browse(function (Browser $browser) {
             $browser->visit('#/reset_password/PJ3JIKv6fGaXpwYX')
                 ->assertSee('Redefinir Senha')
@@ -41,7 +25,7 @@ class ResetpasswordTest extends DuskTestCase
     }
 
     /**
-     * @group login
+     * @group page_reset_password
      * @return void
      */
     public function testingResetPasswordInputsValues(){
