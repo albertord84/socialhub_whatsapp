@@ -28,12 +28,17 @@ class ExtendedChatRepository extends ChatRepository
 
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
+
+
             
         } catch (\Throwable $th) {
             throw $th;
         }
 
-        return $ContactChats;
+        $page_length = env('APP_PAGE_LENGTH', 10);
+        $Slice = $ContactChats->slice($page, $page_length)->all();
+        // return $ContactChats;
+        return new Collection($Slice);
     }
 
     public function getBagContact(int $attendant_id): Contact{
