@@ -29,10 +29,21 @@ class ExtendedChatRepository extends ChatRepository
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
 
-            $page_length = env('APP_PAGE_LENGTH', 10);
-            $Slice = $ContactChats->slice(Count($ContactChats) - $page_length * $page - $page_length, $page_length)->all();
             $Collection = new Collection();
+            $page_length = env('APP_PAGE_LENGTH', 10);
 
+            $msgCount = Count($ContactChats);
+            $start = $msgCount - $page_length * $page - $page_length;
+            if ($start < 0 ) {  // Validating last page
+                if ($start + $page_length <= 0) // if after last page return empty collection
+                    return $Collection;
+
+                // Needed in case the last page not to be a full page
+                $page_length = $start + $page_length;
+                $start = 0;
+            }
+
+            $Slice = $ContactChats->slice($start, $page_length)->all();
             foreach ($Slice as $key => $value) {
                 $Collection->add($value);
             }
