@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class SellerFunctionsTest extends DuskTestCase
 {
     /**
-     * @group login
+     * @group seller
      * @return void
      */
     public function testingLoginPage(){
@@ -23,7 +23,7 @@ class SellerFunctionsTest extends DuskTestCase
     }
 
     /**
-     * * @group login
+     * * @group seller
      * @return void
      */
     public function testingSellerDoLogin(){
@@ -42,30 +42,85 @@ class SellerFunctionsTest extends DuskTestCase
                 ->type('password', 'seller1')
                 ->press('Entrar')
                 ->waitForText('Empresas')
-                ->assertSee('Empresas');
-            echo "OK -- Tested login of user: seller1@socialhub.pro\n";
+                ->assertSee('Empresas')
+                ->assertPresent('#logged_user_name')
+                ->assertPresent('#addCompany')
+                ->assertSee('Linhas por página:')
+
+                ->click('#addCompany')
+                ->waitForText('Nova empresa')
+                ->assertSee('Nova empresa');
+            echo " OK -- Tested login of user: seller1@socialhub.pro\n";
         });
     }
 
-    // /**
-    //  * * @group login
-    //  * @return void
-    //  */
-    // public function testingSellerAddCompany(){
-    //     echo "\n ";
-    //     $this->browse(function ($browser)  {
-    //         $browser->visit('#/seller')
-    //             ->click('a[href="#/addCompany"]')
-    //             ->assertSee('Nova empresa')
+    /**
+     * * @group seller
+     * @return void
+     */
+    public function testingSellerAddCompany(){
+        echo "\n ";
+        $this->browse(function ($browser)  {
+            $browser->visit('/')
+            ->type('email', 'seller1@socialhub.pro')
+            ->type('password', 'seller1')
+            ->press('Entrar')
+            ->waitForText('Empresas')
+            ->assertSee('Empresas')
+            ->assertPresent('#logged_user_name')
+            ->assertPresent('#addCompany')
+            ->assertSee('Linhas por página:')
+
+            ->click('#addCompany')
+            ->waitForText('Nova empresa')
+            ->assertSee('Nova empresa')
+
+            ->assertSee('Endereço postal')
+            ->assertSee('Descrição da empresa')
+            ->assertSee('Dados do manager da empresa')
+            ->assertSee('Adicionar')
+            ->assertSee('Cancelar')
+
+            ->assertPresent('#CNPJ')
+                ->type('CNPJ', '111111111')->press('Adicionar')->waitForText('Por favor, confira')->assertSee('Por favor, confira')->type('CNPJ', '88495263000161')
+            ->assertPresent('#name')
+                ->type('name', 'Company#$%DuskTest')->press('Adicionar')->waitForText('Por favor, confira')->assertSee('Por favor, confira')->type('name', 'CompanyDuskTest')
+            ->assertPresent('#phoneCompany')
+                ->type('phoneCompany', '123456')->press('Adicionar')->waitForText('Por favor, confira')->assertSee('Por favor, confira')->type('phoneCompany', '5521965913089')
+            ->assertPresent('#email')
+                ->type('email', '123456')->press('Adicionar')->waitForText('Por favor, confira')->assertSee('Por favor, confira')->type('phoneCompany', 'jgonzalez@ic.uff.br')
+            ->assertPresent('#whatsapp')
+            ->assertPresent('#amount_attendants')
+            ->assertPresent('#CEP')
+            ->assertPresent('#cidade')
+            ->assertPresent('#estado')
+            ->assertPresent('#rua')
+            ->assertPresent('#numero')
+            ->assertPresent('#complemento')
+            ->assertPresent('#bairro')
+            ->assertPresent('#description')
+            ->assertPresent('#nameManager')
+            ->assertPresent('#emailManager')
+            ->assertPresent('#CPF')
+            ->assertPresent('#phoneManager')
+            ->assertPresent('#whatsapp_id');
+
+
+            // ->type('email', 'seller1@socialhub.pro')
+            // ->type('password', 'seller1')
+            // ->press('Entrar')
+            // ->waitForText('Empresas')
+            // ->assertSee('Empresas')
+            // ->assertPresent('#logged_user_name')
+            // ->assertPresent('#addCompany')
+            // ->assertSee('Linhas por página:')
+
                 
-    //             ->type('email', 'seller1@socialhub.pro')
-    //             ->type('password', 'seller1')
-    //             ->press('Entrar')
-    //             ->waitForText('Empresas')
-    //             ->assertSee('Empresas');
-    //             echo "OK -- Tested login of user: seller1@socialhub.pro\n";
-    //     });
-    // }
+            echo "OK -- Tested seller1 add a new company\n";
+        });
+    }
+
+    
 
 
 }

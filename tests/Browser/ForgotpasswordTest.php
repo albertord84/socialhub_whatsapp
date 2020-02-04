@@ -63,12 +63,12 @@ class ForgotpasswordTest extends DuskTestCase
                 ->assertSee('Email não existe');
             echo "OK -- Tested forgotpassword of non-system user\n";
             
-            $browser->visit('#/forgotpassword')
-                ->type('email', 'attendant2@socialhub.pro') //valid email
-                ->press('Enviar Email')
-                ->waitForText('O email de redefinição de senha foi enviado.')
-                ->assertSee('O email de redefinição de senha foi enviado.');
-            echo " OK -- Tested forgotpassword of attendant2@socialhub.pro user\n";
+            // $browser->visit('#/forgotpassword')
+            //     ->type('email', 'attendant2@socialhub.pro') //valid email
+            //     ->press('Enviar Email')
+            //     ->waitForText('O email de redefinição de senha foi enviado.')
+            //     ->assertSee('O email de redefinição de senha foi enviado.');
+            // echo " OK -- Tested 'O email de redefinição de senha foi enviado': \n";
             
         });
     }
