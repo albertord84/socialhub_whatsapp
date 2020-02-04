@@ -3,66 +3,110 @@
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"admin\\\", path: \\\"\/admin\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819774752
+=======
+        "timestamp": 1580826557951
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"seller\\\", path: \\\"\/seller\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819774753
+=======
+        "timestamp": 1580826557951
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"manager\\\", path: \\\"\/manager\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819774754
+=======
+        "timestamp": 1580826557951
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"attendant\\\", path: \\\"\/attendant\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819774754
+=======
+        "timestamp": 1580826557952
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"attendant\\\", path: \\\"\/attendant\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819774755
+=======
+        "timestamp": 1580826557952
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "SEVERE",
         "message": "http:\/\/wp.socialhub.local\/auth\/login - Failed to load resource: the server responded with a status of 401 (Unauthorized)",
         "source": "network",
+<<<<<<< HEAD
         "timestamp": 1580819775943
+=======
+        "timestamp": 1580826558880
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"admin\\\", path: \\\"\/admin\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819776455
+=======
+        "timestamp": 1580826559308
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"seller\\\", path: \\\"\/seller\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819776455
+=======
+        "timestamp": 1580826559308
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"manager\\\", path: \\\"\/manager\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819776455
+=======
+        "timestamp": 1580826559308
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"attendant\\\", path: \\\"\/attendant\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819776456
+=======
+        "timestamp": 1580826559309
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2211:46 \"[vue-router] Duplicate named routes definition: { name: \\\"attendant\\\", path: \\\"\/attendant\\\" }\"",
         "source": "console-api",
+<<<<<<< HEAD
         "timestamp": 1580819776456
+=======
+        "timestamp": 1580826559309
+>>>>>>> 41864d42100a089f1a92c4f53541f671dac2ba8d
     }
 ]

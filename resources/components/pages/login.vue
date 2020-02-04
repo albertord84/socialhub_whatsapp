@@ -27,8 +27,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
                                         </div>
-                                        <input v-model="model.email" name="email" id="email" type="text" required
-                                               autofocus placeholder="E-mail" class="form-control"/>
+                                        <input v-model="model.email" name="email" id="email" type="text" required autofocus placeholder="E-mail" class="form-control"/>
                                     </div>
                                     <field-messages name="email" show="$invalid && $submitted" class="text-danger">
                                         <div slot="required">Email é obrigatório</div>
@@ -41,7 +40,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <validate tag="div">
-                                    <label for="password"> Senha</label>
+                                    <label for="password"> Senha </label>
                                     <div class="input-group mb-2">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
@@ -75,7 +74,7 @@
 
                         <div class="col-lg-12 text-right">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block" :disabled="isSending==true" @click.prevent="onSubmit">
+                                <button type="submit" id="btnEnter" class="btn btn-primary btn-block" :disabled="isSending==true" @click.prevent="onSubmit">
                                     <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
                                 </button>
                             </div>
