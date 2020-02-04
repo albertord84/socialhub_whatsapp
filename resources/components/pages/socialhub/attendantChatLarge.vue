@@ -775,6 +775,7 @@
                 findAroundMessageId:null, //for find in database when the clicked and founded message is not in actual page
                 pageNumber:0,
                 hasMorePageMessage:true,
+                requestingNewPage:false,
                 messageTimeDelimeter:'',
                 file:null,
                 pathFiles:'',
@@ -996,13 +997,16 @@
             }, 
 
             getContactChat: function(contact) {
-                if (!this.hasMorePageMessage) return;
-                console.log('requesting a apge number '+this.pageNumber);
-                if (this.isSendingNewMessage) return;  
+                if(!this.hasMorePageMessage) return;
+                if(this.isSendingNewMessage) return;  
+                if(this.requestingNewPage) return;
+                this.requestingNewPage=true;
                 if(this.showChatRightSide) this.displayChatRightSide();
                 if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
                 this.selectedContactIndex = contact.index;
+                
+                console.log('requesting a new page number '+this.pageNumber);
                 ApiService.get(this.chat_url,{
                     'contact_id':contact.id,
                     'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
@@ -1054,6 +1058,8 @@
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error carregando os contatos");   
+                    }).finally(()=>{
+                        this.requestingNewPage=false;
                     });
 
                 // setTimeout(() => {
@@ -1154,18 +1160,16 @@
             },
 
             chatMessageScroling: function(value){
-                console.log(value);
-                if(value < 15){
-                    if(this.pageNumber > 0){
-                        this.hasMorePageMessage = true;
-                        this.pageNumber --;
+                if(value < 15 && this.hasMorePageMessage){
+                        this.pageNumber ++;
                         // this.getContactChat(this.selectedContact);
                         console.log(this.pageNumber);
                     }
-                }else
-                if(value>85){
-                    if(this.hasMorePageMessage){
-                        this.pageNumber ++;
+                else
+                if(value>80){
+                    if(this.pageNumber > 0){
+                        this.hasMorePageMessage = true;
+                        this.pageNumber --;
                         // this.getContactChat(this.selectedContact);
                         console.log(this.pageNumber);
                     }
