@@ -34,11 +34,14 @@ class ExtendedChatRepository extends ChatRepository
         } catch (\Throwable $th) {
             throw $th;
         }
-
-        $page_length = env('APP_PAGE_LENGTH', 10);
-        $Slice = $ContactChats->slice($page, $page_length)->all();
-        // return $ContactChats;
-        return new Collection($Slice);
+        
+        
+        
+        return $ContactChats;
+        
+        // $page_length = env('APP_PAGE_LENGTH', 10);
+        // $Slice = $ContactChats->slice(Count($ContactChats) - $page_length * $page - $page_length, $page_length)->all();
+        // return new Collection($Slice);
     }
 
     public function getBagContact(int $attendant_id): Contact{

@@ -1009,6 +1009,8 @@
                     'page':this.pageNumber
                 })
                     .then(response => {
+                        console.log(response.data);
+                        console.log(typeof(response.data));
                         if(response.data.length == 0){
                             this.hasMorePageMessage = false;
                             this.pageNumber --;
