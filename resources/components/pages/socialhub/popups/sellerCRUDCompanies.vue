@@ -11,23 +11,23 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-building-o form-control-feedback"></span>
-                            <input v-model="modelCompany.name" title="Ex: Nome da Empresa" id="name" name="name" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
+                            <input v-model="modelCompany.name" title="Ex: Nome da Empresa" id="nameCompany" name="nameCompany" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phone" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="modelCompany.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phoneCompany" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="email" name="email" type="email" required placeholder="Email empresarial(*)" class="form-control"/>                            
+                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="email" name="emailCompany" type="emailCompany" required placeholder="Email empresarial(*)" class="form-control"/>                            
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsapp" id="whatsapp" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsappCompany" id="whatsappCompany" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-info-circle fa-lg form-control-feedback" ></span>
@@ -106,11 +106,11 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="modelManager.name" title="Ex: Nome do Manager" id="nameManager" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                            <input v-model="modelManager.name" title="Ex: Nome do Manager" id="nameManager" name="nameManager" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelManager.email" title="Ex: manager@gmail.com" name="email" id="emailManager" type="text" required placeholder="Email do manager. Para fazer Loging (*)" class="form-control"/>
+                            <input v-model="modelManager.email" title="Ex: manager@gmail.com" name="emailManager" id="emailManager" type="text" required placeholder="Email do manager. Para fazer Loging (*)" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
@@ -120,13 +120,13 @@
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phoneManager" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                            <input v-model="modelManager.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phoneManager" name="phoneManager" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsapp_id" id="whatsapp_id" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" name="whatsappManager" id="whatsappManager" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                     </div>                                  
                 </div> 
@@ -192,11 +192,11 @@
                 </div>
                                                
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
+                    <button v-show='action=="insert"' type="submit" id="btnInsert" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
                         <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
                     </button>
 
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
+                    <button v-show='action=="edit"' type="submit" id="btnEdit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
                         <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
                     </button>
 
@@ -207,10 +207,10 @@
             <form v-show="action=='delete'">
                 Tem certeza que deseja cancelar o contrato dessa Empresa?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteCompany">
+                    <button type="submit" id="btnDelete" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteCompany">
                         <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
                     </button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button type="reset" id="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
 

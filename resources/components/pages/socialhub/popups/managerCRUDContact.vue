@@ -370,7 +370,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O nome do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.email && this.model.email !=''){
@@ -394,7 +394,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){

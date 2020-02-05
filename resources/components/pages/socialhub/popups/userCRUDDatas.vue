@@ -308,7 +308,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -327,7 +327,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
                     this.flagReference = false;
                 }
 

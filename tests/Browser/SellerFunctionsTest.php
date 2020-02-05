@@ -80,26 +80,52 @@ class SellerFunctionsTest extends DuskTestCase
                     ->type('CNPJ', '')->press('Adicionar')->waitForText('O CNPJ é obrigatório')->assertSee('O CNPJ é obrigatório')
                     ->type('CNPJ', '111111111')->press('Adicionar')->waitForText('CNPJ inválido')->assertSee('CNPJ inválido')
                     ->type('CNPJ', '88495263000161')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('CNPJ inválido')
-                ->assertPresent('#name')
-                    ->type('CNPJ', 'correct name')
+                ->assertPresent('#nameCompany')
+                    ->type('nameCompany', '')->press('Adicionar')->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
+                    ->type('nameCompany', 'correct name')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('O nome da empresa é obrigatório')
                 ->assertPresent('#phoneCompany')
-                ->assertPresent('#email')
-                ->assertPresent('#whatsapp')
+                    ->type('phoneCompany', '11111111')->press('Adicionar')->waitForText('Número de telefone inválido')->assertSee('Número de telefone inválido')
+                    ->type('phoneCompany', '2188888888')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('Número de telefone inválido')
+                ->assertPresent('#emailCompany')
+                    ->type('emailCompany', '')->press('Adicionar')->waitForText('O e-mail da empresa é obrigatório')->assertSee('O e-mail da empresa é obrigatório')
+                    ->type('emailCompany', 'emailInvalid')->press('Adicionar')->waitForText('Email inválido')->assertSee('Email inválido')
+                    ->type('emailCompany', 'emailvalid@gmail.com')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
+                ->assertPresent('#whatsappCompany')
+                    ->type('whatsappCompany', '')->press('Adicionar')->waitForText('O whatsapp da empresa é obrigatório')->assertSee('O whatsapp da empresa é obrigatório')
+                    ->type('whatsappCompany', '11111111')->press('Adicionar')->waitForText('Número de whatsapp inválido')->assertSee('Número de whatsapp inválido')
+                    ->type('whatsappCompany', '2188888888')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('Número de whatsapp inválido')
                 ->assertPresent('#amount_attendants')
+                ->assertPresent('#btnGroupAddon')
                 ->assertPresent('#CEP')
+                    ->type('CEP', '')->press('#btnGroupAddon')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
+                    ->type('CEP', '111111')->press('#btnGroupAddon')->waitForText('CEP inválido')->assertSee('CEP inválido')
+                    ->type('CEP', '12345678')->press('#btnGroupAddon')->waitForText('O CEP inserido não existe')->assertDontSee('O CEP inserido não existe')
+                    ->type('CEP', '24210050')->press('#btnGroupAddon')->waitForText('Niterói')->assertDontSee('Niterói')
+                    ->type('CEP', '')->press('Adicionar')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
+                    ->type('CEP', '111111')->press('Adicionar')->waitForText('CEP inválido')->assertSee('CEP inválido')
+                    ->type('CEP', '24210050')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('CEP inválido')
+
                 ->assertPresent('#cidade')
+                ->type('cidade', '')->press('Adicionar')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
+
+
+
                 ->assertPresent('#estado')
+
                 ->assertPresent('#rua')
+
                 ->assertPresent('#numero')
+
                 ->assertPresent('#complemento')
                 ->assertPresent('#bairro')
                 ->assertPresent('#description')
+
                 ->assertPresent('#nameManager')
                 ->assertPresent('#emailManager')
                 ->assertPresent('#CPF')
                 ->assertPresent('#phoneManager')
 
-                ->assertPresent('#whatsapp_id');
+                ->assertPresent('#whatsappManager');
                     // ->type('whatsapp_id', '')->press('Adicionar')->waitForText('O CNPJ é obrigatório')->assertSee('O CNPJ é obrigatório')
                     // ->type('whatsapp_id', '111111111')->press('Adicionar')->waitForText('CNPJ inválido')->assertSee('CNPJ inválido')
                     // ->type('whatsapp_id', '88495263000161')->press('Adicionar')->waitForText('Empresas adicionada com seucesddo')->assertSee('Empresas adicionada com seucesddo');

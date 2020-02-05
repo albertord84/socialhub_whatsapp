@@ -1442,7 +1442,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O nome do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.selectedContactToEdit.last_name && this.selectedContactToEdit.last_name !=''){
@@ -1473,7 +1473,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.selectedContactToEdit.facebook_id && this.selectedContactToEdit.facebook_id !=''){

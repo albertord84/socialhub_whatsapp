@@ -15,7 +15,7 @@ var regexp={
     },
     'cep':{
         'regexp':'^([0-9]{5}[\-]?[0-9]{3})|([0-9]{8})$',  
-        'error':'CEP inválido. Botar CEP sem traço'
+        'error':'CEP inválido.'
     },
     'email':{
         'regexp':'^[a-zA-Z0-9\._-]+@([a-zA-Z0-9-]{2,}[.])*[a-zA-Z]{2,}$',
