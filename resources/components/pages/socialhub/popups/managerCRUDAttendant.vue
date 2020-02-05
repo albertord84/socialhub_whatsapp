@@ -316,7 +316,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O login do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O login do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.email && this.model.email !=''){
@@ -326,7 +326,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O email do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O email do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.name && this.model.name !=''){
@@ -336,7 +336,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O nome do usuário é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -347,7 +347,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 
@@ -366,7 +366,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){

@@ -372,7 +372,7 @@
                         return;
                     }
                 }else{
-                    miniToastr.error("Erro", "O número de Whatsapp é obrigatorio" );
+                    miniToastr.error("Erro", "O número de Whatsapp é obrigatório" );
                     this.isCheckingWhatsapp = false;
                     return;
                 }
@@ -500,7 +500,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){
