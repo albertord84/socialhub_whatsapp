@@ -21,7 +21,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="email" name="emailCompany" type="emailCompany" required placeholder="Email empresarial(*)" class="form-control"/>                            
+                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="emailCompany" name="emailCompany" type="emailCompany" required placeholder="Email empresarial(*)" class="form-control"/>                            
                         </div>                                                      
                     </div>
                     <div class="row">
@@ -757,6 +757,9 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
+                }else{
+                    miniToastr.error("Erro", "O estado no endereço da empresa é obrigatório" );
+                    this.flagReference = false;
                 }
 
                 if(this.modelCompany.bairro && this.modelCompany.bairro !=''){
@@ -765,6 +768,9 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
+                }else{
+                    miniToastr.error("Erro", "O bairro no endereço da empresa é obrigatório" );
+                    this.flagReference = false;
                 }
 
                 if(this.modelCompany.cidade && this.modelCompany.cidade !=''){
@@ -773,6 +779,9 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
+                }else{
+                    miniToastr.error("Erro", "A cidade no endereço da empresa é obrigatório" );
+                    this.flagReference = false;
                 }
 
                 if(this.modelCompany.rua && this.modelCompany.rua !=''){
@@ -781,6 +790,9 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
+                }else{
+                    miniToastr.error("Erro", "A rua no endereço da empresa é obrigatório" );
+                    this.flagReference = false;
                 }
             },
 
