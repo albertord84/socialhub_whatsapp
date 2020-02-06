@@ -51,9 +51,6 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertPresent('#addCompany')
                 ->assertSee('Linhas por página:');
 
-                // ->click('#addCompany')
-                // ->waitForText('Nova empresa')
-                // ->assertSee('Nova empresa');
             echo " OK -- Tested login of user: seller1@socialhub.pro\n";
         });
     }

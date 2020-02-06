@@ -96,7 +96,7 @@
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
                                     <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="reloadContactPicUrl($event, contact,index)" class="contact-picture">
+                                        <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture">
                                     </div>
                                     <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
@@ -1052,6 +1052,22 @@
             },
 
             reloadContactPicUrl(e,contact,index){
+                console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
+                ApiService.get('updateContactPicture/'+contact.id)
+                    .then(response => {
+                        console.log(e.target);
+                        // delete this.contacts[index].json_data;
+                        this.contacts[index].json_data = response.data.json_data;
+                        e.target.src = JSON.parse(response.data.json_data).picurl;
+                        // this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                        console.log( "Error atualizando informação do contato os contatos");   
+                    });
+            },
+
+            markAsBrokenUrl(contact,index){
                 console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
                 ApiService.get('updateContactPicture/'+contact.id)
                     .then(response => {
