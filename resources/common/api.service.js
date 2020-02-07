@@ -131,17 +131,17 @@ const ApiService = {
             }else{
                 
                 object.typeMessage = "error";
-                if (url == "users" && action == "get") object.message = "Erro carregando usuário.";
+                if (url == "users" && action == "get") object.message = "Erro carregando usuários.";
                 if (url == "users" && action == "add") object.message = "Erro adicionando usuário.";
                 if (url == "users" && action == "update") object.message = "Erro atualizando usuário.";
                 if (url == "users" && action == "delete") object.message = "Erro eliminando usuário.";
                 if (url == "users" && action == "mute_notifications") object.message = "Erro atualizando notificações de som.";
                 if (url == "users" && action == "update_image") object.message = "Erro atualizando a foto do perfil";
 
-                if (url == "usersSeller" && action == "get") object.message = "Erro carregando seller.";
-                if (url == "usersSeller" && action == "add") object.message = "Erro adicionando seller.";
-                if (url == "usersSeller" && action == "update") object.message = "Erro atualizando seller.";
-                if (url == "usersSeller" && action == "delete") object.message = "Erro eliminando seller.";
+                if (url == "usersSeller" && action == "get") object.message = "Erro carregando vendedores.";
+                if (url == "usersSeller" && action == "add") object.message = "Erro adicionando vendedor.";
+                if (url == "usersSeller" && action == "update") object.message = "Erro atualizando vendedor.";
+                if (url == "usersSeller" && action == "delete") object.message = "Erro eliminando vendedor.";
 
                 if (url == "usersManagers" && action == "get") object.message = "Erro obtendo manager.";
                 if (url == "usersManagers" && action == "add") object.message = "Erro adicionando manager.";
@@ -169,18 +169,25 @@ const ApiService = {
                 if (url == "rpis" && action == "delete") object.message = "Erro eliminando canal de comunicação";
                 
                 if (url == "RPI" && action == "logout") object.message = "Erro fechando o canal de comunicação";
-
-                if (url == "cep" && action == "get") object.message = "Erro validando CEP.";
-                if (url == "getContactInfo" && action == "get") object.message = "Número de Whatsapp incorreto ou não existe.";
-                if (url == "chats" && action == "send") object.message = "Erro enviando mensagem.";
-                if (url == "chats" && action == "get") object.message = "Error carregando os contatos.";
-                if (url == "login" && action == "get") object.message = "Error realizando loging.";
-
+                
                 if (url == "getBagContact" && action == "get") object.message = "Error carregando os contatos da sacola.";
                 if (url == "getBagContact" && action == "add") object.message = "Error adicionando o contato da sacola.";
                 
                 if (url == "attendantsContacts" && action == "add") object.message = "Error adicionando contato na tabela attendantsContacts."; 
                 if (url == "attendantsContacts" && action == "update") object.message = "Error atualizando contato na tabela attendantsContacts."; 
+                if (url == "attendantsContacts" && action == "transferring") object.message = "Erro tranferindo o contato."; 
+                
+                if (url == "cep" && action == "get") object.message = "Erro validando CEP.";
+                if (url == "getContactInfo" && action == "get") object.message = "Número de Whatsapp incorreto ou não existe.";
+                if (url == "chats" && action == "send") object.message = "Erro enviando mensagem.";
+                if (url == "chats" && action == "get") object.message = "Error carregando os contatos.";
+                if (url == "login" && action == "get") object.message = "Error realizando loging.";
+                if (action == "logout") object.message = "Error encerrando sessão."; 
+                if (url == "password_reset" && action == "add") object.message = "Email não existe."; 
+                if (url == "auth/add_user" && action == "add") object.message = "Erro adicionando usuário."; 
+                if (url == "auth/password_save" && action == "add") object.message = "Erro salvando sua nova senha."; 
+
+
             }
 
         } else if (error.request) {

@@ -549,7 +549,7 @@
                 this.isSendingValidationCEP = true;
                 // Validando CEP inserido
                 if(!this.modelCompany.CEP){
-                    miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O CEP da empresa é obrigatório" );
                     this.isSendingValidationCEP = false;
                     return;
                 }
@@ -563,7 +563,7 @@
                         return;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O CEP da empresa é obrigatório" );
                     this.isSendingValidationCEP = false;
                     return;
                 }
@@ -637,7 +637,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CNPJ é obrigatorio" );
+                    miniToastr.error("Erro", "O CNPJ é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -648,7 +648,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O nome da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -667,7 +667,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O e-mail da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O e-mail da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -678,7 +678,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -689,7 +689,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CEP da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O CEP da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -700,7 +700,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O número no endereço da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O número no endereço da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -756,7 +756,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do manager da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O nome do manager da empresa é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.modelManager.email && this.modelManager.email !=''){
@@ -766,7 +766,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O e-mail do manager da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O e-mail do manager da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -777,7 +777,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CPF do manager da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O CPF do manager da empresa é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -796,7 +796,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do manager da empresa é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do manager da empresa é obrigatório" );
                     this.flagReference = false;
                 }
             },
@@ -869,7 +869,7 @@
                 //         this.flagReference = false;
                 //     }
                 // }else{
-                //     miniToastr.error("Erro", "O Tunel da API é obrigatorio" );
+                //     miniToastr.error("Erro", "O Tunel da API é obrigatório" );
                 //     this.flagReference = false;
                 // }
 
@@ -902,7 +902,7 @@
                 }else{
                     miniToastr.error(info.erro, info.message); 
                 }
-            }
+            },
         },
 
         mounted(){

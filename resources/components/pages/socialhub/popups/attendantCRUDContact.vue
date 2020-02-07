@@ -310,6 +310,9 @@
 
             deleteContact(){
                 this.isSendingDelete = true;
+                
+                console.log("dentro del delete");
+                console.log(this.item);
 
                 ApiService.delete(this.url+'/'+this.item.id)
                     .then(response => {                        
@@ -337,16 +340,12 @@
                         'transfering':true
                     })
                     .then(response => {
-                        console.log(response);
                         miniToastr.success("Contato tranferido com sucesso","Sucesso");
-                        this.isTransferingContact = false;
                         this.reloadAfterTransferContact();
                         this.formCancel();
                     })
                     .catch(error => {
-                        console.log(error);
-                        this.isTransferingContact = false;
-                        miniToastr.error(error, "Erro tranferindo o contato"); 
+                        this.processMessageError(error, this.secondUrl, "transferring");
                     })
                     .finally(() => this.isTransferingContact = false);   
                 }
@@ -373,7 +372,7 @@
                         return;
                     }
                 }else{
-                    miniToastr.error("Erro", "O número de Whatsapp é obrigatorio" );
+                    miniToastr.error("Erro", "O número de Whatsapp é obrigatório" );
                     this.isCheckingWhatsapp = false;
                     return;
                 }
@@ -394,9 +393,6 @@
                         miniToastr.success("Número de Whatsapp conferido com sucesso","Sucesso");
                     })
                     .catch(error => {
-                        // console.log(error);
-                        // return;
-                        // TODO: ECR => concertar esta excecçaõ, esta coinsidiendo con la de seccion expirada
                         this.processMessageError(error, "getContactInfo", "get");
                     })
                     .finally(() => {this.isCheckingWhatsapp = false;});
@@ -504,7 +500,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){
