@@ -397,7 +397,7 @@
             </div>
 
             <!-- if not selected contact -->
-            <div v-else class="non_converstion_back d-none d-lg-block">
+            <div v-if="selectedContactIndex==-1" class="non_converstion_back d-none d-lg-block">
                 <div class="non-selected-chat text-center">
                     <img src="~img/socialhub/attendant.jpg" alt="" >
                     <h1>Mantenha seus contatos atualizados</h1>
@@ -405,6 +405,13 @@
                         <br>
                         <b class="text-right">Kate Zabriskie</b>
                     </p>
+                </div>
+            </div>
+
+            <!-- if not selected contact -->
+            <div v-if="selectedContactIndex==-2" class="non_converstion_back d-none d-lg-block">
+                <div class="non-selected-chat text-center">
+                    <span style="top:50%; color:gray" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></span>
                 </div>
             </div>
         </div>
@@ -1741,21 +1748,28 @@
 
 
 
-            getContactChat: function(contact) {                
-                this.pageNumber = -1;
-                this.messages = [];
-                this.messageTimeDelimeter = '';
-                this.scrollHeights = [];
-                this.hasMorePageMessage=true;                
+            getContactChat: function(contact) {
+                // if(document.getElementById("chat-content") && document.getElementById("chat-content").scrollHeight > 0)
+                //     document.getElementById("chat-content").innerHTML = '';
+                this.selectedContactIndex = -2;
+                setTimeout(()=>{
+                    this.pageNumber = -1;
+                    this.messages = [];
+                    this.messageTimeDelimeter = '';
+                    this.scrollHeights = [];
+                    this.hasMorePageMessage=true;                
+                    this.requestingNewPage=false;                
 
-                this.selectedContactIndex = contact.index;
-                this.selectedContact = this.contacts[this.selectedContactIndex];
-                this.selectedContactToEdit = this.getContactInfoToEdit(this.selectedContact);
-                if(this.showChatRightSide) this.displayChatRightSide();
-                if(this.showChatFindMessages) this.displayChatFindMessage();
-                document.getElementById("chat-center-side").classList.add("chat-center-side-open");
+                    this.selectedContactIndex = contact.index;
+                    this.selectedContact = this.contacts[this.selectedContactIndex];
+                    this.selectedContactToEdit = this.getContactInfoToEdit(this.selectedContact);
+                    if(this.showChatRightSide) this.displayChatRightSide();
+                    if(this.showChatFindMessages) this.displayChatFindMessage();
+                    document.getElementById("chat-center-side").classList.add("chat-center-side-open");
 
-                this.getChat();
+                    this.getChat();
+                },1000)
+                
             },
 
             getChat: function(){
@@ -1813,7 +1827,6 @@
 
             onTopMessages: function(scrollTop, totalHeight){
                 if(!this.requestingNewPage && this.hasMorePageMessage){
-                    // this.percent = 2;
                     this.getChat();                    
                 }
             },
@@ -1825,7 +1838,6 @@
                     if(this.scrollHeights.length>1){
                         var p = (this.scrollHeights[n-2] * 100)/this.scrollHeights[n-1];
                         this.$refs.message_scroller.scrolltopercent(100-p-0.8);
-                        // console.log(100-p);
                     }
                     console.log(this.scrollHeights);
                     this.requestingNewPage = false;
@@ -1838,7 +1850,6 @@
         updated(){
             if(this.selectedContactIndex >= 0 && this.$refs.message_scroller && this.pageNumber == 0) {
                 this.$refs.message_scroller.scrolltobottom();
-                // this.requestingNewPage = false;
             }            
         },
 
