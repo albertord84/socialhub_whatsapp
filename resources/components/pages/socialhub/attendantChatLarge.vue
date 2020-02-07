@@ -5,7 +5,7 @@
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
-        <div id="chat-left-side" class="col-lg-3 p-0">
+        <div id="chat-left-side" class="ccol-lg-3 width-30 p-0">
             <div class="chatalign">
                 <div class="sect_header">
                     <div v-if="isSearchContact==false" class="container-fluid">
@@ -93,19 +93,19 @@
 
                 <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px">
                     <ul>
-                        <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
-                            <div class="container-fluid">
-                                <div class="row mt-3 mb-3">
-                                    <div class="col-3 pointer-hover" style="left:-15px" @click.prevent="getContactChat(contact)">
-                                        <!-- Contact image -->
+                        <li v-for="(contact,index) in allContacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
+                            <div class="">
+                                <div class="row pt-3 pb-3">
+                                    <div class="col-2 pointer-hover text-left" style="background-color:1red;" @click.prevent="getContactChat(contact)">
                                         <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" class="contact-picture">
                                     </div>
-                                    <div class="col-6 d-flex" style="left:-15px" @click.prevent="getContactChat(contact)">
-                                        <div class="d-flex flex-column pointer-hover">
+
+                                    <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact)">
+                                        <div class="d-flex flex-column pointer-hover ml-2 mt-2">
                                             <!-- Contact name -->
                                             <div class="row">
                                                 <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
-                                                    {{textTruncate(contact.first_name,20) }}
+                                                    {{textTruncate(contact.first_name,30) }}
                                                 </a>
                                             </div>
                                             <!-- Contact last_message -->
@@ -115,7 +115,7 @@
                                                         <i>Sem mensagens</i>
                                                     </span>                                           
                                                     <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
-                                                        {{textTruncate(contact.last_message.message,20)}}
+                                                        {{textTruncate(contact.last_message.message,30)}}
                                                     </span>
                                                     <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
                                                         <i>Arquivo de imagem</i>
@@ -134,53 +134,84 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-3 d-flex">
-                                        <div class="d-flex flex-column">
-                                            <div class="row">
-                                                <!-- Contact time of last message -->
-                                                <span class="text-muted" style="font-size:0.8rem; color:#a4beda; marginright:0px">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}</span>
-                                            </div>
-                                            <div class="row">
-                                                <!-- Contact amount unreaded messages -->
-                                                    <div style="float:right">
-                                                        <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
-                                                        <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
-                                                    </div>
-
-                                                    <div  style="float:right">
-                                                        <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted text-right" title="Notificações silenciadas"></span>
-                                                    </div>
-
-                                                    <div  style="float:right" >
-                                                        <b-dropdown  class="dropdown hidden-xs-down btn-group text-muted text-right" variant="link" toggle-class="text-decoration-none"  right="">
-                                                            <template v-slot:button-content>
-                                                                <i class="mdi mdi-dots-vertical icons-action" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
-                                                            </template>
-                                                            <b-dropdown-item exact class="dropdown_content">
-                                                                <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
-                                                                    <i class="fa fa-exchange"></i> Transferir contato
-                                                                </a>
-                                                            </b-dropdown-item>
-                                                            <b-dropdown-item exact class="dropdown_content" >
-                                                                <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
-                                                                    <i class="mdi mdi-volume-off"></i> Silenciar notificações
-                                                                </a>
-                                                                <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
-                                                                    <i class="mdi mdi-volume-high"></i> Reativar notificações
-                                                                </a>
-                                                            </b-dropdown-item>
-                                                            <b-dropdown-item exact class="dropdown_content">
-                                                                <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
-                                                                    <i class="fa fa-trash-o"></i> Eliminar contato
-                                                                </a>
-                                                            </b-dropdown-item>
-                                                        </b-dropdown>
-                                                    </div>
-
-                                                
-
+                                    <div class="col-3">
+                                        <div class="row">
+                                            <div class="col-12 text-muted text-right" >
+                                                {{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}
                                             </div>
                                         </div>
+
+                                        <div class="d-flex" style="float:right">
+                                            <div class="m-0">
+                                                <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted fa-1_5x" style="m1argin-top: 7px; m1argin-left:-12px" title="Notificações silenciadas"></span>
+                                            </div>
+                                            <div class="m-0">
+                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:5px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
+                                            </div>
+                                            <div :id="'contact_'+contact.id" class="contact-hout m-0">
+                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="m1argin-top:13px"  right="">
+                                                    <template v-slot:button-content>
+                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
+                                                    </template>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
+                                                            <i class="fa fa-exchange"></i> Transferir contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content" >
+                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-off"></i> Silenciar notificações
+                                                        </a>
+                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-high"></i> Reativar notificações
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="fa fa-trash-o"></i> Eliminar contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                </b-dropdown>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- <div class="row">
+                                            <div class="col-3">
+                                                <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted fa-1_5x" style="margin-top: 7px; margin-left:-12px" title="Notificações silenciadas"></span>
+                                            </div>
+                                            <div class="col-4">
+                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:-15px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="left:-15px"  right="">
+                                                    <template v-slot:button-content>
+                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
+                                                    </template>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
+                                                            <i class="fa fa-exchange"></i> Transferir contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content" >
+                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-off"></i> Silenciar notificações
+                                                        </a>
+                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-high"></i> Reativar notificações
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="fa fa-trash-o"></i> Eliminar contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                </b-dropdown>
+                                            </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +222,7 @@
         </div>
 
         <!-- Center side of chat-->
-        <div id="chat-center-side" ref="chatCenterSide" class="col-lg-9 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
+        <div id="chat-center-side" ref="chatCenterSide" class="ccol-lg-9 width-70 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
             <!-- If selected contact -->
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">     
@@ -439,12 +470,13 @@
                 </div>
             </div>
 
-            <!-- if not selected contact -->
-            <div v-else class="non_converstion_back d-none d-lg-block">
-                <div class="non-selected-chat text-center">
+            <div v-else  class="non_converstion_back" >
+                <div class="non-selected-chat text-center " style="max-width:650px">
                     <img src="~img/socialhub/attendant.jpg" alt="" >
-                    <h1>Mantenha seus contatos atualizados</h1>
-                    <p class="text-right">"Os clientes se lembram de um bom atendimento durante muito mais tempo do que se lembram do preço ..."
+                    <h2>Mantenha seus contatos atualizados</h2>
+                    <p class="text-right" >
+                        "Os clientes se lembram de um bom atendimento durante muito mais
+                        tempo do que se lembram do preço ..."
                         <br>
                         <b class="text-right">Kate Zabriskie</b>
                     </p>
@@ -453,7 +485,7 @@
         </div>
         
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-right-side" v-show="showChatRightSide==true" class="col-lg-3 p-0">
+        <div id="chat-right-side" v-show="showChatRightSide==true" class="ccol-lg-3 width-25 p-0">
             <div class="sect_header">
                 <div class="container-fluid">
                     <ul class='row flex-baseline' style="margin-top:1.1rem; margin-left:-3rem">
@@ -683,7 +715,7 @@
         </div>
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-find-side" v-show="showChatFindMessages==true" class="col-lg-3 bg-white p-0">
+        <div id="chat-find-side" v-show="showChatFindMessages==true" class="ccol-lg-3 width-25 bg-white p-0">
             <div class="col-lg-12 sect_header">
                 <div class="container-fluid">
                     <ul class='row flex-baseline' style="margin-left:-3.7rem">
@@ -791,8 +823,6 @@
             </div> 
 
         </b-modal>
-
-        
     </div>
 </template>
 
@@ -834,6 +864,8 @@
         data() {
             return {
                 logguedAttendant:{},
+
+                isMaouseOverContact:false,
 
                 users_url: 'users',
                 contacts_url: 'contacts',
@@ -1288,16 +1320,26 @@
                 document.getElementById(id).classList.remove("message-hover");
             },
 
+            mouseOverContact(id){
+                document.getElementById(id).classList.remove("contact-hout");
+                document.getElementById(id).classList.add("contact-hover");
+            },
+
+            mouseLeaveContact(id){
+                document.getElementById(id).classList.add("contact-hout");
+                document.getElementById(id).classList.remove("contact-hover");
+            },
+
             displayChatRightSide(){
                 if(this.showChatRightSide==false){
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("width-70");
+                    document.getElementById("chat-center-side").classList.add("width-45");
                     document.getElementById("chat-right-side").classList.add("chat-right-side-open");
                     this.showChatFindMessages = false;
                     this.showChatRightSide = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("width-45");
+                    document.getElementById("chat-center-side").classList.add("width-70");
                     document.getElementById("chat-right-side").classList.remove("chat-right-side-open");
                     this.showChatFindMessages = false;
                     this.showChatRightSide = false;
@@ -1310,14 +1352,14 @@
 
             displayChatFindMessage(){
                 if(this.showChatFindMessages==false){
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("width-70");
+                    document.getElementById("chat-center-side").classList.add("width-45");
                     document.getElementById("chat-find-side").classList.add("chat-find-side-open");
                     this.showChatRightSide = false;
                     this.showChatFindMessages = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("width-45");
+                    document.getElementById("chat-center-side").classList.add("width-70");
                     document.getElementById("chat-find-side").classList.remove("chat-find-side-open");
                     this.showChatRightSide = false;
                     this.showChatFindMessages = false;
@@ -2008,6 +2050,18 @@
 
 
 <style scoped lang="scss">
+    .width-30{
+        width: 30% !important;
+    }
+    .width-70{
+        width: 70% !important;
+    }
+    .width-25{
+        width: 25% !important;
+    }
+    .width-45{
+        width: 45% !important;
+    }
 
     /* LAYOUT */
     .desc-img {
@@ -2088,17 +2142,21 @@
         font-size: 1.3em;
     }
     .non_converstion_back{
+        // position: absolute;
         background-color: #eaedf2;
         height: 100%;
         width: 100%;
+        padding-left: 20%;
+        padding-top: 15%;
     }
     .non-selected-chat {
-        position: absolute;
-        top: 40%;
-        left:50%;
-        transform: translate(-50%,-50%);
+        
+        // margin-top: 20%;
+        // left:50%;
+        // transform: translate(-50%,-50%);
+
         img{
-            width:18em; height:18em; border-radius:50%; opacity:0.5;
+            width:18rem; height:18rem; border-radius:50%; opacity:0.5;
         }
     }
     .profile {
@@ -2207,9 +2265,19 @@
         min-width:13em;
     }
     .message-hover{
+        display: block;
         visibility:visible;
     }
     .message-hout{
+        display: none;
+        visibility:hidden;
+    }
+    .contact-hover{
+        display: block;
+        visibility:visible;
+    }
+    .contact-hout{
+        display: none;
         visibility:hidden;
     }
     .message-options-style{
