@@ -198,7 +198,7 @@
                 }
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
             ApiService.get('auth/user_list').then(response => {
@@ -209,7 +209,7 @@
                         "<a class='btn btn-warning clickable' href='#/view_user_api/" + item.id + "'>View</a>");
                 });
             })
-                .catch(function (error) {
+                .catch(error => {
                 });
             // axios.get("http://www.filltext.com/?rows=20&id={index}&name={firstName}~{lastName}&village={firstName}&email={email}&age={numberRange|20,60}&status=[%22Activated%22,%22Deactivated%22]").then(response => {
             //     this.tableData = response.data;
@@ -217,13 +217,13 @@
             //         this.$set(item, "action", "<a class='btn btn-info text-white' href='#/edit_user?" + index + "'>Edit</a>");
             //     });
             // })
-            //     .catch(function (error) {
+            //     .catch(error => {
             //     });
             axios.get("http://www.filltext.com/?rows=1&chartdata={numberArray|12,100}").then(response => {
                 this.ajaxbar.series[0].data = response.data[0].chartdata;
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
             axios.get("http://www.filltext.com/?rows=5&value={number|50}&name={usState|abbr}").then(response => {
@@ -233,7 +233,7 @@
                 });
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
 
@@ -244,8 +244,24 @@
         methods: {
             onReady(instance) {
                 this.instances.push(instance)
-            }
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
         },
+
         beforeRouteLeave(to, from, next) {
             unsub();
             next();
