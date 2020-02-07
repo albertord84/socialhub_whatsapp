@@ -24,8 +24,8 @@
                                         <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i>
                                         </div>
                                     </div>
-                                    <input v-model="model.email" name="email" type="email" required placeholder="E-mail"
-                                           class="form-control"/>
+                                    <input v-model="model.email" id="email" name="email" type="email" required placeholder="E-mail"
+                                        class="form-control"/>
                                 </div>
                                 <field-messages name="email" show="$invalid && $submitted" class="text-danger">
                                     <div slot="required">Email é obrigatório</div>
@@ -83,7 +83,27 @@
                         .catch(error => {
                             this.show_error = true;
                             this.show_success = false;
+                            this.processMessageError(error, 'password_reset', "add");
                         }).finally(() => {this.isSendingEmail = false;});
+                }
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('user');
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.$router.push({name: "login"});
+
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
                 }
             }
         },
