@@ -76,6 +76,7 @@ Route::resource('passwordResets', 'PasswordResetController');
 // Route::resource('contacts', 'ContactController');
 Route::post('contactsFromCSV', 'ExtendedContactController@contactsFromCSV');
 Route::resource('contacts', 'ExtendedContactController');
+Route::get('updateContactPicture/{contact_id}', 'ExtendedContactController@updatePicture');
 
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');

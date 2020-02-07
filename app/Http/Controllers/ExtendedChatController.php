@@ -102,7 +102,7 @@ class ExtendedChatController extends ChatController
             // Check profile picture
             // $contactInfo = json_decode($Contact->json_data);
             // $contactInfo = json_decode($Contact->json_data);
-            // Log::debug('$ContactChats', [$contactInfo]);
+            // Log::debug('\n\r$ContactChats', [$contactInfo]);
 
             // $picurl = $contactInfo->picurl ?? $contactInfo->picurl;
             // $picurl = urlencode($picurl);
@@ -164,6 +164,7 @@ class ExtendedChatController extends ChatController
             // Send text message to SH Rest API
             $User = Auth::check() ? Auth::user() : session('logged_user');
             $input = $request->all();
+            $input['company_id'] = $User->company_id;
             $input['attendant_id'] = $User->id;
 
             $Contact = Contact::findOrFail($input['contact_id']);
@@ -220,7 +221,7 @@ class ExtendedChatController extends ChatController
                 $ExtendedChat->table = $chat->attendant_id;
                 $ExtendedChat = $ExtendedChat->find($chat->id);
                 $ExtendedChat->delete($chat->id);
-                Log::debug('Delete message', [$ExtendedChat]);
+                Log::debug('\n\rDelete message', [$ExtendedChat]);
             }
             // return MyHandler::toJson($th, 500);
             return $th;

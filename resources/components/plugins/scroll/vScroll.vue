@@ -1,7 +1,7 @@
 <template>
     <div ref="vscroll" :style="{ 'height': height,'min-height':minHeight,'max-height':maxHeight }" class="ss-container">
         <div class="ss-wrapper" ref="wrapper">
-            <div class="ss-content" ref="content" @scroll="moveBar" @mouseenter="moveBar">
+            <div class="ss-content" :id="vid" ref="content" @scroll="moveBar" @mouseenter="moveBar">
                 <slot></slot>
             </div>
         </div>
@@ -19,17 +19,24 @@ export default {
         alwaysvisible: Boolean,
 
         seeSrolling:false,
+        vid:'',
+        percent:0,        
+    },
+    data() {
+        return {
+            scrollRatio: 0,
+            grabbed: false,
+            
+            scrollHeight:0,
+        }
     },
     mounted() {
         this.dragDealer();
         this.moveBar();
     },
-    data() {
-        return {
-            scrollRatio: 0,
-            grabbed: false
-        }
-    },
+    updated(){
+        this.scrollHeight = this.$refs.content.scrollHeight;
+    },    
     methods: {
         // Mouse drag handler
         dragDealer() {
@@ -72,6 +79,8 @@ export default {
                 if(this.seeSrolling){
                     var value = parseInt((content.scrollTop / totalHeight) * 100);
                     this.$emit('onscrolling',value);
+                    if(value === 0)
+                        this.$emit('ontop',content.scrollTop, totalHeight);
                 }
                 bar.classList.remove('ss-hidden');
                 bar.style.cssText = 'height:' + (this.scrollRatio) * 100 + '%; top:' + (content.scrollTop / totalHeight) * 100 + '%;right:-' + (this.$refs.vscroll.clientWidth - bar.clientWidth) + 'px;background-color:' + this.color + ';width:' + this.barWidth;
@@ -84,17 +93,22 @@ export default {
 
         scrolltopercent(percent) {
             this.$refs.content.scrollTop = ((this.$refs.content.scrollHeight * percent)/100)-200;
-            console.log('percent');
-            console.log(percent);
-            console.log('new scrollTop');
-            console.log(this.$refs.content.scrollTop);
-            console.log('scrollHeight');
-            console.log(this.$refs.content.scrollHeight);
         },
 
         scrolltobottom() {
             this.$refs.content.scrollTop = this.$refs.content.scrollHeight;
         }
+    },
+    watch:{
+        percent:function(value){
+            this.scrolltopercent(value);
+        },
+        scrollHeight:function(value){
+            if(this.seeSrolling){
+                this.$emit('oncontentresize',value);
+            }
+        },
+        
     }
 }
 </script>
