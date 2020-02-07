@@ -7,7 +7,7 @@ var regexp={
     },
     'cpf':{
         'regexp':'^[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}$',
-        'error':'CPF inválido (*)'  //ECR
+        'error':'CPF inválido' 
     },
     'cnpj':{
         'regexp':'^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})$',
@@ -15,7 +15,7 @@ var regexp={
     },
     'cep':{
         'regexp':'^([0-9]{5}[\-]?[0-9]{3})|([0-9]{8})$',  
-        'error':'CEP inválido.'
+        'error':'CEP inválido'
     },
     'email':{
         'regexp':'^[a-zA-Z0-9\._-]+@([a-zA-Z0-9-]{2,}[.])*[a-zA-Z]{2,}$',
@@ -135,7 +135,7 @@ var regexp={
     },
     'street_address':{
         // 'regexp':'^[a-zA-Z0-9. áéíóúãõẽâîô]{2,80}$',
-        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{2,80}$',
+        'regexp':'^[a-zA-Z0-9.,/ çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ_-]{1,80}$',
         'error':'Confira o nome da rua do endereço fornecido'
     },
     'complement_address':{

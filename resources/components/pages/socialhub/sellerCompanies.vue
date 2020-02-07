@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" id="tableCompanies">
             <table ref="table" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
@@ -37,8 +37,8 @@
                                 {{ collect(row, column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="editCompany" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="deleteCompany" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
