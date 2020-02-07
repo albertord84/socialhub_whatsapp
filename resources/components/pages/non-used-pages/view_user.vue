@@ -62,7 +62,7 @@
                         this.can_delete = true;
                     }
                 })
-                    .catch(function (error) {
+                    .catch(error => {
                     });
             },
             deleteItem() {
@@ -76,7 +76,7 @@
                         this.$router.push("/users_list")
                     }
                 })
-                    .catch(function (error) {
+                    .catch(error => {
                     });
             },
             back(){

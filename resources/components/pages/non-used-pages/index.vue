@@ -632,14 +632,14 @@
                         "<a class='btn btn-warning clickable' href='#/view_user_dashboard/" + item.id + "'>View</a>");
                 });
             })
-                .catch(function (error) {
+                .catch(error => {
                 });
 
             axios.get("http://www.filltext.com/?rows=1&chartdata={numberArray|12,100}").then(response => {
                 this.ajaxbar_chart.series[0].data = response.data[0].chartdata;
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
 

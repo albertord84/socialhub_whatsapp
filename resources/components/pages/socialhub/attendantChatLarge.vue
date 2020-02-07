@@ -5,7 +5,7 @@
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
-        <div id="chat-left-side" class="col-lg-3 p-0">
+        <div id="chat-left-side" class="ccol-lg-3 width-30 p-0">
             <div class="chatalign">
                 <div class="sect_header">
                     <div v-if="isSearchContact==false" class="container-fluid">
@@ -92,26 +92,31 @@
                 </div>
                 <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px">
                     <ul>
-                        <li v-for="(contact,index) in allContacts" class="chat_block" :key="index">
-                            <div class="container-fluid">
-                                <div class="row mt-3 mb-3">
-                                    <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" class="contact-picture">
+                        <li v-for="(contact,index) in allContacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
+                            <div class="">
+                                <div class="row pt-3 pb-3">
+                                    <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact)">
+                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @click="reloadContactPicUrl($event, contact,index)" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture">
+
+                                        <!-- <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @click="reloadContactPicUrl($event, contact,index)" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture"> -->
                                     </div>
-                                    <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
-                                        <div class="d-flex flex-column pointer-hover">
+
+                                    <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact)">
+                                        <div class="d-flex flex-column pointer-hover ml-2 mt-2">
+                                            <!-- Contact name -->
                                             <div class="row">
                                                 <a class="text-dark font-weight-bold" style="font-size:1.1em" href="javascript:void(0)">
-                                                    {{textTruncate(contact.first_name,20) }}
+                                                    {{textTruncate(contact.first_name,30) }}
                                                 </a>
                                             </div>
+                                            <!-- Contact last_message -->
                                             <div class="row">
                                                 <a class="text-muted"> 
                                                     <span v-if="!contact.last_message" style="font-size:1em">
                                                         <i>Sem mensagens</i>
                                                     </span>                                           
                                                     <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
-                                                        {{textTruncate(contact.last_message.message,22)}}
+                                                        {{textTruncate(contact.last_message.message,30)}}
                                                     </span>
                                                     <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
                                                         <i>Arquivo de imagem</i>
@@ -129,16 +134,85 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-1 d-flex">
-                                        <div class="d-flex flex-column text-right">
-                                            <div class="row text-right">
-                                                <span class="text-muted" style="font-size:0.8rem; color:#a4beda">{{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}</span>
-                                            </div>
-                                            <div class="row text-right">
-                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
-                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages" > </span>
+
+                                    <div class="col-3">
+                                        <div class="row">
+                                            <div class="col-12 text-muted text-right" >
+                                                {{(contact.last_message) ? getLastMessageTime(contact.last_message.created_at) : '--:--'}}
                                             </div>
                                         </div>
+
+                                        <div class="d-flex" style="float:right">
+                                            <div class="m-0">
+                                                <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted fa-1_5x" style="m1argin-top: 7px; m1argin-left:-12px" title="Notificações silenciadas"></span>
+                                            </div>
+                                            <div class="m-0">
+                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:5px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
+                                            </div>
+                                            <div :id="'contact_'+contact.id" class="contact-hout m-0">
+                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="m1argin-top:13px"  right="">
+                                                    <template v-slot:button-content>
+                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
+                                                    </template>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
+                                                            <i class="fa fa-exchange"></i> Transferir contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content" >
+                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-off"></i> Silenciar notificações
+                                                        </a>
+                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-high"></i> Reativar notificações
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="fa fa-trash-o"></i> Eliminar contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                </b-dropdown>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- <div class="row">
+                                            <div class="col-3">
+                                                <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted fa-1_5x" style="margin-top: 7px; margin-left:-12px" title="Notificações silenciadas"></span>
+                                            </div>
+                                            <div class="col-4">
+                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:-15px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="left:-15px"  right="">
+                                                    <template v-slot:button-content>
+                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
+                                                    </template>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
+                                                            <i class="fa fa-exchange"></i> Transferir contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content" >
+                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-off"></i> Silenciar notificações
+                                                        </a>
+                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                            <i class="mdi mdi-volume-high"></i> Reativar notificações
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="fa fa-trash-o"></i> Eliminar contato
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                </b-dropdown>
+                                            </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +223,7 @@
         </div>
 
         <!-- Center side of chat-->
-        <div id="chat-center-side" ref="chatCenterSide" class="col-lg-9 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
+        <div id="chat-center-side" ref="chatCenterSide" class="ccol-lg-9 width-70 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
             <!-- If selected contact -->
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header">     
@@ -212,16 +286,16 @@
                 </div>
 
                 <!-- Chat messages -->
-                <v-scroll :height="Height(170)" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @onscrolling="chatMessageScroling">                       
-                    <ul>
-                        <li v-for='(message,index) in messages' :key="index">
-                            <!-- Date separator message-->
+                <v-scroll :height="Height(170)" :vid="'chat-content'" color="#ccc" bar-width="8px" ref="message_scroller" :percent="percent" :seeSrolling="'true'" @onscrolling="chatMessageScroling" @ontop="onTopMessages" @oncontentresize="oncontentresize">
+                    <ul >
+                        <li v-for='(message,index) in messages' :key="index" :id="'message_' + message.id" :ref="'message_' + message.id">                            
+                            <A :id="'message_lnk_' + message.id" :name="'#message_lnk_' + message.id"></A>
+                            <div></div>
                             <div v-if="message.type_id=='date_separator'" class="pt-5 pb-5">
                                 <h6 class="message-time-separator mt-5"><span>{{message.time.date}}</span></h6>
                             </div>
                             
                             <div v-if="message.type_id!='date_separator'">
-                                <!-- Received messages -->
                                 <div v-if="message.source==1" class="row mt-2">
                                     <div class="container-fluid">
                                         <div class="row">
@@ -276,7 +350,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Sent messages -->
                                 <div v-if="message.source==0" class="row mt-2">
                                     <div class="col-11" >
                                         <p style="float:right" class="sendedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
@@ -330,7 +403,7 @@
                         </li>
                     </ul>
                 </v-scroll> 
-
+                
                 <!-- Criate and send new message -->                
                 <div class="p-3">
                     <div class="input-group pb-5 pr-1 " style="color:gray">
@@ -398,20 +471,29 @@
             </div>
 
             <!-- if not selected contact -->
-            <div v-else class="non_converstion_back d-none d-lg-block">
+            <div v-if="selectedContactIndex==-1" class="non_converstion_back d-none d-lg-block">
                 <div class="non-selected-chat text-center">
                     <img src="~img/socialhub/attendant.jpg" alt="" >
-                    <h1>Mantenha seus contatos atualizados</h1>
-                    <p class="text-right">"Os clientes se lembram de um bom atendimento durante muito mais tempo do que se lembram do preço ..."
+                    <h2>Mantenha seus contatos atualizados</h2>
+                    <p class="text-right" >
+                        "Os clientes se lembram de um bom atendimento durante muito mais
+                        tempo do que se lembram do preço ..."
                         <br>
                         <b class="text-right">Kate Zabriskie</b>
                     </p>
                 </div>
             </div>
+
+            <!-- if not selected contact -->
+            <div v-if="selectedContactIndex==-2" class="non_converstion_back d-none d-lg-block">
+                <div class="non-selected-chat text-center">
+                    <span style="top:50%; color:gray" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></span>
+                </div>
+            </div>
         </div>
         
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-right-side" v-show="showChatRightSide==true" class="col-lg-3 p-0">
+        <div id="chat-right-side" v-show="showChatRightSide==true" class="ccol-lg-3 width-25 p-0">
             <div class="sect_header">
                 <div class="container-fluid">
                     <ul class='row flex-baseline' style="margin-top:1.1rem; margin-left:-3rem">
@@ -422,16 +504,30 @@
                             <span class="header-title text-muted">Detalhes</span>
                         </li>
                         <li class="col-1 col-md-1 col-lg-1 col-xl-1">
-                            <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none"  right="">
+                            <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none"  right="" >
                                 <template v-slot:button-content>
-                                    <i class="mdi mdi-dots-vertical icons-action" title="Ações sobre contato"></i>
+                                    <i class="mdi mdi-dots-vertical icons-action" title="Ações sobre contato" @click.prevent="getContactToEditActions(selectedContactToEdit)"></i>
                                 </template>
                                 <b-dropdown-item exact class="dropdown_content">
-                                    <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact"><i class="fa fa-exchange"></i> Transferir</a>
+                                    <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
+                                        <i class="fa fa-exchange"></i> Transferir contato
+                                    </a>
+                                </b-dropdown-item>
+                                <!-- ECR -->
+                                <b-dropdown-item exact class="dropdown_content">
+                                    <a v-if="selectedContactToEdit.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                        <i class="mdi mdi-volume-off"></i> Silenciar notificações
+                                    </a>
+                                    <a v-if="selectedContactToEdit.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                        <i class="mdi mdi-volume-high"></i> Reativar notificações
+                                    </a>
                                 </b-dropdown-item>
                                 <b-dropdown-item exact class="dropdown_content">
-                                    <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()"><i class="fa fa-trash-o"></i> Eliminar</a>
+                                    <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                        <i class="fa fa-trash-o"></i> Eliminar contato
+                                    </a>
                                 </b-dropdown-item>
+
                             </b-dropdown>                        
                         </li>
                     </ul> 
@@ -627,7 +723,7 @@
         </div>
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-find-side" v-show="showChatFindMessages==true" class="col-lg-3 bg-white p-0">
+        <div id="chat-find-side" v-show="showChatFindMessages==true" class="ccol-lg-3 width-25 bg-white p-0">
             <div class="col-lg-12 sect_header">
                 <div class="container-fluid">
                     <ul class='row flex-baseline' style="margin-left:-3.7rem">
@@ -653,12 +749,16 @@
 
         <!-- Modal to transfer contact-->
         <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
-            <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadAfterTransferContact='reloadAfterTransferContact'></attendantCRUDContact>
+            <!-- <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadAfterTransferContact='reloadAfterTransferContact'></attendantCRUDContact> -->
+            <!-- ECR -->
+            <attendantCRUDContact :action='"transfer"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadAfterTransferContact='reloadAfterTransferContact'></attendantCRUDContact>
         </b-modal>
         
         <!-- Modal to delete contact-->
         <b-modal v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
-            <attendantCRUDContact :action='"delete"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
+            <!-- <attendantCRUDContact :action='"delete"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact> -->
+            <!-- ECR -->
+            <attendantCRUDContact :action='"delete"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
         </b-modal>
 
         <!-- Modal to show image-->
@@ -711,11 +811,30 @@
                     <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
                 </div>
         </b-modal>
-        
+
+        <!-- Modal to Mute/Ativate Notifications of Contacts-->
+        <b-modal v-model="modalMuteNotificationsContacts" :hide-footer="true" title="Verificação">
+            <span v-if="!isMuteNotifications"> Tem certeza que deseja silenciar as notificações para este contato? </span>
+            <span v-if="isMuteNotifications"> Tem certeza que deseja reativar as notificações para este contato? </span>
+
+            <div v-if="!isMuteNotifications" class="col-lg-12 mt-5 text-center">
+                <button type="button" class="btn btn-primary btn_width" :disabled="isSendingNotificationsContacts==true" @click.prevent="editNotificationsContacts"> 
+                    <i v-show="isSendingNotificationsContacts==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Silenciar notificações
+                </button>
+                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
+            </div> 
+            <div v-if="isMuteNotifications" class="col-lg-12 mt-5 text-center">
+                <button type="button" class="btn btn-primary btn_width" :disabled="isSendingNotificationsContacts==true" @click.prevent="editNotificationsContacts"> 
+                    <i v-show="isSendingNotificationsContacts==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Reativar notificações
+                </button>
+                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
+            </div> 
+
+        </b-modal>
     </div>
 </template>
 
-<script>
+<script> 
     import Vue from 'vue';
     import vScroll from "../../plugins/scroll/vScroll.vue";
     import rightSideBar from '../../layouts/right-side-bar'
@@ -727,10 +846,9 @@
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
-    // import MicRecorder from "mic-recorder-to-mp3"; 
 
-    import routes from '../../../router/index'; //ECR
-    
+    // import MicRecorder from "mic-recorder-to-mp3"; 
+    import routes from '../../../router/index'; //ECR    
     import OpusMediaRecorder from 'opus-media-recorder';
 
     // import OpusMediaRecorder from 'opus-media-recorder';
@@ -749,12 +867,14 @@
             leftSideBar,
             userCRUDDatas,
             attendantCRUDContact,
-            sendMessageFiles
+            sendMessageFiles,
         },
 
         data() {
-            return {
+            return {                
                 logguedAttendant:{},
+
+                isMaouseOverContact:false,
 
                 users_url: 'users',
                 contacts_url: 'contacts',
@@ -764,6 +884,7 @@
                 contacts:[],
                 selectedContact:{},
                 selectedContactToEdit:{},
+                selectedContactToEditActions:{},
                 amountContactsInBag:0,
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
@@ -773,7 +894,6 @@
                 searchMessageByStringInput:'',
                 messagesWhereLike:[],
                 findAroundMessageId:null, //for find in database when the clicked and founded message is not in actual page
-                pageNumber:0,
                 messageTimeDelimeter:'',
                 file:null,
                 pathFiles:'',
@@ -787,6 +907,12 @@
                     'status_id':4,
                     'socialnetwork_id':1, //Whatsapp
                 },
+                pageNumber:-1,
+                hasMorePageMessage:true,
+                requestingNewPage:false,
+                messageInTop:null,
+
+                percent:0,
 
                 showContactInformation:false,
                 showContactSummary:false,
@@ -803,6 +929,7 @@
                 isUpdatingContact:false,                
                 isAddingContactFromBag:false,                
                 isRecordingAudio:false,
+                isSendingNotificationsContacts:false,
 
                 timeRecordingAudio:"00:00",
                 recordingTime:0,
@@ -824,6 +951,7 @@
                 modalNewContactFromBag:false,
                 modalUserCRUDDatas:false,
                 modalTransferContact:false,
+                modalMuteNotificationsContacts:false,
                 
                 rightLayout:'toggle-edit-contact',
                 leftLayout:'toggle-add-contact',
@@ -831,11 +959,13 @@
                 window: {width: 0,height: 0},
 
                 flagReference: true,
+                isMuteNotifications: null,
 
+                scrollHeights:[],
             }
         },
         
-        methods: {    
+        methods: {
             sendMessage() {
                 if (this.isSendingNewMessage) return;                
                 var This = this;
@@ -898,27 +1028,8 @@
                                 this.isRecordingAudio = false;
                             }
                         })
-                        .catch(function(error) {                            
-                            if (error.response) {
-                                console.log('error.response');
-                                console.log(error.response.data);
-                                console.log(error.response.data.message);
-                                console.log(error.response.status);
-                                console.log(error.response.headers);
-                                if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
-                                    console.log(error.response.data.message);
-                                    miniToastr.warn("Verifique a conexão do seu computador e  do hardware à Internet.", "Atenção");                                     
-                                }
-                            } else
-                            if (error.request) {
-                                console.log('error.request');
-                                console.log(error.request);
-                            } else{
-                                console.log('some another error');
-                                console.log(error.message);
-                            }
-                            console.log('error config');
-                            console.log(error.config);
+                        .catch(error => {
+                            this.processMessageError(error, this.chat_url,"send");
                         }).finally(() => {This.isSendingNewMessage = false;});
                     } catch (error) {
                         This.newMessage.message = "";
@@ -936,13 +1047,21 @@
                         var This = this, i = 0;
                         this.contacts.forEach(function(item, i){
                             item.index = i++;
+                            try {
+                                if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
+                                    item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                                }
+                            } catch (error) {
+                                item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                            }
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
-                        }                        
+                            this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
+                        }   
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_url,"get");
                     });
             },
 
@@ -951,16 +1070,8 @@
                     .then(response => {
                         this.amountContactsInBag = response.data;                        
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("of non-object")){
-                            //  redireccionar para a pagina de login
-                            routes.push({name:'login'}); 
-                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
-                        }else{
-                            miniToastr.error(error, "Error carregando os contatos");
-                            // miniToastr.error(error, "Error carregando as empresas");
-                        }
+                    .catch(error => {
+                        this.processMessageError(error, "getBagContact","get");
                     });
             },
 
@@ -982,23 +1093,42 @@
                         });
                         miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro adicionando o contato");   
-                    }).finally(()=>{this.isAddingContactFromBag = false;});
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_bag_url,"add");
+                    })
+                    .finally(()=>{this.isAddingContactFromBag = false;});
             }, 
 
-            getContactChat: function(contact) {
-                if (this.isSendingNewMessage) return;  
+            chatMessageScroling: function(value){
+                // console.log('value ---> '+value);
+                // if(value < 2 && !this.requestingNewPage && this.hasMorePageMessage){
+                //     this.pageNumber ++;
+                //     this.getContactChat(this.selectedContact);
+                //     console.log('page number ---> '+this.pageNumber);
+                //     console.log('value ---> '+value);
+                //     this.percent = value + 10;
+                // }
+            },                        
+            getContactChatOld: function(contact) {
+                if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
+                this.requestingNewPage=true;
                 if(this.showChatRightSide) this.displayChatRightSide();
                 if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
                 this.selectedContactIndex = contact.index;
+                
+                console.log('requesting a page number '+this.pageNumber);
                 ApiService.get(this.chat_url,{
                     'contact_id':contact.id,
                     'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
                     'page':this.pageNumber
-                })
+                    })
                     .then(response => {
+                        if(response.data.length == 0){
+                            this.hasMorePageMessage = false;
+                            this.pageNumber --;
+                            return;
+                        }
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess =0;
                         this.messagesWhereLike = [];
@@ -1029,25 +1159,23 @@
                         This.messages = This.messages_copy;
                         This.selectedContact = This.contacts[This.selectedContactIndex];
                         This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
-
+                        This.selectedContactToEdit.index = This.selectedContactIndex;
                         // This.$refs.chatCenterSide
+
                         document.getElementById("chat-center-side").classList.add("chat-center-side-open");
 
-                        console.log(This.messages);
+                        // if(This.selectedContactIndex >= 0 && This.$refs.message_scroller){
+                        //     This.$refs.message_scroller.scrolltobottom();
+                        // }
+
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os contatos");   
+                    .catch(error => {
+                        this.processMessageError(error, this.chat_url,"get");
+                    }).finally(()=>{
+                        this.requestingNewPage=false;
                     });
-
-                // setTimeout(() => {
-                //     this.$refs.input.focus();
-                // }, 20);
             },
 
-            chatCenterSideBack(){
-                document.getElementById("chat-center-side").classList.remove("chat-center-side-open");
-            },
-            
             getContactChatWhereLike: function(cont) {
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
                 if (this.searchMessageByStringInput.length > 1){
@@ -1059,12 +1187,39 @@
                         .then(response => {
                             this.messagesWhereLike = response.data;
                         })
-                        .catch(function(error) {
-                            miniToastr.error(error, "Error carregando os contatos");   
+                        .catch(error => {
+                            this.processMessageError(error, this.chat_url,"get");
                         });
                 } else{
                     this.messagesWhereLike = [];
                 }
+            },
+
+            reloadContactPicUrl(e,contact,index){
+                // console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
+                if(typeof(this.allContacts[index].broken) != 'undefined' || typeof(this.contacts[index].broken) != 'undefined'){
+                    ApiService.get('updateContactPicture/'+contact.id)
+                        .then(response => {
+                            console.log(e.target);
+                            // delete this.contacts[index].json_data;
+                            this.contacts[index].json_data = response.data.json_data;
+                            e.target.src = JSON.parse(response.data.json_data).picurl;
+                            // this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                        })
+                        .catch(function(error) {
+                            miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                            console.log( "Error atualizando informação do contato os contatos");   
+                        });
+                }
+            },
+
+            markAsBrokenUrl(contact,index){
+                this.contacts[index].broken = true;
+                this.allContacts[index].broken = true;
+            },
+
+            chatCenterSideBack(){
+                document.getElementById("chat-center-side").classList.remove("chat-center-side-open");
             },
             
             updateContact: function() {
@@ -1100,28 +1255,13 @@
                         if(this.isEditingContactSummary)
                             this.isEditingContactSummary = false;
                         miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                        this.selectedContactIndex = 0;
                         this.getContacts();
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O número de Whatsapp informado já está cadastrado.","Atenção");
-                        }else{
-                            ApiService.process_request_error(error);
-                            miniToastr.error(error, "Erro adicionando contato");
-                        }
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_url, "update");
                     })
                     .finally(() => this.isUpdatingContact = false);
-            },
-
-            chatMessageScroling: function(value){
-                if(value<10){
-                    this.pageNumber --;
-                    //get new page of messages
-                }else
-                if(value>90){
-                    this.pageNumber ++;
-                    //get new page of messages
-                }
             },
 
             getLastMessageTime: function(time){
@@ -1214,16 +1354,6 @@
                 }
             },
             
-            pathContactMessageFile(contact_id, file_name) {
-                let pathFile = process.env.MIX_FILE_PATH +'/' + 
-                            this.logguedAttendant.company_id +'/' +
-                            'contacts' +'/' +
-                            contact_id +'/' +
-                            'chat_files' +'/' +
-                            file_name;
-                return pathFile;
-            },
-            
             mouseOverMessage(id){
                 document.getElementById(id).classList.remove("message-hout");
                 document.getElementById(id).classList.add("message-hover");
@@ -1234,16 +1364,26 @@
                 document.getElementById(id).classList.remove("message-hover");
             },
 
+            mouseOverContact(id){
+                document.getElementById(id).classList.remove("contact-hout");
+                document.getElementById(id).classList.add("contact-hover");
+            },
+
+            mouseLeaveContact(id){
+                document.getElementById(id).classList.add("contact-hout");
+                document.getElementById(id).classList.remove("contact-hover");
+            },
+
             displayChatRightSide(){
                 if(this.showChatRightSide==false){
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("width-70");
+                    document.getElementById("chat-center-side").classList.add("width-45");
                     document.getElementById("chat-right-side").classList.add("chat-right-side-open");
                     this.showChatFindMessages = false;
                     this.showChatRightSide = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("width-45");
+                    document.getElementById("chat-center-side").classList.add("width-70");
                     document.getElementById("chat-right-side").classList.remove("chat-right-side-open");
                     this.showChatFindMessages = false;
                     this.showChatRightSide = false;
@@ -1256,14 +1396,14 @@
 
             displayChatFindMessage(){
                 if(this.showChatFindMessages==false){
-                    document.getElementById("chat-center-side").classList.remove("col-lg-9");
-                    document.getElementById("chat-center-side").classList.add("col-lg-6");
+                    document.getElementById("chat-center-side").classList.remove("width-70");
+                    document.getElementById("chat-center-side").classList.add("width-45");
                     document.getElementById("chat-find-side").classList.add("chat-find-side-open");
                     this.showChatRightSide = false;
                     this.showChatFindMessages = true;
                 }else{
-                    document.getElementById("chat-center-side").classList.remove("col-lg-6");
-                    document.getElementById("chat-center-side").classList.add("col-lg-9");
+                    document.getElementById("chat-center-side").classList.remove("width-45");
+                    document.getElementById("chat-center-side").classList.add("width-70");
                     document.getElementById("chat-find-side").classList.remove("chat-find-side-open");
                     this.showChatRightSide = false;
                     this.showChatFindMessages = false;
@@ -1288,8 +1428,8 @@
                         miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
                     this.logguedAttendant.mute_notifications = val;
                 })
-                .catch(function(error) {
-                    miniToastr.error(error, "Erro atualizando notificações de som.");
+                .catch(error => {
+                    this.processMessageError(error, this.users_url, "mute_notifications");
                 })
                 .finally(() => this.isUpdatingContact = false);
             },
@@ -1346,6 +1486,7 @@
             closemodal(){
                 this.modalDeleteContact = false;
                 this.modalTransferContact = false;
+                this.modalMuteNotificationsContacts = false;
             },
             
             logout() {
@@ -1359,8 +1500,8 @@
                     delete axios.defaults.headers.common['Authorization'];
                     this.$router.push({name: "login"});                    
                 })
-                .catch(function(error) {
-                    miniToastr.error(error, "Error carregando os contatos");   
+                .catch(error => {
+                    this.processMessageError(error, "contacts", "get");
                 });
             },
 
@@ -1419,7 +1560,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O nome do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.selectedContactToEdit.last_name && this.selectedContactToEdit.last_name !=''){
@@ -1450,7 +1591,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do contato é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.selectedContactToEdit.facebook_id && this.selectedContactToEdit.facebook_id !=''){
@@ -1487,6 +1628,7 @@
             createMP3Recorder(){
                 return new MicRecorder({bitRate: 128});
             },
+
             startMP3RecordVoice: function() {
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
@@ -1504,6 +1646,7 @@
                         console.error(e);
                     }).finally(()=>{this.isRecordingAudio = true;});
             },
+
             stopMP3RecordVoice: function() {
                 clearInterval(this.handleTimerCounter);
                 this.recorderMP3.stop().getMp3()
@@ -1568,12 +1711,11 @@
                     console.log(e);                    
                     this.rec.stream.getTracks().forEach(i => i.stop());
                 };
-                
 
                 this.dataChunks = [];
                 this.rec.start();
-
             },
+
             startOGGRecordVoice: function() {                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
@@ -1597,6 +1739,7 @@
                         console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
+
             stopOGGRecordVoice: function() {                                
                 this.rec.stop();
                 return;
@@ -1662,6 +1805,7 @@
                 this.dataChunks = [];
                 this.rec.start();
             },
+
             startNativeRecordVoice: function() {                
                 if(!navigator.mediaDevices){
                     miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
@@ -1681,6 +1825,7 @@
                         console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
+
             stopNativeRecordVoice: function() {                                
                 this.rec.stop();
                 return;
@@ -1708,11 +1853,159 @@
                     });
 
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
+            editNotificationsContacts: function() {
+                this.isSendingNotificationsContacts = true;
+                delete this.selectedContactToEditActions.status;                
+                delete this.selectedContactToEditActions.created_at;
+                delete this.selectedContactToEditActions.updated_at;
+                
+                this.selectedContactToEditActions.status_id = (this.selectedContactToEditActions.status_id !=6)? 6:1;
+                ApiService.put(this.contacts_url+'/'+this.selectedContactToEditActions.id, this.selectedContactToEditActions)
+                    .then(response => {
+                        if(response.data.status_id != 6) miniToastr.success("As notificações foram ativadas com sucesso.","Sucesso");
+                        if(response.data.status_id == 6) miniToastr.success("As notificações foram silenciadas com sucesso.","Sucesso");
+                        this.selectedContactToEdit == this.getContactInfoToEdit(response.data);
+                        
+                        if(this.selectedContactIndex == this.selectedContactToEditActions.index){
+                            this.selectedContactIndex = 0;
+                        }else
+                        if(this.selectedContactIndex < this.selectedContactToEditActions.index){
+                            this.selectedContactIndex ++;
+                        }
+                        this.getContacts();
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_url, "update");
+                    })
+                this.isSendingNotificationsContacts = false;
+                this.closemodal();
+            },
+
+            getContactToEditActions: function(contact) {    
+                this.selectedContactToEditActions = Object.assign({}, contact);
+                this.isMuteNotifications = (contact.status_id == 6)? true: false;
+            },
+
+
+
+            getContactChat: function(contact) {
+                // if(document.getElementById("chat-content") && document.getElementById("chat-content").scrollHeight > 0)
+                //     document.getElementById("chat-content").innerHTML = '';
+                this.selectedContactIndex = -2;
+                setTimeout(()=>{
+                    this.pageNumber = -1;
+                    this.messages = [];
+                    this.messageTimeDelimeter = '';
+                    this.scrollHeights = [];
+                    this.hasMorePageMessage=true;                
+                    this.requestingNewPage=false;                
+
+                    this.selectedContactIndex = contact.index;
+                    this.selectedContact = this.contacts[this.selectedContactIndex];
+                    this.selectedContactToEdit = this.getContactInfoToEdit(this.selectedContact);
+                    if(this.showChatRightSide) this.displayChatRightSide();
+                    if(this.showChatFindMessages) this.displayChatFindMessage();
+                    document.getElementById("chat-center-side").classList.add("chat-center-side-open");
+
+                    this.getChat();
+                },1000)
+                
+            },
+
+            getChat: function(){
+                if(this.requestingNewPage){
+                    return;
+                }else{
+                    this.requestingNewPage = true;                
+                }
+                this.pageNumber = this.pageNumber+1;
+                console.log('request page '+ this.pageNumber);
+                ApiService.get(this.chat_url,{
+                    'contact_id':this.selectedContact.id,
+                    'message_id': this.findAroundMessageId,
+                    'page':this.pageNumber
+                })
+                .then(response => {
+                    if(response.data.length){
+                        this.findAroundMessageId = null;
+                        this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
+                        this.messagesWhereLike = [];
+                        this.searchMessageByStringInput = [];
+                        this.messages_copy=new Array();
+                        response.data.forEach((item, i)=>{
+                            try {
+                                item.time = this.getMessageTime(item.created_at);
+                                if(item.time.date != this.messageTimeDelimeter){
+                                    this.messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    this.messageTimeDelimeter = item.time.date;
+                                }
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                this.messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
+                        if(this.messages.length)
+                            this.messageInTop = this.messages[0];
+                        this.messages = this.messages_copy.concat(this.messages);
+                    }else{
+                        this.hasMorePageMessage =false;
+                    }                    
+                })
+                .catch(function(error) {
+                    miniToastr.error(error, "Error carregando os contatos");   
+                }).finally(()=>{                    
+                });
+            },
+
+            onTopMessages: function(scrollTop, totalHeight){
+                if(!this.requestingNewPage && this.hasMorePageMessage){
+                    this.getChat();                    
+                }
+            },
+
+            oncontentresize: function(val){
+                if(this.requestingNewPage && this.hasMorePageMessage){
+                    this.scrollHeights.push(val);
+                    var n = this.scrollHeights.length;
+                    if(this.scrollHeights.length>1){
+                        var p = (this.scrollHeights[n-2] * 100)/this.scrollHeights[n-1];
+                        this.$refs.message_scroller.scrolltopercent(100-p-0.8);
+                    }
+                    console.log(this.scrollHeights);
+                    this.requestingNewPage = false;
+                }
+            },
+
+
         },
 
         updated(){
-            if(this.selectedContactIndex>=0 && this.$refs.message_scroller)
+            if(this.selectedContactIndex >= 0 && this.$refs.message_scroller && this.pageNumber == 0) {
                 this.$refs.message_scroller.scrolltobottom();
+            }            
         },
 
         beforeMount() {
@@ -1728,8 +2021,8 @@
             })
             .then(response => {                            
             })
-            .catch(function(error) {
-                miniToastr.error(error, "Error carregando os contatos");   
+            .catch(error => {
+                this.processMessageError(error, "contacts", "get");
             });
         },
 
@@ -1814,7 +2107,7 @@
 
                             }
                         });
-                        if(!this.logguedAttendant.mute_notifications)
+                        if(!this.logguedAttendant.mute_notifications && !This.contacts[This.selectedContactIndex].status_id==6)
                             this.$refs.newMessageSound.play();
                     }                    
             });
@@ -1860,7 +2153,7 @@
         },
 
         computed: {
-            allContacts: function() {
+            allContacts: function() {    
                 var self = this;
                 return this.contacts.filter(
                     function(contact) {
@@ -1892,7 +2185,7 @@
                     console.log('sended message');
                     //enable new message, and upload and send buttons
                 }
-            },            
+            },             
         }
 
     }
@@ -1900,6 +2193,18 @@
 
 
 <style scoped lang="scss">
+    .width-30{
+        width: 30% !important;
+    }
+    .width-70{
+        width: 70% !important;
+    }
+    .width-25{
+        width: 25% !important;
+    }
+    .width-45{
+        width: 45% !important;
+    }
 
     /* LAYOUT */
     .desc-img {
@@ -1917,6 +2222,9 @@
     }  
     .chat_block {
         border-bottom: 1px solid #f4f2f2;
+    }
+    .myheight{
+        height: calc(100% - 170px);
     }
     .chatalign {
         background-color: #fff !important;
@@ -1980,17 +2288,21 @@
         font-size: 1.3em;
     }
     .non_converstion_back{
+        // position: absolute;
         background-color: #eaedf2;
         height: 100%;
         width: 100%;
+        padding-left: 20%;
+        padding-top: 15%;
     }
     .non-selected-chat {
-        position: absolute;
-        top: 40%;
-        left:50%;
-        transform: translate(-50%,-50%);
+        
+        // margin-top: 20%;
+        // left:50%;
+        // transform: translate(-50%,-50%);
+
         img{
-            width:18em; height:18em; border-radius:50%; opacity:0.5;
+            width:18rem; height:18rem; border-radius:50%; opacity:0.5;
         }
     }
     .profile {
@@ -2099,9 +2411,19 @@
         min-width:13em;
     }
     .message-hover{
+        display: block;
         visibility:visible;
     }
     .message-hout{
+        display: none;
+        visibility:hidden;
+    }
+    .contact-hover{
+        display: block;
+        visibility:visible;
+    }
+    .contact-hout{
+        display: none;
         visibility:hidden;
     }
     .message-options-style{

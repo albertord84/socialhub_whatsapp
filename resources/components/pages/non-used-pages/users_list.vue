@@ -59,7 +59,7 @@
                         "<a class='btn btn-warning clickable' href='#/view_user/" + item.id + "'>View</a>");
                 });
             })
-                .catch(function (error) {
+                .catch(error => {
                 });
         },
     }

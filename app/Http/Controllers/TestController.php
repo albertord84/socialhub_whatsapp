@@ -153,7 +153,7 @@ class TestController extends AppBaseController
 
     public function testsalesbling(Request $request)
     {
-        Log::debug('Bling Test Sales: ', [$request->all()]);
+        Log::debug('\n\rBling Test Sales: ', [$request->all()]);
     }
 
     public function getGuzzleRequest()
