@@ -65,7 +65,7 @@
                         </div>                                                      
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.estado" title="Ex: RJ" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)"  class="form-control"/>                            
+                            <input v-model="modelCompany.estado" title="Ex: RJ" v-mask="'AA'" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)"  class="form-control"/>                            
                         </div> 
                     </div>
 
@@ -192,25 +192,25 @@
                 </div>
                                                
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" id="btnInsert" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
+                    <button v-show='action=="insert"' type="submit" id="btnInsert" name="btnInsert" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
                         <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
                     </button>
 
-                    <button v-show='action=="edit"' type="submit" id="btnEdit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
+                    <button v-show='action=="edit"' type="submit" id="btnEdit" name="btnEdit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
                         <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
                     </button>
 
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button type="reset" id="btnCancel" name="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
 
             <form v-show="action=='delete'">
                 Tem certeza que deseja cancelar o contrato dessa Empresa?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" id="btnDelete" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteCompany">
+                    <button type="submit" id="btnDelete" name="btnDelete" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteCompany">
                         <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
                     </button>
-                    <button type="reset" id="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button type="reset" id="btnCancel" name="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
 
