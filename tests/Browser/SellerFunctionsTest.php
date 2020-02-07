@@ -78,9 +78,20 @@ class SellerFunctionsTest extends DuskTestCase
                     ->type('CNPJ', '111111111')->press('Adicionar')->waitForText('CNPJ inválido')->assertSee('CNPJ inválido')
                     ->type('CNPJ', '88495263000161')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('CNPJ inválido')
                 ->assertPresent('#name')
+<<<<<<< HEAD
                     ->type('name', '')
                 ->assertPresent('#phoneCompany')
                 ->assertPresent('#email')
+=======
+                    ->type('name', '')->press('Adicionar')->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
+                    ->type('name', 'anyname /@# â')->press('Adicionar')->waitForText('Confira a escrita do nome')->assertSee('Confira a escrita do nome')                    
+                    ->type('name', 'CompanyTestDusk')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('Confira a escrita do nome')                    
+                    ->assertPresent('#phoneCompany')
+                ->assertPresent('#email')
+                    ->type('email', '')->press('Adicionar')->waitForText('O e-mail da empresa é obrigatório')->assertSee('O e-mail da empresa é obrigatório')
+                    ->type('email', 'anyname /@# â')->press('Adicionar')->waitForText('Email inválido')->assertSee('Email inválido')                    
+                    ->type('email', 'josergm86@gmail.com')->press('Adicionar')->waitForText('Por favor, confira')->assertDontSee('Email inválido')                    
+>>>>>>> test-dusk
                 ->assertPresent('#whatsapp')
                 ->assertPresent('#amount_attendants')
                 ->assertPresent('#CEP')
@@ -97,12 +108,15 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertPresent('#phoneManager')
 
                 ->assertPresent('#whatsapp_id');
+<<<<<<< HEAD
                     // ->type('whatsapp_id', '')->press('Adicionar')->waitForText('O CNPJ é obrigatório')->assertSee('O CNPJ é obrigatório')
                     // ->type('whatsapp_id', '111111111')->press('Adicionar')->waitForText('CNPJ inválido')->assertSee('CNPJ inválido')
                     // ->type('whatsapp_id', '88495263000161')->press('Adicionar')->waitForText('Empresas adicionada com seucesddo')->assertSee('Empresas adicionada com seucesddo');
         
 
 
+=======
+>>>>>>> test-dusk
                 
                 
 

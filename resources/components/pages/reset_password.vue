@@ -20,24 +20,17 @@
                     <router-link tag="a" to="/" class="mt-3">Ir à página de login</router-link>
                 </v-layout>
                 <vue-form :state="formstate" @submit.prevent="onSubmit" v-show="!successShow">
-                    <input type="hidden"
-                            id="token"
-                            v-model="model.token"
-                            required
-                    />
+                    <input type="hidden" id="token" v-model="model.token" required/>
                     <div class="col-md-12">
                         <p class="user-message"> * A senha é sensível a maiúsculas.</p>
                         <div class="form-group">
                             <validate tag="div">
-
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                     </div>
-                                    <input v-model="model.password" name="password" type="password" required placeholder="Senha" class="form-control" />
+                                    <input v-model="model.password" id="password" name="password" type="password" required placeholder="Senha" class="form-control" />
                                 </div>
-
-
                                 <field-messages name="password" show="$invalid && $submitted" class="text-danger">
                                     <div slot="required">A senha é obrigatória</div>
                                     <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
@@ -49,15 +42,13 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <validate tag="div">
-
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
                                     </div>
                                     <input v-model="model.password_confirmation" name="repeatpassword" type="password" required placeholder="Repetir senha" class="form-control" :sameas="model.password">
                                 </div>
-
-                                <field-messages name="repeatpassword" show="$invalid && $submitted" class="text-danger">
+                                <field-messages id="repeatpassword" name="repeatpassword" show="$invalid && $submitted" class="text-danger">
                                     <div slot="required">Confirmação de senha é obrigatória</div>
                                     <div slot="sameas">As senhas não coincidem</div>
                                 </field-messages>
