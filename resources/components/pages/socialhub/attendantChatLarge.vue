@@ -90,7 +90,6 @@
                         </ul>
                     </div>                        
                 </div>
-
                 <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
@@ -1824,7 +1823,6 @@
                 }
             },
 
-           
             editNotificationsContacts: function() {
                 this.isSendingNotificationsContacts = true;
                 delete this.selectedContactToEditActions.status;                
