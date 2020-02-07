@@ -29,7 +29,6 @@ class ExtendedCompanyRepository extends CompanyRepository
         return $Company;
     }
 
-
     /**
      * Configure the Model
      **/

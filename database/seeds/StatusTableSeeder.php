@@ -101,6 +101,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'Conversation wit this contact was classed and is archived. The contact will be not appear in the contact list',
         ]);
         $this->command->info('Contacts Status ARCHIVED');
+
+        ContactsStatus::create([
+            'id' => '6',
+            'name' => 'SILENCED',
+            'description' => 'Contact without Notifications',
+        ]);
+        $this->command->info('Contacts Status SILENCED');
     }
 
     function CreateUsersStatus() {

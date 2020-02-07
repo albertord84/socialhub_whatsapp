@@ -197,20 +197,16 @@
                                     this.reload();
                                     this.closeModals();
                                 })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error); 
-                                miniToastr.error(error, "Erro adicionando Atendente");  
+                            .catch(error => {
+                                this.processMessageError(error, this.usersManager_url, "add"); 
                             });
-                           
                         })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando Atendente");  
+                    .catch(error => {
+                        this.processMessageError(error, this.users_url, "add");
                     });
                 })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
+                .catch(error => {
+                    this.processMessageError(error, this.companies_url, "add");
                 });
             },
             
@@ -232,14 +228,12 @@
                                 this.reload();
                                 this.closeModals();
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro atualizando Manager"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.users_url, "update");
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando companhia"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.companies_url, "update");
                     });
             },
 
@@ -255,19 +249,16 @@
                                         this.reload();
                                         this.closeModals();
                                     })
-                                    .catch(function(error) {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Companhia"); 
+                                    .catch(error => {
+                                        this.processMessageError(error, this.companies_url, "delete"); 
                                     });
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando Manager"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.users_url, "delete");
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Manager"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.usersManager_url, "delete");
                     });
             },
 
@@ -300,6 +291,20 @@
             reload(){
                 this.$emit('onreloaddatas');
             }, 
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
 
         },
 

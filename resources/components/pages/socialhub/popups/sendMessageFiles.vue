@@ -113,13 +113,12 @@
                         this.file = null;
                         this.$refs.message_scroller.scrolltobottom();
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error enviando mensagem"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.chat_url, "send");
                     })
                     .finally(() => this.isSending = false);
                 }
             },
-
 
             updateUserPhoto(This){
                 if(!This.file){
@@ -136,15 +135,26 @@
                     .then(response => {
                         This.user.image_path = response.data;
                         window.localStorage.setItem('user', JSON.stringify(This.user));
-                        
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
-
                         window.location.reload(false);
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando a foto do perfil");  
+                    .catch(error => {
+                        this.processMessageError(error, This.url, "update_image"); 
                     });
+                }
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
                 }
             },
            
