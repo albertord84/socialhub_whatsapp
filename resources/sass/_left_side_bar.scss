@@ -2,13 +2,15 @@
 
 #left {
   transition: all .3s ease-in-out;
-  width: 25%;
+  width: 30%;
+  // width: 25%;
   z-index: 1000;
   position: fixed;
   top: 50px;
   bottom: 0;
   overflow-y: auto;
-  left: -25%;
+  left: -30%;
+  // left: -25%;
   box-shadow: 0 0 15px #CCC;
   background: #FAFAFA;
   &.open{
