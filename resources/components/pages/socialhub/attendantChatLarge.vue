@@ -96,7 +96,7 @@
                             <div class="container-fluid">
                                 <div class="row mt-3 mb-3">
                                     <div class="col-3 pointer-hover" @click.prevent="getContactChat(contact)">
-                                        <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="reloadContactPicUrl($event, contact,index)" class="contact-picture">
+                                        <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id"  class="contact-picture">
                                     </div>
                                     <div class="col-7 d-flex" @click.prevent="getContactChat(contact)">
                                         <div class="d-flex flex-column pointer-hover">
