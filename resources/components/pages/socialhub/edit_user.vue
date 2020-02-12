@@ -126,7 +126,25 @@
                         this.model.email = response.data.email;
                         this.model.name = response.data.name;
                     })
-            }
+                    .catch(error => {
+
+                    })
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
         },
         beforeMount() {
             if(this.$route.params.user_id > 0) {

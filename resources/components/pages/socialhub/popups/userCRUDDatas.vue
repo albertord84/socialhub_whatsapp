@@ -207,12 +207,10 @@
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
                 if(model_cpy.phone){
-                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
-                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');            //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');            //ECR
                 }
                 
-
-                // ApiService.put(this.url+'/'+this.model.id, this.model)
                 ApiService.put(this.url+'/'+this.model.id, model_cpy)               //ECR
                 .then(response => {
                     // window.location.reload(false);
@@ -221,9 +219,8 @@
                     miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
                     this.editMode = false;
                 })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro atualizando perfil");  
+                .catch(error => {
+                    this.processMessageError(error, this.url, "update");
                 })
                 .finally(() => this.isSending = false);
                 
@@ -244,14 +241,11 @@
                     .then(response => {
                         This.user.image_path = response.data;
                         window.localStorage.setItem('user', JSON.stringify(This.user));
-                        
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
-
                         window.location.reload(false);
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando a foto do perfil");  
+                    .catch(error => {
+                        this.processMessageError(error, This.url, "update_image");
                     });
                 }
             },
@@ -308,7 +302,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -327,7 +321,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -371,6 +365,20 @@
                     }
                 }
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
 
         },
 

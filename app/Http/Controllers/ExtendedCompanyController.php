@@ -98,5 +98,4 @@ class ExtendedCompanyController extends CompanyController
         // return redirect(route('companies.index'));
     }
 
-
-}
+ }

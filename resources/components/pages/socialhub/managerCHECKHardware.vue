@@ -55,21 +55,26 @@
                     .then(response => {
                         this.statusMessage = response.data.message;
                     })
-                    .catch(function(error) {
+                    .catch(error => {
                         this.duringRequest=false;
                         this.isError=true;
-                        if (error.response) {
-                            miniToastr.warn(error.response.data.message, "Atenção"); 
-                        } else
-                        if (error.request) {
-                            console.log('error.request');
-                            console.log(error.request);
-                        } else{
-                            console.log('some another error');
-                            console.log(error.message);
-                        }
+                        this.processMessageError(error, this.url, "get");
                     })
                     .finally(() => { this.isChecking = false;});
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
             },
 
             

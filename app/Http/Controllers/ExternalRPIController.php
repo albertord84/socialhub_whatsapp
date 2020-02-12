@@ -176,7 +176,7 @@ class ExternalRPIController extends Controller
             
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
-            $response = json_decode($response);
+            // $response = json_decode($response);
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }

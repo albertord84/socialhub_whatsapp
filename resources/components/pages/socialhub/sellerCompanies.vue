@@ -19,13 +19,13 @@
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
+                    <a href="javascript:undefined" id="addCompany" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" id="tableCompanies">
             <table ref="table" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
@@ -37,8 +37,8 @@
                                 {{ collect(row, column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="editCompany" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="deleteCompany" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -99,9 +99,8 @@
     import ApiService from "../../../common/api.service";
     import sellerCRUDCompanies from "./popups/sellerCRUDCompanies";
     // import sellerCRUDCompanies from "./popups/sellerCRUDCompaniesWizzard";
-
-    import routes from '../../../router/index'; //ECR
     
+
     export default {
         props: {
             title: {
@@ -201,13 +200,6 @@
 
         methods: {  
             getCompanies: function() { //R
-                //  console.log(navigator.onLine);   
-                // if(!navigator.onLine){
-                //     miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                    
-                    
-                //     routes.push({name:'login'}); 
-                // }
                 ApiService.get(this.companies_url)
                     .then(response => {
                         this.rows = response.data;
@@ -220,20 +212,13 @@
                             // var name = "";
                             // item.contact_atendant_id = 0;
                             // if(item.latestAttendant){
-                            //     item.attendant_name = item.latestAttendant.user.name;
+                                //     item.attendant_name = item.latestAttendant.user.name;
                             //     item.contact_atendant_id = item.latestAttendant.user.id;
                             // }
                         });
                     })
-                    .catch(function(error) {
-                        if (error.response && error.response.data.message.includes("of non-object")){
-                            //  redireccionar para a pagina de login
-                            routes.push({name:'login'}); 
-                            miniToastr.warn("A conexão aberta expirou. É necessário realizar o login novamente.","Atenção");
-                            
-                        }else{
-                            miniToastr.error(error, "Error carregando as empresas");
-                        }
+                    .catch(error => {
+                        this.processMessageError(error, this.companies_url,"get");
                     });
             }, 
 
@@ -257,16 +242,11 @@
                 this.companies_id = value.id;
                 this.rpi_id = value.rpi_id;
                 this.model_rpi={};
-                // console.log('aqui 1');
 
                 //manager data
                 ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
                     .then(response => {
                         try {
-                            
-                            // console.log('aqui 2');
-                            // console.log(response.data);
-
                             this.model_manager  = response.data[0];
                             for (var key in this.model_manager.user) { //pasar los campos del usuraio para el manager
                                 this.model_manager[key] = this.model_manager.user[key];
@@ -275,27 +255,26 @@
                             
                             //rpi datas
                             if(this.rpi_id){
+
                                 ApiService.get(this.rpi_url+'/'+this.rpi_id)
                                 .then(response => {
                                     this.model_rpi = response.data;
                                     this.modalEditCompanies = !this.modalEditCompanies;    
                                 })
-                                .catch(function(error) {
-                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                .catch(error => {
+                                    this.processMessageError(error, this.rpi_url, "get");   
                                 });
 
                             }else{
                                 this.modalEditCompanies = !this.modalEditCompanies;
                             }
-
-
                             
                         } catch (error) {
                             console.log(error);
                         }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                    .catch(error => {
+                        this.processMessageError(error, this.usersManager_url, "get");
                     });
             },
 
@@ -323,25 +302,22 @@
                                     this.model_rpi = response.data;
                                     this.modalDeleteCompanies = !this.modalDeleteCompanies;    
                                 })
-                                .catch(function(error) {
-                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                .catch(error => {
+                                    this.processMessageError(error, this.rpi_url, "get");
                                 });
 
                             }else{
                                 this.modalDeleteCompanies = !this.modalDeleteCompanies;
                             }
-
-
                             
                         } catch (error) {
                             console.log(error);
                         }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                    .catch(error => {
+                        this.processMessageError(error, this.usersManager_url, "get");
                     });
             },
-
 
 
             //------ Specific DataTable methods------------
@@ -439,6 +415,26 @@
             mycheck(){
                 alert("hi");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('user');
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.$router.push({name: "login"});
+
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
+
         },
 
         beforeMount(){

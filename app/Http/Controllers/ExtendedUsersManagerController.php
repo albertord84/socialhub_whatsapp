@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Laracasts\Flash\Flash;
+use Exception;
 
 use Illuminate\Support\Facades\Mail;
 
@@ -38,7 +39,9 @@ class ExtendedUsersManagerController extends UsersManagerController
     {
         $this->usersManagerRepository->pushCriteria(new RequestCriteria($request));
         $usersManagers = $this->usersManagerRepository->Managers_User($company_id);
+
         return $usersManagers->toJson();
+        
     }
 
     public function store(CreateUsersManagerRequest $request)
@@ -53,13 +56,14 @@ class ExtendedUsersManagerController extends UsersManagerController
         $Seller = Auth::check()? Auth::user():session('logged_user');
         $User = User::find($input['user_id']);
         $User->password = rand(100000,999999);
+        
         $Company = Company::find($User->company_id);
         Mail::to($User->email)
-            ->bcc($Seller->email)
-            ->send(new EmailSigninCompany($Seller, $User, $Company));
+        ->bcc($Seller->email)
+        ->send(new EmailSigninCompany($Seller, $User, $Company));
         $User->password = bcrypt($User->password);
         $User->save();
-        
+
         return ($User)? $User->toJson() : null;
 
     }
