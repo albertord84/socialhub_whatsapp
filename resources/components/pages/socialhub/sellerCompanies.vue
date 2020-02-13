@@ -13,7 +13,7 @@
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar empresas">
+                    <a href="javascript:undefined" id="exportCompany" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar empresas">
                         <i class="mdi mdi-file-export fa-lg"  ></i>
                         <!-- <i class="fa fa-download"></i> -->
                     </a>
@@ -76,17 +76,17 @@
         </div>
 
         <!-- Add Companies Modal -->
-        <b-modal v-model="modalAddCompanies" size="lg" :hide-footer="true" title="Nova empresa">
+        <b-modal v-model="modalAddCompanies" size="lg" :hide-footer="true" title="Nova empresa" id= "addCompaniesModal" >
             <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
         <!-- Edit Companies Modal -->
-        <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa">
+        <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa" id= "editCompaniesModal" >
             <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :model_rpi='model_rpi' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
         <!-- Delete Companies Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteCompanies" :hide-footer="true" title="Verificação de cancelamento">
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteCompanies" :hide-footer="true" title="Verificação de cancelamento" id= "deleteCompaniesModal">
             <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"delete"' :model_rpi='model_rpi' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>            
         </b-modal>
 

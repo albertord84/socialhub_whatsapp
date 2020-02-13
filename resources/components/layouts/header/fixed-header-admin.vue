@@ -54,10 +54,10 @@
                     <!-- User Account: style can be found in dropdown-->
                     <b-dropdown class="dropdown hidden-xs-down btn-group" variant="link" toggle-class="text-decoration-none" >
                         <template v-slot:button-content>
-                            <img :src="pictureProfile" class="my-rounded-circle" alt="User Image">
+                            <img :src="pictureProfile" id="dropdown_btn" class="my-rounded-circle" alt="User Image">
                         </template>
                         <b-dropdown-item exact class="dropdown_content">
-                            <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" exact class="drpodowtext">
+                            <a href="javascript:void()" id="perfil_lnk" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" exact class="drpodowtext">
                                 <i class="fa fa-user-o"></i> Perfil
                             </a>
                             <!-- <router-link to="admin/user_profile" exact class="drpodowtext">
@@ -70,13 +70,13 @@
                             </router-link>
                         </b-dropdown-item> -->
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/lockscreen" exact class="drpodowtext">
+                            <router-link to="/lockscreen" id="lockscreen_lnk" exact class="drpodowtext">
                                 <i class="fa fa-lock"></i> Bloquear
                             </router-link>
                         </b-dropdown-item>
                         <b-dropdown-item exact class="dropdown_content">
-                            <router-link to="/" class="drpodowtext">
-                                <div v-on:click="logout">
+                            <router-link to="/" class="drpodowtext" id="logout_lnk">
+                                <div v-on:click="logout" >
                                     <i class="fa fa-sign-out"></i> Sair
                                 </div>
                             </router-link>
@@ -91,7 +91,7 @@
 
         </nav>
         <!-- Modal to show user datas-->
-        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" >
+        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" id= "userCRUDDatasModal1" >
             <userCRUDDatas :contacts='contacts'></userCRUDDatas>
         </b-modal>
     </header>

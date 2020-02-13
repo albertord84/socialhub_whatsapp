@@ -1,6 +1,7 @@
 <template>
     <div>
-        <b-container fluid>                
+        <b-container fluid> 
+                           
             <form v-show="action!='delete'"> 
                 <div>
                     <h3>Dados da empresa</h3>
@@ -35,7 +36,6 @@
                             <input v-if='action=="edit"' v-model="modelCompany.amount_attendants"  v-mask="'####'" name="amount_attendants" id="amount_attendants" type="text" required placeholder="Atendentes permitidos" class="form-control"/>
                         </div>
                     </div>
-
 
                     <h6>Endereço postal </h6>
                     <div class="row">
@@ -97,7 +97,6 @@
                             <textarea v-model="modelCompany.description" title="Ex: Describe informaçẽs relevantes da empresa" style="width:100%" name="description" id="description" rows="4" placeholder="Descrição"></textarea>
                         </div>                                                                         
                     </div>
-
                 </div>
                 <hr>
 
@@ -130,8 +129,8 @@
                         </div>
                     </div>                                  
                 </div> 
-                
                 <hr>
+
                 <div v-if="action=='edit'">
                     <h3>Dados do canal de comunicação</h3>
                     <div class="row">
@@ -188,10 +187,9 @@
                             <input v-model="modelRpi.soft_version_date" v-mask="'##/##/####'" title="Ex: dd/mm/aaaa" id="soft_version_date" name="soft_version_date" type="text" required placeholder="Data da Versão do Software" class="form-control"/>                            
                         </div>                                                      
                     </div>
-
                 </div>
                                                
-                <div class="col-lg-12 m-t-25 text-center">
+                <!-- <div class="col-lg-12 m-t-25 text-center">
                     <button v-show='action=="insert"' type="submit" id="btnInsert" name="btnInsert" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
                         <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
                     </button>
@@ -201,8 +199,24 @@
                     </button>
 
                     <button type="reset" id="btnCancel" name="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                </div> -->
+
+                <div v-show='action=="insert"' class="col-lg-12 m-t-25 text-center">
+                    <button type="submit" id="btnInsert" name="btnInsert" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addCompany">
+                        <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
+                    </button>
+                    <button type="reset" id="btnCancel" name="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
+
+                <div v-show='action=="edit"' class="col-lg-12 m-t-25 text-center">
+                    <button type="submit" id="btnEdit" name="btnEdit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateCompany">
+                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
+                    </button>
+                    <button type="reset" id="btnCancel2" name="btnCancel2" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                </div>
+
             </form>
+
 
             <form v-show="action=='delete'">
                 Tem certeza que deseja cancelar o contrato dessa Empresa?
@@ -210,7 +224,7 @@
                     <button type="submit" id="btnDelete" name="btnDelete" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteCompany">
                         <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
                     </button>
-                    <button type="reset" id="btnCancel" name="btnCancel" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button type="reset" id="btnCancel1" name="btnCancel1" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
 

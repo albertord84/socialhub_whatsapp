@@ -2,9 +2,12 @@
 
 namespace Tests\Browser;
 
+use Barryvdh\LaravelIdeHelper\Macro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+use App\Providers\DuskServiceProvider;
 
 class SellerFunctionsTest extends DuskTestCase
 {
@@ -15,6 +18,7 @@ class SellerFunctionsTest extends DuskTestCase
     public function testingLoginPage(){
         echo "\n--------------------------------------------------------------\n ";
         $this->browse(function (Browser $browser) {
+
             $browser->visit('/')
                 ->assertSee('Email')
                 ->assertSee('Senha')
@@ -22,9 +26,11 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertSee('Entrar')
                 ->assertPresent('#email')
                 ->assertPresent('#password');
-            echo "OK -- Tested Login Page to Seller functions\n ";
+            echo "OK -- Tested Login Page to Seller functions \n ";
         });
     }
+
+
 
     /**
      * * @group seller
@@ -39,7 +45,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->press('Entrar')
                 ->waitForText('Email ou senha inválido')
                 ->assertSee('Email ou senha inválido');
-            echo "OK -- Tested login of user: seller1@socialhub.pro with incorrect pasword\n";
+            echo "OK -- Tested login of user: seller1@socialhub.pro with incorrect pasword \n";
 
             $browser->visit('/')
                 ->type('email', 'seller1@socialhub.pro')
@@ -48,12 +54,222 @@ class SellerFunctionsTest extends DuskTestCase
                 ->waitForText('Empresas')
                 ->assertSee('Empresas')
                 ->assertPresent('#logged_user_name')
+                ->assertPresent('#search-input')
                 ->assertPresent('#addCompany')
+                ->assertPresent('#exportCompany')
                 ->assertSee('Linhas por página:');
-
-            echo " OK -- Tested login of user: seller1@socialhub.pro\n";
+            echo " OK -- Tested login of user: seller1@socialhub.pro \n";
         });
     }
+
+
+
+    /**
+     * * @group seller
+     * @return void
+     */
+    public function testingSellerDoLogout(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+           
+            $browser
+                ->assertPresent('#lnk_logout')
+                ->click('#lnk_logout')
+                ->assertSee('Email')
+                ->assertSee('Senha')
+                ->assertSee('Esqueceu sua senha?')
+                ->assertSee('Entrar')
+                ->assertPresent('#email')
+                ->assertPresent('#password')
+                ->assertPathIs('/');
+            echo "OK -- Tested logout of user: seller1@socialhub.pro \n";
+
+            $browser
+                ->type('email', 'seller1@socialhub.pro')
+                ->type('password', 'seller1')
+                ->press('Entrar')
+                ->waitForText('Empresas')
+                ->assertSee('Empresas');
+            echo " OK -- Tested login after logout of user: seller1@socialhub.pro y\n";
+        });
+    }
+
+
+
+    /**
+     * * @group seller
+     * @return void
+     */
+    public function testingSellerDoLockScreen(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+           
+            $browser
+                ->assertPresent('#lnk_lockscreen')
+                ->click('#lnk_lockscreen')
+                ->assertPresent('#password')
+                ->assertPresent('#desbloquear');
+            echo "OK -- Tested lockscreen of user: seller1@socialhub.pro\n";
+            
+            $browser
+                ->type('password', '')
+                ->press('#desbloquear')
+                ->waitForText('A senha é obrigatória')
+                ->assertSee('A senha é obrigatória');
+            echo " OK -- Tested login after lockscreen of user: seller1@socialhub.pro without pasword\n";
+            
+            // ECR => descomentar depois de concertado. ERRO: manager ou seller podem entrar com cualquer senha
+            // $browser
+            //     ->type('password', 'wrong_pass')
+            //     ->press('#desbloquear');
+            //     // ->waitForText('Senha inválida')
+            //     // ->assertSee('Senha inválida');
+            // echo " OK -- Tested login after lockscreen of user: seller1@socialhub.pro with incorrect pasword\n";
+
+            $browser
+                ->type('password', 'seller1')
+                ->press('#desbloquear')
+                ->waitForText('Empresas')
+                ->assertSee('Empresas');
+            echo " OK -- Tested login after lockscreen of user: seller1@socialhub.pro\n";
+        });
+    }
+
+
+
+    /**
+     * * @group seller
+     * @return void
+     */
+    public function testingSellerEditUser(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+            
+            $browser
+                ->assertPresent('#lnk_editUser1')
+                ->click('#lnk_editUser1')
+                ->whenAvailable('#userCRUDDatasModal', function ($modal) {
+                    $modal
+                        ->assertSee('INFORMAÇÃO PESSOAL')
+                        ->assertSee('CPF')
+                        ->assertSee('Telefone')
+                        ->assertSee('Whatsapp')
+                        ->assertSee('Facebook')
+                        ->assertSee('Instagram')
+                        ->assertSee('Linkedin');
+                    });
+            $browser
+                ->script('location.reload();');
+            echo "OK -- Tested seller1 check link to edit seller1 from photo user \n";
+            
+            $browser
+                ->assertPresent('#lnk_editUser')
+                ->click('#lnk_editUser')
+                ->whenAvailable('#userCRUDDatasModal', function ($modal) {
+                    $modal
+                        ->assertSee('INFORMAÇÃO PESSOAL')
+                        ->assertSee('CPF')
+                        ->assertSee('Telefone')
+                        ->assertSee('Whatsapp')
+                        ->assertSee('Facebook')
+                        ->assertSee('Instagram')
+                        ->assertSee('Linkedin')
+                        ->assertPresent('#updateUser')
+                        ->assertPresent('#fileUserPhoto')
+                        ->assertPresent('#editPerfil')
+                        ->press('#editPerfil')
+                        ->waitForText('Senha')
+                            ->assertSee('Senha')
+                            ->assertSee('Repetir senha')
+                        ->type('#userCPF', '08266391190')
+                        ->type('#userPhone', '2198745632')
+                        ->type('#userWhatsapp', '2198745632')
+                        ->type('#userFacebook', 'userFacebook')
+                        ->type('#userInstagram', 'userInstagram')
+                        ->type('#userLinkedin', 'userLinkedin')
+                        ->press('#updateUser');
+                });
+            $browser
+                ->waitForText('Sucesso')
+                ->assertSee('Perfil atualizado com sucesso')
+                ->script('location.reload();');
+            echo " OK -- Tested seller1 edit seller1\n";
+        });
+    }
+
+    
+
+    /**
+     * * @group seller
+     * @return void
+     */
+    public function testingSellerHeaderSide(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+           
+            $browser
+                ->assertPresent('#dropdown_btn')
+                ->press('#dropdown_btn')
+                ->waitForText('Perfil')
+                ->assertSee('Perfil')
+                ->assertPresent('#perfil_lnk')
+                ->assertPresent('#lockscreen_lnk')
+                ->assertPresent('#logout_lnk');
+            echo "OK -- Tested Seller1 check Header Side  \n";
+
+            $browser
+                ->press('#perfil_lnk')
+                ->whenAvailable('#userCRUDDatasModal1', function ($modal) {
+                    $modal
+                        ->assertSee('INFORMAÇÃO PESSOAL')
+                        ->assertSee('CPF')
+                        ->assertSee('Telefone')
+                        ->assertSee('Whatsapp')
+                        ->assertSee('Facebook')
+                        ->assertSee('Instagram')
+                        ->assertSee('Linkedin');
+                    });
+            $browser
+                ->script('location.reload();');
+            echo " OK -- Tested seller1 check link to edit seller1 from Header Side \n";
+
+            $browser
+                ->assertPresent('#dropdown_btn')
+                ->press('#dropdown_btn')
+                ->waitForText('Bloquear')
+                ->assertPresent('#lockscreen_lnk')
+                ->press('#lockscreen_lnk')
+                    ->assertPresent('#password')
+                    ->assertPresent('#desbloquear')
+                    ->type('password', 'seller1')
+                    ->press('#desbloquear')
+                ->waitForText('Empresas')
+                ->assertSee('Empresas'); 
+            echo " OK -- Tested seller1 check link to lockscreen seller1 from Header Side \n";
+
+            $browser
+                ->assertPresent('#dropdown_btn')
+                ->press('#dropdown_btn')
+                ->waitForText('Sair')
+                ->assertPresent('#logout_lnk')
+                ->press('#logout_lnk')
+                    ->assertSee('Email')
+                    ->assertSee('Senha')
+                    ->assertSee('Esqueceu sua senha?')
+                    ->assertSee('Entrar')
+                    ->assertPresent('#email')
+                    ->assertPresent('#password')
+                    ->assertPathIs('/')
+                    ->type('email', 'seller1@socialhub.pro')
+                    ->type('password', 'seller1')
+                    ->press('Entrar')
+                ->waitForText('Empresas')
+                ->assertSee('Empresas');
+            echo " OK -- Tested seller1 check link to logout seller1 from Header Side \n";
+        });
+    }
+
+
 
     // /**
     //  *  @group seller
@@ -79,7 +295,7 @@ class SellerFunctionsTest extends DuskTestCase
     //             ->assertPresent('#emailManager')
     //                 ->type('emailManager', '')->press('#btnInsert')->waitForText('O e-mail do manager da empresa é obrigatório')->assertSee('O e-mail do manager da empresa é obrigatório')
     //                 ->type('emailManager', 'emailInvalid')->press('#btnInsert')->waitForText('Email inválido')->assertSee('Email inválido')
-    //                 ->type('emailManager', 'emailvalid2@gmail.com')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
+    //                 ->type('emailManager', 'emailvalid@gmail.com')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
     //             ->assertPresent('#CPF')
     //                 ->type('CPF', '')->press('#btnInsert')->waitForText('O CPF do manager da empresa é obrigatório')->assertSee('O CPF do manager da empresa é obrigatório')
     //                 ->type('CPF', '12345678910')->press('#btnInsert')->waitForText('CPF inválido')->assertSee('CPF inválido')
@@ -158,62 +374,97 @@ class SellerFunctionsTest extends DuskTestCase
      */
     public function testingSellerEditCompany(){
         echo "\n ";
-        $this->browse(function (Browser $browser)  {
+        $this->browse(function (Browser $browser) {
+
+            $browser
+                ->maximize()
+
+                ->with('#tableCompanies', function ($table) {
+                    $table->assertSee('AAA_Company')
+                    ->click('#editCompany');
+                })
+                
+                ->whenAvailable('#editCompaniesModal', function ($modal) {
+                    $modal
+                        ->assertSee('Editar empresa')
+                        ->assertSee('Dados da empresa')
+                        ->assertSee('Endereço postal')
+                        ->assertSee('Descrição da empresa')
+                        ->assertSee('Dados do manager da empresa')
+                        ->assertSee('Dados do canal de comunicação')
+                        ->assertSee('Atualizar')
+                        ->assertSee('Cancelar')
+
+                        ->assertPresent('#nameManager')
+                        ->assertPresent('#emailManager')
+                        ->assertPresent('#CPF')
+                        ->assertPresent('#phoneManager')
+                        ->assertPresent('#whatsappManager')
+
+                        ->assertPresent('#btnGroupAddon')
+                        ->assertPresent('#CEP')
+                        ->assertPresent('#cidade')
+                        ->assertPresent('#estado')
+                        ->assertPresent('#rua')
+                        ->assertPresent('#numero')
+                        ->assertPresent('#complemento')
+                        ->assertPresent('#bairro')
+                        ->assertPresent('#description')
+                        ->assertPresent('#CNPJ')
+                        ->assertPresent('#nameCompany')
+                        ->assertPresent('#phoneCompany')
+                        ->assertPresent('#emailCompany')
+                        ->assertPresent('#amount_attendants')
+                        ->assertPresent('#whatsappCompany')
+
+                        ->assertPresent('#api_user')
+                        ->assertPresent('#api_password')
+                        ->assertPresent('#root_user')
+                        ->assertPresent('#root_password')
+                        ->assertPresent('#tcp_tunnel')
+                        ->assertPresent('#tcp_port')
+                        ->assertPresent('#mac')
+                        ->assertPresent('#api_tunnel')
+                        ->assertPresent('#soft_version')
+                        ->assertPresent('#soft_version_date')
+                        ->assertPresent('#btnEdit')
+                        ->assertPresent('#btnCancel2')
+                            ->press('#btnCancel2');
+                });
+            $browser
+                ->waitUntilMissing('#btnCancel2')
+                ->assertDontSee('Atualizar');
+            $browser->script('location.reload();');
+            echo "OK -- Tested seller1 check cancel botton of editCompaniesModal \n";
+
             $browser
                 ->with('#tableCompanies', function ($table) {
                     $table->assertSee('AAA_Company')
                     ->click('#editCompany');
                 })
-                ->waitForText('Editar empresa')
-                ->assertSee('Dados da empresa')
-                ->assertSee('Endereço postal')
-                ->assertSee('Descrição da empresa')
-                ->assertSee('Dados do manager da empresa')
-                ->assertSee('Dados do canal de comunicação')
-                ->assertSee('Atualizar')
-                ->assertSee('Cancelar')
                 
-                ->assertPresent('#nameManager')
-                    ->type('nameManager', '')->press('#btnEdit')->waitForText('O nome do manager da empresa é obrigatório')->assertSee('O nome do manager da empresa é obrigatório')
-                    ->type('nameManager', 'managerNameEdited')
-                ->assertPresent('#emailManager')
-                ->assertPresent('#CPF')
-                ->assertPresent('#phoneManager')
-                ->assertPresent('#whatsappManager')
+                ->whenAvailable('#editCompaniesModal', function ($modal) {
+                    $modal
+                        // ->type('nameManager', '') 
+                        ->attribute('nameManager', '')
+                        ->screenshot('error1')
+                        ->press('#btnEdit');
+                });
+            $browser
+                ->screenshot('error2')
 
-                ->assertPresent('#btnGroupAddon')
-                ->assertPresent('#CEP')
-                ->assertPresent('#cidade')
-                ->assertPresent('#estado')
-                ->assertPresent('#rua')
-                ->assertPresent('#numero')
-                ->assertPresent('#complemento')
-                ->assertPresent('#bairro')
-                ->assertPresent('#description')
-                ->assertPresent('#CNPJ')
-                ->assertPresent('#nameCompany')
-                    ->type('nameCompany', '')->press('#btnEdit')->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
-                    ->pause(3000)
-                    ->type('nameCompany', 'AAA_CompanyEdited')
-                ->assertPresent('#phoneCompany')
-                ->assertPresent('#emailCompany')
-                ->assertPresent('#amount_attendants')
-                ->assertPresent('#whatsappCompany')
+                ->waitForText('O nome do manager da empresa é obrigatório')
+                ->assertSee('O nome da empresa é obrigatório')
+                ->type('nameManager', 'managerNameEdited')
 
-                ->assertPresent('#api_user')
-                ->assertPresent('#api_password')
-                ->assertPresent('#root_user')
-                ->assertPresent('#root_password')
-                ->assertPresent('#tcp_tunnel')
-                ->assertPresent('#tcp_port')
-                ->assertPresent('#mac')
-                ->assertPresent('#api_tunnel')
-                ->assertPresent('#soft_version')
-                ->assertPresent('#soft_version_date')
+                ->type('nameCompany', '')
+                ->press('#btnEdit')
+                    ->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
+                    // ->pause(3000)
+                ->type('nameCompany', 'AAA_CompanyEdited')
 
-                    
-                ->press('#btnEdit')->waitForText('Dados atualizados corretamente', 10)->assertSee('Dados atualizados corretamente');
-
+                ->press('#btnEdit')
+                    ->waitForText('Dados atualizados corretamente', 10)->assertSee('Dados atualizados corretamente');
             echo "OK -- Tested seller1 edit a company\n";
         });
     }
@@ -232,18 +483,38 @@ class SellerFunctionsTest extends DuskTestCase
     //                 $table->assertSee('AAA_Company')
     //                 ->click('#deleteCompany');
     //             })
-    //             ->waitForText('Verificação de cancelamento')
-    //             ->assertSee('Tem certeza que deseja cancelar o contrato dessa Empresa')
-    //             ->assertSee('Eliminar')
-    //             ->assertSee('Cancelar')
+    //             ->whenAvailable('#deleteCompaniesModal', function ($modal) {
+    //                 $modal
+    //                     ->assertSee('Verificação de cancelamento')
+    //                     ->assertSee('Tem certeza que deseja cancelar o contrato dessa Empresa')
+    //                     ->assertSee('Eliminar')
+    //                     ->assertSee('Cancelar')
+    //                     ->assertPresent('#btnDelete')
+    //                     ->assertPresent('#btnCancel1')
+    //                         ->press('btnCancel1');
+    //             });
+    //         $browser
+    //             ->waitUntilMissing('#btnCancel1')
+    //             ->assertDontSee('Eliminar');
+    //         echo "OK -- Tested seller1 check cancel botton of deleteCompaniesModal \n";
 
-    //             ->press('#btnDelete')
-    //                 ->waitForText('Empresa eliminada com sucesso')
-    //                 ->assertSee('Empresa eliminada com sucesso');
+    //         $browser
+    //             ->with('#tableCompanies', function ($table) {
+    //                 $table->assertSee('AAA_Company')
+    //                 ->click('#deleteCompany');
+    //             })
 
-    //             // ->press('#btnCancel');
+    //             ->whenAvailable('#deleteCompaniesModal', function ($modal) {
+    //                 $modal
+    //                     ->assertPresent('#btnDelete')
+    //                         ->press('#btnDelete');
 
-    //             echo "OK -- Tested seller1 delete a company\n";
+    //             });
+    //         $browser
+    //             ->waitForText('Empresa eliminada com sucesso')
+    //             ->assertSee('Empresa eliminada com sucesso');
+
+    //         echo " OK -- Tested seller1 delete a company \n";
     //     });
     // }
 
@@ -252,3 +523,5 @@ class SellerFunctionsTest extends DuskTestCase
 
 
 }
+
+

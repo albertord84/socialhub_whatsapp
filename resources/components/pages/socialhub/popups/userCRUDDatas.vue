@@ -2,7 +2,7 @@
     <div >
         <div class="card tweet-profile" style="box-shadow:none">
             <div class="card-header text-center">
-                <i class="fa fa-pencil icons-action" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i>
+                <i class="fa fa-pencil icons-action" id="editPerfil" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i>
                 <h4>{{user.name}}</h4>
                 <p>{{user.email}}</p>
             </div>
@@ -37,7 +37,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.CPF}}</span>
-                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" placeholder="CPF (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input ref="CPF" v-show="editMode" id="userCPF" type="text" v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" placeholder="CPF (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -49,7 +49,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.phone}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="editMode"  id="userPhone" type="text" v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -61,7 +61,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.whatsapp_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="editMode" id="userWhatsapp" type="text" v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -73,7 +73,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.facebook_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.facebook_id" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="editMode" id="userFacebook" type="text" v-model="model.facebook_id" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -85,7 +85,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.instagram_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.instagram_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="editMode" id="userInstagram" type="text" v-model="model.instagram_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -97,7 +97,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <span v-show="!editMode" class="text-muted" >{{user.linkedin_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.linkedin_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="editMode" id="userLinkedin"  type="text" v-model="model.linkedin_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -110,7 +110,7 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <input v-show="!watchPassword" type="text" v-model="password" class="border border-top-0 border-left-0 border-right-0 " placeholder="Nova senha">
-                                    <input v-show="watchPassword" ref="password" type="password" v-model="password" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="watchPassword"  ref="password" type="password" v-model="password" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -122,13 +122,13 @@
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
                                     <input v-show="!watchRepeatPassword" type="text" v-model="repeat_password" class="border border-top-0 border-left-0 border-right-0 " placeholder="Repetir senha">
-                                    <input v-show="watchRepeatPassword" ref="repeat_password" type="password" v-model="repeat_password" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <input v-show="watchRepeatPassword"  ref="repeat_password" type="password" v-model="repeat_password" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
                     </div>
                     <div class="col-12 mt-3 mb-3 text-center">                        
-                        <a v-show="editMode" href="javascript:void(0)" class="btn btn-primary text-white pl-5 pr-5" @click.prevent="updateUser">
+                        <a v-show="editMode" href="javascript:void(0)" id="updateUser" class="btn btn-primary text-white pl-5 pr-5" @click.prevent="updateUser">
                             <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
                         </a>
                     </div>
@@ -147,7 +147,7 @@
     import miniToastr from "mini-toastr";
     import validation from "src/common/validation.service";
     miniToastr.init();
-
+    
     export default {
         name: "userCRUDDatas",
 

@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="img-wrapper">
-                        <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas">
+                        <a href="javascript:void()" id="lnk_editUser1" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas">
                             <img :src="pictureProfile" style="width:80px; height:80px" alt="user not found" class="rounded-circle" />
                         </a>
                     </div>
@@ -15,13 +15,13 @@
                         <div class="col-md-3"></div>
                         <div class="col-md-2">
                             <!-- <a :href='"#/"+link+"/user_profile"' title="Perfil"><i class="fa fa-user-o"></i></a> -->
-                            <a href="javascript:void()" title="Dados do Usuario" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas"><i class="fa fa-user-o"></i></a>
+                            <a href="javascript:void()" id="lnk_editUser" title="Dados do Usuario" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas"><i class="fa fa-user-o"></i></a>
                         </div>
                         <div class="col-md-2">
-                            <a href="#/lockscreen" title="Bloquear"><i class="fa fa-lock" aria-hidden="true"></i></a>
+                            <a href="#/lockscreen" id="lnk_lockscreen" title="Bloquear"><i class="fa fa-lock" aria-hidden="true"></i></a>
                         </div>
                         <div class="col-md-2 ">
-                            <a href="javascript:void()" title="Sair" @click.prevent="logout"><i class="fa fa-sign-out"></i></a>
+                            <a href="javascript:void()" id="lnk_logout" title="Sair" @click.prevent="logout"><i class="fa fa-sign-out"></i></a>
                         </div>
                         <div class="col-md-3"></div>
                     </div>
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Modal to show user datas-->
-        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" >
+        <b-modal v-model="modalUserCRUDDatas" :hide-footer="true" body-class="p-0" :hide-header="false" id= "userCRUDDatasModal" >
             <userCRUDDatas :contacts='contacts'></userCRUDDatas>
         </b-modal>
 
