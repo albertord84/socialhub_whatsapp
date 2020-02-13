@@ -82,7 +82,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertPresent('#email')
                 ->assertPresent('#password')
                 ->assertPathIs('/');
-            echo "OK -- Tested logout of user: seller1@socialhub.pro \n";
+            echo "OK -- Tested logout of user: seller1@socialhub.pro\n";
 
             $browser
                 ->type('email', 'seller1@socialhub.pro')
@@ -90,7 +90,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->press('Entrar')
                 ->waitForText('Empresas')
                 ->assertSee('Empresas');
-            echo " OK -- Tested login after logout of user: seller1@socialhub.pro y\n";
+            echo " OK -- Tested login after logout of user: seller1@socialhub.pro\n";
         });
     }
 
@@ -160,7 +160,7 @@ class SellerFunctionsTest extends DuskTestCase
                     });
             $browser
                 ->script('location.reload();');
-            echo "OK -- Tested seller1 check link to edit seller1 from photo user \n";
+            echo "OK -- Tested seller1 check link to edit seller1 from photo user\n";
             
             $browser
                 ->assertPresent('#lnk_editUser')
@@ -215,7 +215,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertPresent('#perfil_lnk')
                 ->assertPresent('#lockscreen_lnk')
                 ->assertPresent('#logout_lnk');
-            echo "OK -- Tested Seller1 check Header Side  \n";
+            echo "OK -- Tested Seller1 check Header Side\n";
 
             $browser
                 ->press('#perfil_lnk')
@@ -231,7 +231,7 @@ class SellerFunctionsTest extends DuskTestCase
                     });
             $browser
                 ->script('location.reload();');
-            echo " OK -- Tested seller1 check link to edit seller1 from Header Side \n";
+            echo " OK -- Tested seller1 check link to edit seller1 from Header Side\n";
 
             $browser
                 ->assertPresent('#dropdown_btn')
@@ -245,7 +245,7 @@ class SellerFunctionsTest extends DuskTestCase
                     ->press('#desbloquear')
                 ->waitForText('Empresas')
                 ->assertSee('Empresas'); 
-            echo " OK -- Tested seller1 check link to lockscreen seller1 from Header Side \n";
+            echo " OK -- Tested seller1 check link to lockscreen seller1 from Header Side\n";
 
             $browser
                 ->assertPresent('#dropdown_btn')
@@ -265,107 +265,112 @@ class SellerFunctionsTest extends DuskTestCase
                     ->press('Entrar')
                 ->waitForText('Empresas')
                 ->assertSee('Empresas');
-            echo " OK -- Tested seller1 check link to logout seller1 from Header Side \n";
+            echo " OK -- Tested seller1 check link to logout seller1 from Header Side\n";
         });
     }
 
 
 
-    // /**
-    //  *  @group seller
-    //  * @return void
-    //  */
-    // public function testingSellerAddCompany(){
-    //     echo "\n ";
-    //     $this->browse(function (Browser $browser)  {
-    //         $browser
-    //             ->click('#addCompany')
-    //             ->waitForText('Nova empresa')
-    //             ->assertSee('Nova empresa')
+    /**
+     *  @group seller
+     * @return void
+     */
+    public function testingSellerAddCompany(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+            $browser
+                ->click('#addCompany')
+                ->waitForText('Nova empresa')
+                ->assertSee('Nova empresa')
 
-    //             ->assertSee('Endereço postal')
-    //             ->assertSee('Descrição da empresa')
-    //             ->assertSee('Dados do manager da empresa')
-    //             ->assertSee('Adicionar')
-    //             ->assertSee('Cancelar')
+                ->assertSee('Endereço postal')
+                ->assertSee('Descrição da empresa')
+                ->assertSee('Dados do manager da empresa')
+                ->assertSee('Adicionar')
+                ->assertSee('Cancelar')
 
-    //             ->assertPresent('#nameManager')
-    //                 ->type('nameManager', '')->press('#btnInsert')->waitForText('O nome do manager da empresa é obrigatório')->assertSee('O nome do manager da empresa é obrigatório')
-    //                 ->type('nameManager', 'correct name')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O nome do manager da empresa é obrigatório')
-    //             ->assertPresent('#emailManager')
-    //                 ->type('emailManager', '')->press('#btnInsert')->waitForText('O e-mail do manager da empresa é obrigatório')->assertSee('O e-mail do manager da empresa é obrigatório')
-    //                 ->type('emailManager', 'emailInvalid')->press('#btnInsert')->waitForText('Email inválido')->assertSee('Email inválido')
-    //                 ->type('emailManager', 'emailvalid@gmail.com')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
-    //             ->assertPresent('#CPF')
-    //                 ->type('CPF', '')->press('#btnInsert')->waitForText('O CPF do manager da empresa é obrigatório')->assertSee('O CPF do manager da empresa é obrigatório')
-    //                 ->type('CPF', '12345678910')->press('#btnInsert')->waitForText('CPF inválido')->assertSee('CPF inválido')
-    //                 ->type('CPF', '08266391190')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('CPF inválido')
-    //             ->assertPresent('#phoneManager')
-    //                 ->type('phoneManager', '11111111')->press('#btnInsert')->waitForText('Número de telefone inválido')->assertSee('Número de telefone inválido')
-    //                 ->type('phoneManager', '2188888888')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Número de telefone inválido')
-    //             ->assertPresent('#whatsappManager')
-    //                 ->type('whatsappManager', '')->press('#btnInsert')->waitForText('O whatsapp do manager da empresa é obrigatório')->assertSee('O whatsapp do manager da empresa é obrigatório')
-    //                 ->type('whatsappManager', '11111111')->press('#btnInsert')->waitForText('Número de whatsapp inválido')->assertSee('Número de whatsapp inválido')
-    //                 ->type('whatsappManager', '2188888888')->press('#btnInsert')->waitForText('Por favor, confira') ->assertSee('Número de whatsapp inválido')
+                ->assertPresent('#nameManager')
+                    ->type('nameManager', '')->press('#btnInsert')->waitForText('O nome do manager da empresa é obrigatório')->assertSee('O nome do manager da empresa é obrigatório')
+                    ->type('nameManager', 'correct name')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O nome do manager da empresa é obrigatório')
+                ->assertPresent('#emailManager')
+                    ->type('emailManager', '')->press('#btnInsert')->waitForText('O e-mail do manager da empresa é obrigatório')->assertSee('O e-mail do manager da empresa é obrigatório')
+                    ->type('emailManager', 'emailInvalid')->press('#btnInsert')->waitForText('Email inválido')->assertSee('Email inválido')
+                    ->pause(3000)
+                    ->type('emailManager', 'emailvalid@gmail.com')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
+                ->assertPresent('#CPF')
+                    ->type('CPF', '')->press('#btnInsert')->waitForText('O CPF do manager da empresa é obrigatório')->assertSee('O CPF do manager da empresa é obrigatório')
+                    ->type('CPF', '12345678910')->press('#btnInsert')->waitForText('CPF inválido')->assertSee('CPF inválido')
+                    ->pause(3000)
+                    ->type('CPF', '08266391190')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('CPF inválido')
+                ->assertPresent('#phoneManager')
+                    ->type('phoneManager', '11111111')->press('#btnInsert')->waitForText('Número de telefone inválido')->assertSee('Número de telefone inválido')
+                    ->pause(3000)
+                    ->type('phoneManager', '2188888888')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Número de telefone inválido')
+                ->assertPresent('#whatsappManager')
+                    ->type('whatsappManager', '')->press('#btnInsert')->waitForText('O whatsapp do manager da empresa é obrigatório')->assertSee('O whatsapp do manager da empresa é obrigatório')
+                    ->type('whatsappManager', '11111111')->press('#btnInsert')->waitForText('Número de whatsapp inválido')->assertSee('Número de whatsapp inválido')
+                    ->pause(3000)
+                    ->type('whatsappManager', '2188888888')->press('#btnInsert')->waitForText('Por favor, confira') ->assertDontSee('Número de whatsapp inválido')
                 
-    //             ->assertPresent('#btnGroupAddon')
-    //             ->assertPresent('#CEP')
-    //                 ->type('CEP', '')->press('#btnGroupAddon')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
-    //                 ->type('CEP', '111111')->press('#btnGroupAddon')->waitForText('CEP inválido')->assertSee('CEP inválido')
-    //                 // ->type('CEP', '12345678')->press('#btnGroupAddon')->waitForText('O CEP inserido não existe')->assertSee('O CEP inserido não existe')
-    //                 ->type('CEP', '')->press('#btnInsert')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
-    //                 ->type('CEP', '111111')->press('#btnInsert')->waitForText('CEP inválido')->assertSee('CEP inválido')
-    //                 ->type('CEP', '24210050')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('CEP inválido')
-    //             ->assertPresent('#cidade')
-    //                 ->type('cidade', '')->press('#btnInsert')->waitForText('A cidade no endereço da empresa é obrigatório')->assertSee('A cidade no endereço da empresa é obrigatório')
-    //                 ->pause(3000)
-    //                 ->type('cidade', 'cidade')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('A cidade no endereço da empresa é obrigatório')
-    //             ->assertPresent('#estado')
-    //                 ->type('estado', '')->press('#btnInsert')->waitForText('O estado no endereço da empresa é obrigatório')->assertSee('O estado no endereço da empresa é obrigatório')
-    //                 ->pause(3000)
-    //                 ->type('estado', 'RJ')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O estado no endereço da empresa é obrigatório')
-    //             ->assertPresent('#rua')
-    //                 ->type('rua', '')->press('#btnInsert')->waitForText('A rua no endereço da empresa é obrigatório')->assertSee('A rua no endereço da empresa é obrigatório')
-    //                 ->pause(3000)
-    //                 ->type('rua', 'rua')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('A rua no endereço da empresa é obrigatório')
-    //             ->assertPresent('#numero')
-    //                 ->type('numero', '')->press('#btnInsert')->waitForText('O número no endereço da empresa é obrigatório')->assertSee('O número no endereço da empresa é obrigatório')
-    //                 ->pause(3000)
-    //                 ->type('numero', '100')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O número no endereço da empresa é obrigatório')
-    //             ->assertPresent('#complemento')
-    //             ->assertPresent('#bairro')
-    //                 ->type('bairro', '')->press('#btnInsert')->waitForText('O bairro no endereço da empresa é obrigatório')->assertSee('O bairro no endereço da empresa é obrigatório')
-    //                 ->pause(3000)
-    //                 ->type('bairro', 'bairro')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O bairro no endereço da empresa é obrigatório')
-    //             ->assertPresent('#description')
+                ->assertPresent('#btnGroupAddon')
+                ->assertPresent('#CEP')
+                    ->type('CEP', '')->press('#btnGroupAddon')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
+                    ->type('CEP', '111111')->press('#btnGroupAddon')->waitForText('CEP inválido')->assertSee('CEP inválido')
+                    // ->type('CEP', '12345678')->press('#btnGroupAddon')->waitForText('O CEP inserido não existe')->assertSee('O CEP inserido não existe')
+                    ->type('CEP', '')->press('#btnInsert')->waitForText('O CEP da empresa é obrigatório')->assertSee('O CEP da empresa é obrigatório')
+                    ->type('CEP', '111111')->press('#btnInsert')->waitForText('CEP inválido')->assertSee('CEP inválido')
+                    ->pause(3000)
+                    ->type('CEP', '24210050')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('CEP inválido')
+                ->assertPresent('#cidade')
+                    ->type('cidade', '')->press('#btnInsert')->waitForText('A cidade no endereço da empresa é obrigatório')->assertSee('A cidade no endereço da empresa é obrigatório')
+                    ->pause(3000)
+                    ->type('cidade', 'cidade')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('A cidade no endereço da empresa é obrigatório')
+                ->assertPresent('#estado')
+                    ->type('estado', '')->press('#btnInsert')->waitForText('O estado no endereço da empresa é obrigatório')->assertSee('O estado no endereço da empresa é obrigatório')
+                    ->pause(3000)
+                    ->type('estado', 'RJ')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O estado no endereço da empresa é obrigatório')
+                ->assertPresent('#rua')
+                    ->type('rua', '')->press('#btnInsert')->waitForText('A rua no endereço da empresa é obrigatório')->assertSee('A rua no endereço da empresa é obrigatório')
+                    ->pause(3000)
+                    ->type('rua', 'rua')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('A rua no endereço da empresa é obrigatório')
+                ->assertPresent('#numero')
+                    ->type('numero', '')->press('#btnInsert')->waitForText('O número no endereço da empresa é obrigatório')->assertSee('O número no endereço da empresa é obrigatório')
+                    ->pause(3000)
+                    ->type('numero', '100')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O número no endereço da empresa é obrigatório')
+                ->assertPresent('#complemento')
+                ->assertPresent('#bairro')
+                    ->type('bairro', '')->press('#btnInsert')->waitForText('O bairro no endereço da empresa é obrigatório')->assertSee('O bairro no endereço da empresa é obrigatório')
+                    ->pause(3000)
+                    ->type('bairro', 'bairro')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O bairro no endereço da empresa é obrigatório')
+                ->assertPresent('#description')
 
-    //             ->assertPresent('#CNPJ')
-    //                 ->type('CNPJ', '')->press('#btnInsert')->waitForText('O CNPJ é obrigatório')->assertSee('O CNPJ é obrigatório')
-    //                 ->type('CNPJ', '111111111')->press('#btnInsert')->waitForText('CNPJ inválido')->assertSee('CNPJ inválido')
-    //                 ->pause(3000)
-    //                 ->type('CNPJ', '88495263000161')->press('#btnInsert')->waitForText('Por favor, confira', 10)->assertDontSee('CNPJ inválido')
-    //             ->assertPresent('#nameCompany')
-    //                 ->type('nameCompany', '')->press('#btnInsert')->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
-    //                 ->pause(3000)
-    //                 ->type('nameCompany', 'AAA_Company')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O nome da empresa é obrigatório')
-    //             ->assertPresent('#phoneCompany')
-    //                 ->type('phoneCompany', '11111111')->press('#btnInsert')->waitForText('Número de telefone inválido')->assertSee('Número de telefone inválido')
-    //                 ->pause(3000)
-    //                 ->type('phoneCompany', '2188888888')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Número de telefone inválido')
-    //             ->assertPresent('#emailCompany')
-    //                 ->type('emailCompany', '')->press('#btnInsert')->waitForText('O e-mail da empresa é obrigatório')->assertSee('O e-mail da empresa é obrigatório')
-    //                 ->type('emailCompany', 'emailInvalid')->press('#btnInsert')->waitForText('Email inválido')->assertSee('Email inválido')
-    //                 ->pause(3000)
-    //                 ->type('emailCompany', 'emailvalid@gmail.com')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
-    //             ->assertPresent('#amount_attendants')
-    //             ->assertPresent('#whatsappCompany')
-    //                 ->type('whatsappCompany', '')->press('#btnInsert')->waitForText('O whatsapp da empresa é obrigatório')->assertSee('O whatsapp da empresa é obrigatório')
-    //                 ->type('whatsappCompany', '11111111')->press('#btnInsert')->waitForText('Número de whatsapp inválido')->assertSee('Número de whatsapp inválido')
-    //                 ->type('whatsappCompany', '2188888888')->press('#btnInsert')->waitForText('Empresa adicionada com sucesso', 10)->assertSee('Empresa adicionada com sucesso');
-
-    //         echo "OK -- Tested seller1 add a new company\n";
-    //     });
-    // }
+                ->assertPresent('#CNPJ')
+                    ->type('CNPJ', '')->press('#btnInsert')->waitForText('O CNPJ é obrigatório')->assertSee('O CNPJ é obrigatório')
+                    ->type('CNPJ', '111111111')->press('#btnInsert')->waitForText('CNPJ inválido')->assertSee('CNPJ inválido')
+                    ->pause(3000)
+                    ->type('CNPJ', '88495263000161')->press('#btnInsert')->waitForText('Por favor, confira', 10)->assertDontSee('CNPJ inválido')
+                ->assertPresent('#nameCompany')
+                    ->type('nameCompany', '')->press('#btnInsert')->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
+                    ->pause(3000)
+                    ->type('nameCompany', 'AAA_Company')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('O nome da empresa é obrigatório')
+                ->assertPresent('#phoneCompany')
+                    ->type('phoneCompany', '11111111')->press('#btnInsert')->waitForText('Número de telefone inválido')->assertSee('Número de telefone inválido')
+                    ->pause(3000)
+                    ->type('phoneCompany', '2188888888')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Número de telefone inválido')
+                ->assertPresent('#emailCompany')
+                    ->type('emailCompany', '')->press('#btnInsert')->waitForText('O e-mail da empresa é obrigatório')->assertSee('O e-mail da empresa é obrigatório')
+                    ->type('emailCompany', 'emailInvalid')->press('#btnInsert')->waitForText('Email inválido')->assertSee('Email inválido')
+                    ->pause(3000)
+                    ->type('emailCompany', 'emailvalid@gmail.com')->press('#btnInsert')->waitForText('Por favor, confira')->assertDontSee('Email inválido')
+                ->assertPresent('#amount_attendants')
+                ->assertPresent('#whatsappCompany')
+                    ->type('whatsappCompany', '')->press('#btnInsert')->waitForText('O whatsapp da empresa é obrigatório')->assertSee('O whatsapp da empresa é obrigatório')
+                    ->type('whatsappCompany', '11111111')->press('#btnInsert')->waitForText('Número de whatsapp inválido')->assertSee('Número de whatsapp inválido')
+                    ->type('whatsappCompany', '2188888888')->press('#btnInsert')->waitForText('Empresa adicionada com sucesso', 10)->assertSee('Empresa adicionada com sucesso');
+                $browser->script('location.reload();');
+            echo "OK -- Tested seller1 add a new company\n";
+        });
+    }
 
     
     /**
@@ -377,13 +382,12 @@ class SellerFunctionsTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
 
             $browser
-                ->maximize()
+                // ->maximize()
 
                 ->with('#tableCompanies', function ($table) {
                     $table->assertSee('AAA_Company')
                     ->click('#editCompany');
                 })
-                
                 ->whenAvailable('#editCompaniesModal', function ($modal) {
                     $modal
                         ->assertSee('Editar empresa')
@@ -435,93 +439,90 @@ class SellerFunctionsTest extends DuskTestCase
                 ->waitUntilMissing('#btnCancel2')
                 ->assertDontSee('Atualizar');
             $browser->script('location.reload();');
-            echo "OK -- Tested seller1 check cancel botton of editCompaniesModal \n";
+            echo "OK -- Tested seller1 check cancel botton of editCompaniesModal\n";
 
             $browser
                 ->with('#tableCompanies', function ($table) {
                     $table->assertSee('AAA_Company')
                     ->click('#editCompany');
                 })
-                
                 ->whenAvailable('#editCompaniesModal', function ($modal) {
                     $modal
-                        // ->type('nameManager', '') 
-                        ->attribute('nameManager', '')
-                        ->screenshot('error1')
+                        ->type('nameManager', ' ') 
+                        ->type('nameCompany', ' ')
                         ->press('#btnEdit');
                 });
             $browser
-                ->screenshot('error2')
-
-                ->waitForText('O nome do manager da empresa é obrigatório')
+                ->waitForText('Por favor, confira')
                 ->assertSee('O nome da empresa é obrigatório')
-                ->type('nameManager', 'managerNameEdited')
-
-                ->type('nameCompany', '')
-                ->press('#btnEdit')
-                    ->waitForText('O nome da empresa é obrigatório')->assertSee('O nome da empresa é obrigatório')
-                    // ->pause(3000)
-                ->type('nameCompany', 'AAA_CompanyEdited')
-
-                ->press('#btnEdit')
-                    ->waitForText('Dados atualizados corretamente', 10)->assertSee('Dados atualizados corretamente');
-            echo "OK -- Tested seller1 edit a company\n";
+                ->assertSee('O nome do manager da empresa é obrigatório');
+            $browser->script('location.reload();');
+            echo " OK -- Tested seller1 edit a company without mandatory data\n";
+            
+            $browser
+                ->with('#tableCompanies', function ($table) {
+                    $table->assertSee('AAA_Company')
+                    ->click('#editCompany');
+                })
+                ->whenAvailable('#editCompaniesModal', function ($modal) {
+                    $modal
+                        ->type('nameManager', 'managerNameEdited')
+                        ->type('nameCompany', 'AAA_CompanyEdited')
+                        ->press('#btnEdit');
+                });
+            $browser
+                ->waitForText('Dados atualizados corretamente', 10)
+                ->assertSee('Dados atualizados corretamente');
+            $browser->script('location.reload();');
+            echo " OK -- Tested seller1 edit a company\n";
         });
     }
 
 
-    
-    // /**
-    //  *  @group seller
-    //  * @return void
-    //  */
-    // public function testingSellerDeleteCompany(){
-    //     echo "\n ";
-    //     $this->browse(function (Browser $browser)  {
-    //         $browser
-    //             ->with('#tableCompanies', function ($table) {
-    //                 $table->assertSee('AAA_Company')
-    //                 ->click('#deleteCompany');
-    //             })
-    //             ->whenAvailable('#deleteCompaniesModal', function ($modal) {
-    //                 $modal
-    //                     ->assertSee('Verificação de cancelamento')
-    //                     ->assertSee('Tem certeza que deseja cancelar o contrato dessa Empresa')
-    //                     ->assertSee('Eliminar')
-    //                     ->assertSee('Cancelar')
-    //                     ->assertPresent('#btnDelete')
-    //                     ->assertPresent('#btnCancel1')
-    //                         ->press('btnCancel1');
-    //             });
-    //         $browser
-    //             ->waitUntilMissing('#btnCancel1')
-    //             ->assertDontSee('Eliminar');
-    //         echo "OK -- Tested seller1 check cancel botton of deleteCompaniesModal \n";
 
-    //         $browser
-    //             ->with('#tableCompanies', function ($table) {
-    //                 $table->assertSee('AAA_Company')
-    //                 ->click('#deleteCompany');
-    //             })
+    /**
+     *  @group seller
+     * @return void
+     */
+    public function testingSellerDeleteCompany(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+            $browser
+                ->with('#tableCompanies', function ($table) {
+                    $table->assertSee('AAA_Company')
+                    ->click('#deleteCompany');
+                })
+                ->whenAvailable('#deleteCompaniesModal', function ($modal) {
+                    $modal
+                        ->assertSee('Verificação de cancelamento')
+                        ->assertSee('Tem certeza que deseja cancelar o contrato dessa Empresa')
+                        ->assertSee('Eliminar')
+                        ->assertSee('Cancelar')
+                        ->assertPresent('#btnDelete')
+                        ->assertPresent('#btnCancel1')
+                            ->press('btnCancel1');
+                });
+            $browser
+                ->waitUntilMissing('#btnCancel1')
+                ->assertDontSee('Eliminar');
+            echo "OK -- Tested seller1 check cancel botton of deleteCompaniesModal\n";
 
-    //             ->whenAvailable('#deleteCompaniesModal', function ($modal) {
-    //                 $modal
-    //                     ->assertPresent('#btnDelete')
-    //                         ->press('#btnDelete');
+            $browser
+                ->with('#tableCompanies', function ($table) {
+                    $table->assertSee('AAA_Company')
+                    ->click('#deleteCompany');
+                })
+                ->whenAvailable('#deleteCompaniesModal', function ($modal) {
+                    $modal
+                        ->assertPresent('#btnDelete')
+                            ->press('#btnDelete');
 
-    //             });
-    //         $browser
-    //             ->waitForText('Empresa eliminada com sucesso')
-    //             ->assertSee('Empresa eliminada com sucesso');
-
-    //         echo " OK -- Tested seller1 delete a company \n";
-    //     });
-    // }
-
-
-
-
+                });
+            $browser
+                ->waitForText('Empresa eliminada com sucesso')
+                ->assertSee('Empresa eliminada com sucesso');
+            echo " OK -- Tested seller1 delete a company\n";
+        });
+    }
 
 }
-
-

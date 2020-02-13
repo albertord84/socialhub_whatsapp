@@ -3,30 +3,30 @@
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2344:46 \"[vue-router] Duplicate named routes definition: { name: \\\"admin\\\", path: \\\"\/admin\\\" }\"",
         "source": "console-api",
-        "timestamp": 1581607452943
+        "timestamp": 1581625372832
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2344:46 \"[vue-router] Duplicate named routes definition: { name: \\\"seller\\\", path: \\\"\/seller\\\" }\"",
         "source": "console-api",
-        "timestamp": 1581607452943
+        "timestamp": 1581625372833
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2344:46 \"[vue-router] Duplicate named routes definition: { name: \\\"manager\\\", path: \\\"\/manager\\\" }\"",
         "source": "console-api",
-        "timestamp": 1581607452944
+        "timestamp": 1581625372833
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2344:46 \"[vue-router] Duplicate named routes definition: { name: \\\"attendant\\\", path: \\\"\/attendant\\\" }\"",
         "source": "console-api",
-        "timestamp": 1581607452944
+        "timestamp": 1581625372837
     },
     {
         "level": "WARNING",
         "message": "http:\/\/wp.socialhub.local\/main.js? 2344:46 \"[vue-router] Duplicate named routes definition: { name: \\\"attendant\\\", path: \\\"\/attendant\\\" }\"",
         "source": "console-api",
-        "timestamp": 1581607452944
+        "timestamp": 1581625372837
     }
 ]
