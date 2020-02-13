@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="col-12">
         <form v-show="action=='insert' || action=='edit'">   
             <div class="col-lg-12 sect_header">
                 <ul v-if='action=="insert"' class="menu">
@@ -612,7 +612,7 @@
         outline: none;
     }
     /*-------------------------------------*/
-      .has-icon .form-control {
+    .has-icon .form-control {
         padding-left: 2.375rem;
     }
     .has-icon .form-control {
