@@ -7,7 +7,7 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-use App\Providers\DuskServiceProvider;
+// use App\Providers\DuskServiceProvider;
 
 class SellerFunctionsTest extends DuskTestCase
 {

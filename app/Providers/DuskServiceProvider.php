@@ -28,5 +28,3 @@ class DuskServiceProvider extends ServiceProvider
 
     }
 }
-
-

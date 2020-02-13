@@ -163,7 +163,7 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\DuskServiceProvider::class,  // ECR
+        // App\Providers\DuskServiceProvider::class,  // ECR
 
         /**
          * Generate Laravel Migrations from an existing database, including indexes and foreign keys!
