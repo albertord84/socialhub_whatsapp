@@ -1,7 +1,9 @@
 <template>
     <div class="card p-3">
-        <form-wizard    title = '' subtitle = '' nextButtonText = 'Seguinte' backButtonText = 'Voltar' finishButtonText = 'Finalizar' stepSize = 'xs' color = "#20a0ff">
-
+        <form-wizard    title = '' subtitle = '' backButtonText = 'Voltar' nextButtonText = 'Seguinte'  finishButtonText = 'Finalizar' stepSize = 'xs' color = "#20a0ff">
+            <template v-slot:backButtonText>
+                <h2>title hola mundo.com</h2>
+            </template>
             <tab-content title="Informação" :beforeChange='steepInformation'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5">
@@ -79,7 +81,7 @@
                                 <template v-slot:header>
                                     <h6 class="mb-0" style="float:left">Personalize a mensagem</h6>
                                     <h6 class="mb-0" style="float:right">
-                                        <i class="fa fa-refresh hover text-muted" title="Reiniciar mensagem" aria-hidden="true" @click.prevent="getDefaultMessage"></i>
+                                        <i class="fa fa-refresh hover text-muted" title="Reiniciar mensagem" aria-hidden="true" @click.prevent="resetDefaultMessage"></i>
                                     </h6>
                                 </template>
                                 <textarea ref="text_message" v-model="message" style="width:100%; height:300px; resize: none" class="border-0" name="" id="" rows="14" spellcheck="false"></textarea>
@@ -206,22 +208,22 @@
                     return false;
                 }else{
                     return new Promise((resolve, reject) => {                    
-                            //update company
-                            ApiService.post(this.bling_url, {
-                                "company_id":this.logued_user.company_id,
-                                "bling_apikey":this.apikey,
-                                "bling_message":this.message,
-                                // "blingtoken":'',
-                            })
-                            .then(response => {
-                                    resolve(true);
-                            })
-                            .catch(function(error) {
-                                this.processMessageError(error, "contacts", "get");
-                                reject(false);
-                            });
+                        //update company and create the respective sales table
+                        ApiService.post(this.bling_url, {
+                            "company_id":this.logued_user.company_id,
+                            "bling_apikey":this.apikey,
+                            "bling_message":this.message,
+                            // "blingtoken":'',
+                        })
+                        .then(response => {
+                                resolve(true);
+                        })
+                        .catch(function(error) {
+                            this.processMessageError(error, "contacts", "get");
+                            reject(false);
                         });
-                    }
+                    });
+                }
             },
 
             steepEnd(){
@@ -237,14 +239,14 @@
                 textarea.selectionStart = (before + ' ' + str).length;
             },
 
-            getDefaultMessage(){
+            resetDefaultMessage(){
                 let textarea = this.$refs.text_message;
                 this.message = this.defaultMessage;
                 textarea.value = this.message;
             },
 
             processMessageError: function(error, url, action) {
-                //Egberto aqui, dar mensagem de: Erro atualizando os dados da integração
+                //TODO-Egberto: aqui, dar mensagem de: Erro atualizando os dados da integração
                 var info = ApiService.process_request_error(error, url, action);
                 if(info.typeException == "expiredSection"){
                     miniToastr.warn(info.message,"Atenção");
