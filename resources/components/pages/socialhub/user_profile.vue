@@ -177,21 +177,20 @@
                         delete this.user_edit.password;
                     this.isSending = true;
                     ApiService.put(this.url+'/'+this.user_edit.id, this.user_edit)
-                    .then(response => {
-                        // window.location.reload(false);
-                        this.user = response.data;
-                        window.localStorage.setItem('user', JSON.stringify(this.user));
-                        
-                        this.user_edit = Object.assign({}, this.user);
-                        this.user_edit.repeat_password = this.user_edit.password = '';
-                        miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
-                        this.isSending = false;
-                    })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando perfil");  
-                        this.isSending = false;
-                    });
+                        .then(response => {
+                            // window.location.reload(false);
+                            this.user = response.data;
+                            window.localStorage.setItem('user', JSON.stringify(this.user));
+                            
+                            this.user_edit = Object.assign({}, this.user);
+                            this.user_edit.repeat_password = this.user_edit.password = '';
+                            miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
+                            this.isSending = false;
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.url, "update");
+                            this.isSending = false;
+                        });
                 }
             },
 
@@ -217,9 +216,8 @@
 
                         window.location.reload(false);
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando a foto do perfil");  
+                    .catch(error => {
+                        this.processMessageError(error, This.url, "update_image");
                     });
                 }
             },
@@ -237,6 +235,21 @@
                     miniToastr.error("A imagem deve ter tamanho inferior a 4MB", "Erro"); 
                 }
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
         },
 
 

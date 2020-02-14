@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Business\ChatsBusiness;
 use App\Business\FileUtils;
+use App\Business\MyException;
+use App\Business\MyResponse;
+use App\Business\Response;
 use App\Events\MessageToAttendant;
 use App\Events\NewContactMessage;
 use App\Events\WhatsappLoggedIn;
-use App\Models\AttendantsContact;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Rpi;
 use App\Models\UsersAttendant;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -49,14 +52,16 @@ class ExternalRPIController extends Controller
 
     /**
      * Update or Register RPi.
+     * 
+     * @tested
      * @param Request $request
      * @return Response
      */
     public function update(Request $request)
     {
         $rpiMAC = $request->MAC;
-        $rpiUser = $request->user;
-        $rpiPass = $request->password;
+        $apiUser = $request->user;
+        $apiPass = $request->password;
 
         $Company = Company::with('rpi')->whereHas('rpi', function ($query) use ($rpiMAC) {
             $query->where(['mac' => $rpiMAC]);
@@ -65,31 +70,50 @@ class ExternalRPIController extends Controller
         if (!$Company) { // Whether not found RPI associated to a company
             $RPI = Rpi::where(['mac' => $rpiMAC])->first();
             if (!$RPI) { // Whether not found RPI
-                $RPI = $this->registerNewRPI($rpiMAC);
+                $RPI = $this->registerNewRPI($rpiMAC, $apiUser, $apiPass);
             }
+        }
+        else {
+            $Company->rpi->mac = $rpiMAC;
+            $Company->rpi->api_user = $apiUser;
+            $Company->rpi->api_password = $apiPass;
+            $Company->rpi->save();
         }
 
         return json_encode($Company);
     }
 
-    public function registerNewRPI(string $MAC = null)
+    /**
+     * Register New RPI function
+     * 
+     * @tested
+     * @param string $MAC
+     * @param string $apiUser
+     * @param string $apiPass
+     * @return void
+     */
+    public function registerNewRPI(string $MAC = null, string $apiUser = null, string $apiPass = null)
     {
         $RPI = new Rpi();
         try {
             $RPI->mac = $MAC;
+            $RPI->api_user = $apiUser;
+            $RPI->api_password = $apiPass;
             return $RPI->save();
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
     }
 
     /**
      * Force RPi Update
+     * 
+     * @tested
+     * @param Rpi|null $Rpi
+     * @return Json {"message": "Atualizado"}
      */
-    public static function sai_rpi_to_update(?Rpi $Rpi = null) //: stdClass
+    public static function sai_rpi_to_update(?Rpi $Rpi = null) : stdClass
     {
-        // $Rpi = new stdClass();
-        // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
         $response = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
@@ -99,27 +123,37 @@ class ExternalRPIController extends Controller
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
             $response = json_decode($response);
-            return $response;
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
+        return $response;
     }
 
     /**
      * Logged in from GoMain whatsapp handler
+     * 
+     * @tested
+     * @param Request $request
+     * @return void
      */
-    public function loggedin(Request $request = null): stdClass
+    public function loggedin(Request $request)
     {
-        Log::debug('WhatsappLoggedIn Callback Recived: ', [$request]);
         $response = new stdClass();
         try {
-            if ($this->LoggedUser) {
-                broadcast(new WhatsappLoggedIn($this->LoggedUser->id));
-                Log::debug('WhatsappLoggedIn Event to: ', [$this->LoggedUser]);
+            $input = $request->all();
+            $request->CompanyPhone = str_replace("@c.us", "", $request->CompanyPhone);
+            $Company = Company::where('whatsapp', $request->CompanyPhone)->first();
+            $User = $Company->manager()->manager;
+            if ($User) {
+                $response->LoggedUser = $User; 
+                if (!isset($input['Testing'])) {
+                    broadcast(new WhatsappLoggedIn($User->id));
+                }
+                // Log::debug('\n\rWhatsappLoggedIn Event to: ', [$User]);
             }
 
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
 
         return $response;
@@ -127,11 +161,13 @@ class ExternalRPIController extends Controller
 
     /**
      * Log Out from whatsapp
+     * 
+     * @tested
+     * @param Rpi|null $Rpi
+     * @return Json {"message": "Logout feito"}
      */
-    public static function logout(?Rpi $Rpi = null) //: stdClass
+    public static function logout(?Rpi $Rpi = null) : stdClass
     {
-        // $Rpi = new stdClass();
-        // $Rpi->tunnel = 'http://shrpialberto.sa.ngrok.io.ngrok.io';
         $response = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
@@ -140,10 +176,9 @@ class ExternalRPIController extends Controller
             
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
-            Log::debug('RPI/Logout $response', [$response]);
             // $response = json_decode($response);
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
 
         return $response;
@@ -151,6 +186,10 @@ class ExternalRPIController extends Controller
 
     /**
      * Get QRCode
+     *
+     * @tested
+     * @param Rpi|null $Rpi
+     * @return stdClass
      */
     public static function getQRCode(?Rpi $Rpi = null) : stdClass
     {
@@ -167,15 +206,19 @@ class ExternalRPIController extends Controller
             $QRCode = json_decode($QRCode);
             return $QRCode;
         } catch (\Throwable $th) {
-            // throw $th;
+            MyResponse::makeExceptionJson($th);
         }
         return $QRCode;
     }
 
     /**
      * Get Contact Info
+     *
+     * @tested
+     * @param string $contact_id
+     * @param Rpi|null $Rpi
+     * @return void
      */
-    // public function getContactInfo(string $contact_id = '551199723998')//: stdClass
     public function getContactInfo(string $contact_id = '', ?Rpi $Rpi = null) //: stdClass
     {
         $contactInfo = new stdClass();
@@ -189,58 +232,63 @@ class ExternalRPIController extends Controller
             ]);
 
             $contactInfo = $contactInfo->getBody()->getContents();
-            // $contactInfo = json_decode($contactInfo);
-            Log::debug('getContactInfo Response: ', [$contactInfo]);
+            // $contactInfo = json_decode($contactInfo); // Isso viaja para VUE entao nao pode ir como objeto
+            // Log::debug('\n\rgetContactInfo Response: ', [$contactInfo]);
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
         return $contactInfo;
     }
 
     /**
      * Recive Text Message
+     * 
+     * @tested
      * @param Request $request
      * @return Response
      */
     public function reciveTextMessage(Request $request)
     {
-        $input = $request->all();
-        Log::debug('reciveTextMessage: ', [$input]);
+        try {
+            $input = $request->all();
+            Log::debug('\n\r\n\rreciveTextMessage: ', [$input]);
 
-        $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
-        $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
+            $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
+            $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
 
-        $contact_Jid = $input['Jid'];
-        $company_phone = $input['CompanyPhone'];
+            $contact_Jid = $input['Jid'];
+            $company_phone = $input['CompanyPhone'];
 
-        $Company = Company::where(['whatsapp' => $company_phone])->first();
-        // $Company = Company::where(['whatsapp' => $company_phone])->first();
-        // Log::debug('reciveTextMessage to Company: ', [$Company]);
+            $Company = Company::where(['whatsapp' => $company_phone])->first();
+            if (!$Company) throw new MyException("Company phone ($company_phone) not found", MyException::$COMPANY_PHONE_NOT_FOUND);
+            // $Company = Company::where(['whatsapp' => $company_phone])->first();
+            // Log::debug('\n\rreciveTextMessage to Company: ', [$Company]);
 
-        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-            ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
-            ->first();
-        // Log::debug('reciveTextMessage to Contact: ', [$Contact]);
+            $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
+                ->first();
+            // Log::debug('\n\rreciveTextMessage to Contact: ', [$Contact]);
 
-        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact ?? null);
-        if (!$Chat) {
-            return "Error saving text message!";
-        }
-
-        $Chat->save();
-
-        if ($Contact) {
-            $Chat->contact_name = $Contact->first_name;
-            if ($Contact->latestAttendantContact) {
-                $userAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                $Chat->attendant_name = $userAttendant ? $userAttendant->name : "Atendant not identified";
+            $Chat = $this->messageToChatModel($input, $Contact);
+            if (!$Chat) {
+                return "Error saving text message!";
             }
-            // Send event to attendants with new chat message
-            broadcast(new MessageToAttendant($Chat));
-        } else {
-            // Send event to all attendants with new bag contact count
-            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
-            broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+
+            $Chat->save();
+
+            if ($Contact) {
+                // Send event to attendants with new chat message
+                if (!isset($input['Testing'])) {
+                    broadcast(new MessageToAttendant($Chat));
+                }
+            } else {
+                // Send event to all attendants with new bag contact count
+                $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
+                if (!isset($input['Testing']))
+                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+            }
+        } catch (\Throwable $th) {
+            return MyResponse::makeExceptionJson($th);
         }
 
         return $Chat->toJson();
@@ -253,49 +301,59 @@ class ExternalRPIController extends Controller
      */
     public function reciveFileMessage(Request $request)
     {
-        $input = $request->all();
-        // Log::debug('reciveFileMessage: ', [$input]);
+        try {
+            $input = $request->all();
+            // Log::debug('\n\rreciveFileMessage: ', [$input]);
 
-        $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
-        $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
+            $input['Jid'] = str_replace("@s.whatsapp.net", "", $input['Jid']);
+            $input['CompanyPhone'] = str_replace("@c.us", "", $input['CompanyPhone']);
 
-        $contact_Jid = $input['Jid'];
-        $company_phone = $input['CompanyPhone'];
+            $contact_Jid = $input['Jid'];
+            $company_phone = $input['CompanyPhone'];
 
-        $Company = Company::where(['whatsapp' => $company_phone])->first();
-        // Log::debug('reciveFileMessage to Company: ', [$Company]);
+            $Company = Company::where(['whatsapp' => $company_phone])->first();
+            // Log::debug('\n\rreciveFileMessage to Company: ', [$Company]);
 
-        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-            ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
-            ->first();
+            $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
+                ->first();
 
-        $Chat = $this->messageToChatModel($input, $Contact, $Contact->latestAttendantContact);
-        if (!$Chat) {
-            return "Error saving file message!";
-        }
+            $Chat = $this->messageToChatModel($input, $Contact);
+            if (!$Chat) {
+                return "Error saving file message!";
+            }
 
-        $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
+            $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
-        // $envFilePath = env('APP_FILE_PATH', 'external_files');
-        // Log::debug('Storage Disk: ', [Storage::disk('chats_files')]);
-        // $envFilePath = Storage::disk('chats_files')->root;
+            // $envFilePath = env('APP_FILE_PATH', 'external_files');
+            // Log::debug('\n\rStorage Disk: ', [Storage::disk('chats_files')]);
+            // $envFilePath = Storage::disk('chats_files')->root;
 
-        $filePath = "companies/$Company->id/contacts/$Chat->contact_id/chat_files";
-        Log::debug('reciveFileMessage File Path: ', [$filePath]);
+            $filePath = "companies/$Company->id/contacts/$Chat->contact_id/chat_files";
+            Log::debug('\n\rreciveFileMessage File Path: ', [$filePath]);
 
-        $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
-        Log::debug('reciveFileMessage File Response: ', [$file_response]);
+            $file_response = FileUtils::SavePostFile($request->file('File'), $filePath, $Chat->id);
+            Log::debug('\n\rreciveFileMessage File Response: ', [$file_response]);
 
-        $Chat->data = json_encode($file_response);
-        $Chat->save();
+            $Chat->data = json_encode($file_response);
+            $Chat->save();
 
-        if ($Contact) {
-            // Send event to attendants with new chat message
-            broadcast(new MessageToAttendant($Chat));
-        } else {
-            // Send event to all attendants with new contact
-            $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
-            broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+            if ($Contact) {
+                // Send event to attendants with new chat message
+                // Send event to attendants with new chat message
+                if (!isset($input['Testing'])) {
+                    broadcast(new MessageToAttendant($Chat));
+                }
+            } else {
+                // Send event to all attendants with new contact
+                $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
+                // Send event to attendants with new chat message
+                if (!isset($input['Testing'])) {
+                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+                }
+            }
+        } catch (\Throwable $th) {
+            return MyResponse::makeExceptionJson($th);
         }
 
         return $Chat->toJson();
@@ -307,9 +365,10 @@ class ExternalRPIController extends Controller
      * @param array Request $input
      * @return Chat
      */
-    public function messageToChatModel(array $input, ?Contact $Contact, ?AttendantsContact $AttendantsContact): ExtendedChat
+    public function messageToChatModel(array $input, ?Contact $Contact): ExtendedChat
     {
         // if (strpos("@g.us", $input['Msg']) !== false) return null;
+        $AttendantsContact = $Contact ? $Contact->latestAttendantContact : null;
 
         $contact_Jid = $input['Jid'];
         $input['Type'] = isset($input['Type']) ? $input['Type'] : 'text';
@@ -321,6 +380,12 @@ class ExternalRPIController extends Controller
                 break;
             case 'audio':
                 $type_id = 3;
+                break;
+            case 'video':
+                $type_id = 4;
+                break;
+            case 'document':
+                $type_id = 5;
                 break;
         }
 
@@ -366,11 +431,19 @@ class ExternalRPIController extends Controller
             $Chat->save();
 
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
         return $Chat;
     }
 
+    /**
+     * Send Text Message
+     *
+     * @tested
+     * @param string $message
+     * @param Contact $Contact
+     * @return void
+     */
     public function sendTextMessage(string $message, Contact $Contact)
     {
         try {
@@ -394,7 +467,7 @@ class ExternalRPIController extends Controller
 
             return $response->getBody()->getContents();
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
     }
 
@@ -413,7 +486,7 @@ class ExternalRPIController extends Controller
             }
 
             $contact_Jid = "$Contact->whatsapp_id@s.whatsapp.net";
-            Log::debug('sendFileMessage to Contact contact_Jid: ', [$contact_Jid]);
+            Log::debug('\n\rsendFileMessage to Contact contact_Jid: ', [$contact_Jid]);
 
             switch ($file_type) {
                 // case 'image':
@@ -436,7 +509,7 @@ class ExternalRPIController extends Controller
             }
 
             $url = $url . "/$EndPoint";
-            Log::debug('sendFileMessage to Contact RPi URL: ', [$url]);
+            Log::debug('\n\rsendFileMessage to Contact RPi URL: ', [$url]);
 
             $Contact = Contact::where(['whatsapp_id' => $contact_Jid])->first();
             $response = $client->request('POST', $url, [
@@ -452,10 +525,10 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
-            Log::debug('sendFileMessage to Contact Response: ', [$response]);
+            Log::debug('\n\rsendFileMessage to Contact Response: ', [$response]);
             return $response->getBody()->getContents();
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
     }
 
@@ -476,18 +549,37 @@ class ExternalRPIController extends Controller
                 $RPI = $Company ? $Company->rpi : null;
             }
         } catch (\Throwable $th) {
-            throw $th;
+            MyResponse::makeExceptionJson($th);
         }
 
         return $RPI;
     }
 
+    /**
+     * Used for tests purpose only
+     *
+     * @param string $option
+     * @return void
+     */
     public function tests(string $option)
     {
+        // Log::debug('\n\rExternalRPIController tests: ', [$option]);
         app('debugbar')->disable();
         switch ($option) {
             case 'logout':
-                $response = '{"Message": "Logout feito"}';
+                $response = '{"message": "Logout feito"}';
+                break;
+            case 'update':
+                $response = '{"message": "Atualizado"}';
+                break;
+            case 'qrcode':
+                $response = '{"message": "Ja logado"}';
+                break;
+            case 'GetContact':
+                $response = '{"name": "name", "picurl": "url"}';
+                break;
+            case 'SendTextMessage':
+                $response = '{"MsgID": "MsgID"}';
                 break;
             default:
                 $response = null;

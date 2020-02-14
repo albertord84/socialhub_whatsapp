@@ -25,21 +25,5 @@ const menu_items = [
                 icon: 'mdi mdi-exclamation-thick mdi-rotate-45'
             }
         ]
-},
-
-
-    
-    // {
-    //     name: 'Dashboard',
-    //     link: '/manager',
-    //     icon: ' fa fa-home'
-    // },{
-    
-    //  }, {
-    //      name: 'Empresa',
-    //      link: '/manager/company',
-    //      icon: ' fa fa-building-o'
-    //  },
-    
-];
+}];
 export default menu_items;

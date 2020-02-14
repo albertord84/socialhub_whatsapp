@@ -245,7 +245,7 @@ module.exports = function normalizeComponent (
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(87);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_axios__ = __webpack_require__(486);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_axios__);
@@ -255,7 +255,7 @@ module.exports = function normalizeComponent (
 
 
 
-window.axios = __webpack_require__(86);
+window.axios = __webpack_require__(87);
 
 var ApiService = {
     init: function init() {
@@ -308,12 +308,145 @@ var ApiService = {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.put("" + resource, params);
     },
     delete: function _delete(resource) {
-        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.delete(resource).catch(function (error) {
-            throw new Error("[RWV] ApiService " + error);
-        });
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.delete(resource);
     },
-    process_request_error: function process_request_error(error) {
-        alert('An error exception occurred in PHP-Laravel, please open developer console and try again');
+    process_request_error: function process_request_error(error, url, action) {
+
+        var object = {
+            erro: "",
+            typeException: "", // "duplicateEntry", "expiredSection", "WithoutConnection",
+            typeMessage: "", // "error", "warn", "info", "succes",
+            message: ""
+        };
+
+        object.erro = error;
+
+        if (error.response.status == 401 && error.response.data.error.includes("Unauthorized")) {
+            // Quando dados de login errados
+            object.typeMessage = "warn";
+            object.message = "Confira os dados fornecidos para login.";
+            return object;
+        }
+
+        if (error.response) {
+
+            // console.log("error");
+            // console.log(error);
+            // console.log("error.response");
+            // console.log(error.response);
+            // console.log("error.response.data");
+            // console.log(error.response.data);
+            // console.log("error.response.data.message");
+            // console.log(error.response.data.message);
+            // console.log("error.response.data.exception");
+            // console.log(error.response.data.exception);
+            // console.log("error.response.status");
+            // console.log(error.response.status);
+            // console.log("error.response.headers");
+            // console.log(error.response.headers);
+
+            if (error.response.data.message && error.response.data.message.includes("Duplicate entry")) {
+                // Entrada duplicada no BD. 
+                object.typeException = "duplicateEntry";
+                object.typeMessage = "warn";
+                if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
+                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
+            } else if (error.response.data.message && error.response.data.message.includes("Could not resolve host")) {
+
+                object.typeException = "WithoutConnection";
+                object.typeMessage = "warn";
+                object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
+            } else if (error.response.data.message && error.response.data.message.includes("Trying to get property 'api_tunnel' of non-object")) {
+                // Quando tenta verificar número de whatsapp e o hardware está desconectado
+                object.typeMessage = "warn";
+                object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
+            } else if (error.response.status == 419 && error.response.data.message.includes("")) {
+                // Secção expirada.
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+            } else if (error.response.data.message && error.response.data.message.includes("Erro enviando mensagem")) {
+                // Quando não se pode enviar mensagem
+                object.typeMessage = "warn";
+                object.message = "Não foi possível enviar a mensagem! Verifique a conexão do seu computador e do hardware à Internet.";
+            } else {
+
+                object.typeMessage = "error";
+                if (url == "users" && action == "get") object.message = "Erro carregando usuários.";
+                if (url == "users" && action == "add") object.message = "Erro adicionando usuário.";
+                if (url == "users" && action == "update") object.message = "Erro atualizando usuário.";
+                if (url == "users" && action == "delete") object.message = "Erro eliminando usuário.";
+                if (url == "users" && action == "mute_notifications") object.message = "Erro atualizando notificações de som.";
+                if (url == "users" && action == "update_image") object.message = "Erro atualizando a foto do perfil";
+
+                if (url == "usersSeller" && action == "get") object.message = "Erro carregando vendedores.";
+                if (url == "usersSeller" && action == "add") object.message = "Erro adicionando vendedor.";
+                if (url == "usersSeller" && action == "update") object.message = "Erro atualizando vendedor.";
+                if (url == "usersSeller" && action == "delete") object.message = "Erro eliminando vendedor.";
+
+                if (url == "usersManagers" && action == "get") object.message = "Erro obtendo manager.";
+                if (url == "usersManagers" && action == "add") object.message = "Erro adicionando manager.";
+                if (url == "usersManagers" && action == "update") object.message = "Erro atualizando manager.";
+                if (url == "usersManagers" && action == "delete") object.message = "Erro eliminando manager.";
+
+                if (url == "usersAttendants" && action == "get") object.message = "Erro carregando attendente.";
+                if (url == "usersAttendants" && action == "add") object.message = "Erro adicionando attendente.";
+                if (url == "usersAttendants" && action == "update") object.message = "Erro atualizando attendente.";
+                if (url == "usersAttendants" && action == "delete") object.message = "Erro eliminando attendente.";
+
+                if (url == "contacts" && action == "get") object.message = "Erro carregando contato.";
+                if (url == "contacts" && action == "add") object.message = "Erro adicionando contato.";
+                if (url == "contacts" && action == "update") object.message = "Erro atualizando contato.";
+                if (url == "contacts" && action == "delete") object.message = "Erro eliminando contato.";
+
+                if (url == "companies" && action == "get") object.message = "Erro carregando empresa";
+                if (url == "companies" && action == "add") object.message = "Erro adicionando empresa";
+                if (url == "companies" && action == "update") object.message = "Erro atualizando empresa";
+                if (url == "companies" && action == "delete") object.message = "Erro eliminando empresa";
+
+                if (url == "rpis" && action == "get") object.message = "Erro obtendo canal de comunicação";
+                if (url == "rpis" && action == "add") object.message = "Erro adicionando canal de comunicação";
+                if (url == "rpis" && action == "update") object.message = "Erro atualizando canal de comunicação";
+                if (url == "rpis" && action == "delete") object.message = "Erro eliminando canal de comunicação";
+
+                if (url == "RPI" && action == "logout") object.message = "Erro fechando o canal de comunicação";
+
+                if (url == "getBagContact" && action == "get") object.message = "Error carregando os contatos da sacola.";
+                if (url == "getBagContact" && action == "add") object.message = "Error adicionando o contato da sacola.";
+
+                if (url == "attendantsContacts" && action == "add") object.message = "Error adicionando contato na tabela attendantsContacts.";
+                if (url == "attendantsContacts" && action == "update") object.message = "Error atualizando contato na tabela attendantsContacts.";
+                if (url == "attendantsContacts" && action == "transferring") object.message = "Erro tranferindo o contato.";
+
+                if (url == "cep" && action == "get") object.message = "Erro validando CEP.";
+                if (url == "getContactInfo" && action == "get") object.message = "Número de Whatsapp incorreto ou não existe.";
+                if (url == "chats" && action == "send") object.message = "Erro enviando mensagem.";
+                if (url == "chats" && action == "get") object.message = "Error carregando os contatos.";
+                if (url == "login" && action == "get") object.message = "Error realizando loging.";
+                if (action == "logout") object.message = "Error encerrando sessão.";
+                if (url == "password_reset" && action == "add") object.message = "Email não existe.";
+                if (url == "auth/add_user" && action == "add") object.message = "Erro adicionando usuário.";
+                if (url == "auth/password_save" && action == "add") object.message = "Erro salvando sua nova senha.";
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+
+            // console.log("error.request");
+            // console.log(error.request);
+        } else {}
+            // Something happened in setting up the request that triggered an Error
+            // console.log('some another error');
+            // console.log('Error', error.message);
+
+
+            // console.log("error.request");
+            // console.log(error.request);
+
+            // console.log("error.config");
+            // console.log(error.config);
+
+
+        return object;
     }
 };
 
@@ -404,7 +537,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__common_api_service__ = __webpack_require__(400);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_lodash__ = __webpack_require__(497);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_lodash__);
-window.axios = __webpack_require__(86);
+window.axios = __webpack_require__(87);
 
 
 
@@ -5150,7 +5283,7 @@ var routes = [{
     path: '/forgotpassword',
     name: 'forgotpassword',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(18).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(818)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(17).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(818)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Forgot Password"
@@ -5159,7 +5292,7 @@ var routes = [{
     path: '/reset_password/:token',
     name: 'reset_password_token',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(17).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(819)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(16).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(819)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Reset Password"
@@ -5167,7 +5300,7 @@ var routes = [{
 }, {
     path: '/lockscreen',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(16).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(820)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(15).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(820)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Lockscreen"
@@ -5363,18 +5496,12 @@ var layout = [{
 }, {
     path: '/manager/audio',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(15).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(810)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(18).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(810)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Audio test"
     }
-}, /*{
-     path: '/manager/company',
-     component: resolve => require(['pages/socialhub/managerCompany'], resolve),
-     meta: {
-         title: "Empresa",
-     }
-   },*/{
+}, {
     path: '/manager/user_profile',
     component: function component(resolve) {
         return __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(122)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
@@ -5382,15 +5509,6 @@ var layout = [{
     meta: {
         title: "Perfil"
     }
-    // {
-    //     path: '/manager',
-    //     name: 'manager',
-    //     component: resolve => require(['pages/socialhub/managerDashboard'], resolve),
-    //     meta: {
-    //         title: "Dashboard",
-    //     }
-
-
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (layout);
@@ -6637,7 +6755,7 @@ return Promise$1;
 
 //# sourceMappingURL=es6-promise.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(87), __webpack_require__(35)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(86), __webpack_require__(35)))
 
 /***/ }),
 

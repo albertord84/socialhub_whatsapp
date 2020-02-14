@@ -239,7 +239,7 @@
                 }
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
             ApiService.get('auth/user_list').then(response => {
@@ -250,7 +250,7 @@
                         "<a class='btn btn-warning clickable' href='#/view_user_api/" + item.id + "'>View</a>");
                 });
             })
-                .catch(function (error) {
+                .catch(error => {
                 });
             // axios.get("http://www.filltext.com/?rows=20&id={index}&name={firstName}~{lastName}&village={firstName}&email={email}&age={numberRange|20,60}&status=[%22Activated%22,%22Deactivated%22]").then(response => {
             //     this.tableData = response.data;
@@ -264,7 +264,7 @@
                 this.ajaxbar.series[0].data = response.data[0].chartdata;
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
             axios.get("http://www.filltext.com/?rows=5&value={number|50}&name={usState|abbr}").then(response => {
@@ -274,7 +274,7 @@
                 });
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => { 
 
                 });
 

@@ -33,6 +33,7 @@ Route::group(['prefix' => 'RPI'], function ($router) {
     Route::get('test', 'ExternalRPIController@test');
     
     Route::post('tests/{option}', 'ExternalRPIController@tests');
+    Route::get('tests/{option}', 'ExternalRPIController@tests');
 });
 
 Route::get('/', 'AuthController@index');
@@ -75,6 +76,7 @@ Route::resource('passwordResets', 'PasswordResetController');
 // Route::resource('contacts', 'ContactController');
 Route::post('contactsFromCSV', 'ExtendedContactController@contactsFromCSV');
 Route::resource('contacts', 'ExtendedContactController');
+Route::get('updateContactPicture/{contact_id}', 'ExtendedContactController@updatePicture');
 
 Route::resource('contacts_status', 'ExtendedContactsStatusController');
 Route::resource('contactsStatuses', 'ExtendedContactsStatusController');

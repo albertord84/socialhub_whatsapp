@@ -8,7 +8,7 @@
                             <img :src="pictureProfile" style="width:80px; height:80px" alt="user not found" class="rounded-circle" />
                         </a>
                     </div>
-                    <p class="mt-2 mb-1 user_name_max text-center">{{name}}</p>
+                    <p id="logged_user_name" class="mt-2 mb-1 user_name_max text-center">{{name}}</p>
                 </div>
                 <div class="leftuser_icons col-12 ">
                     <div class="row text-center">

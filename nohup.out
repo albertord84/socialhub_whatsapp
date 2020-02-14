@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Laravel development server started: <http://127.0.0.1:8000>
 [Thu Oct 31 09:33:03 2019] 127.0.0.1:56234 [200]: /manifest.js
 [Thu Oct 31 09:33:03 2019] 127.0.0.1:56236 [200]: /vendor.js
@@ -849,3 +850,6 @@ In Pusher.php line 235:
 
     Laravel development server started: <http://127.0.0.1:8000>
     Laravel development server started: <http://127.0.0.1:8000>
+Laravel development server started: <http://127.0.0.1:8000>
+=======
+>>>>>>> develop
