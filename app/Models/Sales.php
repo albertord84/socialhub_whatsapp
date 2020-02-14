@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
+use stdClass;
 
 /**
  * Class Sales
@@ -27,7 +28,7 @@ class Sales extends Model
 
     public $fillable = [
         'contact_id',
-        'source',
+        'source', // Defaul 1 -> Bling
         'sended',
         'json_data'
     ];
@@ -54,5 +55,16 @@ class Sales extends Model
         
     ];
 
-    
+    /**
+     * Class constructor.
+     */
+    public static function blingConstruct(stdClass $saleBling) : Sales
+    {
+        $Sale = new Sales;
+        $Sale->contact_id = $saleBling->contact_id;
+        $Sale->source = 1;
+        $Sale->json_data = json_encode($saleBling);
+
+        return $Sale;
+    }
 }

@@ -10,6 +10,7 @@ use App\Repositories\BlingRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Log;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
@@ -26,15 +27,18 @@ class BlingController extends AppBaseController
     public function get_sales_bling(Request $request)
     {
         try {
-            Log::debug('Process Bling Sales', []);
-
             $BlingBussines = new BlingBusiness();
-
-            $BlingBussines->getBlingSales();
             
+            $Sales = $BlingBussines->getBlingSales();
+            
+            // Log::debug('Bling Sales', [$Sales]);
+
+
         } catch (\Throwable $tr) {
             return MyResponse::makeExceptionJson($tr);
         }
+
+        return $Sales->toJson();
     }
 
     /**

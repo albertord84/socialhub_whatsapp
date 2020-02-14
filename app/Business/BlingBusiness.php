@@ -5,6 +5,7 @@ namespace App\Business;
 use App\Models\Company;
 use App\Repositories\BlingRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 
 class BlingBusiness extends Business {
 
@@ -20,12 +21,127 @@ class BlingBusiness extends Business {
         $Sales = new Collection();
         try {
             $Companies = Company::where(['bling_contrated' => true])->get();
-            dd($Companies);
+            $Sales = $Companies;
+
+            $SalesBussines = new SalesBusiness();
+            foreach ($Companies as $key => $Company) {
+                $Sales = $this->getBlingCompanySales($Company);
+
+                foreach ($Sales as $key => $Sale) {
+                    $SalesBussines->createSale($Sale);
+                }
+            }
         } catch (\Throwable $tr) {
             // throw $tr;
         }
 
-        $Sales;
+        return $Sales;
+    }
+
+    function getBlingCompanySales(Company $Company) : Collection
+    {
+        $Sales = new Collection();
+        try {
+            $client = new \GuzzleHttp\Client();
+
+            $url = env('URL_BLING_SALES', 'https://bling.com.br/Api/v2/pedidos/json/');
+
+            $today = Carbon::yesterday()->format('d/m/Y');
+            // $today = Carbon::now()->format('d/m/Y');
+
+            $response = $client->request('GET', $url, [
+                'query' => [
+                    'apikey' => $Company->bling_apikey,
+                    'filters' => "dataEmissao[$today TO $today]"
+                ]
+            ]);
+
+            $Content = $response->getBody()->getContents();
+            $Content = json_decode($Content);
+
+            if ($Content && isset($Content->retorno->pedidos)) {
+                $Sales = new Collection($Content->retorno->pedidos);
+            }
+        } catch (\Throwable $th) {
+            MyResponse::makeExceptionJson($th);
+        }
+
+        return $Sales;
     }
 
 }
+
+
+/*
+Collection {#931 ▼
+  #items: array:1 [▼
+    0 => {#911 ▼
+      +"pedido": {#928 ▼
+        +"desconto": "0,00"
+        +"observacoes": ""
+        +"observacaointerna": ""
+        +"data": "2020-02-13"
+        +"numero": "2"
+        +"numeroOrdemCompra": ""
+        +"vendedor": ""
+        +"valorfrete": "0.00"
+        +"totalprodutos": "6.00"
+        +"totalvenda": "6.00"
+        +"situacao": "Em aberto"
+        +"loja": "203395636"
+        +"numeroPedidoLoja": "2324665257"
+        +"tipoIntegracao": "MercadoLivre"
+        +"cliente": {#926 ▶}
+        +"itens": array:1 [▼
+          0 => {#922 ▼
+            +"item": {#912 ▼
+              +"codigo": null
+              +"descricao": "Caneta Bic Azul"
+              +"quantidade": "1.0000"
+              +"valorunidade": "6.0000000000"
+              +"precocusto": null
+              +"descontoItem": "0.00"
+              +"un": "UN"
+              +"pesoBruto": null
+              +"largura": null
+              +"altura": null
+              +"profundidade": null
+              +"descricaoDetalhada": ""
+              +"unidadeMedida": "m"
+              +"gtin": null
+            }
+          }
+        ]
+        +"parcelas": array:1 [▼
+          0 => {#913 ▼
+            +"parcela": {#916 ▼
+              +"idLancamento": 0
+              +"valor": "6.00"
+              +"dataVencimento": "2020-03-14 00:00:00"
+              +"obs": "Método de pagamento: master"
+              +"destino": 1
+              +"forma_pagamento": {#915 ▼
+                +"id": 897799
+                +"descricao": "Conta a receber/pagar"
+                +"codigoFiscal": 15
+              }
+            }
+          }
+        ]
+        +"transporte": {#920 ▼
+          +"enderecoEntrega": {#927 ▼
+            +"nome": "Jéssica Mello (MEJ4290244)"
+            +"endereco": ""
+            +"numero": ""
+            +"complemento": ""
+            +"cidade": ""
+            +"bairro": "Não Informado"
+            +"cep": ".-"
+            +"uf": ""
+          }
+        }
+      }
+    }
+  ]
+}
+*/
