@@ -76,12 +76,12 @@
         </div>
 
         <!-- Add Companies Modal -->
-        <b-modal v-model="modalAddCompanies" size="lg" :hide-footer="true" title="Nova empresa" id= "addCompaniesModal" >
+        <b-modal v-model="modalAddCompanies" size="lg" :hide-footer="true" title="Nova empresa" id="addCompaniesModal" >
             <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 
         <!-- Edit Companies Modal -->
-        <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa" id= "editCompaniesModal" >
+        <b-modal v-model="modalEditCompanies" size="lg" :hide-footer="true" title="Editar empresa" id="editCompaniesModal" >
             <sellerCRUDCompanies :rpi_url='rpi_url' :companies_url='companies_url' :users_url='users_url' :usersManager_url='usersManager_url' :action='"edit"' :model_rpi='model_rpi' :model_company='model_company' :model_manager='model_manager' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </sellerCRUDCompanies>
         </b-modal>
 

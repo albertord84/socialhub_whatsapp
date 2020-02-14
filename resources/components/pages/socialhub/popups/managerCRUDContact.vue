@@ -4,11 +4,11 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome (*)" class="form-control"/>
+                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="nameContact" name="nameContact" type="text" autofocus placeholder="Nome (*)" class="form-control"/>
                 </div>
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-headphones form-control-feedback"></span>
-                    <select v-model="contact_atendant_id" title="Ex: Escolha um atendente para o contato" class="form-control has-search-color" size="1">
+                    <select v-model="contact_atendant_id" id="contact_atendant_id" title="Ex: Escolha um atendente para o contato" class="form-control has-search-color" size="1">
                         <option value="0">Asignar um Atendente agora?</option>
                         <option v-for="(attendant,index) in attendants" v-bind:key="index" :value="attendant.id" :title="attendant.email">{{attendant.name}}</option>
                     </select>
@@ -17,11 +17,11 @@
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-envelope form-control-feedback"></span>
-                    <input v-model="model.email" title="Ex: contato@gmail.com" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                    <input v-model="model.email" title="Ex: contato@gmail.com" name="emailContact" id="emailContact" type="email" placeholder="Email" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.phone" id="phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                    <input v-model="model.phone" id="phoneContact" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phoneContact" type="text" placeholder="Telefone fixo" class="form-control"/>
                 </div>                                
             </div>
             <div class="row">
@@ -54,26 +54,43 @@
                     <label class="form-group has-search-color" for="form-group">{{remember_length}}/500</label>
                 </div>
             </div>
-            <div class="col-lg-12 m-t-25 text-center">
-                <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addContact">
+
+            <!-- <div class="col-lg-12 m-t-25 text-center">
+                <button v-show='action=="insert"'  id="btnInsertContact" type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addContact">
                     <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
                 </button>
 
-                <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateContact">
+                <button v-show='action=="edit"' id="btnEditContact" type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateContact">
                     <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
                 </button>
 
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+                <button type="reset" id="btnCancelContact1" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+            </div> -->
+
+
+            <div class="col-lg-12 m-t-25 text-center" v-show='action=="insert"'>
+                <button id="btnInsertContact" type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addContact">
+                    <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Adicionar
+                </button>
+                <button type="reset" id="btnCancelContact1" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+            </div>
+            
+            <div class="col-lg-12 m-t-25 text-center" v-show='action=="edit"'>
+                <button id="btnEditContact" type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateContact">
+                    <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
+                </button>
+                <button type="reset" id="btnCancelContact2" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
             </div>
         </form>
+
         <form v-show="action=='delete'">
             Tem certeza que deseja remover esse Contato?
             <div class="col-lg-12 mt-5 text-center">
-                <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteContact">
+                <button type="submit" id="btnDeleteContact" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteContact">
                     <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
                 </button>
 
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
+                <button type="reset" id="btnCancelContact3" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
             </div>                    
         </form>
     </b-container>

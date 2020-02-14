@@ -89,7 +89,7 @@
         </b-modal>
 
         <!-- Delete Sellers Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteSellers" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteSellers" id="deleteSellerModal" :hide-footer="true" title="Verificação de exclusão">
             <adminCRUDSellers :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </adminCRUDSellers>            
         </b-modal>
 

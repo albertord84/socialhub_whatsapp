@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" id="tableContacts">
             <table ref="table" id="tableContacts" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
@@ -85,17 +85,17 @@
         </div>
 
         <!-- Add Contact Modal -->
-        <b-modal v-model="modalAddContact" size="lg" :hide-footer="true" title="Novo contato">
+        <b-modal v-model="modalAddContact" size="lg" :hide-footer="true" title="Novo contato" id="addContactModal">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"insert"' :attendants='attendants' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>
         </b-modal>
 
         <!-- Edit Contact Modal -->
-        <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar contato">
+        <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar contato" id="editContactModal">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"edit"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
         <!-- Delete Contact Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="deleteContactModal" :hide-footer="true" title="Verificação de exclusão">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
