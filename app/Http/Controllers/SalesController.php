@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\MyResponse;
 use App\Http\Requests\CreateSalesRequest;
 use App\Http\Requests\UpdateSalesRequest;
 use App\Repositories\SalesRepository;
@@ -19,6 +20,15 @@ class SalesController extends AppBaseController
     public function __construct(SalesRepository $salesRepo)
     {
         $this->salesRepository = $salesRepo;
+    }
+
+    public function process_bling_sales(Request $request)
+    {
+        try {
+            Log::debug('Process Bling Sales', [$request->all()]);
+        } catch (\Throwable $tr) {
+            return MyResponse::makeExceptionJson($tr);
+        }
     }
 
     /**
