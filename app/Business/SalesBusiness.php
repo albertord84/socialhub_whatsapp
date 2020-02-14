@@ -18,7 +18,7 @@ class SalesBusiness extends Business {
 
     function createSale(stdClass $Sale)
     {
-        dd($Sale);
+        // dd($Sale);
         // 1. Crea la venta
         $SaleModel = Sales::blingConstruct($Sale);
         $SaleModel->save();

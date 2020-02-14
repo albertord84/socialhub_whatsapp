@@ -9,8 +9,7 @@ use App\Http\Requests\UpdateBlingRequest;
 use App\Repositories\BlingRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
-use Flash;
-use Illuminate\Support\Facades\Log;
+use Laracasts\Flash\Flash as Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
@@ -76,16 +75,17 @@ class BlingController extends AppBaseController
     public function store(CreateBlingRequest $request)
     {
         $input = $request->all();
-
-        $bling = $this->blingRepository->create($input);
+        // $bling = $this->blingRepository->create($input);
 
         //1. atualizar campo de companies (llamar el update de companies) e bling_contrated a 1
-
+        $Company = $this->blingRepository->updateCompanyBlingIntegrationField($input["company_id"], $input["bling_apikey"], $input["bling_message"]);
         //2. crear tabla de sales para essa empressa
+        $this->blingRepository->createCompanySalesTable($input["company_id"]);
 
-        Flash::success('Bling saved successfully.');
+        Flash::success('Bling integration created successfully.');
 
-        return redirect(route('blings.index'));
+        // return redirect(route('blings.index'));
+        return $Company->toJson();
     }
 
     /**
