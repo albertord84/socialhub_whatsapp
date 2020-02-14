@@ -36,7 +36,9 @@
                             <li class="mb-4"> 1) Acesse a <a href="https://www.bling.com.br/usuarios.php#add" target="_blank" rel="noopener noreferrer">https://www.bling.com.br/usuarios.php#add</a> e selecione <b>usuário API</b>.</li>
                             <li class="mb-4"> 2) Na sessão <b>Informações da conta</b> preencha os campos <b>Nome</b> e <b>Email</b> do usuário API.</li>
                             <li class="mb-2"> 3) Na sessão <b>API key</b> gere a API key. Seguido copie e cole a API key aqui:</li>
-                            <li class="ml-4 mb-4"><input type="text" class="w-400" placeholder="Adicione sua API key aqui "></li>
+                            <li class="ml-4 mb-4">
+                                <input type="text" class="w-400" v-model="apikey" placeholder="Adicione sua API key aqui">
+                            </li>
                             <li class="mb-4"> 4) Selecione a aba <b>Vendas</b> na sessão <b>Permissões</b> e marque todos os item da sub-sessão <b>Pedidos de Venda</b>.</li>
                             <li class="mb-4"> 5) Pressionar o botão <b>Salvar</b> para finalizar a <i>Criação do Usuário API e da API key</i>.</li>
                         </ul>
@@ -170,8 +172,9 @@
         data(){
             return{
                 logued_user:null,
-                message:'',
-                defaultMessage:''
+                message:"",
+                defaultMessage:"",
+                apikey:"",
             }
         },
 
@@ -181,11 +184,21 @@
             },
 
             steepAPIKEY(){
-                return true;
+                if(this.apikey.trim().length==0){                    
+                    miniToastr.warn("Atenção", "Deve inserir uma API key para continuar");  
+                    return false;
+                }else{
+                    return true;
+                }
             },
 
             steepCallback(){
-                return true;
+                if(this.message.trim().length==0){                    
+                    miniToastr.warn("Atenção", "Deve inserir uma API key para continuar");  
+                    return false;
+                }else{
+                    return true;
+                }
             },
 
             steepLayoutMessage(){
