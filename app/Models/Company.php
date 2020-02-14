@@ -48,6 +48,10 @@ class Company extends Model
         'complemento',
         'bairro',
         'amount_attendants',
+
+        'blingapikey',
+        'blingtoken',
+        'blingmessage',
     ];
 
     /**
@@ -75,6 +79,11 @@ class Company extends Model
         'bairro'=> 'string',
         
         'amount_attendants'=> 'string',
+
+        'bling_apikey'=> 'string',
+        'bling_token'=> 'string',
+        'bling_message'=> 'string',
+        'bling_contrated'=> 'integer',
     ];
 
     /**
@@ -118,7 +127,7 @@ class Company extends Model
     {
         $this->manager = User::where([
             'company_id' => $this->id, 
-            'role_id' => 3, 
+            'role_id' => 3,
             'status_id' => 1
         ])->first();
 

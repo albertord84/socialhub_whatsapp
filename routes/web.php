@@ -108,3 +108,9 @@ Route::resource('rpis', 'ExtendedRpiController');
 
 
 Route::resource('contactsOrigins', 'ContactsOriginsController');
+
+Route::resource('blings', 'BlingController');
+
+Route::resource('sales', 'SalesController');
+
+Route::resource('chatsBlings', 'ChatsBlingController');

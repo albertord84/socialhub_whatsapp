@@ -14,9 +14,10 @@ class AddBlingFliedsColumnToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->string('blingapikey', 500)->nullable();
-            $table->string('blingtoken', 500)->nullable();
-            $table->string('blingmessage', 1000)->nullable();
+            $table->string('bling_apikey', 500)->nullable();
+            $table->string('bling_token', 500)->nullable();
+            $table->string('bling_message', 1000)->nullable();
+            $table->integer('bling_contrated')->nullable()->default(0);
         });
     }
     

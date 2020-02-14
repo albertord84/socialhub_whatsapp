@@ -1108,7 +1108,8 @@
                 //     console.log('value ---> '+value);
                 //     this.percent = value + 10;
                 // }
-            },                        
+            },
+            
             getContactChatOld: function(contact) {
                 if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
                 this.requestingNewPage=true;
@@ -2014,16 +2015,6 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
-
-            ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
-                'user_id':this.logguedAttendant.id,
-                'selected_contact_id':0
-            })
-            .then(response => {                            
-            })
-            .catch(error => {
-                this.processMessageError(error, "contacts", "get");
-            });
         },
 
         mounted(){

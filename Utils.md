@@ -32,7 +32,7 @@ cd /var/www/html/socialhub
 
 
 	#############################
-	php artisan infyom:scaffold MessageType --fromTable --tableName=message_types
+	php artisan infyom:scaffold MessageType --fromTable --tableName=message_types --connection=connectionName
 	php artisan infyom:scaffold User
 	php artisan infyom:scaffold Role
 	php artisan infyom:scaffold Status

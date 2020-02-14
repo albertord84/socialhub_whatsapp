@@ -49,13 +49,5 @@ class ContactsOriginsTableSeeder extends Seeder
         ]);
         $this->command->info('Contact Origin BLING');
 
-        ContactsOrigins::create([
-            'id' => '5',
-            'name' => 'CSV',
-            'description' => 'Contact was added by a Manager from a CSV file',
-        ]);
-        $this->command->info('Contact Origin ORGANIC');
-
-
     }
 }

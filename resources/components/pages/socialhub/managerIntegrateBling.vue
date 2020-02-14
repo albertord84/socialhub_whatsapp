@@ -36,7 +36,9 @@
                             <li class="mb-4"> 1) Acesse a <a href="https://www.bling.com.br/usuarios.php#add" target="_blank" rel="noopener noreferrer">https://www.bling.com.br/usuarios.php#add</a> e selecione <b>usuário API</b>.</li>
                             <li class="mb-4"> 2) Na sessão <b>Informações da conta</b> preencha os campos <b>Nome</b> e <b>Email</b> do usuário API.</li>
                             <li class="mb-2"> 3) Na sessão <b>API key</b> gere a API key. Seguido copie e cole a API key aqui:</li>
-                            <li class="ml-4 mb-4"><input type="text" class="w-400" placeholder="Adicione sua API key aqui "></li>
+                            <li class="ml-4 mb-4">
+                                <input type="text" class="w-400" v-model="apikey" placeholder="Adicione sua API key aqui">
+                            </li>
                             <li class="mb-4"> 4) Selecione a aba <b>Vendas</b> na sessão <b>Permissões</b> e marque todos os item da sub-sessão <b>Pedidos de Venda</b>.</li>
                             <li class="mb-4"> 5) Pressionar o botão <b>Salvar</b> para finalizar a <i>Criação do Usuário API e da API key</i>.</li>
                         </ul>
@@ -169,9 +171,13 @@
 
         data(){
             return{
+                companies_url:"companies",
+                sales_url:"companies",
+                bling_url:"blings",
                 logued_user:null,
-                message:'',
-                defaultMessage:''
+                message:"",
+                defaultMessage:"",
+                apikey:"",
             }
         },
 
@@ -181,15 +187,41 @@
             },
 
             steepAPIKEY(){
-                return true;
+                if(this.apikey.trim().length==0){                    
+                    miniToastr.warn("Atenção", "Deve inserir uma API key para continuar");  
+                    return false;
+                }else{
+                    return true;
+                }
             },
 
-            steepCallback(){
-                return true;
-            },
+            steepCallback(){},
 
             steepLayoutMessage(){
-                return true;
+                let textarea = this.$refs.text_message;
+                this.message = textarea.value;
+                if(this.message.trim().length==0){                    
+                    miniToastr.warn("Atenção", "Deve configurar uma mensagem template para ser enviada aos seus clientes");  
+                    reject(false);
+                    return false;
+                }else{
+                    return new Promise((resolve, reject) => {                    
+                            //update company
+                            ApiService.post(this.bling_url, {
+                                "company_id":this.logued_user.company_id,
+                                "bling_apikey":this.apikey,
+                                "bling_message":this.message,
+                                // "blingtoken":'',
+                            })
+                            .then(response => {
+                                    resolve(true);
+                            })
+                            .catch(function(error) {
+                                this.processMessageError(error, "contacts", "get");
+                                reject(false);
+                            });
+                        });
+                    }
             },
 
             steepEnd(){
@@ -211,23 +243,20 @@
                 textarea.value = this.message;
             },
 
-
-
-            addCompanyOld: function() { //C
-                this.modelCompany.id=1;
-                this.modelCompany.user_seller_id=this.logued_user.id;
-                this.modelManager.id=1;
-                this.modelManager.role_id=3;
-                this.modelManager.image_path = "images/user.jpg";
-                // inserindo company
-                ApiService.post(this.companies_url, this.modelCompany)
-                .then(response => {
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
-                });
+            processMessageError: function(error, url, action) {
+                //Egberto aqui, dar mensagem de: Erro atualizando os dados da integração
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
             },
+
         },
 
         mounted(){

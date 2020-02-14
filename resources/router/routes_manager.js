@@ -37,28 +37,12 @@ const layout = [
         meta: {
             title: "Audio test",
         }
-    },/*{
-        path: '/manager/company',
-        component: resolve => require(['pages/socialhub/managerCompany'], resolve),
-        meta: {
-            title: "Empresa",
-        }
-    },*/{
+    },{
         path: '/manager/user_profile',    
         component: resolve => require(['pages/socialhub/user_profile'], resolve),
         meta: {
             title: "Perfil",
         }
-    }
-   // {
-   //     path: '/manager',
-   //     name: 'manager',
-   //     component: resolve => require(['pages/socialhub/managerDashboard'], resolve),
-   //     meta: {
-   //         title: "Dashboard",
-   //     }
-    
-    
-    ]
+    }]
     
     export default layout
