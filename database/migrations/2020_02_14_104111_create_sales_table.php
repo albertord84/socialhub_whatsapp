@@ -10,9 +10,14 @@ class CreateSalesTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function up()
+	public function up(string $table_name = "sales")
 	{
-		Schema::connection('socialhub_mvp.sales')->create('sales', function(Blueprint $table)
+		try {
+			$this->down($table_name);
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
+		Schema::connection('socialhub_mvp.sales')->create($table_name, function(Blueprint $table)
 		{
 			$table->integer('id')->primary();
 			$table->integer('contact_id')->nullable();
@@ -30,9 +35,9 @@ class CreateSalesTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
+	public function down(string $table_name = "sales")
 	{
-		Schema::connection('socialhub_mvp.sales')->drop('sales');
+		Schema::connection('socialhub_mvp.sales')->drop($table_name);
 	}
 
 }

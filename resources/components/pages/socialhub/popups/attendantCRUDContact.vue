@@ -186,6 +186,7 @@
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
+                    origin:2
                 },
 
                 isSendingInsert: false,
