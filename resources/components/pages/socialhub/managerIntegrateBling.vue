@@ -20,7 +20,9 @@
                         <p class="text-justify pl-4">
                             - Ter uma conta no <a href="https://www.bling.com.br" target="_blank" rel="noopener noreferrer">Bling</a> que gerencie as suas vendas realizadas através dos e-commerces.
                             <br><br>
-                            - Ter feito a <a href="https://manuais.bling.com.br/manual/?item=homologacao-parceiro-api" target="_blank" rel="noopener noreferrer">Homologação</a> da API de pedidos de vendas do Bling.
+                            - Ter feito a integração da sua conta Bling com algum dos e-commerces.
+                            <!-- <br><br>
+                            - Ter feito a <a href="https://manuais.bling.com.br/manual/?item=homologacao-parceiro-api" target="_blank" rel="noopener noreferrer">Homologação</a> da API de pedidos de vendas do Bling. -->
                         </p>
                     </div>
                 <hr>
@@ -32,8 +34,8 @@
                         <h4 style="color:#34AD70">Criação do Usuário API e da API key</h4>
                         <ul class="pl-4">
                             <li class="mb-4"> 1) Acesse a <a href="https://www.bling.com.br/usuarios.php#add" target="_blank" rel="noopener noreferrer">https://www.bling.com.br/usuarios.php#add</a> e selecione <b>usuário API</b>.</li>
-                            <li class="mb-4"> 2) Na sessão <b>Informações</b> da conta preencha os campos <b>Nome</b> e <b>Email</b> do usuário API.</li>
-                            <li class="mb-2"> 3) Na sessão <b>API key</b> gere a API key, e copie e cole ela aqui:</li>
+                            <li class="mb-4"> 2) Na sessão <b>Informações da conta</b> preencha os campos <b>Nome</b> e <b>Email</b> do usuário API.</li>
+                            <li class="mb-2"> 3) Na sessão <b>API key</b> gere a API key. Seguido copie e cole a API key aqui:</li>
                             <li class="ml-4 mb-4"><input type="text" class="w-400" placeholder="Adicione sua API key aqui "></li>
                             <li class="mb-4"> 4) Selecione a aba <b>Vendas</b> na sessão <b>Permissões</b> e marque todos os item da sub-sessão <b>Pedidos de Venda</b>.</li>
                             <li class="mb-4"> 5) Pressionar o botão <b>Salvar</b> para finalizar a <i>Criação do Usuário API e da API key</i>.</li>
@@ -42,7 +44,7 @@
                 <hr>
             </tab-content>
             
-            <tab-content title="Configurar callback" :beforeChange='steepCallback'>
+            <!-- <tab-content title="Configurar callback" :beforeChange='steepCallback'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Configuração do callback</h4>
@@ -58,7 +60,7 @@
                         </ul>
                     </div>
                 <hr>
-            </tab-content>
+            </tab-content> -->
 
             <tab-content title="Configurar mensagem" :beforeChange='steepLayoutMessage'>
                 <hr>
@@ -72,7 +74,13 @@
                     <div class="row pl-5 pr-5 pb-3">
                         <div class="col-8">
                             <b-card  header="Personalize a mensagem" header-tag="h4" class="bg-default-card ">
-                                <textarea ref="text_message" v-model="message" style="width:100%; height:300px" class="border-0" name="" id="" rows="14" spellcheck="false"></textarea>
+                                <template v-slot:header>
+                                    <h6 class="mb-0" style="float:left">Personalize a mensagem</h6>
+                                    <h6 class="mb-0" style="float:right">
+                                        <i class="fa fa-refresh hover text-muted" title="Reiniciar mensagem" aria-hidden="true" @click.prevent="getDefaultMessage"></i>
+                                    </h6>
+                                </template>
+                                <textarea ref="text_message" v-model="message" style="width:100%; height:300px; resize: none" class="border-0" name="" id="" rows="14" spellcheck="false"></textarea>
                             </b-card>
                         </div>
                         <div class="col-4">
@@ -163,6 +171,7 @@
             return{
                 logued_user:null,
                 message:'',
+                defaultMessage:''
             }
         },
 
@@ -196,6 +205,12 @@
                 textarea.selectionStart = (before + ' ' + str).length;
             },
 
+            getDefaultMessage(){
+                let textarea = this.$refs.text_message;
+                this.message = this.defaultMessage;
+                textarea.value = this.message;
+            },
+
 
 
             addCompanyOld: function() { //C
@@ -217,13 +232,15 @@
 
         mounted(){
             this.logued_user = JSON.parse(window.localStorage.getItem('user'));
-            this.message = "Olá, @nome \n\n"+
+            
+            this.defaultMessage = "Olá, @nome \n\n"+
             "Obrigado pela compra do produto @produto.\n"+
             "Quantidade de ítens: @quantidade.\n\n"+
             "O endereço de entrega informado é rua @endereco, número @numero.\n\n"+
             "Em caso de dúvidas, problemas ou sugestões nos contate diretamente pelo nosso whatsapp ou pela Central de Atendimento, para um suporte ágil e eficaz."+
             "Horário de atendimento: De Segunda a Sexta das 07:00 as 15:30 e Sábados das 08:00 as 13:00.\n\n"+
             "Atte. Equipe Coffee Business.";
+            this.message = this.defaultMessage;
         },
 
         created() {
@@ -257,6 +274,10 @@
         padding-left: 8px;
         font-size: 1.1rem;
         background-color: #f7f7f7 ;
+    }
+
+    .hover:hover{
+        cursor: pointer;
     }
 
 </style>

@@ -103,3 +103,6 @@ Route::resource('messagesTypes', 'MessagesTypeController');
 
 Route::resource('rpis', 'ExtendedRpiController');
 
+
+
+Route::resource('contactsOrigins', 'ContactsOriginsController');
