@@ -33,8 +33,9 @@ class CompaniesTableSeeder extends Seeder
             'name' => 'Companie-Develop',
             'phone' => '5521965536174',
             'whatsapp' => '5521965536174',
-            'CNPJ' => '07367014196',
+            'CNPJ' => '12345678910123', 
             'description' => 'Companie Develop',
+            'email' => 'companie.develop@socialhub.pro',
         ]);
         $this->command->info('Created Companie-Develop');
     }    

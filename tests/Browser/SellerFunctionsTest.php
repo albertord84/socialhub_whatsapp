@@ -26,7 +26,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertSee('Entrar')
                 ->assertPresent('#email')
                 ->assertPresent('#password');
-            echo "OK -- Tested Login Page to Seller functions \n ";
+            echo "OK -- Tested Login Page to Seller functions\n ";
         });
     }
 
@@ -45,7 +45,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->press('Entrar')
                 ->waitForText('Email ou senha inválido')
                 ->assertSee('Email ou senha inválido');
-            echo "OK -- Tested login of user: seller1@socialhub.pro with incorrect pasword \n";
+            echo "OK -- Tested login of user: seller1@socialhub.pro with incorrect pasword\n";
 
             $browser->visit('/')
                 ->type('email', 'seller1@socialhub.pro')
@@ -58,7 +58,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertPresent('#addCompany')
                 ->assertPresent('#exportCompany')
                 ->assertSee('Linhas por página:');
-            echo " OK -- Tested login of user: seller1@socialhub.pro \n";
+            echo " OK -- Tested login of user: seller1@socialhub.pro\n";
         });
     }
 

@@ -81,6 +81,7 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => bcrypt('manager'), // password
             'remember_token' => Str::random(10),
+            'whatsapp_id' => '55 21965950008',
         ]);
         UsersManager::create([
             'user_id' => 3,
@@ -99,15 +100,15 @@ class UsersTableSeeder extends Seeder
             'login' => 'attendant1',
             'CPF' => '00000000002',
             'role_id' => $role_id,
-            'phone' => '(21)9659 13089',
+            'phone' => '55 219659513089',
             'status_id' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('attendant1'), // password
             'remember_token' => Str::random(10),
-            'whatsapp_id' => '(21)965913089',
-            'facebook_id' => 'facebook@attendant1',
-            'instagram_id' => 'instagram@attendant1',
-            'linkedin_id' => 'linkedin@attendant1',
+            'whatsapp_id' => '55 21965951308',
+            'facebook_id' => 'facebook',
+            'instagram_id' => 'instagram',
+            'linkedin_id' => 'linkedin',
         ]);
         UsersAttendant::create([
             'user_id' => 4,
@@ -128,6 +129,7 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => bcrypt('attendant2'), // password
             'remember_token' => Str::random(10),
+            'whatsapp_id' => '55 21965955555',
         ]);
         $attendantRepository->createAttendantChatTable(5);
         UsersAttendant::create([
