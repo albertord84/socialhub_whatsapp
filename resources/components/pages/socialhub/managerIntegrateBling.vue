@@ -173,6 +173,7 @@
             return{
                 companies_url:"companies",
                 sales_url:"companies",
+                bling_url:"blings",
                 logued_user:null,
                 message:"",
                 defaultMessage:"",
@@ -197,48 +198,30 @@
             steepCallback(){},
 
             steepLayoutMessage(){
-                return new Promise((resolve, reject) => {
-                    let textarea = this.$refs.text_message;
-                    this.message = textarea.value;
-                    if(this.message.trim().length==0){                    
-                        miniToastr.warn("Atenção", "Deve configurar uma mensagem template para ser enviada aos seus clientes");  
-                        reject(false);
-                    }else{
-                        //update company
-                        ApiService.put(this.companies_url+"/"+this.logued_user.company_id, {
-                            "blingapikey":this.apikey,
-                            "blingmessage":this.message,
-                            // "blingtoken":'',
-                        })
-                        .then(response => {
-                            //create bling table in sales scheme
-                            // ApiService.post(this.sales_url, {
-                            //     "company_id":this.logued_user.company_id
-                            // })
-                            // .then(response => {
-                                resolve(true);
-                            // })
-                            // .catch(function(error) {
-                            //     ApiService.process_request_error(error); 
-                            //     miniToastr.error(error, "Erro adicionando usuáio");  
-                            // }); 
-                        })
-                        .catch(function(error) {
-                            this.processMessageError(error, "contacts", "get");
-                            reject(false);
+                let textarea = this.$refs.text_message;
+                this.message = textarea.value;
+                if(this.message.trim().length==0){                    
+                    miniToastr.warn("Atenção", "Deve configurar uma mensagem template para ser enviada aos seus clientes");  
+                    reject(false);
+                    return false;
+                }else{
+                    return new Promise((resolve, reject) => {                    
+                            //update company
+                            ApiService.post(this.bling_url, {
+                                "company_id":this.logued_user.company_id,
+                                "bling_apikey":this.apikey,
+                                "bling_message":this.message,
+                                // "blingtoken":'',
+                            })
+                            .then(response => {
+                                    resolve(true);
+                            })
+                            .catch(function(error) {
+                                this.processMessageError(error, "contacts", "get");
+                                reject(false);
+                            });
                         });
                     }
-
-
-
-                    // axios.post('/api/validate',this.form)
-                    // .then(response => { resolve(true) })
-                    // .catch(error => { reject(false) })
-                });
-
-
-
-                
             },
 
             steepEnd(){

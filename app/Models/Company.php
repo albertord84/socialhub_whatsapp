@@ -80,9 +80,10 @@ class Company extends Model
         
         'amount_attendants'=> 'string',
 
-        'blingapikey'=> 'string',
-        'blingtoken'=> 'string',
-        'blingmessage'=> 'string',
+        'bling_apikey'=> 'string',
+        'bling_token'=> 'string',
+        'bling_message'=> 'string',
+        'bling_contrated'=> 'integer',
     ];
 
     /**
