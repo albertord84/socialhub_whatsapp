@@ -12,7 +12,7 @@
                         <li class="divider mt-3 " v-if="item.title">
                             <span>{{item.name}}</span>
                         </li>
-                        <vsub-menu v-if="item.child" title="item.name" :icon="item.icon" >
+                        <vsub-menu v-if="item.child" :title="item.name" :icon="item.icon" >
                             <vmenu-item v-for="child in item.child" :link="child.link" :icon="child.icon" :key="child.name">{{child.name}}</vmenu-item>
                         </vsub-menu>
                         <vmenu-item v-if="item.link" :title="item.name" :link="item.link" :icon="item.icon">{{ item.name}}</vmenu-item>
