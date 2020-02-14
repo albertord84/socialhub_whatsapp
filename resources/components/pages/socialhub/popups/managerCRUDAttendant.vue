@@ -26,13 +26,13 @@
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                        <input v-model="model.phone" v-mask="'55 ############'" title="Ex: 55 1188888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
                     </div>  
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
@@ -177,24 +177,15 @@
                                 this.reload();
                                 this.closeModals();
                             })
-                        .catch(function(error) {
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando Atendente");
+                        .catch(error => {
+                            this.processMessageError(error, this.url,"add");
                         })
                         .finally(() => this.isSendingInsert = false);
                     })
-                    // .catch(function(error) {
                     .catch(error => {
-                        
-                        if(error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                        }else{
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando usuáio");  
-                        }
+                        this.processMessageError(error, this.first_url,"add");
                         this.isSendingInsert = false;
                     });
-                    // .finally(() => this.isSendingInsert = false);
             },
             
             editAttendant: function() { //U
@@ -221,7 +212,6 @@
                     this.flagReference = true;
                     return;
                 }
-
                 
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
@@ -244,15 +234,8 @@
                             this.reload();
                             this.closeModals();
                     })
-                    .catch(function(error) {
-                        // ApiService.process_request_error(error);  
-                        // miniToastr.error(error, "Erro atualizando Atendente"); 
-                        if(error.response.data.message.includes("Duplicate entry")){
-                            miniToastr.warn("O e-mail do usuário informado já está cadastrado.","Atenção");
-                        }else{
-                            ApiService.process_request_error(error); 
-                            miniToastr.error(error, "Erro adicionando Atendente");
-                        }
+                    .catch(error => {
+                        this.processMessageError(error, this.first_url,"update");
                     })
                     .finally(() => this.isSendingUpdate = false);
             },
@@ -269,21 +252,20 @@
                                         this.reload();
                                         this.closeModals();
                                     })
-                                    .catch(function(error) {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Atendente"); 
-                                    });
+                                    .catch(error => {
+                                        this.processMessageError(error, this.first_url, "delete");
+                                    })
+                                    .finally(() => this.isSendingDelete = false);
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando Atendente"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.url, "delete");
+                                this.isSendingDelete = false;
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Atendente"); 
-                    })
-                    .finally(() => this.isSendingDelete = false);
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "delete");
+                        this.isSendingDelete = false;
+                    });
             },
 
             formReset:function(){
@@ -334,7 +316,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O login do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O login do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.email && this.model.email !=''){
@@ -344,7 +326,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O email do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O email do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.name && this.model.name !=''){
@@ -354,7 +336,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O nome do usuário é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -365,7 +347,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 
@@ -384,7 +366,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatorio" );
+                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){
@@ -424,6 +406,21 @@
                     }
                 }
             },
+
+            
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
 
         },
 

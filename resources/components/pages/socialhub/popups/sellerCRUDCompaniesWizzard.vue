@@ -16,23 +16,23 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-building-o form-control-feedback"></span>
-                            <input v-model="modelCompany.name" id="name" name="name" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
+                            <input v-model="modelCompany.name" id="nameCompany" name="nameCompany" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelCompany.phone" name="phone" id="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelCompany.phone" name="phoneCompany" id="phoneCompany" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelCompany.email" id="email" name="email" type="email" required placeholder="Email" class="form-control"/>                            
+                            <input v-model="modelCompany.email" id="emailCompany" name="emailCompany" type="email" required placeholder="Email" class="form-control"/>                            
                         </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" name="whatsapp" id="whatsapp" type="text" required placeholder="whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" name="whatsappCompany" id="whatsappCompany" type="text" required placeholder="whatsapp (*)" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
@@ -49,11 +49,11 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="modelManager.name" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                            <input v-model="modelManager.name" id="nameManager" name="nameManager" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelManager.email" name="email" id="email" type="text" required placeholder="Email" class="form-control"/>
+                            <input v-model="modelManager.email" name="emailManager" id="emailManager" type="text" required placeholder="Email" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="modelManager.phone" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
+                            <input v-model="modelManager.phone" id="phoneManager" name="phoneManager" type="text" required placeholder="Telefone (*)" class="form-control"/>
                         </div>
                     </div>  
             </tab-content>
@@ -197,20 +197,16 @@
                                     this.reload();
                                     this.closeModals();
                                 })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error); 
-                                miniToastr.error(error, "Erro adicionando Atendente");  
+                            .catch(error => {
+                                this.processMessageError(error, this.usersManager_url, "add"); 
                             });
-                           
                         })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando Atendente");  
+                    .catch(error => {
+                        this.processMessageError(error, this.users_url, "add");
                     });
                 })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
+                .catch(error => {
+                    this.processMessageError(error, this.companies_url, "add");
                 });
             },
             
@@ -232,14 +228,12 @@
                                 this.reload();
                                 this.closeModals();
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro atualizando Manager"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.users_url, "update");
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando companhia"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.companies_url, "update");
                     });
             },
 
@@ -255,19 +249,16 @@
                                         this.reload();
                                         this.closeModals();
                                     })
-                                    .catch(function(error) {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Companhia"); 
+                                    .catch(error => {
+                                        this.processMessageError(error, this.companies_url, "delete"); 
                                     });
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando Manager"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.users_url, "delete");
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Manager"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.usersManager_url, "delete");
                     });
             },
 
@@ -300,6 +291,20 @@
             reload(){
                 this.$emit('onreloaddatas');
             }, 
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
 
         },
 

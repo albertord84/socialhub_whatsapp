@@ -80,7 +80,7 @@
         @keyframes sk-bounce {
             0%,
             100% {
-                transform: scale(0.0);
+                transform: scale(0.0);omineo
                 -webkit-transform: scale(0.0);
             }
             50% {
