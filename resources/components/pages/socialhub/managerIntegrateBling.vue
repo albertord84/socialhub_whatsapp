@@ -171,6 +171,8 @@
 
         data(){
             return{
+                companies_url:"companies",
+                sales_url:"companies",
                 logued_user:null,
                 message:"",
                 defaultMessage:"",
@@ -192,17 +194,51 @@
                 }
             },
 
-            steepCallback(){
-                if(this.message.trim().length==0){                    
-                    miniToastr.warn("Atenção", "Deve inserir uma API key para continuar");  
-                    return false;
-                }else{
-                    return true;
-                }
-            },
+            steepCallback(){},
 
             steepLayoutMessage(){
-                return true;
+                return new Promise((resolve, reject) => {
+                    let textarea = this.$refs.text_message;
+                    this.message = textarea.value;
+                    if(this.message.trim().length==0){                    
+                        miniToastr.warn("Atenção", "Deve configurar uma mensagem template para ser enviada aos seus clientes");  
+                        reject(false);
+                    }else{
+                        //update company
+                        ApiService.put(this.companies_url+"/"+this.logued_user.company_id, {
+                            "blingapikey":this.apikey,
+                            "blingmessage":this.message,
+                            // "blingtoken":'',
+                        })
+                        .then(response => {
+                            //create bling table in sales scheme
+                            // ApiService.post(this.sales_url, {
+                            //     "company_id":this.logued_user.company_id
+                            // })
+                            // .then(response => {
+                                resolve(true);
+                            // })
+                            // .catch(function(error) {
+                            //     ApiService.process_request_error(error); 
+                            //     miniToastr.error(error, "Erro adicionando usuáio");  
+                            // }); 
+                        })
+                        .catch(function(error) {
+                            this.processMessageError(error, "contacts", "get");
+                            reject(false);
+                        });
+                    }
+
+
+
+                    // axios.post('/api/validate',this.form)
+                    // .then(response => { resolve(true) })
+                    // .catch(error => { reject(false) })
+                });
+
+
+
+                
             },
 
             steepEnd(){
@@ -224,23 +260,20 @@
                 textarea.value = this.message;
             },
 
-
-
-            addCompanyOld: function() { //C
-                this.modelCompany.id=1;
-                this.modelCompany.user_seller_id=this.logued_user.id;
-                this.modelManager.id=1;
-                this.modelManager.role_id=3;
-                this.modelManager.image_path = "images/user.jpg";
-                // inserindo company
-                ApiService.post(this.companies_url, this.modelCompany)
-                .then(response => {
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
-                });
+            processMessageError: function(error, url, action) {
+                //Egberto aqui, dar mensagem de: Erro atualizando os dados da integração
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
             },
+
         },
 
         mounted(){
