@@ -60,7 +60,6 @@ class BlingController extends AppBaseController
 
         //1. atualizar campo de companies (llamar el update de companies) e bling_contrated a 1
         $Company = $this->blingRepository->updateCompanyBlingIntegrationField($input["company_id"], $input["bling_apikey"], $input["bling_message"]);
-
         //2. crear tabla de sales para essa empressa
         $this->blingRepository->createCompanySalesTable($input["company_id"]);
 
