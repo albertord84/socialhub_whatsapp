@@ -31,6 +31,7 @@ class BlingRepository extends BaseRepository
         $Company = Company::find($company_id);
         $Company->bling_apikey = $bling_apikey;
         $Company->bling_message = $bling_message;
+        $Company->bling_contrated = true;
         $Company->save();
         return $Company;
     }

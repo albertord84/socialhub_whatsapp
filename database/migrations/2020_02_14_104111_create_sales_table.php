@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSalesTable extends Migration {
 
@@ -19,7 +20,7 @@ class CreateSalesTable extends Migration {
 		}
 		Schema::connection('socialhub_mvp.sales')->create($table_name, function(Blueprint $table)
 		{
-			$table->integer('id')->primary();
+			$table->string('id')->unique()->nullable(false);
 			$table->integer('contact_id')->nullable();
 			$table->integer('source')->nullable()->default(1);
 			$table->integer('sended')->nullable()->default(0);

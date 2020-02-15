@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Business\MyException;
 use Illuminate\Database\Eloquent\Model as Model;
 use stdClass;
 
@@ -10,6 +11,7 @@ use stdClass;
  * @package App\Models
  * @version February 14, 2020, 10:30 am -03
  *
+ * @property string id
  * @property integer contact_id
  * @property integer source
  * @property integer sended
@@ -19,6 +21,8 @@ class Sales extends Model
 {
 
     public $table = 'sales';
+
+    public $company_id = null;
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -27,6 +31,7 @@ class Sales extends Model
     public $connection = "socialhub_mvp.sales";
 
     public $fillable = [
+        'id',
         'contact_id',
         'source', // Defaul 1 -> Bling
         'sended',
@@ -39,7 +44,7 @@ class Sales extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'contact_id' => 'integer',
         'source' => 'integer',
         'sended' => 'integer',
@@ -58,10 +63,17 @@ class Sales extends Model
     /**
      * Class constructor.
      */
-    public static function blingConstruct(stdClass $saleBling) : Sales
+    public static function blingConstruct(stdClass $saleBling, int $contact_id, int $company_id) : Sales
     {
         $Sale = new Sales;
-        $Sale->contact_id = $saleBling->contact_id;
+        $Sale->table = "$company_id";
+        if (isset($saleBling->pedido->numeroPedidoLoja)) {
+            $Sale->id =  $saleBling->pedido->numeroPedidoLoja;
+        }
+        else {
+            throw new MyException("Invalid Bling Sale Id", 1);
+        }
+        $Sale->contact_id = $contact_id;
         $Sale->source = 1;
         $Sale->json_data = json_encode($saleBling);
 
