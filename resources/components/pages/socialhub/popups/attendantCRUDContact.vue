@@ -186,7 +186,7 @@
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
-                    origin:2
+                    origin: "",
                 },
 
                 isSendingInsert: false,
@@ -237,7 +237,7 @@
                     this.flagReference = true;
                     return;
                 }
-
+                this.model.origin = 2;
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR

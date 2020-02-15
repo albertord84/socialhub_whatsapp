@@ -118,7 +118,7 @@
                     facebook_id: "",
                     instagram_id: "",
                     linkedin_id: "",
-                    origin:2
+                    origin: "",
                 },
                 
                 //---------New record properties-----------------------------
@@ -151,8 +151,8 @@
                 
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
-                    this.model.status_id = 1;                
-
+                    this.model.status_id = 1;
+                this.model.origin = 2;
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
