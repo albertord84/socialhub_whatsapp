@@ -218,8 +218,8 @@
                         .then(response => {
                                 resolve(true);
                         })
-                        .catch(function(error) {
-                            this.processMessageError(error, "contacts", "get");
+                        .catch(error => {
+                            this.processMessageError(error, this.bling_url, "add");
                             reject(false);
                         });
                     });
@@ -246,7 +246,6 @@
             },
 
             processMessageError: function(error, url, action) {
-                //TODO-Egberto: aqui, dar mensagem de: Erro atualizando os dados da integração
                 var info = ApiService.process_request_error(error, url, action);
                 if(info.typeException == "expiredSection"){
                     miniToastr.warn(info.message,"Atenção");

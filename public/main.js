@@ -427,6 +427,8 @@ var ApiService = {
                 if (url == "password_reset" && action == "add") object.message = "Email não existe.";
                 if (url == "auth/add_user" && action == "add") object.message = "Erro adicionando usuário.";
                 if (url == "auth/password_save" && action == "add") object.message = "Erro salvando sua nova senha.";
+
+                if (url == "blings" && action == "add") object.message = "Erro atualizando os dados da integração.";
             }
         } else if (error.request) {
             // The request was made but no response was received

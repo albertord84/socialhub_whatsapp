@@ -31,6 +31,3 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('edit_user', 'AuthController@editUser');
     Route::get('delete_user/{user_id}', 'AuthController@deleteUser');
 });
-
-
-Route::resource('sales', 'SalesAPIController');

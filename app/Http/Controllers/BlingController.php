@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\BlingBusiness;
+use App\Business\MyResponse;
 use App\Http\Requests\CreateBlingRequest;
 use App\Http\Requests\UpdateBlingRequest;
 use App\Repositories\BlingRepository;
@@ -19,6 +21,23 @@ class BlingController extends AppBaseController
     public function __construct(BlingRepository $blingRepo)
     {
         $this->blingRepository = $blingRepo;
+    }
+
+    public function get_sales_bling(Request $request)
+    {
+        try {
+            $BlingBussines = new BlingBusiness();
+            
+            $Sales = $BlingBussines->getBlingSales();
+            
+            // Log::debug('Bling Sales', [$Sales]);
+
+
+        } catch (\Throwable $tr) {
+            return MyResponse::makeExceptionJson($tr);
+        }
+
+        return $Sales->toJson();
     }
 
     /**
@@ -161,4 +180,5 @@ class BlingController extends AppBaseController
 
         return redirect(route('blings.index'));
     }
+
 }
