@@ -38,8 +38,8 @@
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
                                 <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeAttendant(row)"><i class='fa fa-headphones text-dark mr-3'></i></a> -->
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Eliminar atendente" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="editAttendant" title="Editar dados" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="deleAttendant" title="Eliminar atendente" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -77,12 +77,12 @@
         </div>
 
         <!-- Add Attendant Modal -->
-        <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
+        <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" id="addAttendantModal" title="Novo atendente">
             <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
         <!-- Edit Attendant Modal -->
-        <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
+        <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" id="editAttendantModal" title="Editar atendente">
             <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
         </b-modal>
 
@@ -241,7 +241,7 @@
                 if(this.modelCompany.amount_attendants > this.rows.length){
                     this.modalAddAttendant = !this.modalAddAttendant;
                 }else{
-                    miniToastr.warn("Para inserir mais atentendente você deve contatar nossa equipe atendimento", "Atenção"); 
+                    miniToastr.warn("Para inserir mais atentendente você deve contatar nossa equipe de atendimento", "Atenção"); 
                 }
             },
 

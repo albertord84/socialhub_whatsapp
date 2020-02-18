@@ -141,8 +141,152 @@ class ManagerAttendantsFunctionsTest extends DuskTestCase
     }
 
 
+    /**
+     *  @group managerAttendants
+     * @return void
+     */
+    public function testingManagerAddAttendantsWhitoutMoreAllowed(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+            $browser
+                ->click('#addAttendant')
+                ->waitForText('Atenção')
+                ->assertSee('Para inserir mais atentendente você deve contatar nossa equipe');
+            $browser->script('location.reload();');
+            echo "OK -- Tested Manager Trying to add a Attendant when reached the maximum number allowed \n";
+        });
+    }
 
 
+
+    /**
+     *  @group managerAttendants
+     * @return void
+     */
+    public function testingManagerEditAttendant(){
+        echo "\n ";
+        $this->browse(function (Browser $browser) {
+
+            $browser
+                ->with('#tableAttendants', function ($table) {
+                    $table->assertSee('AAA_nameAttendant')
+                    ->click('#editAttendant');
+                })
+                ->whenAvailable('#editAttendantModal', function ($modal) {
+                    $modal
+
+                        ->assertSee('Editar atendente')
+                        ->assertSee('Atualizar')
+                        ->assertSee('Cancelar')
+                        ->assertPresent('#nameAttendant')
+                        ->assertPresent('#loginAttendant')
+                        ->assertPresent('#emailAttendant')
+                        ->assertPresent('#CPF-Attendant')
+                        ->assertPresent('#phoneAttendant')
+                        ->assertPresent('#whatsappAttendant')
+                        ->assertPresent('#facebookAttendant')
+                        ->assertPresent('#instagramAttendant')
+                        ->assertPresent('#linkedinAttendant')
+
+                        ->assertPresent('#btnCancelContact1')
+                        ->press('#btnCancelContact1');
+                });
+            $browser
+                ->waitUntilMissing('#btnCancelContact1')
+                ->assertDontSee('Atualizar');
+            $browser->script('location.reload();');
+            echo "OK -- Tested manager check cancel botton of editAttendantModal \n";
+
+            $browser
+                ->with('#tableAttendants', function ($table) {
+                    $table->assertSee('AAA_nameAttendant')
+                    ->click('#editAttendant');
+                })
+                ->whenAvailable('#editAttendantModal', function ($modal) {
+                    $modal
+                        ->type('nameAttendant', ' ') 
+                        ->type('emailAttendant', ' ')
+                        ->type('CPF-Attendant', ' ')
+                        ->type('whatsappAttendant', ' ')
+
+                        ->press('#btnEditAttendant');
+                });
+            $browser
+                ->waitForText('Por favor, confira')
+                ->assertSee('O nome do atendente é obrigatório')
+                ->assertSee('O e-mail do atendente é obrigatório')
+                ->assertSee('O CPF do atendente é obrigatório')
+                ->assertSee('O whatsapp do atendente é obrigatório');
+
+            $browser->script('location.reload();');
+            echo " OK -- Tested manager edit an Attendant without mandatory data \n";
+            
+            $browser
+                ->with('#tableAttendants', function ($table) {
+                    $table->assertSee('AAA_nameAttendant')
+                    ->click('#editAttendant');
+                })
+                ->whenAvailable('#editAttendantModal', function ($modal) {
+                    $modal
+                        ->type('nameAttendant', 'AAA_nameAttendantEdited') 
+                        ->type('emailAttendant', 'emailvalidedited@gmail.com')
+                        ->type('CPF-Attendant', '08266391190')
+                        ->press('#btnEditAttendant');
+                });
+            $browser
+                ->waitForText('Atendente atualizado com sucesso', 10)
+                ->assertSee('Atendente atualizado com sucesso');
+            $browser->script('location.reload();');
+            echo " OK -- Tested manager edit a new Attendant \n";
+        });
+    }
+
+
+
+    /**
+     *  @group managerAttendants
+     * @return void
+     */
+    public function testingManagerDeleteAttendant(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+            $browser
+                ->with('#tableAttendants', function ($table) {
+                    $table->assertSee('AAA_nameAttendantEdited')
+                    ->click('#deleAttendant');
+                })
+                ->whenAvailable('#deleteAttendantModal', function ($modal) {
+                    $modal
+                        ->assertSee('Verificação de exclusão')
+                        ->assertSee('Tem certeza que deseja remover esse Atendente?')
+                        ->assertSee('Eliminar')
+                        ->assertSee('Cancelar')
+
+                        ->assertPresent('#btnDeleteAttendant')
+                        ->assertPresent('#btnCancelContact2')
+                            ->press('#btnCancelContact2');
+                });
+            $browser
+                ->waitUntilMissing('#btnCancelContact2')
+                ->assertDontSee('Eliminar');
+            echo "OK -- Tested manager check cancel botton of deleteAttendantModal \n";
+
+            $browser
+                ->with('#tableAttendants', function ($table) {
+                    $table->assertSee('AAA_nameAttendantEdited')
+                    ->click('#deleAttendant');
+                })
+                ->whenAvailable('#deleteAttendantModal', function ($modal) {
+                    $modal
+                        ->assertPresent('#btnDeleteAttendant')
+                            ->press('#btnDeleteAttendant');
+                });
+            $browser
+                ->waitForText('Atendente eliminado com sucesso')
+                ->assertSee('Atendente eliminado com sucesso');
+            echo " OK -- Tested manager delete Attendant \n";
+        });
+    }
 
 
 
