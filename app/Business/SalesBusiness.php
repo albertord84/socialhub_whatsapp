@@ -29,7 +29,7 @@ class SalesBusiness extends Business {
                 $hasClient = true;
                 $phone = ($Sale->pedido->cliente->celular != "")? $Sale->pedido->cliente->celular : $Sale->pedido->cliente->fone;
                 $phone = trim($phone);
-                if (!(strpos('55', $phone) === 0)) {
+                if (!(strpos('55', $phone) === 0) && ($phone != "")) {
                     $phone = "55$phone";
                 }
 
@@ -64,9 +64,11 @@ class SalesBusiness extends Business {
 
 
             // 3. Envia un mensage
-                    $ExternalRPIController = new ExternalRPIController();
-                    if ($hasClient)
+                    $ExternalRPIController = new ExternalRPIController($Company->rpi);
+                    if ($hasClient && $phone) {
+                        $checkContact = $ExternalRPIController->getContactInfo($Contact->whatsapp_id);
                         $ExternalRPIController->sendTextMessage($Company->bling_message, $Contact);
+                    }
                 }
             }
 

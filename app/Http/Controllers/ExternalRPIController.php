@@ -24,7 +24,7 @@ use stdClass;
 
 class ExternalRPIController extends Controller
 {
-    private $Rpi;
+    private $Rpi = null;
 
     public function __construct(?Rpi $Rpi = null)
     {
@@ -176,7 +176,7 @@ class ExternalRPIController extends Controller
             
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
-            // $response = json_decode($response);
+            $response = json_decode($response);
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }
@@ -224,7 +224,7 @@ class ExternalRPIController extends Controller
         $contactInfo = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
-            $Rpi = $Rpi ?? self::getRPI();
+            $Rpi = $Rpi ?? ($this->Rpi ?? self::getRPI());
             $url = $Rpi->api_tunnel . '/GetContact';
 
             $contactInfo = $client->request('GET', $url, [

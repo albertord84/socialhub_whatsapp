@@ -21,7 +21,7 @@ class BlingBusiness extends Business
     {
         $Sales = new Collection();
         try {
-            $Companies = Company::where(['bling_contrated' => true])->get();
+            $Companies = Company::with('rpi')->where(['bling_contrated' => true])->get();
 
             $SalesBussines = new SalesBusiness();
             foreach ($Companies as $key => $Company) {
@@ -46,7 +46,7 @@ class BlingBusiness extends Business
 
             $url = env('URL_BLING_SALES', 'https://bling.com.br/Api/v2/pedidos/json/');
 
-            $yesterday = Carbon::yesterday()->subDays(1)->format('d/m/Y');
+            $yesterday = Carbon::yesterday()->subDays(3)->format('d/m/Y');
             $today = Carbon::now()->format('d/m/Y');
 
             $response = $client->request('GET', $url, [
