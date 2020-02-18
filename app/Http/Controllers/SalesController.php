@@ -9,6 +9,7 @@ use App\Repositories\SalesRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
@@ -40,10 +41,15 @@ class SalesController extends AppBaseController
     public function index(Request $request)
     {
         $this->salesRepository->pushCriteria(new RequestCriteria($request));
-        $sales = $this->salesRepository->all();
+        // $sales = $this->salesRepository->all();
+        
+        $User = Auth::check()? Auth::user():session('logged_user');
+        $sales = $this->salesRepository->salesByCompany($User->company_id);
+        
+        // return view('sales.index')
+        //     ->with('sales', $sales);
 
-        return view('sales.index')
-            ->with('sales', $sales);
+        return $sales->toJson();
     }
 
     /**

@@ -9,26 +9,13 @@
                 <label>
                     <div style="" class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input type="search" id="search-input" class="form-control" placeholder="Buscar contato" v-model="searchInput">
+                        <input type="search" id="search-input" class="form-control" placeholder="Buscar venda" v-model="searchInput">
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar vendas">
                         <i class="mdi mdi-file-export fa-lg"  ></i>
                         <!-- <i class="fa fa-download"></i> -->
-                    </a>
-                </div>
-                <div class="actions float-right pr-4 mb-3">
-                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="triggerEvent()" title="Importar contatos">
-                        <i class="mdi mdi-file-import fa-lg"  ></i>
-                        <!-- <i class="fa fa-id-card-o"></i> -->
-                    </a>
-
-                </div>
-                <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
-                        <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
             </div>
@@ -39,15 +26,17 @@
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,index) in columns">
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row,column.field) }}
-                            </td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                            <td v-if="!column.html && !column.json" :key="index">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="index" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="index">
+                                <div style="position:relative; margin-left:-80px;">
+                                    <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a>
+                                    <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar venda" @click.prevent="actionDeleteSales(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                </div>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -83,18 +72,13 @@
                 </ul>
             </div>
         </div>
-
-        <!-- Add Contact Modal -->
-        <b-modal v-model="modalAddContact" size="lg" :hide-footer="true" title="Novo contato">
-            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"insert"' :attendants='attendants' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>
-        </b-modal>
-
-        <!-- Edit Contact Modal -->
-        <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar contato">
+        
+        <!-- Edit Sales Modal -->
+        <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar venda">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"edit"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
-        <!-- Delete Contact Modal -->
+        <!-- Delete Sales Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
@@ -159,7 +143,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
-                url:'blings',  //route to controller
+                url:'sales',  //route to controller
                 // secondUrl:'attendantsContacts',
                 // url_attendants:'usersAttendants',  //route to controller
                 
@@ -175,7 +159,7 @@
                 //---------Edit record properties-----------------------------
                 
                 //---------Show Modals properties-----------------------------
-                modalAddContact: false,
+                modalAddSales: false,
                 modalEditContact: false,
                 modalDeleteContact: false,
                 showModalFileUploadCSV: false,
@@ -187,36 +171,42 @@
                 rows:[],
                 columns: [
                     {
-                        label: 'Status',
-                        field: 'status_name',
+                        label: 'Id',
+                        field: 'id',
                         numeric: true, 
-                        width: "90px",
-                        html: false,
-                    },{
-                        label: 'Whatsapp',
-                        field: 'whatsapp_id',
-                        numeric: false,
-                        html: false,
-                    },{
-                        label: 'Nome', 
-                        field: 'first_name', 
-                        numeric: false, 
-                        html: false, 
+                        // width: "90px",
+                        html: false,                   
                     }, {
-                        label: 'Email',
-                        field: 'email',
+                        label: 'Cliente',
+                        field: 'json_data.cliente.nome',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Atendente',
-                        field: 'attendant_name',
+                        label: 'Telefone',
+                        field: 'json_data.cliente.fone',
                         numeric: false,
                         html: false,
+                    }, {
+                        label: 'Situação',
+                        field: 'json_data.situacao',
+                        numeric: false,
+                        html: false,
+                    },{
+                        label: 'Produto',
+                        field: 'json_data.itensInHTML',
+                        numeric: false,
+                        html: true,
+                    }, {
+                        label: 'Mensagem',
+                        field: 'messageSended',
+                        numeric: false,
+                        html: true,
                     }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
-                        html: true,
+                        html: false,
+                        actions: true,
                     }
                 ],
                 currentPage: 1,
@@ -231,18 +221,16 @@
             getSales: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
+                        response.data.forEach((sale, i)=>{
+                            sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
+                            sale.json_data = JSON.parse(sale.json_data);
+                            var str = "";
+                            sale.json_data.itens.forEach((itemData, j)=>{
+                                str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
+                            });
+                            sale.json_data.itensInHTML =str;
+                        });
                         this.rows = response.data;
-                        // var This=this;
-                        // response.data.forEach(function(item, i){                            
-                        //     if(item.status)
-                        //         item.status_name = item.status.name;
-                        //     var name = "";
-                        //     item.contact_atendant_id = 0;
-                        //     if(item.latestAttendant){
-                        //         item.attendant_name = item.latestAttendant.name;
-                        //         item.contact_atendant_id = item.latestAttendant.id;
-                        //     }
-                        // });
                     })
                     .catch(error => {
                         this.processMessageError(error, this.url, "get");
@@ -254,23 +242,24 @@
             },
             
             closeModals(){
-                this.modalAddContact = false;
+                this.modalAddSales = false;
                 this.modalEditContact = false;
                 this.modalDeleteContact = false;
             },
 
-            actionSeeContact: function(value){
-                alert(value);
+            actionResendMessageSales: function(value){
+                alert(value.contact_id);
+                alert(value.json_data);
             },
 
-            actionEditContact: function(value){
+            actionEditSales: function(value){
                 this.model = value;
                 this.contact_id = value.id;
                 // this.contact_atendant_id = value.contact_atendant_id;
                 this.modalEditContact = !this.modalEditContact;
             },
 
-            actionDeleteContact: function(value){
+            actionDeleteSales: function(value){
                 this.model = value;
                 this.contact_id = value.id;
                 this.modalDeleteContact = !this.modalDeleteContact;
@@ -496,5 +485,11 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .sended{
+        /* background-color: rgb(212, 241, 212);         */
+    }
+    .notSended{
+        /* background-color:  rgb(247, 212, 212); */
     }
 </style>
