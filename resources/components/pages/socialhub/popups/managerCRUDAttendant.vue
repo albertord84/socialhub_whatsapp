@@ -6,47 +6,47 @@
                     {{model.user_id}}
                 </div>    
                 <div class="row">
+                    <div  class="col-lg-6 form-group has-search">
+                        <span class="fa fa-user form-control-feedback"></span>
+                        <input v-model="model.name" title="Ex: Nome do Atendente" id="nameAttendant" name="nameAttendant" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                    </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login (*)" class="form-control"/>
+                        <input v-model="model.login" title="Ex: Login do Atendente" name="loginAttendant" id="loginAttendant" type="text" required placeholder="Login" class="form-control"/>
                     </div>
-                    <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-envelope form-control-feedback"></span>
-                        <input v-model="model.email" title="Ex: atendente@gmail.com" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
-                    </div>                                                      
                 </div>
                 <div class="row">
                     <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                        <span class="fa fa-envelope form-control-feedback"></span>
+                        <input v-model="model.email" title="Ex: atendente@gmail.com" id="emailAttendant" name="emailAttendant" type="email" required placeholder="Email (*)" class="form-control"/>                            
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF-Attendant" id="CPF-Attendant" type="text" required placeholder="CPF (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
+                        <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phoneAttendant" name="phoneAttendant" type="text" required placeholder="Telefone fixo" class="form-control"/>
                     </div>  
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" id="whatsappAttendant" name="whatsappAttendant" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
-                        <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
+                        <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebookAttendant" name="facebookAttendant" type="text" placeholder="Facebook" class="form-control"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-instagram form-control-feedback"></span>
-                            <input v-model="model.instagram_id" title="Ex: instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
+                            <input v-model="model.instagram_id" title="Ex: instagram_id" id="instagramAttendant" name="instagramAttendant" type="text" placeholder="Instagram" class="form-control"/>
                         </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-linkedin form-control-feedback"></span>
-                        <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
+                        <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedinAttendant" name="linkedinAttendant" type="text" placeholder="LinkedIn" class="form-control"/>
                     </div>
                 </div>
                 <div v-if="action=='edit'" class="row">
@@ -60,24 +60,24 @@
                     </div>
                 </div>
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addAttendant">
+                    <button v-show='action=="insert"' id="btnInsertAttendant" type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addAttendant">
                         <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Adicionar
                     </button>
 
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateAttendant">
+                    <button v-show='action=="edit"' id="btnEditAttendant" type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateAttendant">
                         <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
                     </button>
 
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button type="reset" id="btnCancelContact1" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>
             </form>
             <form v-show="action=='delete'">
                 Tem certeza que deseja remover esse Atendente?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteAttendant">
+                    <button type="submit" id="btnDeleteAttendant" class="btn btn-primary btn_width" :disabled="isSendingDelete==true" @click.prevent="deleteAttendant">
                         <i v-show="isSendingDelete==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
                     </button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button type="reset" id="btnCancelContact2" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
                 </div>                    
             </form>
 
@@ -315,9 +315,6 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O login do usuário é obrigatório" );
-                    this.flagReference = false;
                 }
                 if(this.model.email && this.model.email !=''){
                     check = validation.check('email', this.model.email)
@@ -326,7 +323,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O email do usuário é obrigatório" );
+                    miniToastr.error("Erro", "O e-mail do atendente é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.name && this.model.name !=''){
@@ -336,7 +333,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O nome do usuário é obrigatório" );
+                    miniToastr.error("Erro", "O nome do atendente é obrigatório" );
                     this.flagReference = false;
                 }
 
@@ -347,7 +344,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
+                    miniToastr.error("Erro", "O CPF do atendente é obrigatório" );
                     this.flagReference = false;
                 }
                 
@@ -366,7 +363,7 @@
                         this.flagReference = false;
                     }
                 }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
+                    miniToastr.error("Erro", "O whatsapp do atendente é obrigatório" );
                     this.flagReference = false;
                 }
                 if(this.model.facebook_id && this.model.facebook_id !=''){

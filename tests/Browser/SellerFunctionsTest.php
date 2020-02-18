@@ -366,7 +366,7 @@ class SellerFunctionsTest extends DuskTestCase
                 ->assertPresent('#whatsappCompany')
                     ->type('whatsappCompany', '')->press('#btnInsert')->waitForText('O whatsapp da empresa é obrigatório')->assertSee('O whatsapp da empresa é obrigatório')
                     ->type('whatsappCompany', '11111111')->press('#btnInsert')->waitForText('Número de whatsapp inválido')->assertSee('Número de whatsapp inválido')
-                    ->type('whatsappCompany', '2188888888')->press('#btnInsert')->waitForText('Empresa adicionada com sucesso', 10)->assertSee('Empresa adicionada com sucesso');
+                    ->type('whatsappCompany', '2188888888') ->press('#btnInsert')->waitForText('Empresa adicionada com sucesso', 10)->assertSee('Empresa adicionada com sucesso');
                 $browser->script('location.reload();');
             echo "OK -- Tested seller1 add a new company\n";
         });
@@ -382,11 +382,9 @@ class SellerFunctionsTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
 
             $browser
-                // ->maximize()
-
                 ->with('#tableCompanies', function ($table) {
                     $table->assertSee('AAA_Company')
-                    ->click('#editCompany');
+                        ->click('#editCompany');
                 })
                 ->whenAvailable('#editCompaniesModal', function ($modal) {
                     $modal
@@ -444,11 +442,12 @@ class SellerFunctionsTest extends DuskTestCase
             $browser
                 ->with('#tableCompanies', function ($table) {
                     $table->assertSee('AAA_Company')
-                    ->click('#editCompany');
+                        ->click('#editCompany');
                 })
+
                 ->whenAvailable('#editCompaniesModal', function ($modal) {
                     $modal
-                        ->type('nameManager', ' ') 
+                        ->type('nameManager', ' ')
                         ->type('nameCompany', ' ')
                         ->press('#btnEdit');
                 });
@@ -462,7 +461,7 @@ class SellerFunctionsTest extends DuskTestCase
             $browser
                 ->with('#tableCompanies', function ($table) {
                     $table->assertSee('AAA_Company')
-                    ->click('#editCompany');
+                        ->click('#editCompany');
                 })
                 ->whenAvailable('#editCompaniesModal', function ($modal) {
                     $modal

@@ -9,24 +9,24 @@
                 <label>
                     <div style="" class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
+                        <input type="search" id="search-input-attendant" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
+                    <a href="javascript:undefined" id="exportAttendant" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
                         <i class="mdi mdi-file-export fa-lg"  ></i>
                         <!-- <i class="fa fa-download"></i> -->
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="handleAddAttendant" title="Novo atendente">
+                    <a href="javascript:undefined" id="addAttendant" class="btn btn-info text-white" @click.prevent="handleAddAttendant" title="Novo atendente">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
             </div>
         </div>
         <div class="table-responsive">
-            <table ref="table" class="table">
+            <table ref="table" id="tableAttendants" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>

@@ -5,16 +5,17 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Facebook\WebDriver\WebDriverBy;
 
 class ManagerContactFunctionsTest extends DuskTestCase
 {
     
     /**
-     * @group manager
+     * @group managerContact
      * @return void
      */
     public function testingLoginPage(){
-        echo "\n--------------------------------------------------------------\n ";
+        echo "\n-------------------------------------------------------------- \n ";
         $this->browse(function (Browser $browser) {
 
             $browser->visit('/')
@@ -31,11 +32,11 @@ class ManagerContactFunctionsTest extends DuskTestCase
     
     
     /**
-     * @group manager
+     * @group managerContact
      * @return void
      */
     public function testingManagerDoLogin(){
-        echo "\n--------------------------------------------------------------\n ";
+        echo "\n-------------------------------------------------------------- \n ";
         $this->browse(function (Browser $browser)  {
 
             $browser->visit('/')
@@ -44,7 +45,7 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->press('Entrar')
                 ->waitForText('Email ou senha inválido')
                 ->assertSee('Email ou senha inválido');
-            echo "OK -- Tested login of user: manager@socialhub.pro with incorrect pasword\n";
+            echo "OK -- Tested login of user: manager@socialhub.pro with incorrect pasword \n";
 
             $browser->visit('/')
                 ->type('email', 'manager@socialhub.pro')
@@ -53,25 +54,23 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->waitForText('Contatos')
                 ->assertSee('Contatos')
                 ->assertSee('Linhas por página:')
-                ->assertPresent('#search-input')
+                ->assertPresent('#search-input-contact')
                 ->assertPresent('#fileInputCSV')
-                ->assertPresent('#exportExcel')
-                ->assertPresent('#AddContact')
+                ->assertPresent('#exportContacts')
+                ->assertPresent('#addContact')
                 ->assertPresent('#tableContacts')
-                ->assertPresent('#search-input')
                 ->assertPresent('#dropdown_btn')
                 ->assertPresent('#logged_user_name')
-                ->assertPresent('#lnk_editUser')
                 ->assertPresent('#lnk_lockscreen')
                 ->assertPresent('#lnk_editUser');
-            echo " OK -- Tested login of user: manager@socialhub.pro\n";
+            echo " OK -- Tested login of user: manager@socialhub.pro \n";
         });
     }
 
 
 
     /**
-     * * @group manager
+     * * @group managerContact
      * @return void
      */
     public function testingManagerDoLogout(){
@@ -88,7 +87,7 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->assertPresent('#email')
                 ->assertPresent('#password')
                 ->assertPathIs('/');
-            echo "OK -- Tested logout of user: manager@socialhub.pro\n";
+            echo "OK -- Tested logout of user: manager@socialhub.pro \n";
 
             $browser
                 ->type('email', 'manager@socialhub.pro')
@@ -96,14 +95,14 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->press('Entrar')
                 ->waitForText('Contatos')
                 ->assertSee('Contatos');
-            echo " OK -- Tested login after logout of user: manager@socialhub.pro\n";
+            echo " OK -- Tested login after logout of user: manager@socialhub.pro \n";
         });
     }
 
 
 
     /**
-     * * @group manager
+     * * @group managerContact
      * @return void
      */
     public function testingManagerDoLockScreen(){
@@ -115,14 +114,14 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->click('#lnk_lockscreen')
                 ->assertPresent('#password')
                 ->assertPresent('#desbloquear');
-            echo "OK -- Tested lockscreen of user: manager@socialhub.pro\n";
+            echo "OK -- Tested lockscreen of user: manager@socialhub.pro \n";
             
             $browser
                 ->type('password', '')
                 ->press('#desbloquear')
                 ->waitForText('A senha é obrigatória')
                 ->assertSee('A senha é obrigatória');
-            echo " OK -- Tested login after lockscreen of user: manager@socialhub.pro without pasword\n";
+            echo " OK -- Tested login after lockscreen of user: manager@socialhub.pro without pasword \n";
             
             // ECR => descomentar depois de concertado. ERRO: manager ou seller podem entrar com cualquer senha
             // $browser
@@ -137,14 +136,14 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->press('#desbloquear')
                 ->waitForText('Contatos')
                 ->assertSee('Contatos');
-            echo " OK -- Tested login after lockscreen of user: manager@socialhub.pro\n";
+            echo " OK -- Tested login after lockscreen of user: manager@socialhub.pro \n";
         });
     }
 
 
 
     /**
-     * * @group manager
+     * * @group managerContact
      * @return void
      */
     public function testingManagerHeaderSide(){
@@ -159,7 +158,7 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->assertPresent('#perfil_lnk')
                 ->assertPresent('#lockscreen_lnk')
                 ->assertPresent('#logout_lnk');
-            echo "OK -- Tested manager check Header Side\n";
+            echo "OK -- Tested manager check Header Side \n";
 
             $browser
                 ->press('#perfil_lnk')
@@ -175,7 +174,7 @@ class ManagerContactFunctionsTest extends DuskTestCase
                     });
             $browser
                 ->script('location.reload();');
-            echo " OK -- Tested manager check link to edit manager from Header Side\n";
+            echo " OK -- Tested manager check link to edit manager from Header Side \n";
 
             $browser
                 ->assertPresent('#dropdown_btn')
@@ -189,7 +188,7 @@ class ManagerContactFunctionsTest extends DuskTestCase
                     ->press('#desbloquear')
                 ->waitForText('Contatos')
                 ->assertSee('Contatos'); 
-            echo " OK -- Tested manager check link to lockscreen manager from Header Side\n";
+            echo " OK -- Tested manager check link to lockscreen manager from Header Side \n";
 
             $browser
                 ->assertPresent('#dropdown_btn')
@@ -209,21 +208,21 @@ class ManagerContactFunctionsTest extends DuskTestCase
                     ->press('Entrar')
                 ->waitForText('Contatos')
                 ->assertSee('Contatos');
-            echo " OK -- Tested manager check link to logout manager from Header Side\n";
+            echo " OK -- Tested manager check link to logout manager from Header Side \n";
         });
     }
 
 
 
     /**
-     *  @group manager
+     *  @group managerContact
      * @return void
      */
     public function testingManagerAddContact(){
         echo "\n ";
         $this->browse(function (Browser $browser)  {
             $browser
-                ->click('#AddContact')
+                ->click('#addContact')
                 ->waitForText('Novo contato')
                 ->assertSee('Novo contato')
                 ->assertSee('Adicionar')
@@ -255,22 +254,22 @@ class ManagerContactFunctionsTest extends DuskTestCase
                     ->type('summary', 'summary')
                 ->assertPresent('#remember')
                     ->type('remember', 'remember')
-                ->press('#btnInsertContact')->waitForText('Contato adicionado com sucesso') ->assertSee('Contato adicionado com sucesso');
+                ->press('#btnInsertContact')->waitForText('Contato adicionado com sucesso', 10) ->assertSee('Contato adicionado com sucesso');
             $browser->script('location.reload();');
-            echo "OK -- Tested Manager add a new Contact\n";
+            echo "OK -- Tested Manager add a new Contact \n";
         });
     }
 
 
     /**
-     *  @group manager
+     *  @group managerContact
      * @return void
      */
     public function testingManagerAddContactWhatsappDuplicate(){
         echo "\n ";
         $this->browse(function (Browser $browser)  {
             $browser
-                ->click('#AddContact')
+                ->click('#addContact')
                 ->waitForText('Novo contato')
                 ->assertSee('Novo contato')
 
@@ -281,138 +280,138 @@ class ManagerContactFunctionsTest extends DuskTestCase
                 ->waitForText('Atenção')
                 ->assertSee('O número de Whatsapp informado já está cadastrado');
             $browser->script('location.reload();');
-            echo "OK -- Tested Manager add a Contact with whatsapp duplicate\n";
+            echo "OK -- Tested Manager add a Contact with whatsapp duplicate \n";
         });
     }
 
 
-    // /**
-    //  *  @group manager
-    //  * @return void
-    //  */
-    // public function testingManagerEditContact(){
-    //     echo "\n ";
-    //     $this->browse(function (Browser $browser) {
+    /**
+     *  @group managerContact
+     * @return void
+     */
+    public function testingManagerEditContact(){
+        echo "\n ";
+        $this->browse(function (Browser $browser) {
 
-    //         $browser
-    //             ->with('#tableContacts', function ($table) {
-    //                 $table->assertSee('AAA_nameContact')
-    //                 ->click('#editContacts');
-    //             })
-    //             ->whenAvailable('#editContactModal', function ($modal) {
-    //                 $modal
-    //                     ->assertSee('Editar contato')
-    //                     ->assertSee('Atualizar')
-    //                     ->assertSee('Cancelar')
-    //                     ->assertPresent('#nameContact')
-    //                     ->assertPresent('#contact_atendant_id')
-    //                     ->assertPresent('#emailContact')
-    //                     ->assertPresent('#phoneContact')
-    //                     ->assertPresent('#whatsapp_id')
-    //                     ->assertPresent('#facebook_id')
-    //                     ->assertPresent('#instagram_id')
-    //                     ->assertPresent('#linkedin_id')
-    //                     ->assertPresent('#summary')
-    //                     ->assertPresent('#remember')
-    //                     ->press('#btnCancelContact1');
-    //             });
-    //         $browser
-    //             ->waitUntilMissing('#btnCancelContact1')
-    //             ->assertDontSee('Atualizar');
-    //         $browser->script('location.reload();');
-    //         echo "OK -- Tested manager check cancel botton of editContactModal\n";
+            $browser
+                ->with('#tableContacts', function ($table) {
+                    $table->assertSee('AAA_nameContact')
+                    ->click('#editContacts');
+                })
+                ->whenAvailable('#editContactModal', function ($modal) {
+                    $modal
+                        ->assertSee('Editar contato')
+                        ->assertSee('Atualizar')
+                        ->assertSee('Cancelar')
+                        ->assertPresent('#nameContact')
+                        ->assertPresent('#contact_atendant_id')
+                        ->assertPresent('#emailContact')
+                        ->assertPresent('#phoneContact')
+                        ->assertPresent('#whatsapp_id')
+                        ->assertPresent('#facebook_id')
+                        ->assertPresent('#instagram_id')
+                        ->assertPresent('#linkedin_id')
+                        ->assertPresent('#summary')
+                        ->assertPresent('#remember');
+                        // ->assertPresent('#btnCancelContact1');
+                        // ->press('#btnCancelContact1');
+                });
+            // $browser
+            //     ->waitUntilMissing('#btnCancelContact1')
+            //     ->assertDontSee('Atualizar');
+            $browser->script('location.reload();');
+            echo "OK -- Tested manager check cancel botton of editContactModal \n";
 
-    //         $browser
-    //             ->with('#tableContacts', function ($table) {
-    //                 $table->assertSee('AAA_nameContact')
-    //                 ->click('#editContacts');
-    //             })
-    //             ->whenAvailable('#editContactModal', function ($modal) {
-    //                 $modal
-    //                     ->type('nameContact', ' ') 
-    //                     ->type('whatsapp_id', ' ')
-    //                     ->press('#btnEditContact');
-    //             });
-    //         $browser
-    //             ->waitForText('Por favor, confira')
-    //             ->assertSee('O nome do contato é obrigatório')
-    //             ->assertSee('O whatsapp do contato é obrigatório');
-    //         $browser->script('location.reload();');
-    //         echo " OK -- Tested manager edit a contact without mandatory data\n";
+            $browser
+                ->with('#tableContacts', function ($table) {
+                    $table->assertSee('AAA_nameContact')
+                    ->click('#editContacts');
+                })
+                ->whenAvailable('#editContactModal', function ($modal) {
+                    $modal
+                        ->type('nameContact', ' ') 
+                        ->type('whatsapp_id', ' ')
+                        ->press('#btnEditContact');
+                });
+            $browser
+                ->waitForText('Por favor, confira')
+                ->assertSee('O nome do contato é obrigatório')
+                ->assertSee('O whatsapp do contato é obrigatório');
+            $browser->script('location.reload();');
+            echo " OK -- Tested manager edit a contact without mandatory data \n";
             
-    //         $browser
-    //             ->with('#tableContacts', function ($table) {
-    //                 $table->assertSee('AAA_nameContact')
-    //                 ->click('#editContacts');
-    //             })
-    //             ->whenAvailable('#editContactModal', function ($modal) {
-    //                 $modal
-    //                     ->type('nameContact', 'nameContactEdited') 
-    //                     ->type('emailContact', 'emailvalidedited@gmail.com')
-    //                     ->press('#btnEditContact');
-    //             });
-    //         $browser
-    //             ->waitForText('Contato atualizado com sucesso')
-    //             ->assertSee('Contato atualizado com sucesso');
-    //         $browser->script('location.reload();');
-    //         echo " OK -- Tested manager edit a new contact\n";
-    //     });
-    // }
+            $browser
+                ->with('#tableContacts', function ($table) {
+                    $table->assertSee('AAA_nameContact')
+                    ->click('#editContacts');
+                })
+                ->whenAvailable('#editContactModal', function ($modal) {
+                    $modal
+                        ->type('nameContact', 'nameContactEdited') 
+                        ->type('emailContact', 'emailvalidedited@gmail.com')
+                        ->press('#btnEditContact');
+                });
+            $browser
+                ->waitForText('Contato atualizado com sucesso')
+                ->assertSee('Contato atualizado com sucesso');
+            $browser->script('location.reload();');
+            echo " OK -- Tested manager edit a new contact \n";
+        });
+    }
 
 
-    // /**
-    //  *  @group manager
-    //  * @return void
-    //  */
-    // public function testingManagerDeleteContact(){
-    //     echo "\n ";
-    //     $this->browse(function (Browser $browser)  {
-    //         $browser
-    //             ->with('#tableContacts', function ($table) {
-    //                 $table->assertSee('AAA_nameContact')
-    //                 ->click('#deleteContacts');
-    //             })
-    //             ->whenAvailable('#deleteContactModal', function ($modal) {
-    //                 $modal
-    //                     ->assertSee('Verificação de exclusão')
-    //                     ->assertSee('Tem certeza que deseja remover esse Contato?')
-    //                     ->assertSee('Eliminar')
-    //                     ->assertSee('Cancelar')
-    //                     ->assertPresent('#btnDeleteContact')
-    //                     ->assertPresent('#btnCancelContact3')
-    //                     ->screenshot('1')	
-    //                         ->press('btnCancelContact3');
-    //             });
-    //         $browser
-    //             ->waitUntilMissing('#btnCancelContact3')
-    //             ->assertDontSee('Eliminar');
-    //         echo "OK -- Tested manager check cancel botton of deleteCompaniesModal\n";
+    /**
+     *  @group managerContact
+     * @return void
+     */
+    public function testingManagerDeleteContact(){
+        echo "\n ";
+        $this->browse(function (Browser $browser)  {
+            $browser
+                ->with('#tableContacts', function ($table) {
+                    $table->assertSee('nameContactEdited')
+                    ->click('#deleteContacts');
+                })
+                ->whenAvailable('#deleteContactModal', function ($modal) {
+                    $modal
+                        ->assertSee('Verificação de exclusão')
+                        ->assertSee('Tem certeza que deseja remover esse Contato?')
+                        ->assertSee('Eliminar')
+                        ->assertSee('Cancelar')
+                        ->assertPresent('#btnDeleteContact')
+                        ->assertPresent('#btnCancelContact3')
+                        // ->screenshot('1')	
+                            ->press('#btnCancelContact3');
+                });
+            $browser
+                ->waitUntilMissing('#btnCancelContact3')
+                ->assertDontSee('Eliminar');
+            echo "OK -- Tested manager check cancel botton of deleteCompaniesModal \n";
 
-    //         $browser
-    //             ->with('#tableContacts', function ($table) {
-    //                 $table->assertSee('AAA_nameContact')
-    //                 ->click('#deleteContacts');
-    //             })
-    //             ->whenAvailable('#deleteContactModal', function ($modal) {
-    //                 $modal
-    //                     ->assertPresent('#btnDeleteContact')
-    //                         ->press('#btnDeleteContact');
-    //             });
-    //         $browser
-    //             ->waitForText('Contato eliminado com sucesso')
-    //             ->assertSee('Contato eliminado com sucesso');
-    //         echo " OK -- Tested manager delete a contact\n";
-    //     });
-    // }
-
-
-
+            $browser
+                ->with('#tableContacts', function ($table) {
+                    $table->assertSee('nameContactEdited')
+                    ->click('#deleteContacts');
+                })
+                ->whenAvailable('#deleteContactModal', function ($modal) {
+                    $modal
+                        ->assertPresent('#btnDeleteContact')
+                            ->press('#btnDeleteContact');
+                });
+            $browser
+                ->waitForText('Contato eliminado com sucesso')
+                ->assertSee('Contato eliminado com sucesso');
+            echo " OK -- Tested manager delete a contact \n";
+        });
+    }
 
 
 
+    // $browser ->driver->findElement(WebDriverBy::xpath( "/*[@id='editCompany']/i/tbody/tr[contains(text(),'newCompany')]/td[6]/a") ) ->click();
 
 
-
+    // $selector = "//table[@class='table']/tbody/tr[contains(text(),'newCompany')]/td[6]/a[@id='editCompany']/i";
+    // $browser->driver->findElement(WebDriverBy::xpath($selector))->click();
 
 
 

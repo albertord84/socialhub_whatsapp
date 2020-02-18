@@ -9,11 +9,11 @@
                 <label>
                     <div style="" class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input type="search" id="search-input" class="form-control" placeholder="Buscar contato" v-model="searchInput">
+                        <input type="search" id="search-input-contact" class="form-control" placeholder="Buscar contato" v-model="searchInput">
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" id="exportExcel" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
+                    <a href="javascript:undefined" id="exportContacts" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
                         <i class="mdi mdi-file-export fa-lg"  ></i>
                         <!-- <i class="fa fa-download"></i> -->
                     </a>
@@ -27,7 +27,7 @@
 
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" id="AddContact" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
+                    <a href="javascript:undefined" id="addContact" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
