@@ -43,6 +43,13 @@ const layout = [
         meta: {
             title: "Perfil",
         }
-    }]
+    },{
+        path: '/manager/blingSales',    
+        component: resolve => require(['pages/socialhub/managerBlingSales'], resolve),
+        meta: {
+            title: "Vendas Bling",
+        }
+    }
+]
     
     export default layout

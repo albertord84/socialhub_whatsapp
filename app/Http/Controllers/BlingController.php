@@ -32,8 +32,10 @@ class BlingController extends AppBaseController
         $this->blingRepository->pushCriteria(new RequestCriteria($request));
         $blings = $this->blingRepository->all();
 
-        return view('blings.index')
-            ->with('blings', $blings);
+        // return view('blings.index')
+        //     ->with('blings', $blings);
+
+        return $blings->toJson();
     }
 
     /**
