@@ -263,7 +263,7 @@
         mounted(){
             this.logued_user = JSON.parse(window.localStorage.getItem('user'));
             
-            this.defaultMessage = "Olá, @client_nome \n\n"+
+            this.defaultMessage = "Olá, @cliente_nome \n\n"+
             "Obrigado pela compra do produto @item_descricao.\n"+
             "Quantidade de ítens: @item_quantidade.\n\n"+
             "O endereço de entrega informado é rua @entrega_endereco, número @entrega_numero.\n\n"+
