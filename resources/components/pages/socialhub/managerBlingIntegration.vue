@@ -147,6 +147,9 @@
 
             <tab-content title="Fim da integração" :beforeChange='steepEnd'>
                 <div class="mt-5 mb-5 pt-5 pb-5 text-center">
+                    <h4 style="color:#34AD70; text-align: left; margin-left:100px">
+                        Parabéns {{logued_user.name}}, <br> sua integração foi concluída!
+                    </h4>
                 </div>
             </tab-content>
 
@@ -227,6 +230,7 @@
             },
 
             steepEnd(){
+                miniToastr.success("Integração realizada com sucesso","Sucesso");
                 return true;
             },
 
