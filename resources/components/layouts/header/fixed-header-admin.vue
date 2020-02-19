@@ -139,7 +139,7 @@
                 window.localStorage.removeItem('token');
                 window.localStorage.removeItem('user');
                 delete axios.defaults.headers.common['Authorization'];
-                this.$router.push({name: "login"});          
+                this.$router.push({name: "login"});
             },
 
             urlIMG: function(){
