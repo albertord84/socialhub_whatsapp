@@ -16,13 +16,17 @@ const menu_items = [
         link: '/manager/hardware',
         icon: 'mdi mdi-chip'
     }, {
-        name: 'Integrações',
+        name: 'Bling',
         icon: 'mdi mdi-settings-transfer-outline',
         child: [
             {
-                name: 'Bling',
+                name: 'Integração',
                 link: '/manager/bling',
                 icon: 'mdi mdi-exclamation-thick mdi-rotate-45'
+            },{
+                name: 'Vendas Bling',
+                link: '/manager/blingSales',
+                icon: 'fa fa-users'
             }
         ]
 }];

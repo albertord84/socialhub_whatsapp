@@ -23,14 +23,7 @@ const layout = [
         component: resolve => require(['pages/socialhub/managerCHECKHardware'], resolve),
         meta: {
             title: "Consultar o hardware",
-        }
-    },{
-        path: '/manager/bling',
-        component: resolve => require(['pages/socialhub/managerIntegrateBling'], resolve),
-        // component: resolve => require(['pages/socialhub/managerIntegrateBling'], resolve),
-        meta: {
-            title: "Integração com o Bling",
-        }
+        }    
     },{
         path: '/manager/audio',
         component: resolve => require(['pages/socialhub/popups/handleRecordAudio'], resolve),
@@ -43,6 +36,19 @@ const layout = [
         meta: {
             title: "Perfil",
         }
-    }]
+    },{
+        path: '/manager/bling',
+        component: resolve => require(['pages/socialhub/managerBlingIntegration'], resolve),
+        meta: {
+            title: "Integração com o Bling",
+        }
+    },{
+        path: '/manager/blingSales',    
+        component: resolve => require(['pages/socialhub/managerBlingSales'], resolve),
+        meta: {
+            title: "Vendas Bling",
+        }
+    }
+]
     
     export default layout

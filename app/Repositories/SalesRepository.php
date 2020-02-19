@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Sales;
+use Illuminate\Database\Eloquent\Collection;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
@@ -25,6 +26,18 @@ class SalesRepository extends BaseRepository
         'sended',
         'json_data'
     ];
+
+
+    public function salesByCompany($company_id)
+    {
+        $Sales = new Sales();
+        $Sales->table = "$company_id";
+
+        return $Sales->where('id', '!=', null)->get();
+    }
+    
+
+
 
     /**
      * Configure the Model
