@@ -68,10 +68,13 @@ class SalesBusiness extends Business {
                     if ($hasClient && $phone) {
                         $checkContact = $ExternalRPIController->getContactInfo($Contact->whatsapp_id);
                         $checkContact = json_encode($checkContact);
-                        if (is_object($checkContact) && ($checkContact->name !== "" || $checkContact->picurl !== "" )) {
+                        // if (is_object($checkContact) && ($checkContact->name !== "" || $checkContact->picurl !== "" )) {
                             $ExternalRPIController->sendTextMessage($SaleModel->message, $Contact);
                             $SaleModel->sended = true;
-                        }
+                        // }
+                        // else {
+                            Log::error('Sales Bussines createSale', [$Contact->whatsapp_id, $checkContact]);
+                        // }
                     }
 
                     $SaleModel->save();
