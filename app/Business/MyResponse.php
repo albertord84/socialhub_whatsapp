@@ -15,7 +15,7 @@ class MyResponse
      * @param Throwable $e
      * @return void
      */
-    public static function makeRequestJson(Request $request = null, Throwable $e): JsonResponse
+    public static function makeRequestExceptionJson(Request $request = null, Throwable $e): JsonResponse
     {
         if ($request && $request->ajax() || $request->wantsJson()) {
             $json = [
@@ -51,7 +51,6 @@ class MyResponse
     }
 
     public static function makeExceptionJson(Throwable $th) {
-        throw $th;
         Log::error('makeExceptionJson Throwable: ', [$th]);
         return self::makeResponseJson($th->getMessage(), $th->getTrace(), $th->getCode(), false);
     }

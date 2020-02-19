@@ -53,6 +53,7 @@ class Contact extends Model
         'linkedin_id',
         'json_data',
         'status_id',
+        'origin',
     ];
 
     /**
@@ -77,6 +78,7 @@ class Contact extends Model
         'json_data' => 'string',
         'status_id' => 'integer',
         'updated_at' => 'string',
+        'origin' => 'integer',
     ];
 
     /**

@@ -6,6 +6,7 @@ use Exception;
 class MyException extends Exception
 {
     static $COMPANY_PHONE_NOT_FOUND = 1000;
+    static $ERROR_SAVING_FILE_MSG_FOUND = 1001;
 
     /**
      * Class constructor.

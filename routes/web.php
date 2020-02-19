@@ -105,3 +105,13 @@ Route::resource('messagesTypes', 'MessagesTypeController');
 
 Route::resource('rpis', 'ExtendedRpiController');
 
+
+
+Route::resource('contactsOrigins', 'ContactsOriginsController');
+
+Route::resource('blings', 'BlingController');
+
+Route::resource('sales', 'SalesController');
+Route::get('get_sales_bling', 'BlingController@get_sales_bling');
+
+Route::resource('chatsBlings', 'ChatsBlingController');

@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CompaniesTableSeeder::class);
         $this->call(RolesTableSeeder::class);
         $this->call(StatusTableSeeder::class);
+        $this->call(ContactsOriginsTableSeeder::class);
         $this->call(MessagesTypesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(ContactsTableSeeder::class);
@@ -22,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ChatsTableSeeder::class);
         $this->call(ChatsTestsTableSeeder::class);
         $this->call(RpisTableSeeder::class);
+        $this->call(SalesTableSeeder::class);
     }
 }
