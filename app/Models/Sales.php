@@ -35,6 +35,7 @@ class Sales extends Model
         'contact_id',
         'source', // Defaul 1 -> Bling
         'sended',
+        'message',
         'json_data'
     ];
 
@@ -48,6 +49,7 @@ class Sales extends Model
         'contact_id' => 'integer',
         'source' => 'integer',
         'sended' => 'integer',
+        'message' => 'string',
         'json_data' => 'string'
     ];
 

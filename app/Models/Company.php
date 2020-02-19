@@ -49,9 +49,10 @@ class Company extends Model
         'bairro',
         'amount_attendants',
 
-        'blingapikey',
-        'blingtoken',
-        'blingmessage',
+        'bling_apikey',
+        'bling_token',
+        'bling_message',
+        'bling_contrated',
     ];
 
     /**
