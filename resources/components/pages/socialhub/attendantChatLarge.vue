@@ -1995,7 +1995,14 @@
                         'ClientOriginalName':ClientOriginalName, 
                         'ClientOriginalExtension':ClientOriginalExtension
                     },
-                    {'responseType': 'blob'}, // important
+                    // {'responseType': 'blob'}, // important
+                    {
+                        responseType: 'arraybuffer',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/pdf'
+                        }
+                    }
                     )
                     .then((response)=>{
                         const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/'+ClientOriginalExtension }));
