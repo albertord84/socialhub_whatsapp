@@ -53,6 +53,12 @@ class Contact extends Model
         'linkedin_id',
         'json_data',
         'status_id',
+
+        'cidade',
+        'estado',
+        'categoria1',
+        'categoria2',
+
     ];
 
     /**
@@ -77,6 +83,11 @@ class Contact extends Model
         'json_data' => 'string',
         'status_id' => 'integer',
         'updated_at' => 'string',
+        
+        'cidade' => 'string',
+        'estado' => 'string',
+        'categoria1' => 'string',
+        'categoria2' => 'string',
     ];
 
     /**
