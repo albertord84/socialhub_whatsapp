@@ -199,7 +199,7 @@
                 delete this.model.status;
                 delete this.model.updated_at;
                 this.contact_atendant_id =  this.model.contact_atendant_id;
-                this.modalEditContact = !this.modalEditContact;
+                // this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U
