@@ -326,10 +326,7 @@
                                                             <br>
                                                         </span>
                                                         <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                            <!-- <a href="javascript:void()" rel=”noopener” @click.prevent="downloadFile(message.data.FullPath, message.data.ClientOriginalName, message.data.ClientOriginalExtension)">
-                                                                <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                            </a>   -->
-                                                            <a :href="message.path" target="_blank" rel=”noopener” download="w3logo" >
+                                                            <a :href="message.path" :download="message.data.ClientOriginalName" >
                                                                 <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                             </a>  
                                                             <br>
@@ -380,10 +377,7 @@
                                                 <br>
                                             </span>
                                             <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                <!-- <a href="javascript:void()" rel=”noopener” @click.prevent="downloadFile(message.data.FullPath, message.data.ClientOriginalName, message.data.ClientOriginalExtension)" >
-                                                    <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                </a> -->
-                                                <a :href="message.path" target="_blank" rel=”noopener” download="w3logo" >
+                                                <a :href="message.path" :download="message.data.ClientOriginalName" >
                                                     <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                 </a>
                                                 <br>                                      
@@ -1988,37 +1982,6 @@
                 }
             },
 
-            downloadFile: function(FullPath, ClientOriginalName, ClientOriginalExtension){
-                ApiService.post("downloadChatFile", 
-                    {
-                        'FullPath':FullPath, 
-                        'ClientOriginalName':ClientOriginalName, 
-                        'ClientOriginalExtension':ClientOriginalExtension
-                    },
-                    // {'responseType': 'blob'}, // important
-                    {
-                        responseType: 'arraybuffer',
-                        headers: {
-                            'Content-Type': 'application/pdf',
-                            'Accept': 'application/pdf'
-                        }
-                    }
-                    )
-                    .then((response)=>{
-                        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/'+ClientOriginalExtension }));
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.setAttribute('download', ClientOriginalName); //or any other extension
-                        document.body.appendChild(link);
-                        link.click();
-                    })
-                    .catch(error => {
-                        //TODO-Egberto: process_message_error
-                        miniToastr.error(error, "Erro");
-                    })
-                    .finally(()=>{
-                    });
-            },
 
         },
 
