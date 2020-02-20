@@ -68,10 +68,13 @@ class SalesBusiness extends Business {
                     if ($hasClient && $phone) {
                         $checkContact = $ExternalRPIController->getContactInfo($Contact->whatsapp_id);
                         $checkContact = json_encode($checkContact);
-                        if (is_object($checkContact) && ($checkContact->name !== "" || $checkContact->picurl !== "" )) {
+                        // if (is_object($checkContact) && ($checkContact->name !== "" || $checkContact->picurl !== "" )) {
                             $ExternalRPIController->sendTextMessage($SaleModel->message, $Contact);
                             $SaleModel->sended = true;
-                        }
+                        // }
+                        // else {
+                            Log::error('Sales Bussines createSale', [$Contact->whatsapp_id, $checkContact]);
+                        // }
                     }
 
                     $SaleModel->save();
@@ -90,15 +93,15 @@ class SalesBusiness extends Business {
     {
 
         $replace = [
-            '@desconto', 
-            '@pedido_observacoes', 
-            '@pedido_data', 
-            '@pedido_vendedor', 
-            '@pedido_valorfrete', 
-            '@pedido_totalprodutos', 
-            '@pedido_totalvenda',
-            '@pedido_situacao', 
-            '@pedido_dataPrevista', 
+            $Sale->pedido->desconto ?? '@desconto', 
+            $Sale->pedido->observacoes ?? '@pedido_observacoes', 
+            $Sale->pedido->data ?? '@pedido_data', 
+            $Sale->pedido->vendedor ?? '@pedido_vendedor', 
+            $Sale->pedido->valorfrete ?? '@pedido_valorfrete', 
+            $Sale->pedido->totalproduto ?? '@pedido_totalprodutos', 
+            $Sale->pedido->totalvenda ?? '@pedido_totalvenda',
+            $Sale->pedido->situacao ?? '@pedido_situacao', 
+            $Sale->pedido->dataPrevista ?? '@pedido_dataPrevista', 
 
             $Sale->pedido->cliente->nome ?? '@cliente_nome', 
             $Sale->pedido->cliente->cnpj ?? '@cliente_cnpj',

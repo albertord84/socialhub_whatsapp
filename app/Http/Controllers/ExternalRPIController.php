@@ -574,7 +574,7 @@ class ExternalRPIController extends Controller
         switch ($option) {
             case 'logout':
                 $response = '{"message": "Logout feito"}';
-                $response = '{"message": "Sessao deletada"}';
+                // $response = '{"message": "Sessao deletada"}';
                 break;
             case 'update':
                 $response = '{"message": "Atualizado"}';
