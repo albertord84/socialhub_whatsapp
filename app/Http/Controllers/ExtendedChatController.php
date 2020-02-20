@@ -277,8 +277,5 @@ class ExtendedChatController extends ChatController
 
     }
 
-    public function downloadChatFile(Request $request) {        
-        $headers = array('Content-Type: application/'.$request['ClientOriginalExtension']);
-        return Response::download($request['FullPath'], $request['ClientOriginalName'], $headers);
-    }
+    
 }
