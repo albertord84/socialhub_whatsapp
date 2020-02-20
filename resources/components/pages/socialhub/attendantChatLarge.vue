@@ -300,46 +300,47 @@
                                             <div  class="col-1"></div>
                                             <div class="col-11" >
                                                 <p style="float:left;" class="receivedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
-                                                        <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
-                                                        <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                                            <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                                                <img :src="message.path" class="midia-files"/>
-                                                            </a>
-                                                            <br>
-                                                        </span>                               
-                                                        <span v-if='message.type_id == "3"' class='text-center'>
-                                                            <br>
-                                                            <audio controls class="mycontrolBar m-2">
-                                                                <source :src="message.path" type="audio/ogg">
-                                                                <source :src="message.path" type="audio/mp3">
-                                                                Seu navegador não suporta o elemento de áudio.
-                                                            </audio>
-                                                            <br>
-                                                        </span>
-                                                        <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                                            <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                                                <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                                    <source :src="message.path+'#t=2'" type="video/mp4">
-                                                                    Seu navegador não suporta o elemento de vídeo.
-                                                                </video>
-                                                            </a>
-                                                            <br>
-                                                        </span>
-                                                        <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                            <a :href="message.path" :download="message.data.ClientOriginalName" >
-                                                                <!-- <img v-if="['pfd'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/pdf.svg"/>
-                                                                <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/word.svg"/>
-                                                                <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/excel.svg"/>
-                                                                <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="~img/icons/powerpoint.svg"/>
-                                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i> -->
-                                                                <i class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                            </a>  
-                                                            <br>
-                                                        </span>
-                                                        <span v-if="message.message && message.message !=''" class="text-message">
-                                                            {{ message.message ? message.message : "" }}
-                                                        </span>
+                                                    <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
+                                                    <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                        <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                            <img :src="message.path" class="midia-files"/>
+                                                        </a>
                                                         <br>
+                                                    </span>                               
+                                                    <span v-if='message.type_id == "3"' class='text-center'>
+                                                        <br>
+                                                        <audio controls class="mycontrolBar m-2">
+                                                            <source :src="message.path" type="audio/ogg">
+                                                            <source :src="message.path" type="audio/mp3">
+                                                            Seu navegador não suporta o elemento de áudio.
+                                                        </audio>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                        <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                            <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                                <source :src="message.path+'#t=2'" type="video/mp4">
+                                                                Seu navegador não suporta o elemento de vídeo.
+                                                            </video>
+                                                        </a>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                        <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                        <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                        <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                        <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                        <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        <b :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                        <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
+                                                            <i class="mdi mdi-download fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        </a>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if="message.message && message.message !=''" class="text-message">
+                                                        {{ message.message ? message.message : "" }}
+                                                    </span>
+                                                    <br>
                                                 </p>                                                 
                                             </div>
                                         </div>
@@ -382,13 +383,14 @@
                                                 <br>
                                             </span>
                                             <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                <a :href="message.path" :download="message.data.ClientOriginalName" >
-                                                    <!-- <img v-if="['pfd'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/pdf.svg"/>
-                                                    <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/word.svg"/>
-                                                    <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/excel.svg"/>
-                                                    <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="~img/icons/powerpoint.svg"/>
-                                                    <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i> -->
-                                                    <i class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                <b :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
+                                                    <i class="mdi mdi-download fa-2x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                 </a>
                                                 <br>                                      
                                             </span>
@@ -2419,6 +2421,12 @@
     }
     .document_received{
         color: #007bff;
+    }
+    .document_sent_download{
+        float:right; padding:0.1rem 0.6rem; border:1px solid white; border-radius:50%
+    }
+    .document_received_download{
+        float:right; padding:0.1rem 0.6rem; border:1px solid #007bff; border-radius:50%
     }
     .midia-files{
         width: 15em;
