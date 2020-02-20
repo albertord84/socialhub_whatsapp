@@ -1999,7 +1999,7 @@
                     {
                         responseType: 'arraybuffer',
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/pdf',
                             'Accept': 'application/pdf'
                         }
                     }
