@@ -1989,14 +1989,21 @@
             },
 
             downloadFile: function(FullPath, ClientOriginalName, ClientOriginalExtension){
-                alert('aaa');
                 ApiService.post("downloadChatFile", 
                     {
                         'FullPath':FullPath, 
                         'ClientOriginalName':ClientOriginalName, 
                         'ClientOriginalExtension':ClientOriginalExtension
-                    })
-                    .then(response=>{
+                    },
+                    'blob', // important
+                    )
+                    .then((response)=>{
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', ClientOriginalName); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
                     })
                     .catch(error => {
                         //TODO-Egberto: process_message_error
