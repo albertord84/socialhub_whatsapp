@@ -326,10 +326,13 @@
                                                             <br>
                                                         </span>
                                                         <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                            <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                            <a href="javascript:void()" rel=”noopener” @click.prevent="downloadFile(message.data.FullPath, message.data.ClientOriginalName, message.data.ClientOriginalExtension)">
                                                                 <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                             </a>  
-                                                            <br>                                      
+                                                            <!-- <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                                <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                            </a>   -->
+                                                            <br>
                                                         </span>
                                                         <span v-if="message.message && message.message !=''" class="text-message">
                                                             {{ message.message ? message.message : "" }}
@@ -377,9 +380,12 @@
                                                 <br>
                                             </span>
                                             <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                <a href="javascript:void()" rel=”noopener” @click.prevent="downloadFile(message.data.FullPath, message.data.ClientOriginalName, message.data.ClientOriginalExtension)" >
                                                     <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                </a>  
+                                                </a>
+                                                <!-- <a :href="message.path" target="_blank" rel=”noopener”  >
+                                                    <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                </a> -->
                                                 <br>                                      
                                             </span>
                                             <span v-if="message.message && message.message !=''" class="text-message">
@@ -1982,6 +1988,23 @@
                 }
             },
 
+            downloadFile: function(FullPath, ClientOriginalName, ClientOriginalExtension){
+                alert('aaa');
+                ApiService.post("downloadChatFile", 
+                    {
+                        'FullPath':FullPath, 
+                        'ClientOriginalName':ClientOriginalName, 
+                        'ClientOriginalExtension':ClientOriginalExtension
+                    })
+                    .then(response=>{
+                    })
+                    .catch(error => {
+                        //TODO-Egberto: process_message_error
+                        miniToastr.error(error, "Erro");
+                    })
+                    .finally(()=>{
+                    });
+            },
 
         },
 
