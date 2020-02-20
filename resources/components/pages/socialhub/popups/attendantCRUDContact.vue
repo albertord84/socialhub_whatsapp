@@ -56,6 +56,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
@@ -63,7 +64,44 @@
                             <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
                         </div>
                     </div>
-                </div>                
+                </div> 
+                
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div style="" class="form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" placeholder="Cidade" class="form-control"/>
+                        </div>
+                    </div>
+                </div>   
+                
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div style="" class="form-group has-search">
+                        <span class="fa fa-id-card form-control-feedback"></span>
+                        <input v-model="model.estado" title="Ex: Rio de Janeiro" id="estado" name="estado" type="text" placeholder="Estado" class="form-control"/>
+                        </div>
+                    </div>
+                </div>   
+                
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div style="" class="form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model.categoria1" title="Ex: categoria1" id="categoria1" name="categoria1" type="text" placeholder="Categoria 1" class="form-control"/>
+                        </div>
+                    </div>
+                </div>   
+                
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div style="" class="form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="model.categoria2" title="Ex: categoria2" id="categoria2" name="categoria2" type="text" placeholder="Categoria 2" class="form-control"/>
+                        </div>
+                    </div>
+                </div>   
+
                 <div  class="col-lg-12 mt-5">
                     <ul class="list-inline">
                         <li class="list-inline-item">
@@ -186,6 +224,11 @@
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
+                    
+                    cidade: "",
+                    estado: "",
+                    categoria1: "",
+                    categoria2: "",
                 },
 
                 isSendingInsert: false,
