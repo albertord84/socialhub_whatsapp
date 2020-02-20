@@ -24,6 +24,7 @@ class CreateSalesTable extends Migration {
 			$table->integer('contact_id')->nullable();
 			$table->integer('source')->nullable()->default(1);
 			$table->integer('sended')->nullable()->default(0);
+			$table->string('message', 1000)->nullable();
 			$table->string('json_data', 10000)->nullable();
 			$table->timestamps();
 			$table->softDeletes();

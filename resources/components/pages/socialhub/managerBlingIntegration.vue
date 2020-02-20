@@ -263,10 +263,10 @@
         mounted(){
             this.logued_user = JSON.parse(window.localStorage.getItem('user'));
             
-            this.defaultMessage = "Olá, @nome \n\n"+
-            "Obrigado pela compra do produto @produto.\n"+
-            "Quantidade de ítens: @quantidade.\n\n"+
-            "O endereço de entrega informado é rua @endereco, número @numero.\n\n"+
+            this.defaultMessage = "Olá, @cliente_nome \n\n"+
+            "Obrigado pela compra do produto @item_descricao.\n"+
+            "Quantidade de ítens: @item_quantidade.\n\n"+
+            "O endereço de entrega informado é rua @entrega_endereco, número @entrega_numero.\n\n"+
             "Em caso de dúvidas, problemas ou sugestões nos contate diretamente pelo nosso whatsapp ou pela Central de Atendimento, para um suporte ágil e eficaz."+
             "Horário de atendimento: De Segunda a Sexta das 07:00 as 15:30 e Sábados das 08:00 as 13:00.\n\n"+
             "Atte. Equipe Coffee Business.";
