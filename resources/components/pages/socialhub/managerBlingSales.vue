@@ -1,6 +1,6 @@
 <template>
     <div class="card p-3">
-        <!-- Contact DataTable -->
+        <!-- Sales DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>        
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table ref="table" class="table">
+            <table ref="table" id="salesTable" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
@@ -74,42 +74,23 @@
         </div>
         
         <!-- Edit Sales Modal -->
-        <b-modal v-model="modalEditContact" size="lg" :hide-footer="true" title="Editar venda">
-            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"edit"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
+        <b-modal v-model="modalEditSales" size="lg" :hide-footer="true" title="Editar venda" id="modalEditSales" >
+            <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
         </b-modal>
 
         <!-- Delete Sales Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteSales" :hide-footer="true" title="Verificação de exclusão" id="modalDeleteSales">
+            <managerCRUDBlingSales :url='url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
         </b-modal>
-
-        <!-- Confirm import cantacts Modal -->
-        <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Confirmação de importação de contatos">
-            
-            <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
-            <h5>Atenção:</h5>
-            <p>   1. Para adicionar os contatos, o nome de usuário e o número de Whatsapp são obrigatórios.</p>
-            <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato corretos.</p>
-            <p>      Ex: Nome | Whatsapp | email | facebook | instagram | linkedin </p>
-            <p>Os contatos que não cumpram com os itens 1 e 2 não serão adicionados na lista de contatos.</p>
-
-                <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
-                        <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
-                        Enviar
-                    </button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, file=null">Cancelar</button>
-                </div>
-        </b-modal>
-
     </div>
+
 </template>
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-    import managerCRUDContact from "./popups/managerCRUDContact";
+    import managerCRUDBlingSales from "./popups/managerCRUDBlingSales";
 
     export default {
         props: {
@@ -137,35 +118,31 @@
         },
 
         components:{
-            managerCRUDContact
+            managerCRUDBlingSales
         },
 
         data() {
             return {
                 //---------General properties-----------------------------
                 url:'sales',  //route to controller
-                secondUrl:'attendantsContacts',
-                // url_attendants:'usersAttendants',  //route to controller
                 
                 //---------Specific properties-----------------------------
-                contact_id: "",
-                contact_atendant_id: 0,
+                sales_id: "",
                 model:{},
+                message_sended: false,
                 
-                isSendingContactFromCSV:false,
-                file:null,
                 //---------New record properties-----------------------------
+                
                 
                 //---------Edit record properties-----------------------------
                 
+
                 //---------Show Modals properties-----------------------------
-                modalAddSales: false,
-                modalEditContact: false,
-                modalDeleteContact: false,
-                showModalFileUploadCSV: false,
+                modalEditSales: false,
+                modalDeleteSales: false,
 
                 //---------Externals properties-----------------------------
-                attendants:null,
+
 
                 //---------DataTable properties-----------------------------
                 rows:[],
@@ -246,27 +223,63 @@
             },
             
             closeModals(){
-                this.modalAddSales = false;
-                this.modalEditContact = false;
-                this.modalDeleteContact = false;
+                this.modalEditSales = false;
+                this.modalDeleteSales = false;
             },
 
             actionResendMessageSales: function(value){
                 alert(value.contact_id);
                 alert(value.json_data);
+
+                // tryResendMessageSales(); // TODO: ainda por implementar
+                this.message_sended = true; // So para teste
+
+                if(this.message_sended){
+                    //  console.log("1");
+                    //  console.log(this.model);
+                    //  console.log(value);
+                    //  console.log(value.json_data);
+                    //  console.log(value.id);
+
+                    delete value.json_data.itensInHTML;
+                    delete value.created_at;
+                    delete value.updated_at;
+                    delete value.deleted_at;
+
+                    value.sended = 1;
+
+                    value.json_data = JSON.stringify(value.json_data);
+                    
+                    ApiService.put(this.url+'/'+value.id, value) 
+                        .then(response => {
+
+                            miniToastr.success("Mensagem enviada com sucesso","Sucesso");
+                                this.reloadDatas();
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.url, "update");
+                        })
+
+                }else{
+                    miniToastr.warn("Não foi possivél enviar a mensagem. Tente mais tarde!","Atenção");
+                }   
+            },
+
+            tryResendMessageSales: function(){
+                // se mensagem enviado
+                this.message_sended = true;
             },
 
             actionEditSales: function(value){
                 this.model = value;
-                this.contact_id = value.id;
-                // this.contact_atendant_id = value.contact_atendant_id;
-                this.modalEditContact = !this.modalEditContact;
+                this.sales_id = value.id;
+                this.modalEditSales = !this.modalEditSales;
             },
 
             actionDeleteSales: function(value){
                 this.model = value;
-                this.contact_id = value.id;
-                this.modalDeleteContact = !this.modalDeleteContact;
+                this.sales_id = value.id;
+                this.modalDeleteSales = !this.modalDeleteSales;
             },
 
             
@@ -366,10 +379,6 @@
                 alert("hi");
             },
 
-            triggerEvent () {
-                this.$refs.fileInputCSV.click();
-            },
-            
             //------ Specific exceptions methods------------
             processMessageError: function(error, url, action) {
                 var info = ApiService.process_request_error(error, url, action);
