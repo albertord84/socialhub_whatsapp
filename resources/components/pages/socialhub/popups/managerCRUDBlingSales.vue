@@ -134,7 +134,10 @@
         methods:{
                         
             editSale: function() { //U
+                
                 this.model = Object.assign({}, this.item);
+                console.log(this.model.json_data);
+                return;
                 delete this.model.created_at;
                 delete this.model.updated_at;
                 delete this.model.deleted_at;
