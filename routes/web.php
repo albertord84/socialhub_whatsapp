@@ -95,6 +95,7 @@ Route::resource('systemConfigs', 'SystemConfigController');
 Route::resource('chats', 'ExtendedChatController');
 Route::get('getBagContact', 'ExtendedChatController@getBagContact');
 Route::get('getBagContactsCount', 'ExtendedChatController@getBagContactsCount');
+Route::post('downloadChatFile', 'ExtendedChatController@downloadChatFile');
 
 Route::resource('test', 'TestController');
 
