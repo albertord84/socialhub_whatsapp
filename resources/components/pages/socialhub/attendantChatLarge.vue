@@ -327,11 +327,12 @@
                                                         </span>
                                                         <span v-if='message.type_id == "5"' class='mb-2 text-center'>
                                                             <a :href="message.path" :download="message.data.ClientOriginalName" >
-                                                                <img v-if="['pfd'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/pdf.svg"/>
+                                                                <!-- <img v-if="['pfd'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/pdf.svg"/>
                                                                 <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/word.svg"/>
                                                                 <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/excel.svg"/>
                                                                 <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="~img/icons/powerpoint.svg"/>
-                                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i> -->
+                                                                <i class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                             </a>  
                                                             <br>
                                                         </span>
@@ -382,11 +383,12 @@
                                             </span>
                                             <span v-if='message.type_id == "5"' class='mb-2 text-center'>
                                                 <a :href="message.path" :download="message.data.ClientOriginalName" >
-                                                    <img v-if="['pfd'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/pdf.svg"/>
+                                                    <!-- <img v-if="['pfd'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/pdf.svg"/>
                                                     <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/word.svg"/>
                                                     <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="~img/icons/excel.svg"/>
                                                     <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="~img/icons/powerpoint.svg"/>
-                                                    <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                    <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i> -->
+                                                    <i class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                 </a>
                                                 <br>                                      
                                             </span>
