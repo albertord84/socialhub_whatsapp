@@ -54,6 +54,12 @@ class Contact extends Model
         'json_data',
         'status_id',
         'origin',
+
+        'cidade',
+        'estado',
+        'categoria1',
+        'categoria2',
+
     ];
 
     /**
@@ -79,6 +85,11 @@ class Contact extends Model
         'status_id' => 'integer',
         'updated_at' => 'string',
         'origin' => 'integer',
+        
+        'cidade' => 'string',
+        'estado' => 'string',
+        'categoria1' => 'string',
+        'categoria2' => 'string',
     ];
 
     /**

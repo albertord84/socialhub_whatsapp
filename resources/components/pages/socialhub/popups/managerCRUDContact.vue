@@ -34,6 +34,7 @@
                     <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook_id" name="facebook_id" type="text" placeholder="Facebook" class="form-control"/>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-instagram form-control-feedback"></span>
@@ -44,6 +45,26 @@
                     <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin_id" name="linkedin_id" type="text" placeholder="LinkedIn" class="form-control"/>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-lg-3 form-group has-search">
+                        <span class="fa fa-id-card form-control-feedback"></span>
+                        <input v-model="model.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" placeholder="Cidade" class="form-control"/>
+                </div>
+                <div class="col-lg-3 form-group has-search">
+                    <span class="fa fa-id-card form-control-feedback"></span>
+                    <input v-model="model.estado" title="Ex: Rio de Janeiro" id="estado" name="estado" type="text" placeholder="Estado" class="form-control"/>
+                </div>
+                <div class="col-lg-3 form-group has-search">
+                        <span class="fa fa-id-card form-control-feedback"></span>
+                        <input v-model="model.categoria1" title="Ex: categoria1" id="categoria1" name="categoria1" type="text" placeholder="Categoria 1" class="form-control"/>
+                </div>
+                <div class="col-lg-3 form-group has-search">
+                    <span class="fa fa-id-card form-control-feedback"></span>
+                    <input v-model="model.categoria2" title="Ex: categoria2" id="categoria2" name="categoria2" type="text" placeholder="Categoria 2" class="form-control"/>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-lg-6 form-group">
                     <textarea v-model="model.summary" @keyup="countLengthSumary" name="summary" id="summary" placeholder="Adicione um resumo ..." class="form-control" cols="30" rows="4"></textarea>
@@ -119,6 +140,12 @@
                     instagram_id: "",
                     linkedin_id: "",
                     origin: "",
+
+                    cidade: "",
+                    estado: "",
+                    categoria1: "",
+                    categoria2: "",
+
                 },
                 
                 //---------New record properties-----------------------------

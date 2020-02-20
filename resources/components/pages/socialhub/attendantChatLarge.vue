@@ -600,6 +600,36 @@
                                     <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 1188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
+
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Cidade"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.cidade}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Estado"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.estado}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Categoria 1"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria1}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Categoria 1" v-model="selectedContactToEdit.categoria1" placeholder="Categoria 1" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Categoria 2"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria2}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Categoria 2" v-model="selectedContactToEdit.categoria2" placeholder="Categoria 2" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+
                             <div v-show="isEditingContact">
                                 <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
                                     <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
