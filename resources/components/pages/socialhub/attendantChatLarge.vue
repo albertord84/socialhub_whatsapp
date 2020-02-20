@@ -331,7 +331,7 @@
                                                         <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
                                                         <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
                                                         <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                        <b :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                        <b style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
                                                         <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
                                                             <i class="mdi mdi-download fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                         </a>
@@ -388,7 +388,7 @@
                                                 <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
                                                 <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
                                                 <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                <b :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                <b  style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
                                                 <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
                                                     <i class="mdi mdi-download fa-2x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
                                                 </a>
