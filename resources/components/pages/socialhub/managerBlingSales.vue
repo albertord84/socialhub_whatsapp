@@ -144,7 +144,7 @@
             return {
                 //---------General properties-----------------------------
                 url:'sales',  //route to controller
-                // secondUrl:'attendantsContacts',
+                secondUrl:'attendantsContacts',
                 // url_attendants:'usersAttendants',  //route to controller
                 
                 //---------Specific properties-----------------------------
@@ -178,17 +178,17 @@
                         html: false,                   
                     }, {
                         label: 'Cliente',
-                        field: 'json_data.cliente.nome',
+                        field: 'json_data.pedido.cliente.nome',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'Telefone',
-                        field: 'json_data.cliente.fone',
+                        field: 'json_data.pedido.cliente.fone',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'Situação',
-                        field: 'json_data.situacao',
+                        field: 'json_data.pedido.situacao',
                         numeric: false,
                         html: false,
                     },{
@@ -225,10 +225,14 @@
                             sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
                             sale.json_data = JSON.parse(sale.json_data);
                             var str = "";
-                            sale.json_data.itens.forEach((itemData, j)=>{
-                                str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
-                            });
-                            sale.json_data.itensInHTML =str;
+                            try{
+                                sale.json_data.pedido.itens.forEach((itemData, j)=>{
+                                    str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
+                                });
+                                sale.json_data.itensInHTML =str;
+                            }catch(error){
+                                console.log(error);
+                            }
                         });
                         this.rows = response.data;
                     })
