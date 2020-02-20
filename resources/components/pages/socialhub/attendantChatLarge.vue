@@ -1995,7 +1995,7 @@
                         'ClientOriginalName':ClientOriginalName, 
                         'ClientOriginalExtension':ClientOriginalExtension
                     },
-                    'blob', // important
+                    {'responseType': 'blob'}, // important
                     )
                     .then((response)=>{
                         const url = window.URL.createObjectURL(new Blob([response.data]));
