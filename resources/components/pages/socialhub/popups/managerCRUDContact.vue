@@ -21,13 +21,13 @@
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.phone" id="phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
+                    <input v-model="model.phone" id="phone" v-mask="'55 ############'" title="Ex: 55 1188888888" name="phone" type="text" placeholder="Telefone fixo" class="form-control"/>
                 </div>                                
             </div>
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-whatsapp form-control-feedback"></span>
-                    <input v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                    <input v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-facebook form-control-feedback"></span>
@@ -139,6 +139,7 @@
                     facebook_id: "",
                     instagram_id: "",
                     linkedin_id: "",
+                    origin: "",
 
                     cidade: "",
                     estado: "",
@@ -177,8 +178,8 @@
                 
                 this.model.id=4; //TODO: el id debe ser autoincremental, no devo estar mandandolo
                 if (this.contact_atendant_id)
-                    this.model.status_id = 1;                
-
+                    this.model.status_id = 1;
+                this.model.origin = 2;
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
@@ -225,7 +226,7 @@
                 delete this.model.status;
                 delete this.model.updated_at;
                 this.contact_atendant_id =  this.model.contact_atendant_id;
-                this.modalEditContact = !this.modalEditContact;
+                // this.modalEditContact = !this.modalEditContact;
             },
 
             updateContact: function() { //U

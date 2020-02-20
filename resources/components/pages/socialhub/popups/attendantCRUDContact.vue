@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="col-12">
         <form v-show="action=='insert' || action=='edit'">   
             <div class="col-lg-12 sect_header">
                 <ul v-if='action=="insert"' class="menu">
@@ -24,7 +24,7 @@
                     <div class="input-group-prepend">
                         <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp (*)" style="background-color:white"></span>
                     </div>
-                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
+                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
                     <div class="input-group-append" title="Conferir número">
                         <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber">
                             <span v-if="!isCheckingWhatsapp" class="fa fa-check"></span>
@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
+                            <input v-model="model.phone" v-mask="'55 ############'" title="Ex: 55 1188888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
                         </div>
                     </div>
                 </div> 
@@ -224,6 +224,7 @@
                     facebook_id: "",
                     instagram_id: "",   
                     linkedin_id: "",
+                    origin: "",
                     
                     cidade: "",
                     estado: "",
@@ -279,7 +280,7 @@
                     this.flagReference = true;
                     return;
                 }
-
+                this.model.origin = 2;
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
                 model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
@@ -655,7 +656,7 @@
         outline: none;
     }
     /*-------------------------------------*/
-      .has-icon .form-control {
+    .has-icon .form-control {
         padding-left: 2.375rem;
     }
     .has-icon .form-control {

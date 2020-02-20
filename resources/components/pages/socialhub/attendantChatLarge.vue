@@ -88,20 +88,18 @@
                                 </a>
                             </li>
                         </ul>
-                    </div>                        
+                    </div>
                 </div>
                 <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
                             <div class="">
                                 <div class="row pt-3 pb-3">
-                                    <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact)">
-                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @click="reloadContactPicUrl($event, contact,index)" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture">
-
-                                        <!-- <img :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @click="reloadContactPicUrl($event, contact,index)" @error="/*reloadContactPicUrl($event, contact,index)*/markAsBrokenUrl(contact,index)" class="contact-picture"> -->
+                                    <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact,index)">
+                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
                                     </div>
 
-                                    <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact)">
+                                    <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact,index)">
                                         <div class="d-flex flex-column pointer-hover ml-2 mt-2">
                                             <!-- Contact name -->
                                             <div class="row">
@@ -302,41 +300,47 @@
                                             <div  class="col-1"></div>
                                             <div class="col-11" >
                                                 <p style="float:left;" class="receivedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
-                                                        <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
-                                                        <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                                            <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                                                <img :src="message.path" class="midia-files"/>
-                                                            </a>
-                                                            <br>
-                                                        </span>                               
-                                                        <span v-if='message.type_id == "3"' class='text-center'>
-                                                            <br>
-                                                            <audio controls class="mycontrolBar m-2">
-                                                                <source :src="message.path" type="audio/ogg">
-                                                                <source :src="message.path" type="audio/mp3">
-                                                                Seu navegador não suporta o elemento de áudio.
-                                                            </audio>
-                                                            <br>
-                                                        </span>
-                                                        <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                                            <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                                                <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                                    <source :src="message.path+'#t=2'" type="video/mp4">
-                                                                    Seu navegador não suporta o elemento de vídeo.
-                                                                </video>
-                                                            </a>
-                                                            <br>
-                                                        </span>
-                                                        <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                            <a :href="message.path" target="_blank" rel=”noopener”  >
-                                                                <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                            </a>  
-                                                            <br>                                      
-                                                        </span>
-                                                        <span v-if="message.message && message.message !=''" class="text-message">
-                                                            {{ message.message ? message.message : "" }}
-                                                        </span>
+                                                    <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
+                                                    <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                        <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                            <img :src="message.path" class="midia-files"/>
+                                                        </a>
                                                         <br>
+                                                    </span>                               
+                                                    <span v-if='message.type_id == "3"' class='text-center'>
+                                                        <br>
+                                                        <audio controls class="mycontrolBar m-2">
+                                                            <source :src="message.path" type="audio/ogg">
+                                                            <source :src="message.path" type="audio/mp3">
+                                                            Seu navegador não suporta o elemento de áudio.
+                                                        </audio>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                        <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                            <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                                <source :src="message.path+'#t=2'" type="video/mp4">
+                                                                Seu navegador não suporta o elemento de vídeo.
+                                                            </video>
+                                                        </a>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                        <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                        <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                        <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                        <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                        <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        <b style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                        <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
+                                                            <i class="mdi mdi-download fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        </a>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if="message.message && message.message !=''" class="text-message">
+                                                        {{ message.message ? message.message : "" }}
+                                                    </span>
+                                                    <br>
                                                 </p>                                                 
                                             </div>
                                         </div>
@@ -379,9 +383,15 @@
                                                 <br>
                                             </span>
                                             <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                <a :href="message.path" target="_blank" rel=”noopener”  >
-                                                    <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                </a>  
+                                                <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                <b  style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
+                                                    <i class="mdi mdi-download fa-2x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                </a>
                                                 <br>                                      
                                             </span>
                                             <span v-if="message.message && message.message !=''" class="text-message">
@@ -580,14 +590,14 @@
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## #########'" title="Ex: 55 11 988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 11988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-phone fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ## #########'" title="Ex: 55 11 88888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 1188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
 
@@ -630,7 +640,7 @@
                         <!-- Nota resumo -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="container-fluid">
-                                <div class="row flex-baseline" >
+                                <div class="row flex-baseline">
                                     <div class="col-1 pt-2 pb-2">
                                         <i class="mdi mdi-account-badge-horizontal-outline fa-1_5x text-muted" aria-hidden="true"></i>
                                     </div>
@@ -1129,16 +1139,6 @@
                     .finally(()=>{this.isAddingContactFromBag = false;});
             }, 
 
-            chatMessageScroling: function(value){
-                // console.log('value ---> '+value);
-                // if(value < 2 && !this.requestingNewPage && this.hasMorePageMessage){
-                //     this.pageNumber ++;
-                //     this.getContactChat(this.selectedContact);
-                //     console.log('page number ---> '+this.pageNumber);
-                //     console.log('value ---> '+value);
-                //     this.percent = value + 10;
-                // }
-            },                        
             getContactChatOld: function(contact) {
                 if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
                 this.requestingNewPage=true;
@@ -1146,8 +1146,6 @@
                 if(this.showChatFindMessages) this.displayChatFindMessage();
                 this.messageTimeDelimeter = '';
                 this.selectedContactIndex = contact.index;
-                
-                console.log('requesting a page number '+this.pageNumber);
                 ApiService.get(this.chat_url,{
                     'contact_id':contact.id,
                     'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
@@ -1225,20 +1223,20 @@
                 }
             },
 
-            reloadContactPicUrl(e,contact,index){
-                // console.log(contact.first_name + ' has a picurl broken, now it is reloading it json_data field asyncronous');
+            reloadContactPicUrl(contact,index){
                 if(typeof(this.allContacts[index].broken) != 'undefined' || typeof(this.contacts[index].broken) != 'undefined'){
+                    console.log('requesting ContactPicUrl');
                     ApiService.get('updateContactPicture/'+contact.id)
                         .then(response => {
-                            console.log(e.target);
-                            // delete this.contacts[index].json_data;
                             this.contacts[index].json_data = response.data.json_data;
-                            e.target.src = JSON.parse(response.data.json_data).picurl;
-                            // this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                            // e.target.src = JSON.parse(response.data.json_data).picurl;
+                            this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                            delete this.allContacts[index].broken;
+                            delete this.contacts[index].broken;
+                            console.log('end requesting ContactPicUrl');
                         })
                         .catch(function(error) {
                             miniToastr.error(error, "Error atualizando informação do contato os contatos");   
-                            console.log( "Error atualizando informação do contato os contatos");   
                         });
                 }
             },
@@ -1933,9 +1931,8 @@
 
 
 
-            getContactChat: function(contact) {
-                // if(document.getElementById("chat-content") && document.getElementById("chat-content").scrollHeight > 0)
-                //     document.getElementById("chat-content").innerHTML = '';
+            getContactChat: function(contact,index) {
+                this.reloadContactPicUrl(contact,index);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
                     this.pageNumber = -1;
@@ -1964,7 +1961,6 @@
                     this.requestingNewPage = true;                
                 }
                 this.pageNumber = this.pageNumber+1;
-                console.log('request page '+ this.pageNumber);
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': this.findAroundMessageId,
@@ -2024,7 +2020,6 @@
                         var p = (this.scrollHeights[n-2] * 100)/this.scrollHeights[n-1];
                         this.$refs.message_scroller.scrolltopercent(100-p-0.8);
                     }
-                    console.log(this.scrollHeights);
                     this.requestingNewPage = false;
                 }
             },
@@ -2044,16 +2039,6 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
-
-            ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
-                'user_id':this.logguedAttendant.id,
-                'selected_contact_id':0
-            })
-            .then(response => {                            
-            })
-            .catch(error => {
-                this.processMessageError(error, "contacts", "get");
-            });
         },
 
         mounted(){
@@ -2061,13 +2046,11 @@
 
             // Check if MediaRecorder available.
             if (!window.MediaRecorder) {
-                console.log('!window.MediaRecorder');
                 window.MediaRecorder = OpusMediaRecorder;
             }
             // Check if a target format (e.g. audio/ogg) is supported.
             else 
             if (!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-                console.log("!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')");
                 window.MediaRecorder = OpusMediaRecorder;
             }
 
@@ -2107,9 +2090,7 @@
 
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
-                        console.log(this.messages.length);                          
                         this.messages.push(Object.assign({}, message));
-                        console.log(this.messages.length);
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
@@ -2146,7 +2127,6 @@
                 .listen('NewContactMessage', (e) => {
                     if(this.amountContactsInBag<e.message && !this.logguedAttendant.mute_notifications)
                         this.$refs.newContactInBag.play();
-                    // console.log(e);
                     this.amountContactsInBag = e.message;
             });
 
@@ -2471,6 +2451,12 @@
     }
     .document_received{
         color: #007bff;
+    }
+    .document_sent_download{
+        float:right; padding:0.1rem 0.6rem; border:1px solid white; border-radius:50%
+    }
+    .document_received_download{
+        float:right; padding:0.1rem 0.6rem; border:1px solid #007bff; border-radius:50%
     }
     .midia-files{
         width: 15em;
