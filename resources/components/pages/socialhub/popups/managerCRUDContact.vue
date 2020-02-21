@@ -4,7 +4,7 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome (*)" class="form-control"/>
+                    <input v-model="model.first_name" title="Ex: Nome do Contato" id="name" name="username" type="text" autofocus placeholder="Nome *" class="form-control"/>
                 </div>
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-headphones form-control-feedback"></span>
@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-whatsapp form-control-feedback"></span>
-                    <input v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                    <input v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" id="whatsapp_id" name="whatsapp_id" type="text" required placeholder="WhatsApp *" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-facebook form-control-feedback"></span>
@@ -52,7 +52,7 @@
                     <input v-model="model.estado" title="Ex: Rio de Janeiro" id="estado" name="estado" type="text" placeholder="Estado" class="form-control"/>
                 </div>
                 <div class="col-lg-3 form-group has-search">
-                        <span class=" mdi mdi-city  form-control-feedback"></span>
+                        <span class="mdi mdi-city  form-control-feedback"></span>
                         <input v-model="model.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" placeholder="Cidade" class="form-control"/>
                 </div>
                 <div class="col-lg-3 form-group has-search">

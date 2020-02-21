@@ -22,9 +22,9 @@
                 <br><br>
                 <div class="col-lg-12 input-group">
                     <div class="input-group-prepend">
-                        <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp (*)" style="background-color:white"></span>
+                        <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp *" style="background-color:white"></span>
                     </div>
-                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
+                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" class="form-control border-left-0 outline" placeholder="Whatsapp *" >
                     <div class="input-group-append" title="Conferir número">
                         <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber">
                             <span v-if="!isCheckingWhatsapp" class="fa fa-check"></span>
@@ -69,7 +69,16 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
+                        <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
+                        <input v-model="model.estado" title="Ex: Rio de Janeiro" id="estado" name="estado" type="text" placeholder="Estado" class="form-control"/>
+                        </div>
+                    </div>
+                </div>   
+
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div style="" class="form-group has-search">
+                            <span class="mdi mdi-city form-control-feedback"></span>
                             <input v-model="model.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" placeholder="Cidade" class="form-control"/>
                         </div>
                     </div>
@@ -78,16 +87,7 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
-                        <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.estado" title="Ex: Rio de Janeiro" id="estado" name="estado" type="text" placeholder="Estado" class="form-control"/>
-                        </div>
-                    </div>
-                </div>   
-                
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <div style="" class="form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <span class="mdi mdi-format-list-bulleted form-control-feedback"></span>
                             <input v-model="model.categoria1" title="Ex: categoria1" id="categoria1" name="categoria1" type="text" placeholder="Categoria 1" class="form-control"/>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                 <div class="col-lg-12">
                     <div class="form-group">
                         <div style="" class="form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <span class="mdi mdi-format-list-bulleted form-control-feedback"></span>
                             <input v-model="model.categoria2" title="Ex: categoria2" id="categoria2" name="categoria2" type="text" placeholder="Categoria 2" class="form-control"/>
                         </div>
                     </div>

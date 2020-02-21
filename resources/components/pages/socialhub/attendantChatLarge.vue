@@ -576,7 +576,7 @@
                                 <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact">{{selectedContact.first_name}}</span>
-                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" placeholder="Nome completo (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" placeholder="Nome completo *" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
@@ -590,7 +590,7 @@
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 11988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 11988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp *" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
@@ -602,28 +602,28 @@
                             </ul>
 
                             <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Cidade"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li class="list-group-item border-0" title="Estado"><i class="mdi mdi-map-marker-radius fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1" >{{selectedContact.estado}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Cidade"><i class="mdi mdi-city fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.cidade}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Estado"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.estado}}</span>
-                                    <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
-                                </li>
-                            </ul>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Categoria 1"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li class="list-group-item border-0" title="Categoria 1"><i class="mdi mdi-format-list-bulleted fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria1}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 1" v-model="selectedContactToEdit.categoria1" placeholder="Categoria 1" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item border-0" title="Categoria 2"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li class="list-group-item border-0" title="Categoria 2"><i class="mdi mdi-format-list-bulleted fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria2}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 2" v-model="selectedContactToEdit.categoria2" placeholder="Categoria 2" class="border border-top-0 border-left-0 border-right-0 font-italic">

@@ -5,29 +5,29 @@
                 <div>
                     <h3>Dados da empresa</h3>
                     <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelCompany.CNPJ" v-mask="'##.###.###/####-##'" title="Ex: 00.000.000/0001-00" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ (*)" class="form-control"/>
-                        </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-building-o form-control-feedback"></span>
-                            <input v-model="modelCompany.name" title="Ex: Nome da Empresa" id="nameCompany" name="nameCompany" type="text" required placeholder="Nome da empresa (*)" class="form-control"/>
+                            <input v-model="modelCompany.name" title="Ex: Nome da Empresa" id="nameCompany" name="nameCompany" type="text" required placeholder="Nome da empresa *" class="form-control"/>
                         </div>                                                      
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-id-card form-control-feedback"></span>
+                            <input v-model="modelCompany.CNPJ" v-mask="'##.###.###/####-##'" title="Ex: 00.000.000/0001-00" name="CNPJ" id="CNPJ" type="text" required placeholder="CNPJ *" class="form-control"/>
+                        </div>
                     </div>
                     <div class="row">
+                        <div  class="col-lg-6 form-group has-search">
+                            <span class="fa fa-envelope form-control-feedback"></span>
+                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="emailCompany" name="emailCompany" type="emailCompany" required placeholder="Email empresarial *" class="form-control"/>                            
+                        </div>                                                      
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
                             <input v-model="modelCompany.phone" v-mask="'55 ############'" title="Ex: 55 1188888888" name="phoneCompany" id="phoneCompany" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
-                        <div  class="col-lg-6 form-group has-search">
-                            <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="emailCompany" name="emailCompany" type="emailCompany" required placeholder="Email empresarial(*)" class="form-control"/>                            
-                        </div>                                                      
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelCompany.whatsapp" v-mask="'55 ############'" title="Ex: 55 11988888888" name="whatsappCompany" id="whatsappCompany" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelCompany.whatsapp" v-mask="'55 ############'" title="Ex: 55 11988888888" name="whatsappCompany" id="whatsappCompany" type="text" required placeholder="Whatsapp *" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-info-circle fa-lg form-control-feedback" ></span>
@@ -41,7 +41,7 @@
                     <div class="row">
                         <!-- <div class="col-lg-3 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.CEP" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>
+                            <input v-model="modelCompany.CEP" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP *" class="form-control"/>
                         </div>
                         <div class="col-lg-1" >
                             <button class="btn btn-info text-18" href="javascript:void(0)" title="Validar CEP" @click.prevent="validateCEP"><i class="fa fa-check-circle-o" aria-hidden="true"></i> </button>
@@ -50,7 +50,7 @@
                         <div class="col-lg-4" >
                             <div class="input-group">
                                 <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
-                                    <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
+                                    <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP *" class="form-control"/>                                <div class="input-group-append">
                                     <div class="input-group-text hover-pointer" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
                                         <i v-if="isSendingValidationCEP==false" class="fa fa-search" aria-hidden="true"></i>
                                         <i v-else class="fa fa-spinner fa-spin" style="color:blue" ></i>
@@ -60,34 +60,34 @@
                         </div>
 
                         <div  class="col-lg-4 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
-                        </div>                                                      
-                        <div  class="col-lg-4 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.estado" title="Ex: RJ" v-mask="'AA'" id="estado" name="estado" type="text" required placeholder="Estado Federal (*)"  class="form-control"/>                            
+                            <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
+                            <input v-model="modelCompany.estado" title="Ex: RJ" v-mask="'AA'" id="estado" name="estado" type="text" required placeholder="Estado Federal *"  class="form-control"/>                            
                         </div> 
+                        <div  class="col-lg-4 form-group has-search">
+                            <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
+                            <input v-model="modelCompany.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" required placeholder="Cidade *"  class="form-control"/>                            
+                        </div>                                                      
                     </div>
 
                     <div class="row">
                         <div class="col-lg-8 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida (*)"  class="form-control"/>
+                            <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
+                            <input v-model="modelCompany.rua" title="Ex: São João" name="rua" id="rua" type="text" required placeholder="Rua/Avenida *"  class="form-control"/>
                         </div>
                         <div  class="col-lg-4 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.numero" title="Ex: 000" id="numero" name="numero" type="text" required placeholder="Número (*)" class="form-control"/>                            
+                            <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
+                            <input v-model="modelCompany.numero" title="Ex: 000" id="numero" name="numero" type="text" required placeholder="Número *" class="form-control"/>                            
                         </div>                                                                               
                     </div>
 
                     <div class="row">
                         <div  class="col-lg-8 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
+                            <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
                             <input v-model="modelCompany.complemento" title="Ex: Casa 00 / Bloco 00, Apto 00" id="complemento" name="complemento" type="text" required placeholder="Complemento" class="form-control"/>
                         </div> 
                         <div class="col-lg-4 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.bairro" title="Ex: Centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
+                            <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
+                            <input v-model="modelCompany.bairro" title="Ex: Centro" name="bairro" id="bairro" type="text" required placeholder="Bairro *" class="form-control"/>
                         </div>
                     </div>
 
@@ -106,17 +106,17 @@
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-user form-control-feedback"></span>
-                            <input v-model="modelManager.name" title="Ex: Nome do Manager" id="nameManager" name="nameManager" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
+                            <input v-model="modelManager.name" title="Ex: Nome do Manager" id="nameManager" name="nameManager" type="text" required autofocus placeholder="Nome completo *" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelManager.email" title="Ex: manager@gmail.com" name="emailManager" id="emailManager" type="text" required placeholder="Email do manager. Para fazer Loging (*)" class="form-control"/>
+                            <input v-model="modelManager.email" title="Ex: manager@gmail.com" name="emailManager" id="emailManager" type="text" required placeholder="Email do manager, para fazer loging *" class="form-control"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
-                            <input v-model="modelManager.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                            <input v-model="modelManager.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF *" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
@@ -126,7 +126,7 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" name="whatsappManager" id="whatsappManager" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
+                            <input v-model="modelManager.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" name="whatsappManager" id="whatsappManager" type="text" required placeholder="Whatsapp *" class="form-control"/>
                         </div>
                     </div>                                  
                 </div> 
@@ -170,11 +170,11 @@
                     <div class="row">
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.mac" v-mask="'NN:NN:NN:NN:NN:NN'" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
+                            <input v-model="modelRpi.mac" v-mask="'NN:NN:NN:NN:NN:NN'" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC *" class="form-control"/>
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
-                            <input v-model="modelRpi.api_tunnel" title="Ex: http://shrpialberto.sa.ngrok.io.ngrok.io" id="api_tunnel" name="api_tunnel" type="text" required placeholder="Tunnel da API (*)" class="form-control"/>                            
+                            <input v-model="modelRpi.api_tunnel" title="Ex: http://shrpialberto.sa.ngrok.io.ngrok.io" id="api_tunnel" name="api_tunnel" type="text" required placeholder="Tunnel da API *" class="form-control"/>                            
                         </div>                                                      
                     </div>
 

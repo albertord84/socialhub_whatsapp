@@ -6,23 +6,23 @@
                     {{model.user_id}}
                 </div>    
                 <div class="row">
+                    <div  class="col-lg-6 form-group has-search">
+                        <span class="fa fa-user form-control-feedback"></span>
+                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo *" class="form-control"/>
+                    </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login (*)" class="form-control"/>
+                        <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login" class="form-control"/>
                     </div>
-                    <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-envelope form-control-feedback"></span>
-                        <input v-model="model.email" title="Ex: atendente@gmail.com" id="email" name="email" type="email" required placeholder="Email (*)" class="form-control"/>                            
-                    </div>                                                      
                 </div>
                 <div class="row">
                     <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
-                    </div>
+                        <span class="fa fa-envelope form-control-feedback"></span>
+                        <input v-model="model.email" title="Ex: atendente@gmail.com" id="email" name="email" type="email" required placeholder="Email *" class="form-control"/>                            
+                    </div> 
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF *" class="form-control"/>
                     </div>
                     <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-phone form-control-feedback"></span>
@@ -32,7 +32,7 @@
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp *" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
@@ -315,9 +315,6 @@
                         miniToastr.error("Erro", check.error );
                         this.flagReference = false;
                     }
-                }else{
-                    miniToastr.error("Erro", "O login do usuário é obrigatório" );
-                    this.flagReference = false;
                 }
                 if(this.model.email && this.model.email !=''){
                     check = validation.check('email', this.model.email)
