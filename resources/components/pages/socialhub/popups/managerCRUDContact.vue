@@ -48,19 +48,19 @@
 
             <div class="row">
                 <div class="col-lg-3 form-group has-search">
-                        <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" placeholder="Cidade" class="form-control"/>
-                </div>
-                <div class="col-lg-3 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
+                    <span class="mdi mdi-map-marker-radius form-control-feedback"></span>
                     <input v-model="model.estado" title="Ex: Rio de Janeiro" id="estado" name="estado" type="text" placeholder="Estado" class="form-control"/>
                 </div>
                 <div class="col-lg-3 form-group has-search">
-                        <span class="fa fa-id-card form-control-feedback"></span>
+                        <span class=" mdi mdi-city  form-control-feedback"></span>
+                        <input v-model="model.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" placeholder="Cidade" class="form-control"/>
+                </div>
+                <div class="col-lg-3 form-group has-search">
+                        <span class="mdi mdi-format-list-bulleted form-control-feedback"></span>
                         <input v-model="model.categoria1" title="Ex: categoria1" id="categoria1" name="categoria1" type="text" placeholder="Categoria 1" class="form-control"/>
                 </div>
                 <div class="col-lg-3 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
+                    <span class="mdi mdi-format-list-bulleted form-control-feedback"></span>
                     <input v-model="model.categoria2" title="Ex: categoria2" id="categoria2" name="categoria2" type="text" placeholder="Categoria 2" class="form-control"/>
                 </div>
             </div>
