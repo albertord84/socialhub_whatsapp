@@ -27,11 +27,11 @@
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
-                        <template v-for="(column,index) in columns">
-                            <td v-if="!column.html && !column.json" :key="index">{{ collect(row,column.field) }}</td>
-                            <td v-if="column.sended" :key="index" v-html="collect(row, column.field)"></td>
-                            <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
-                            <td v-if="column.actions" :key="index">
+                        <template v-for="(column,indexColumn) in columns">
+                            <td v-if="!column.html && !column.json" :key="indexColumn">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="indexColumn" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="indexColumn" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="indexColumn">
                                 <div style="position:relative; margin-left:-80px;">
                                     <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a>
                                     <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
@@ -155,17 +155,17 @@
                         html: false,                   
                     }, {
                         label: 'Cliente',
-                        field: 'json_data.cliente.nome',
+                        field: 'json_data.pedido.cliente.nome',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'Telefone',
-                        field: 'json_data.cliente.fone',
+                        field: 'json_data.pedido.cliente.fone',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'Situação',
-                        field: 'json_data.situacao',
+                        field: 'json_data.pedido.situacao',
                         numeric: false,
                         html: false,
                     },{
@@ -198,11 +198,13 @@
             getSales: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
+                        console.log(response.data);
+                        
                         response.data.forEach((sale, i)=>{
                             sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
                             sale.json_data = JSON.parse(sale.json_data);
                             var str = "";
-                            sale.json_data.itens.forEach((itemData, j)=>{
+                            sale.json_data.pedido.itens.forEach((itemData, j)=>{
                                 str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
                             });
                             sale.json_data.itensInHTML =str;
@@ -210,7 +212,9 @@
                         this.rows = response.data;
                     })
                     .catch(error => {
+                        console.log(error);
                         this.processMessageError(error, this.url, "get");
+
                     });
             }, 
 

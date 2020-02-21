@@ -130,14 +130,21 @@ class SalesController extends AppBaseController
      */
     public function update($id, UpdateSalesRequest $request)
     {
-        $sales = $this->salesRepository->findWithoutFail($id);
-
+        // $sales = $this->salesRepository->findWithoutFail($id);
+        
+        
+        $this->salesRepository->pushCriteria(new RequestCriteria($request));
+        
+        $User = Auth::check()? Auth::user():session('logged_user');
+        $sales = $this->salesRepository->salesByCompany($User->company_id);
+        // dd($sales);
+        
         if (empty($sales)) {
             Flash::error('Sales not found');
 
-            return redirect(route('sales.index'));
+            // return redirect(route('sales.index'));
+            return $sales->toJson();
         }
-
         $sales = $this->salesRepository->update($request->all(), $id);
 
         Flash::success('Sales updated successfully.');

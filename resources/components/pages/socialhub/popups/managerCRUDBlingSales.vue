@@ -7,73 +7,26 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.nome" title="Ex: Nome do cliente" id="name" name="name" type="text" autofocus placeholder="Nome do cliente" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.nome" title="Ex: Nome do cliente" id="name" name="name" type="text" autofocus placeholder="Nome do cliente" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.id" id="clientID" title="Ex: 88888888" name="clientID" type="text" placeholder="ID do cliente" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.id" id="clientID" title="Ex: 88888888" name="clientID" type="text" placeholder="ID do cliente" class="form-control"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-envelope form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.email" title="Ex: cliente@gmail.com" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.email" title="Ex: cliente@gmail.com" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.fone" id="phone" title="Ex: 55 1188888888" name="phone" type="text" placeholder="Telefone" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.fone" id="phone" title="Ex: 55 1188888888" name="phone" type="text" placeholder="Telefone" class="form-control"/>
                 </div>
             </div>
 
-            <h4>Dados da venda</h4>
-
-            <div class="row">
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.vendedor" id="vendedor" title="Ex: Nome do vendedor" name="vendedor" type="text" placeholder="Nome do vendedor" class="form-control"/>
-                </div>
-
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.situacao" id="situacao" title="Ex: Em aberto" name="situacao" type="text" placeholder="Situação da venda" class="form-control"/>
-                </div>
-                
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.data" id="data" title="Ex: 31/12/2020" name="data" type="text" placeholder="Data da venda" class="form-control"/>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.tipoIntegracao" id="tipoIntegracao" title="Ex: MercadoLivre" name="tipoIntegracao" type="text" placeholder="Tipo de Integracão" class="form-control"/>
-                </div>
-                
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.loja" id="loja" title="Ex: 88888888" name="loja" type="text" placeholder="Loja" class="form-control"/>
-                </div>
-
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.numeroPedidoLoja" id="numeroPedidoLoja" title="Ex: 88888888" name="numeroPedidoLoja" type="text" placeholder="Número de Pedido da Loja" class="form-control"/>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-4 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.numeroOrdemCompra" id="numeroOrdemCompra" title="Ex: 88888888" name="numeroOrdemCompra" type="text" placeholder="Número de Ordem de Compra" class="form-control"/>
-                </div>
-
-                <div class="col-lg-8 form-group has-search">
-                    <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.itens" id="produtos" title="Ex: 88888888" name="produtos" type="text" placeholder="Produtos comprados" class="form-control"/>
-                </div>
-            </div>
-
+            
             <div class="col-lg-12 m-t-25 text-center">
                 <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateSale">
                     <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
@@ -159,6 +112,11 @@
                 // }
                  
                 delete this.model.json_data.itensInHTML;
+                delete this.model.messageSended;
+                delete this.model.created_at;
+                delete this.model.updated_at;
+                delete this.model.deleted_at;
+
                 this.model.json_data = JSON.stringify(this.model.json_data);
 
                 ApiService.put(this.url+'/'+this.model.id, this.model) 
