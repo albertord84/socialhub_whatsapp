@@ -142,7 +142,8 @@ class SalesController extends AppBaseController
 
         Flash::success('Sales updated successfully.');
 
-        return redirect(route('sales.index'));
+        // return redirect(route('sales.index'));
+        return $sales->toJson();
     }
 
     /**
@@ -166,6 +167,7 @@ class SalesController extends AppBaseController
 
         Flash::success('Sales deleted successfully.');
 
-        return redirect(route('sales.index'));
+        // return redirect(route('sales.index'));
+        
     }
 }
