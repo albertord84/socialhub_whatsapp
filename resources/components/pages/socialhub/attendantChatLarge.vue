@@ -580,14 +580,14 @@
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 11988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 5511988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-phone fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
-                                    <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 1188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 551188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <div v-show="isEditingContact">
