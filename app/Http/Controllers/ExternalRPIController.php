@@ -226,11 +226,11 @@ class ExternalRPIController extends Controller
             $client = new \GuzzleHttp\Client();
             $Rpi = $Rpi ?? ($this->Rpi ?? self::getRPI());
             $url = $Rpi->api_tunnel . '/GetContact';
-
+            
             $contactInfo = $client->request('GET', $url, [
                 'query' => ['RemoteJid' => $contact_id],
             ]);
-
+            
             $contactInfo = $contactInfo->getBody()->getContents();
             // $contactInfo = json_decode($contactInfo); // Isso viaja para VUE entao nao pode ir como objeto
             // Log::debug('\n\rgetContactInfo Response: ', [$contactInfo]);

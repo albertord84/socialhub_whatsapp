@@ -300,41 +300,47 @@
                                             <div  class="col-1"></div>
                                             <div class="col-11" >
                                                 <p style="float:left;" class="receivedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
-                                                        <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
-                                                        <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                                            <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                                                <img :src="message.path" class="midia-files"/>
-                                                            </a>
-                                                            <br>
-                                                        </span>                               
-                                                        <span v-if='message.type_id == "3"' class='text-center'>
-                                                            <br>
-                                                            <audio controls class="mycontrolBar m-2">
-                                                                <source :src="message.path" type="audio/ogg">
-                                                                <source :src="message.path" type="audio/mp3">
-                                                                Seu navegador não suporta o elemento de áudio.
-                                                            </audio>
-                                                            <br>
-                                                        </span>
-                                                        <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                                            <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                                                <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                                    <source :src="message.path+'#t=2'" type="video/mp4">
-                                                                    Seu navegador não suporta o elemento de vídeo.
-                                                                </video>
-                                                            </a>
-                                                            <br>
-                                                        </span>
-                                                        <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                            <a :href="message.path" target="_blank" rel=”noopener”  >
-                                                                <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                            </a>  
-                                                            <br>                                      
-                                                        </span>
-                                                        <span v-if="message.message && message.message !=''" class="text-message">
-                                                            {{ message.message ? message.message : "" }}
-                                                        </span>
+                                                    <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
+                                                    <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                        <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                            <img :src="message.path" class="midia-files"/>
+                                                        </a>
                                                         <br>
+                                                    </span>                               
+                                                    <span v-if='message.type_id == "3"' class='text-center'>
+                                                        <br>
+                                                        <audio controls class="mycontrolBar m-2">
+                                                            <source :src="message.path" type="audio/ogg">
+                                                            <source :src="message.path" type="audio/mp3">
+                                                            Seu navegador não suporta o elemento de áudio.
+                                                        </audio>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                        <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                            <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                                <source :src="message.path+'#t=2'" type="video/mp4">
+                                                                Seu navegador não suporta o elemento de vídeo.
+                                                            </video>
+                                                        </a>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                        <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                        <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                        <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                        <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                        <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        <b style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                        <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
+                                                            <i class="mdi mdi-download fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        </a>
+                                                        <br>
+                                                    </span>
+                                                    <span v-if="message.message && message.message !=''" class="text-message">
+                                                        {{ message.message ? message.message : "" }}
+                                                    </span>
+                                                    <br>
                                                 </p>                                                 
                                             </div>
                                         </div>
@@ -377,9 +383,15 @@
                                                 <br>
                                             </span>
                                             <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                <a :href="message.path" target="_blank" rel=”noopener”  >
-                                                    <i class="fa fa-file-text fa-5x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
-                                                </a>  
+                                                <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                <b  style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
+                                                    <i class="mdi mdi-download fa-2x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                </a>
                                                 <br>                                      
                                             </span>
                                             <span v-if="message.message && message.message !=''" class="text-message">
@@ -588,6 +600,36 @@
                                     <input v-show="isEditingContact" type="text" v-mask="'55 ############'" title="Ex: 55 1188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
+
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Cidade"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.cidade}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Estado"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.estado}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Categoria 1"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria1}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Categoria 1" v-model="selectedContactToEdit.categoria1" placeholder="Categoria 1" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item border-0" title="Categoria 2"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
+                                <li style="margin-top:1em !important">
+                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria2}}</span>
+                                    <input v-show="isEditingContact" type="text" title="Ex: Categoria 2" v-model="selectedContactToEdit.categoria2" placeholder="Categoria 2" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                </li>
+                            </ul>
+
                             <div v-show="isEditingContact">
                                 <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
                                     <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
@@ -2409,6 +2451,12 @@
     }
     .document_received{
         color: #007bff;
+    }
+    .document_sent_download{
+        float:right; padding:0.1rem 0.6rem; border:1px solid white; border-radius:50%
+    }
+    .document_received_download{
+        float:right; padding:0.1rem 0.6rem; border:1px solid #007bff; border-radius:50%
     }
     .midia-files{
         width: 15em;
