@@ -30,7 +30,7 @@ class ExternalRPIController extends Controller
     {
         parent::__construct();
 
-        $this->Rpi = $Rpi ?? $this->getRPI();
+        $this->Rpi = $Rpi->id == 0 ? $this->getRPI() : $Rpi;
     }
 
     public function index(Request $request)
