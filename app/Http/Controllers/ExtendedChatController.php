@@ -277,4 +277,5 @@ class ExtendedChatController extends ChatController
 
     }
 
+    
 }

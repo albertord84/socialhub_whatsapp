@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business\ChatsBusiness;
+use App\Business\SalesBusiness;
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
@@ -11,6 +12,7 @@ use App\Mail\EmailSigninAttendant;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Models\Sales;
 use App\Repositories\ExtendedChatRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -42,11 +44,31 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        // dd(Storage::disk('chats_files'));
-        dd(Storage::disk('chats_files')->getDriver()->getAdapter()->getPathPrefix());
 
-        var_dump(env('APP_NAME'));
-        var_dump(env('APP_ENV'));
+        // Build Bling message by Sales object
+        $Company = Company::with('rpi')->find(1);
+        $SaleModel = new Sales;
+        $SaleModel->table = "$Company->id";
+        $firstSale = $SaleModel->first();
+        $SalesBussines = new SalesBusiness;
+
+        $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+
+        dd($message);
+
+
+        // Check contact info by company
+        // $ExternalRPIController = new ExternalRPIController($Company->rpi);
+        // $checkContact = $ExternalRPIController->getContactInfo("5521986615841");
+        // $checkContact = $ExternalRPIController->getContactInfo("5521969791284");
+        // $checkContact = $ExternalRPIController->getContactInfo("5521969791284xxx");
+        // dd($checkContact);
+
+        // dd(Storage::disk('chats_files'));
+        // dd(Storage::disk('chats_files')->getDriver()->getAdapter()->getPathPrefix());
+
+        // var_dump(env('APP_NAME'));
+        // var_dump(env('APP_ENV'));
 
         //testing emails from laravel -Jose R
         // $Company = Company::find(1); 

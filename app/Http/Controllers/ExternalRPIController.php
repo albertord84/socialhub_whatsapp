@@ -24,13 +24,13 @@ use stdClass;
 
 class ExternalRPIController extends Controller
 {
-    private $Rpi;
+    private $Rpi = null;
 
     public function __construct(?Rpi $Rpi = null)
     {
         parent::__construct();
 
-        $this->Rpi = $Rpi ?? $this->getRPI();
+        $this->Rpi = (!$Rpi || $Rpi->id == 0) ? $this->getRPI() : $Rpi;
     }
 
     public function index(Request $request)
@@ -176,7 +176,7 @@ class ExternalRPIController extends Controller
             
             $response = $client->request('POST', $url);
             $response = $response->getBody()->getContents();
-            // $response = json_decode($response);
+            $response = json_decode($response);
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }
@@ -224,13 +224,13 @@ class ExternalRPIController extends Controller
         $contactInfo = new stdClass();
         try {
             $client = new \GuzzleHttp\Client();
-            $Rpi = $Rpi ?? self::getRPI();
+            $Rpi = $Rpi ?? ($this->Rpi ?? self::getRPI());
             $url = $Rpi->api_tunnel . '/GetContact';
-
+            
             $contactInfo = $client->request('GET', $url, [
                 'query' => ['RemoteJid' => $contact_id],
             ]);
-
+            
             $contactInfo = $contactInfo->getBody()->getContents();
             // $contactInfo = json_decode($contactInfo); // Isso viaja para VUE entao nao pode ir como objeto
             // Log::debug('\n\rgetContactInfo Response: ', [$contactInfo]);
@@ -260,9 +260,12 @@ class ExternalRPIController extends Controller
             $company_phone = $input['CompanyPhone'];
 
             $Company = Company::where(['whatsapp' => $company_phone])->first();
-            if (!$Company) throw new MyException("Company phone ($company_phone) not found", MyException::$COMPANY_PHONE_NOT_FOUND);
+            if (!$Company) 
+            {
+                Log::debug('\n\r rreciveTextMessage to Company (company not found): ', [$input]);
+                throw new MyException("Company phone ($company_phone) not found", MyException::$COMPANY_PHONE_NOT_FOUND);
+            }
             // $Company = Company::where(['whatsapp' => $company_phone])->first();
-            // Log::debug('\n\rreciveTextMessage to Company: ', [$Company]);
 
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
@@ -312,7 +315,10 @@ class ExternalRPIController extends Controller
             $company_phone = $input['CompanyPhone'];
 
             $Company = Company::where(['whatsapp' => $company_phone])->first();
-            // Log::debug('\n\rreciveFileMessage to Company: ', [$Company]);
+            if (!$Company) {
+                Log::debug('\n\r reciveFileMessage to Company (company not found): ', [$input]);
+                throw new MyException("Company phone ($company_phone) not found", MyException::$COMPANY_PHONE_NOT_FOUND);
+            }
 
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
@@ -320,7 +326,7 @@ class ExternalRPIController extends Controller
 
             $Chat = $this->messageToChatModel($input, $Contact);
             if (!$Chat) {
-                return "Error saving file message!";
+                throw new MyException("Error saving file message!", MyException::$ERROR_SAVING_FILE_MSG_FOUND);
             }
 
             $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
@@ -568,6 +574,7 @@ class ExternalRPIController extends Controller
         switch ($option) {
             case 'logout':
                 $response = '{"message": "Logout feito"}';
+                // $response = '{"message": "Sessao deletada"}';
                 break;
             case 'update':
                 $response = '{"message": "Atualizado"}';

@@ -95,6 +95,7 @@ class ExtendedContactController extends ContactController
 
                     $Contact = new Contact();
                     $Contact->company_id = $User->company_id;
+                    $Contact->origin = 3;
                     
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
                         $Contact->first_name = trim($contact[0]);
