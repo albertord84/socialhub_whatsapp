@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.fone" id="phone" title="Ex: 55 1188888888" name="phone" type="text" placeholder="Telefone" class="form-control"/>
+                    <input v-model="model.json_data.cliente.fone" id="phone" title="Ex: 551188888888" name="phone" type="text" placeholder="Telefone" class="form-control"/>
                 </div>
             </div>
 
