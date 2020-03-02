@@ -46,13 +46,14 @@ class BlingBusiness extends Business
 
             $url = env('URL_BLING_SALES', 'https://bling.com.br/Api/v2/pedidos/json/');
 
-            $yesterday = Carbon::yesterday()->subDays(3)->format('d/m/Y');
+            // $yesterday = Carbon::yesterday()->subDays(3)->format('d/m/Y');
+            $yesterday = Carbon::yesterday()->format('d/m/Y');
             $today = Carbon::now()->format('d/m/Y');
 
             $response = $client->request('GET', $url, [
                 'query' => [
                     'apikey' => $Company->bling_apikey,
-                    'filters' => "dataEmissao[$yesterday TO $today]",
+                    'filters' => "dataEmissao[$today TO $today]",
                 ],
             ]);
 
