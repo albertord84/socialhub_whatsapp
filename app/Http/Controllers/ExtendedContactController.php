@@ -100,7 +100,7 @@ class ExtendedContactController extends ContactController
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
                         $Contact->first_name = trim($contact[0]);
                     }
-                    if (preg_match("/^[5]{2}[1-9]{2}[1-9][0-9]{8}$/", $whatsapp) ) {
+                    if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
                         $Contact->whatsapp_id = $whatsapp;
                     }
                     if ($contact[2] && filter_var(trim($contact[2]), FILTER_VALIDATE_EMAIL)) {
@@ -115,6 +115,12 @@ class ExtendedContactController extends ContactController
                     }
                     if ($contact[5] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[5])) {
                         $Contact->linkedin_id = trim($contact[5]);
+                    }
+                    if ($contact[6] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[6])) {
+                        $Contact->estado = trim($contact[6]);
+                    }
+                    if ($contact[7] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[7])) {
+                        $Contact->cidade = trim($contact[7]);
                     }
 
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
