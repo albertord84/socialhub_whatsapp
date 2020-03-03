@@ -122,6 +122,12 @@ class ExtendedContactController extends ContactController
                     if ($contact[7] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[7])) {
                         $Contact->cidade = trim($contact[7]);
                     }
+                    if ($contact[8] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[8])) {
+                        $Contact->categoria1 = trim($contact[8]);
+                    }
+                    if ($contact[9] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[9])) {
+                        $Contact->categoria2 = trim($contact[9]);
+                    }
 
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
                         $Contact->save();
