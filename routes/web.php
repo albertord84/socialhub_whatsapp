@@ -13,7 +13,7 @@
 
 // Route::post('storeFromRPi', 'ExtendedChatController@storeFromRPi');
 // Route::get('reciveFileMessage', function () {
-//     die("ok");
+//     die("ok ok");
 // });
 
 // https://app.socialhub.pro/testsalesbling
