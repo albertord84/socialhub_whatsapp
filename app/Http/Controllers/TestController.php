@@ -173,9 +173,12 @@ class TestController extends AppBaseController
         // dd($this->repository->Sellers_User());
     }
 
-    public function testsalesbling(Request $request)
+    public function testsalesbling($p1, Request $request)
     {
-        Log::debug('\n\rBling Test Sales: ', [$request->all()]);
+        // Log::debug('\n\rBling Test Sales: ', [$request->all()]);
+
+        // var_dump($p1);
+        // var_dump($request->p1);
     }
 
     public function getGuzzleRequest()

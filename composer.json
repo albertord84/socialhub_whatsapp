@@ -39,7 +39,9 @@
         "nunomaduro/collision": "^2.0",
         "phpunit/phpunit": "^7.0",
         "squizlabs/php_codesniffer": "^3.4",
-        "xethron/migrations-generator": "^2.0"
+        "xethron/migrations-generator": "^2.0",
+        "stavarengo/php-sigep": "dev-master",
+        "stavarengo/php-sigep-fpdf": "dev-master"
     },
     "autoload": {
         "classmap": [

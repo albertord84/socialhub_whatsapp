@@ -166,7 +166,7 @@ class ExternalRPIController extends Controller
      * @param Rpi|null $Rpi
      * @return Json {"message": "Logout feito"}
      */
-    public static function logout(?Rpi $Rpi = null) : stdClass
+    public static function logout(?Rpi $Rpi = null)// : stdClass
     {
         $response = new stdClass();
         try {
@@ -175,8 +175,8 @@ class ExternalRPIController extends Controller
             $url = $Rpi->api_tunnel . '/logout';
             
             $response = $client->request('POST', $url);
-            $response = $response->getBody()->getContents();
-            $response = json_decode($response);
+            $response2 = $response->getBody()->getContents();
+            $response2 = json_decode($response2);
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }
