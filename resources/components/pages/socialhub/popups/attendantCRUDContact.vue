@@ -24,7 +24,7 @@
                     <div class="input-group-prepend">
                         <span class="fa fa-whatsapp input-group-text text-muted border-right-0 pt-2 outline" required placeholder="WhatsApp (*)" style="background-color:white"></span>
                     </div>
-                    <input type="text" v-model="model.whatsapp_id" v-mask="'55 ############'" title="Ex: 55 11988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
+                    <input type="text" v-model="model.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" class="form-control border-left-0 outline" placeholder="Whatsapp(*)" >
                     <div class="input-group-append" title="Conferir número">
                         <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="checkWhatsappNumber">
                             <span v-if="!isCheckingWhatsapp" class="fa fa-check"></span>
@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <div style="" class="form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
-                            <input v-model="model.phone" v-mask="'55 ############'" title="Ex: 55 1188888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
+                            <input v-model="model.phone" v-mask="'###############'" title="Ex: 551188888888" id="phone" name="phone" type="text" placeholder="Telefone fixo" class="form-control outline"/>
                         </div>
                     </div>
                 </div> 
