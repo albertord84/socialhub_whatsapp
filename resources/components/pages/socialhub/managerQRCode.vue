@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <div class="card" id="printableArea">
+            <div class="card no-shadows" id="printableArea">
                 <div class="card-block">
                     <div class="row">
                         <div class="col-8 col-md-8 invoice_address">
@@ -391,4 +391,7 @@
         cursor: pointer;
     }
 
+    .no-shadows{
+        box-shadow: none !important;
+    }
 </style>

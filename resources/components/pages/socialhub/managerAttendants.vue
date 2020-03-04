@@ -1,5 +1,5 @@
 <template>
-    <div class="card p-3">
+    <div class="card p-3 no-shadows">
         <!-- Attendant DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
@@ -486,5 +486,8 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 </style>
