@@ -105,8 +105,8 @@
     </div>
     <div id="app"></div>
 
-    <script type="text/javascript" src="{{ url(mix('manifest.js'))}}"></script>
-    <script type="text/javascript" src="{{ url(mix('vendor.js'))}}"></script>
+    <script type="text/javascript" src="{{ url(mix('manifest.js')).'?'.env('APP_VERSION') }}"></script>
+    <script type="text/javascript" src="{{ url(mix('vendor.js')).'?'.env('APP_VERSION') }}"></script>
     <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP_VERSION') }}"></script>
 
 </body>

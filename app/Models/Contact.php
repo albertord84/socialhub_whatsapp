@@ -32,6 +32,8 @@ class Contact extends Model
 
     public $table = 'contacts';
 
+    public $connection = "socialhub_mvp";
+
     public $timestamps = true;
     
     const CREATED_AT = 'created_at';
@@ -123,6 +125,14 @@ class Contact extends Model
     public function attendantsContacts()
     {
         return $this->hasMany(\App\Models\AttendantsContact::class, 'contact_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function sales()
+    {
+        return $this->hasMany(\App\Models\Sales::class, 'contact_id');
     }
 
     /**

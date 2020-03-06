@@ -10,6 +10,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\Auth;
+use Laracasts\Flash\Flash as FlashFlash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
@@ -130,20 +131,25 @@ class SalesController extends AppBaseController
      */
     public function update($id, UpdateSalesRequest $request)
     {
-        $sales = $this->salesRepository->findWithoutFail($id);
-
-        if (empty($sales)) {
-            Flash::error('Sales not found');
-
-            return redirect(route('sales.index'));
-        }
-
-        $sales = $this->salesRepository->update($request->all(), $id);
-
+        // $sales = $this->salesRepository->findWithoutFail($id);
+        $company_id = $id;
+        $sales_id = $request['id'];
+        // $sales = $this->salesRepository->findSale($company_id, $sales_id);
+        
+        // if (empty($sales)) {
+        //     Flash::error('Sales not found');
+        //     // return redirect(route('sales.index'));
+        //     return null;
+        // }
+        
+        // $sales = $this->salesRepository->update($request->all(), $id);
+        $sales = $this->salesRepository->updateSale($request->all(), $company_id, $sales_id);
+        
         Flash::success('Sales updated successfully.');
-
+        
         // return redirect(route('sales.index'));
-        return $sales->toJson();
+        return (string)$sales;
+        // return $sales->toJson();
     }
 
     /**

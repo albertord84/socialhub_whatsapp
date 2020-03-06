@@ -7,6 +7,7 @@
                 <e_barcharts></e_barcharts>
                 <e_linecharts></e_linecharts>
                 <e_piecharts></e_piecharts>
+                <dropdowns></dropdowns>
             </div>
         </div>
     </div>
@@ -22,6 +23,7 @@
     import e_barcharts from "../non_used_pages/e_barcharts";    
     import e_linecharts from "../non_used_pages/e_linecharts";    
     import e_piecharts from "../non_used_pages/e_piecharts";    
+    import dropdowns from "../non_used_pages/dropdowns";    
 
     export default {
         name: "PMailStatistics",
@@ -32,6 +34,7 @@
             e_barcharts,
             e_linecharts,
             e_piecharts,
+            dropdowns,
         },
 
         data() {
