@@ -46,9 +46,31 @@ const layout = [
         path: '/manager/blingSales',    
         component: resolve => require(['pages/socialhub/managerBlingSales'], resolve),
         meta: {
-            title: "Vendas Bling",
+            title: "Pedidos de venda no Bling",
+        }
+    },
+    {
+        path: '/manager/pmail',
+        component: resolve => require(['pages/socialhub/managerPMailIntegration'], resolve),
+        meta: {
+            title: "Integração",
+        }
+    },{
+        path: '/manager/pmailSales',    
+        component: resolve => require(['pages/socialhub/managerPMailSales'], resolve),
+        meta: {
+            title: "Envios",
+        }
+    },{
+        path: '/manager/pmailStatistics',    
+        component: resolve => require(['pages/socialhub/managerPMailStatistics'], resolve),
+        meta: {
+            title: "Estatísticas",
         }
     }
+    
+
+
 ]
     
     export default layout

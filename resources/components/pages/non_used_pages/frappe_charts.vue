@@ -5,7 +5,7 @@
                 <h4 class="card-title">Bar Charts</h4>
             </div>
             <div class="card-body">
-               <composite-chart></composite-chart>
+                <composite-chart></composite-chart>
             </div>
         </div>
         <!--default demo charts-->

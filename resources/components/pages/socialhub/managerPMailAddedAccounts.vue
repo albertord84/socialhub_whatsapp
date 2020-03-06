@@ -1,45 +1,21 @@
 <template>
-    <div class="card p-3 no-shadows">
-        <!-- Attendant DataTable -->
-        <div class="table-header">
-            <h4 class="table-title text-center mt-3">{{title}}</h4>
-        </div>        
-        <div class="text-left">
-            <div id="search-input-container">
-                <label>
-                    <div style="" class="form-group has-search">
-                        <span class="fa fa-search form-control-feedback"></span>
-                        <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
-                    </div>
-                </label>
-                <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
-                        <i class="mdi mdi-file-export fa-lg"  ></i>
-                        <!-- <i class="fa fa-download"></i> -->
-                    </a>
-                </div>
-                <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="handleAddAttendant" title="Novo atendente">
-                        <i class="fa fa-user-plus"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table ref="table" class="table">
-                <thead>
+    <div class="card no-shadows">
+        <!-- PMailAddedAccounts DataTable -->        
+        <div class="table-responsive no-shadows">
+            <table ref="table" class="table no-shadows">
+                <thead class="no-shadows">
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
-                <tbody>
+                <tbody class="no-shadows">
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
                         <template v-for="(column,index) in columns">
                             <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row, column.field) }}
+                                {{ collect(row,column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeAttendant(row)"><i class='fa fa-headphones text-dark mr-3'></i></a> -->
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Eliminar atendente" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeePMailAddedAccounts(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
+                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditPMailAddedAccounts(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeletePMailAddedAccounts(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -54,7 +30,7 @@
                     <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
                     <option value="-1">Todos</option>
                 </select>
-                <div class="datatable-info pb-2 mt-3">
+                <div class="datatable-info  pb-2 mt-3">
                     <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
                     currentPerPage * currentPage)}} of {{processedRows.length}}
                     <span>linhas</span>
@@ -76,33 +52,30 @@
             </div>
         </div>
 
-        <!-- Add Attendant Modal -->
-        <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
+        <!-- Edit PMailAddedAccounts Modal -->
+        <b-modal v-model="modalEditPMailAddedAccounts" size="lg" :hide-footer="true" title="Editar contato">
+            <managerCRUDPMailAddedAccounts :url='url' :secondUrl='secondUrl' :action='"edit"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDPMailAddedAccounts>            
         </b-modal>
 
-        <!-- Edit Attendant Modal -->
-        <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
+        <!-- Delete PMailAddedAccounts Modal -->
+        <b-modal ref="modal-delete-matter" v-model="modalDeletePMailAddedAccounts" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+            <managerCRUDPMailAddedAccounts :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDPMailAddedAccounts>            
         </b-modal>
 
-        <!-- Delete Attendant Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
-        </b-modal>
+        
 
     </div>
 </template>
-
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-    import managerCRUDAttendant from "./popups/managerCRUDAttendant";
-    
+    import managerCRUDPMailAddedAccounts from "./popups/managerCRUDPMailAddedAccounts";
 
     export default {
+        name:"managerPMailAddedAccounts",
+        
         props: {
             title: {
                 default: ""
@@ -124,75 +97,34 @@
                 default () {
                     return [5, 10, 20, 50]
                 }
-            }
+            },
+            rows:[]
         },
 
         components:{
-            managerCRUDAttendant
+            managerCRUDPMailAddedAccounts
         },
 
         data() {
             return {
-                //---------General properties-----------------------------
-                // logguedManager:{},
-                attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
-                first_url:'users',  //route to controller
-                url:'usersAttendants',  //route to controller
-
-                company_url:'companies',  //route to controller
+                url:'contacts',  //route to controller
+                // url:'pmail_accounts_url',  //route to controller
                 
-                // model:{},
-                //---------Specific properties-----------------------------
-                attendant_id: "",
+                pmail_accounts_id: "",
+                pmail_accounts_atendant_id: 0,
                 model:{},
-                modelCompany:{},
-                //---------New record properties-----------------------------
-                
-                //---------Edit record properties-----------------------------
 
-                //---------Show Modals properties-----------------------------
-                modalAddAttendant: false,
-                modalEditAttendant: false,
-                modalDeleteAttendant: false,
+                modalEditPMailAddedAccounts: false,
+                modalDeletePMailAddedAccounts: false,
 
-                //---------Externals properties-----------------------------
-
-                //---------DataTable properties-----------------------------
                 rows:[],
                 columns: [
                     {
-                        label: 'Status',
-                        field: 'status_id',
-                        // field: 'status_name',
-                        numeric: true, 
-                        width: "90px",
-                        html: false,
-                    },{
-                        label: 'Login', 
-                        field: 'login', 
-                        numeric: false, 
-                        html: false, 
-                    },{
-                        label: 'Nome completo', 
-                        field: 'name', 
-                        numeric: false, 
-                        html: false,                     
-                    }, {
-                        label: 'Email',
+                        label: 'Login',
                         field: 'email',
                         numeric: false,
                         html: false,
-                    }, {
-                        label: 'Telefone',
-                        field: 'phone',
-                        numeric: false,
-                        html: false,
-                    }, {
-                        label: 'CPF',
-                        field: 'CPF',
-                        numeric: false,
-                        html: false,
-                    }, {
+                    },{
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -207,69 +139,33 @@
             }
         },
 
-        methods: {  
-            getAttendants: function() { //R
-                ApiService.get(this.url)
-                    .then(response => {
-                        this.rows = [];
-                        var This=this;
-                        response.data.forEach(function(item, i){
-                            var obj = item.user;
-                            obj.created_at = item.created_at;
-                            obj.deleted_at = item.deleted_at;
-                            obj.updated_at = item.updated_at;
-                            This.rows.push(obj);
-                            //TODO-JR: adicionar o nome do status a cada registro
-                        });
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.url,"get");
-                    });
-            }, 
-
-            getCompanyOFManager(){ //TODO-Egberto
-                ApiService.get(this.company_url)
-                    .then(response => {
-                        this.modelCompany = response.data[0];
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.company_url,"get");
-                    });
-            }, 
-
-            handleAddAttendant(){ //TODO-Egberto (OK)
-                if(this.modelCompany.amount_attendants > this.rows.length){
-                    this.modalAddAttendant = !this.modalAddAttendant;
-                }else{
-                    miniToastr.warn("Para inserir mais atentendente você deve contatar nossa equipe atendimento", "Atenção"); 
-                }
-            },
-
+        methods: {
             reloadDatas(){
-                this.getAttendants();
+                this.$emit("reload");
             },
             
             closeModals(){
-                this.modalAddAttendant = false;
-                this.modalEditAttendant = false;
-                this.modalDeleteAttendant = false;
+                this.modalEditPMailAddedAccounts = false;
+                this.modalDeletePMailAddedAccounts = false;
             },
 
-            actionSeeAttendant: function(value){
-                this.model = value;
+            actionSeePMailAddedAccounts: function(value){
+                alert(value);
             },
 
-            actionEditAttendant: function(value){
+            actionEditPMailAddedAccounts: function(value){
                 this.model = value;
-                this.attendant_id = value.id;
-                this.modalEditAttendant = !this.modalEditAttendant;
+                this.contact_id = value.id;
+                this.modalEditPMailAddedAccounts = !this.modalEditPMailAddedAccounts;
             },
 
-            actionDeleteAttendant: function(value){
+            actionDeletePMailAddedAccounts: function(value){
                 this.model = value;
-                this.attendant_id = value.id;
-                this.modalDeleteAttendant = !this.modalDeleteAttendant;
+                this.contact_id = value.id;
+                this.modalDeletePMailAddedAccounts = !this.modalDeletePMailAddedAccounts;
             },
+
+            
 
             //------ Specific DataTable methods------------
             nextPage() {
@@ -296,20 +192,6 @@
 
             click(row, index) {
                 this.$emit("rowClick", row, index);
-            },
-
-            exportExcel() {
-                const mimeType = 'data:application/vnd.ms-excel';
-                const html = this.renderTable().replace(/ /g, '%20');
-
-                const d = new Date();
-
-                var dummy = document.createElement('a');
-                dummy.href = mimeType + ', ' + html;
-                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
-                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
-                    '.xls';
-                dummy.click();
             },
 
             renderTable() {
@@ -367,6 +249,10 @@
                 alert("hi");
             },
 
+            triggerEvent () {
+                this.$refs.fileInputCSV.click();
+            },
+            
             //------ Specific exceptions methods------------
             processMessageError: function(error, url, action) {
                 var info = ApiService.process_request_error(error, url, action);
@@ -382,10 +268,8 @@
             }
         },
 
-        beforeMount(){
-            // this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
-            this.getAttendants();
-            this.getCompanyOFManager();
+        beforeMount(){            
+            this.getPMailAddedAccounts();
         },
 
         mounted() {
@@ -429,6 +313,7 @@
                 }
                 return computedRows;
             },
+
             paginated: function () {
                 var paginatedRows = this.processedRows;
                 if (this.paginate && this.currentPerPage != -1) {
@@ -444,6 +329,7 @@
                 this.currentPage = 1;
                 this.paginated;
             },
+
             searchInput() {
                 this.currentPage = 1;
                 this.paginated;
@@ -451,8 +337,6 @@
         },
         
     }
-
-
 </script>
 
 <style scoped>

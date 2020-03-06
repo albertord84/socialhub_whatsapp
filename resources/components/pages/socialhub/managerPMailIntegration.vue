@@ -7,70 +7,81 @@
             <tab-content title="Informação" :beforeChange='steepInformation'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5">
-                        <h4 style="color:#34AD70">Porque integrar com o Bling?</h4>
+                        <h4 style="color:#34AD70">Porque integrar com os Correios?</h4>
                         <p class="text-justify pl-4">
-                            Essa funcionalidade é ideal para quem vende mercadorias ou serviços através de e-commerces como o MercadoLivre, 
-                            Amazon, B2W, Via Varejo, Magazine Luiza, ou o Carrefour, e usa o <a href="https://www.bling.com.br" target="_blank" rel="noopener noreferrer">Bling</a> 
-                            como Sistema integrado de gestão empresarial (ERP, Enterprise Resource Planning).
+                            Essa funcionalidade é ideal para quem vende mercadorias e faz entregas a través dos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a>.
                             <br><br>
-                            A integração de SocialHUB com o Bling lhe permite enviar mensagens com layouts personalisados através 
-                            de Whatsapp aos seus clientes logo depois que o Bling registrar cada pedido de venda feito nos seus e-commerces.                            
+                            A integração de <b>SocialHUB</b> com os <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a> lhe permite: <br> 
+                            <ul class="pl-4">
+                                <li class="mb-2"> 1) Monitorar automáticamente todos seus envios;</li>
+                                <li class="mb-2"> 2) Notificar a você e seus atendentes com as últimas ocorrências dos seus envios;</li>
+                                <li class="mb-2"> 3) Receber alertas por tipo de ocorrência: objeto mal encaminhado, não atendido, fiscalização, extraviado, endereço insuficiente, etc...;</li>
+                                <li class="mb-2"> 4) Abrir e reabrir automaticamente seus Pedidos de Indemnização (PI)) nos Correios tanto em caso de atraso quanto em caso de extravio para que você não perca do prazo de 30 dias para reembolso;</li>
+                                <li class="mb-2"> 5) Enviar mensagens por whatsapp ou e-mail com o status da entrega aos seus clientes com layouts de mensagens personalisados por você; e</li>
+                                <li class="mb-2"> 6) E muito importante, um Dashboard e Relatórios de Performance à sua disposição.</li>
+                            </ul>
                         </p>
                     </div>
                     <div class="pt-4 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Pré-requisitos para a integração</h4>
                         <p class="text-justify pl-4">
-                            - Ter uma conta no <a href="https://www.bling.com.br" target="_blank" rel="noopener noreferrer">Bling</a> que gerencie as suas vendas realizadas através dos e-commerces.
-                            <br><br>
-                            - Ter feito a integração da sua conta Bling com algum dos e-commerces.
-                            <!-- <br><br>
-                            - Ter feito a <a href="https://manuais.bling.com.br/manual/?item=homologacao-parceiro-api" target="_blank" rel="noopener noreferrer">Homologação</a> da API de pedidos de vendas do Bling. -->
+                            - Ter uma conta nos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a> que gerencie seus envios.
                         </p>
                     </div>
                 <hr>
             </tab-content>
 
-            <tab-content title="Gerar a API key" :beforeChange='steepAPIKEY'>
+            <tab-content title="Configuração das contas" :beforeChange='steepPMailAccounts'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
-                        <h4 style="color:#34AD70">Criação do Usuário API e da API key</h4>
-                        <ul class="pl-4">
-                            <li class="mb-4"> 1) Acesse a <a href="https://www.bling.com.br/usuarios.php#add" target="_blank" rel="noopener noreferrer">https://www.bling.com.br/usuarios.php#add</a> e selecione <b>usuário API</b>.</li>
-                            <li class="mb-4"> 2) Na sessão <b>Informações da conta</b> preencha os campos <b>Nome</b> e <b>Email</b> do usuário API.</li>
-                            <li class="mb-2"> 3) Na sessão <b>API key</b> gere a API key. Seguido copie e cole a API key aqui:</li>
-                            <li class="ml-4 mb-4">
-                                <input type="text" class="w-400" v-model="apikey" placeholder="Adicione sua API key aqui">
-                            </li>
-                            <li class="mb-4"> 4) Selecione a aba <b>Vendas</b> na sessão <b>Permissões</b> e marque todos os item da sub-sessão <b>Pedidos de Venda</b>.</li>
-                            <li class="mb-4"> 5) Pressionar o botão <b>Salvar</b> para finalizar a <i>Criação do Usuário API e da API key</i>.</li>
-                        </ul>
+                        <h4 style="color:#34AD70">Configuração das contas a serem monitoradas</h4>
+                        <p class="pl-4"> Aqui você deve informar as suas contas nos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a>  que deseja que sejam monitoradas.
+                        </p>
+
                     </div>
+                    <div class="row pl-5 pr-5 pb-3">
+                        <div class="col-3"></div>                        
+                        <div class="col-6">
+                            <b-card header="Personalize a mensagem" header-tag="h4" class="bg-default-card no-shadows">
+                                <template v-slot:header>
+                                    <h6 class="mb-0" style="float:left">Dados de acesso da conta</h6>                                    
+                                </template>
+                                <form @submit.prevent="addPMailAccount">
+                                    <div class="p-3">
+                                        <label for="username">Nome de usuário nos Correios</label>
+                                        <input type="text" ref="username" v-model="username" class="w-100 p-1" placeholder="Login nos Correios" required>
+                                    </div>
+                                    <div class="p-3">
+                                        <label for="password">Senha nos Correios</label>
+                                        <input type="text" ref="password" v-model="password" class="w-100 p-1" placeholder="Senha nos Correios" required>
+                                    </div>
+                                    <!-- <div class="p-3 text-center">
+                                        <button type="submit" style="background-color: rgb(32, 160, 255); color:white; font-size: 14px;font-weight: 600;padding: 6px 12px;min-width: 140px;" class="btn pl-4 pr-4">
+                                            <i v-if="isAddingPMailAccount" class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                                            Adiconar
+                                        </button>
+                                    </div> -->
+                                </form>
+                            </b-card>
+                        </div>
+                        <div class="col-3"></div>
+                        <!-- <div class="col-6">
+                            <b-card header="Palavras chaves" header-tag="h4" class="bg-default-card no-shadows" style="padding:0px !important; margin:0px !important">
+                                <template v-slot:header>
+                                    <h6 class="mb-0" style="float:left">Contas adicionadas</h6>
+                                </template>
+                                <managerPMailAddedAccounts :rows="pmailAccounts" @onreload="reloadPMailAccounts"></managerPMailAddedAccounts>
+                            </b-card>
+                        </div> -->
+                    </div>                    
                 <hr>
             </tab-content>
-            
-            <!-- <tab-content title="Configurar callback" :beforeChange='steepCallback'>
-                <hr>
-                    <div class="pt-3 pl-5 pr-5 pb-3">
-                        <h4 style="color:#34AD70">Configuração do callback</h4>
-                        <ul class="pl-4">
-                            <li class="mb-4"> 1) Acesse a <a href="https://www.bling.com.br/configuracoes.integracoes.lojas.virtuais.php#add/Api/3" target="_blank" rel="noopener noreferrer">https://www.bling.com.br/configuracoes.integracoes.lojas.virtuais.php#add/Api/3</a>.</li>
-                            <li class="mb-4"> 2) No menu esquerdo Selecione a opção <b>Autenticação</b>.</li>
-                            <li class="mb-4"> 3) Digite um nome no campo <b>Nome do canal de venda</b>.</li>
-                            <li class="mb-4"> 4) No menu esquerdo Selecione a opção <b>Callbacks</b>.</li>
-                            <li class="mb-4"> 5) Em <b>Tipo de retorno no callback</b> selecione a opção <b>JSON (urlencoded)</b>.</li>
-                            <li class="mb-4"> 6) Ative a opção <b>Callback de pedidos de venda</b>.</li>
-                            <li class="mb-4"> 7) Copie o seguinte link: <b>https://app.socialhub.pro/blingsales/code</b> e cole no campo <b>Preencha com a URL de callback de venda</b>.</li>
-                            <li class="mb-2"> 8) Pressionar o botão <b>Salvar</b> para finalizar a <i>Configuração do callback</i>.</li>
-                        </ul>
-                    </div>
-                <hr>
-            </tab-content> -->
 
             <tab-content title="Configurar mensagem" :beforeChange='steepLayoutMessage'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Configuração da Mensagem</h4>
-                        <p class="pl-4"> Personalize a mensagem que deseja enviar aos seus cliente após cada pedido de vendas.
+                        <p class="pl-4">Personalize a mensagem que deseja enviar aos seus cliente após cada pedido de vendas.
                             A mensagem pode conter palavras chaves precedidas do símbolo <b>@</b>, as que serão substituídas 
                             pela informação contida no pedido de venda. 
                         </p>
@@ -148,7 +159,7 @@
             <tab-content title="Fim da integração" :beforeChange='steepEnd'>
                 <div class="mt-5 mb-5 pt-5 pb-5 text-center">
                     <h4 style="color:#34AD70; text-align: left; margin-left:100px">
-                        Parabéns {{logued_user.name}}, <br> sua integração foi concluída!
+                        Parabéns {{logued_user.name}}, <br><br> sua integração com os Correios foi concluída!
                     </h4>
                 </div>
             </tab-content>
@@ -160,6 +171,7 @@
 <script>
     import Vue from 'vue';
     import ApiService from "../../../common/api.service";
+    import managerPMailAddedAccounts from "./managerPMailAddedAccounts.vue";
     import miniToastr from "mini-toastr";
     miniToastr.init();
 
@@ -167,42 +179,78 @@
     import 'vue-form-wizard/dist/vue-form-wizard.min.css'
     
     export default {
-        name: 'managerIntegrateBling',
+        name: 'managerPMailIntegration',
         
         components:{
             FormWizard,
-            TabContent
+            TabContent,
+            managerPMailAddedAccounts
         },
 
         data(){
             return{
-                companies_url:"companies",
-                sales_url:"companies",
-                bling_url:"blings",
+                pmail_accounts_url:"contacts", // "pmail_accounts_url",
                 logued_user:null,
                 message:"",
-                defaultMessage:"",
-                apikey:"",
+                defaultMessage:"",                
+                username:'',
+                password:'',
+                pmailAccounts:[],
+                isAddingPMailAccount:false,
             }
         },
 
         methods:{
+            addPMailAccount(){
+                alert("Adicionando conta"); return; //TODO: eliminar
+
+                this.isAddingPMailAccount =true;
+                ApiService.post(this.pmail_accounts_url, {
+                    "company_id":this.logued_user.company_id,
+                    "username":this.username,
+                    "password":this.password
+                })
+                .then(response => {
+                    miniToastr.success("Mensagem enviada com sucesso","Sucesso");
+                    this.username = "";
+                    this.password = "";
+                    this.reloadPMailAccounts();
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.url, "update");//TODO: EGBERTO
+                })
+                .finally(()=>{
+                    this.isAddingPMailAccount =false;
+                });
+            },
+
+            reloadPMailAccounts(){
+                ApiService.get(this.pmail_accounts_url, this.logued_user.company_id) 
+                .then(response => {
+                    this.pmailAccounts = response.data;
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.url, "update");//TODO: EGBERTO
+                })
+                .finally(()=>{
+                });                
+            },
+
             steepInformation(){
                 return true;
             },
 
-            steepAPIKEY(){
-                if(this.apikey.trim().length==0){                    
-                    miniToastr.warn("Atenção", "Deve inserir uma API key para continuar");  
+            steepPMailAccounts(){
+                if(this.pmailAccounts.length==0){                    
+                    miniToastr.warn("Atenção", "Deve inserir pelo menos uma conta dos Correios");  
                     return false;
                 }else{
                     return true;
                 }
             },
 
-            steepCallback(){},
-
             steepLayoutMessage(){
+                return true; //TODO: elimninar
                 let textarea = this.$refs.text_message;
                 this.message = textarea.value;
                 if(this.message.trim().length==0){                    
@@ -266,6 +314,7 @@
 
         beforeMount(){
             this.logued_user = JSON.parse(window.localStorage.getItem('user'));
+            this.reloadPMailAccounts();
         },
 
         mounted(){

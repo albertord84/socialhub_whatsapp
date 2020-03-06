@@ -1,45 +1,62 @@
 <template>
     <div class="card p-3 no-shadows">
-        <!-- Attendant DataTable -->
+        <!-- Sales DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>        
         <div class="text-left">
             <div id="search-input-container">
+                <!-- Buscar envio -->
                 <label>
                     <div style="" class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input type="search" id="search-input" class="form-control" placeholder="Buscar atendente" v-model="searchInput">
+                        <input type="search" id="search-input" style="width:35rem" class="form-control" placeholder="Buscar envio por e-mail, CEP, CPF/CNPJ ou código de rastreio" v-model="searchInput">
                     </div>
                 </label>
+
+                <!-- Exportar envios -->
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
-                        <i class="mdi mdi-file-export fa-lg"  ></i>
-                        <!-- <i class="fa fa-download"></i> -->
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar envios mostrados">
+                        <i class="mdi mdi-download fa-lg"></i>
                     </a>
                 </div>
+                <!-- Subir lista de códigos de rastreio -->
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="handleAddAttendant" title="Novo atendente">
-                        <i class="fa fa-user-plus"></i>
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Subir lista de códigos de rastreio">
+                        <i class="mdi mdi-upload fa-lg"  ></i>
+                    </a>
+                </div>                
+                <!-- Adicionar um envio -->
+                <div class="actions float-right pr-4 mb-3">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Adicionar um envio">
+                        <i class="mdi mdi-sticker-plus"></i>
+                    </a>
+                </div>
+                <!-- Adicionar um envio -->
+                <div class="actions float-right pr-4 mb-3">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Configurar filtros">
+                        <i class="mdi mdi-filter-plus"></i>
                     </a>
                 </div>
             </div>
         </div>
         <div class="table-responsive">
-            <table ref="table" class="table">
+            <table ref="table" id="salesTable" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,index) in columns">
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row, column.field) }}
-                            </td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeAttendant(row)"><i class='fa fa-headphones text-dark mr-3'></i></a> -->
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Eliminar atendente" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                            <td v-if="!column.html && !column.json" :key="index">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="index" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="index">
+                                <div style="position:relative; margin-left:-80px;">
+                                    <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a>
+                                    <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar venda" @click.prevent="actionDeleteSales(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                </div>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -54,7 +71,7 @@
                     <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
                     <option value="-1">Todos</option>
                 </select>
-                <div class="datatable-info pb-2 mt-3">
+                <div class="datatable-info  pb-2 mt-3">
                     <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
                     currentPerPage * currentPage)}} of {{processedRows.length}}
                     <span>linhas</span>
@@ -75,34 +92,29 @@
                 </ul>
             </div>
         </div>
-
-        <!-- Add Attendant Modal -->
-        <b-modal v-model="modalAddAttendant" size="lg" :hide-footer="true" title="Novo atendente">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"insert"' :item='{}' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
+        
+        <!-- Edit Sales Modal -->
+        <b-modal v-model="modalEditSales" size="lg" :hide-footer="true" title="Editar venda" id="modalEditSales" >
+            <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
         </b-modal>
 
-        <!-- Edit Attendant Modal -->
-        <b-modal v-model="modalEditAttendant" size="lg" :hide-footer="true" title="Editar atendente">
-            <managerCRUDAttendant :url='url' :first_url='first_url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>
+        <!-- Delete Sales Modal -->
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteSales" :hide-footer="true" title="Verificação de exclusão" id="modalDeleteSales">
+            <managerCRUDBlingSales :url='url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
         </b-modal>
-
-        <!-- Delete Attendant Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
-        </b-modal>
-
     </div>
-</template>
 
+</template>
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-    import managerCRUDAttendant from "./popups/managerCRUDAttendant";
-    
+    import managerCRUDBlingSales from "./popups/managerCRUDBlingSales";
 
     export default {
+        name:"managerPMailSales",
+        
         props: {
             title: {
                 default: ""
@@ -128,75 +140,72 @@
         },
 
         components:{
-            managerCRUDAttendant
+            managerCRUDBlingSales
         },
 
         data() {
             return {
                 //---------General properties-----------------------------
-                // logguedManager:{},
-                attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
-                first_url:'users',  //route to controller
-                url:'usersAttendants',  //route to controller
-
-                company_url:'companies',  //route to controller
+                url:'sales',  //route to controller
                 
-                // model:{},
                 //---------Specific properties-----------------------------
-                attendant_id: "",
+                sales_id: "",
                 model:{},
-                modelCompany:{},
+                message_sended: false,
+                
                 //---------New record properties-----------------------------
                 
+                
                 //---------Edit record properties-----------------------------
+                
 
                 //---------Show Modals properties-----------------------------
-                modalAddAttendant: false,
-                modalEditAttendant: false,
-                modalDeleteAttendant: false,
+                modalEditSales: false,
+                modalDeleteSales: false,
 
                 //---------Externals properties-----------------------------
+
 
                 //---------DataTable properties-----------------------------
                 rows:[],
                 columns: [
                     {
-                        label: 'Status',
-                        field: 'status_id',
-                        // field: 'status_name',
+                        label: 'Id',
+                        field: 'id',
                         numeric: true, 
-                        width: "90px",
-                        html: false,
-                    },{
-                        label: 'Login', 
-                        field: 'login', 
-                        numeric: false, 
-                        html: false, 
-                    },{
-                        label: 'Nome completo', 
-                        field: 'name', 
-                        numeric: false, 
-                        html: false,                     
+                        // width: "90px",
+                        html: false,                   
                     }, {
-                        label: 'Email',
-                        field: 'email',
+                        label: 'Cliente',
+                        field: 'json_data.pedido.cliente.nome',
                         numeric: false,
                         html: false,
                     }, {
                         label: 'Telefone',
-                        field: 'phone',
+                        field: 'json_data.pedido.cliente.fone',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'CPF',
-                        field: 'CPF',
+                        label: 'Situação',
+                        field: 'json_data.pedido.situacao',
                         numeric: false,
                         html: false,
+                    },{
+                        label: 'Produto',
+                        field: 'json_data.itensInHTML',
+                        numeric: false,
+                        html: true,
+                    }, {
+                        label: 'Mensagem',
+                        field: 'messageSended',
+                        numeric: false,
+                        html: true,
                     }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
-                        html: true,
+                        html: false,
+                        actions: true,
                     }
                 ],
                 currentPage: 1,
@@ -207,70 +216,95 @@
             }
         },
 
-        methods: {  
-            getAttendants: function() { //R
+        methods: {
+            getSales: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
-                        this.rows = [];
-                        var This=this;
-                        response.data.forEach(function(item, i){
-                            var obj = item.user;
-                            obj.created_at = item.created_at;
-                            obj.deleted_at = item.deleted_at;
-                            obj.updated_at = item.updated_at;
-                            This.rows.push(obj);
-                            //TODO-JR: adicionar o nome do status a cada registro
+                        response.data.forEach((sale, i)=>{
+                            sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
+                            sale.json_data = JSON.parse(sale.json_data);
+                            var str = "";
+                            try{
+                                sale.json_data.pedido.itens.forEach((itemData, j)=>{
+                                    str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
+                                });
+                                sale.json_data.itensInHTML =str;
+                            }catch(error){
+                                console.log(error);
+                            }
                         });
+                        this.rows = response.data;
                     })
                     .catch(error => {
-                        this.processMessageError(error, this.url,"get");
+                        this.processMessageError(error, this.url, "get");
                     });
             }, 
-
-            getCompanyOFManager(){ //TODO-Egberto
-                ApiService.get(this.company_url)
-                    .then(response => {
-                        this.modelCompany = response.data[0];
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.company_url,"get");
-                    });
-            }, 
-
-            handleAddAttendant(){ //TODO-Egberto (OK)
-                if(this.modelCompany.amount_attendants > this.rows.length){
-                    this.modalAddAttendant = !this.modalAddAttendant;
-                }else{
-                    miniToastr.warn("Para inserir mais atentendente você deve contatar nossa equipe atendimento", "Atenção"); 
-                }
-            },
 
             reloadDatas(){
-                this.getAttendants();
+                this.getSales();
             },
             
             closeModals(){
-                this.modalAddAttendant = false;
-                this.modalEditAttendant = false;
-                this.modalDeleteAttendant = false;
+                this.modalEditSales = false;
+                this.modalDeleteSales = false;
             },
 
-            actionSeeAttendant: function(value){
+            actionResendMessageSales: function(value){
+                alert(value.contact_id);
+                alert(value.json_data);
+
+                // tryResendMessageSales(); // TODO: ainda por implementar
+                this.message_sended = true; // So para teste
+
+                if(this.message_sended){
+                    //  console.log("1");
+                    //  console.log(this.model);
+                    //  console.log(value);
+                    //  console.log(value.json_data);
+                    //  console.log(value.id);
+
+                    delete value.json_data.itensInHTML;
+                    delete value.created_at;
+                    delete value.updated_at;
+                    delete value.deleted_at;
+
+                    value.sended = 1;
+
+                    value.json_data = JSON.stringify(value.json_data);
+                    
+                    ApiService.put(this.url+'/'+value.id, value) 
+                        .then(response => {
+
+                            miniToastr.success("Mensagem enviada com sucesso","Sucesso");
+                                this.reloadDatas();
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.url, "update");
+                        })
+
+                }else{
+                    miniToastr.warn("Não foi possivél enviar a mensagem. Tente mais tarde!","Atenção");
+                }   
+            },
+
+            tryResendMessageSales: function(){
+                // se mensagem enviado
+                this.message_sended = true;
+            },
+
+            actionEditSales: function(value){
                 this.model = value;
+                this.sales_id = value.id;
+                this.modalEditSales = !this.modalEditSales;
             },
 
-            actionEditAttendant: function(value){
+            actionDeleteSales: function(value){
                 this.model = value;
-                this.attendant_id = value.id;
-                this.modalEditAttendant = !this.modalEditAttendant;
+                this.sales_id = value.id;
+                this.modalDeleteSales = !this.modalDeleteSales;
             },
 
-            actionDeleteAttendant: function(value){
-                this.model = value;
-                this.attendant_id = value.id;
-                this.modalDeleteAttendant = !this.modalDeleteAttendant;
-            },
-
+            
             //------ Specific DataTable methods------------
             nextPage() {
                 if (this.processedRows.length > this.currentPerPage * this.currentPage && this.currentPerPage != -1)
@@ -383,9 +417,7 @@
         },
 
         beforeMount(){
-            // this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
-            this.getAttendants();
-            this.getCompanyOFManager();
+            this.getSales();
         },
 
         mounted() {
@@ -429,6 +461,7 @@
                 }
                 return computedRows;
             },
+
             paginated: function () {
                 var paginatedRows = this.processedRows;
                 if (this.paginate && this.currentPerPage != -1) {
@@ -444,6 +477,7 @@
                 this.currentPage = 1;
                 this.paginated;
             },
+
             searchInput() {
                 this.currentPage = 1;
                 this.paginated;
@@ -486,6 +520,12 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .sended{
+        /* background-color: rgb(212, 241, 212);         */
+    }
+    .notSended{
+        /* background-color:  rgb(247, 212, 212); */
     }
     .no-shadows{
         box-shadow: none !important;
