@@ -123,28 +123,12 @@
 
         data() {
             return {
-                //---------General properties-----------------------------
-                url:'sales',  //route to controller
-                
-                //---------Specific properties-----------------------------
+                url:'sales',  
                 sales_id: "",
                 model:{},
                 message_sended: false,
-                
-                //---------New record properties-----------------------------
-                
-                
-                //---------Edit record properties-----------------------------
-                
-
-                //---------Show Modals properties-----------------------------
                 modalEditSales: false,
                 modalDeleteSales: false,
-
-                //---------Externals properties-----------------------------
-
-
-                //---------DataTable properties-----------------------------
                 rows:[],
                 columns: [
                     {
@@ -198,6 +182,7 @@
             getSales: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
+                        console.log(response.data);
                         response.data.forEach((sale, i)=>{
                             sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
                             sale.json_data = JSON.parse(sale.json_data);

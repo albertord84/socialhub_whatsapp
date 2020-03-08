@@ -23,6 +23,7 @@
 
                 <!-- Subir lista de códigos de rastreio -->
                 <div class="actions float-right pr-4 mb-3">
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
                     <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
                         <i class="mdi mdi-upload fa-lg"  ></i>
                     </a>
@@ -97,12 +98,12 @@
         </div>
         
         <!-- Add Dispatch Modal -->
-        <b-modal v-model="modalAddDispatch" size="lg" :hide-footer="true" title="Editar venda">
+        <b-modal v-model="modalAddDispatch" size="lg" :hide-footer="true" title="Adicionar envio">
             <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
         </b-modal>         
 
         <!-- Edit Dispatch Modal -->
-        <b-modal v-model="modalEdtitDispatch" size="lg" :hide-footer="true" title="Editar venda">
+        <b-modal v-model="modalEdtitDispatch" size="lg" :hide-footer="true" title="Editar envio">
             <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
         </b-modal>
 
@@ -112,18 +113,40 @@
         </b-modal>
 
         <!-- Filter Dispatchs Modal -->
-        <b-modal v-model="modalFilterDispatchs" size="lg" :hide-footer="true" title="Editar venda">
-            <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
+        <b-modal v-model="modalFilterDispatchs" size="md" :hide-footer="true" title="Filtrar envios">
+            <form class="p-3">
+                <div class="row pl-2 pr-2">
+                    <div class="col-12 mb-4">
+                        <label for="period">Periodo</label>
+                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <label for="period">Situação</label>
+                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <label for="period">Ocorrências</label>
+                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <label for="period"> Dados do contato</label>
+                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
+                    </div>
+                </div>
+            </form>            
         </b-modal>
     </div>
 
 </template>
 <script>
+    import Vue from 'vue';
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDBlingSales from "./popups/managerCRUDBlingSales";
+    import Multiselect from 'vue-multiselect';
+    Vue.component(Multiselect);
 
     export default {
         name:"managerPMailSales",
@@ -153,7 +176,8 @@
         },
 
         components:{
-            managerCRUDBlingSales
+            managerCRUDBlingSales,
+            Multiselect
         },
 
         data() {
@@ -214,6 +238,15 @@
                         actions: true,
                     }
                 ],
+
+                tag_value:null,
+                object_options: [
+                    {name: 'Vue.js', code: 'vu'}, 
+                    {name: 'Javascript',code: 'js'}, 
+                    {name: 'Monterail',code: 'pl'},
+                    {name: 'Open Source',code: 'os'}
+                ],
+
                 currentPage: 1,
                 currentPerPage: this.perPage,
                 sortColumn: -1,
@@ -267,7 +300,7 @@
             },
             
             showModalUploadDispatchList() {
-                //uploadDispatchList
+                this.$refs.fileInputCSV.click();
             },
             
             closeModals(){
@@ -429,6 +462,15 @@
                 alert("hi");
             },
 
+            addTag(newTag) {
+                const tag = {
+                    name: newTag,
+                    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                }
+                this.object_options.push(tag)
+                this.tag_value.push(tag)
+            },
+
             //------ Specific exceptions methods------------
             processMessageError: function(error, url, action) {
                 var info = ApiService.process_request_error(error, url, action);
@@ -559,3 +601,4 @@
         box-shadow: none !important;
     }
 </style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
