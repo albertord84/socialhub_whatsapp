@@ -929,6 +929,8 @@
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
+
+                handleTimeToReloadContacts:null,
                 
                 messages:[],
                 searchMessageByStringInput:'',
@@ -2065,8 +2067,21 @@
             this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
             this.getAmountContactsInBag();
+            
+            if(this.handleTimeToReloadContacts){
+                clearInterval(this.handleTimeToReloadContacts);
+            }
+            if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
+                this.handleTimeToReloadContacts = setInterval(()=>{
+                    console.log("Reloading all chats by time");
+                    this.getContacts();
+                    this.getAmountContactsInBag();
+                }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
+            }
+            
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
+
         },
 
         mounted(){
