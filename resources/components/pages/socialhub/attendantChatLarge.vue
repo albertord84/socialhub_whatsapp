@@ -1279,32 +1279,47 @@
                     return;
                 }
 
-                delete this.selectedContactToEdit.status;                
-                delete this.selectedContactToEdit.created_at;
-                delete this.selectedContactToEdit.updated_at;
-                
-                var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
-                selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                if(selectedContactToEdit_cpy.phone){
-                    selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
-                    selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                var modifiedData = false;
+                if(this.selectedContact.first_name != this.selectedContactToEdit.first_name) modifiedData = true;
+                if(this.selectedContact.email != this.selectedContactToEdit.email) modifiedData = true;
+                if(this.selectedContact.whatsapp_id != this.selectedContactToEdit.whatsapp_id) modifiedData = true;
+                if(this.selectedContact.phone != this.selectedContactToEdit.phone) modifiedData = true;
+                if(this.selectedContact.cidade != this.selectedContactToEdit.cidade) modifiedData = true;
+                if(this.selectedContact.estado != this.selectedContactToEdit.estado) modifiedData = true;
+                if(this.selectedContact.categoria1 != this.selectedContactToEdit.categoria1) modifiedData = true;
+                if(this.selectedContact.categoria2 != this.selectedContactToEdit.categoria2) modifiedData = true;
+
+                if(modifiedData){
+
+                    delete this.selectedContactToEdit.status;                
+                    delete this.selectedContactToEdit.created_at;
+                    delete this.selectedContactToEdit.updated_at;
+                    
+                    var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                    if(selectedContactToEdit_cpy.phone){
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                    }
+                            
+                    ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
+                        .then(response => {
+                            if(this.isEditingContact)
+                                this.isEditingContact = false;
+                            if(this.isEditingContactSummary)
+                                this.isEditingContactSummary = false;
+                            miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                            this.selectedContactIndex = 0;
+                            this.getContacts();
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.contacts_url, "update");
+                        })
+                        .finally(() => this.isUpdatingContact = false);
                 }
-                        
-                ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
-                    .then(response => {
-                        if(this.isEditingContact)
-                            this.isEditingContact = false;
-                        if(this.isEditingContactSummary)
-                            this.isEditingContactSummary = false;
-                        miniToastr.success("Contato atualizado com sucesso.","Sucesso");
-                        this.selectedContactIndex = 0;
-                        this.getContacts();
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.contacts_url, "update");
-                    })
-                    .finally(() => this.isUpdatingContact = false);
+                this.isUpdatingContact = false;
+                this.isEditingContact = false;
             },
 
             getLastMessageTime: function(time){
