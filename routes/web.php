@@ -20,6 +20,8 @@
 Route::post('testsalesbling', 'TestController@testsalesbling');
 Route::get('testsalesbling', 'TestController@testsalesbling');
 
+Route::get('testCorreios', 'TestController@testCorreios');
+
 Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
     Route::post('reciveTextMessage', 'ExternalRPIController@reciveTextMessage');
