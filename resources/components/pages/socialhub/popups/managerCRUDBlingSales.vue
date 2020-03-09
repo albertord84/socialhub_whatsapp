@@ -7,22 +7,22 @@
             <div class="row">
                 <div  class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.nome" title="Ex: Nome do cliente" id="name" name="name" type="text" autofocus placeholder="Nome do cliente" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.nome" title="Ex: Nome do cliente" id="name" name="name" type="text" autofocus placeholder="Nome do cliente" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-user form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.id" id="clientID" title="Ex: 88888888" name="clientID" type="text" placeholder="ID do cliente" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.id" id="clientID" title="Ex: 88888888" name="clientID" type="text" placeholder="ID do cliente" class="form-control"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-envelope form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.email" title="Ex: cliente@gmail.com" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.email" title="Ex: cliente@gmail.com" name="email" id="email" type="email" placeholder="Email" class="form-control"/>
                 </div>
                 <div class="col-lg-6 form-group has-search">
                     <span class="fa fa-phone form-control-feedback"></span>
-                    <input v-model="model.json_data.cliente.fone" id="phone" title="Ex: 55 1188888888" name="phone" type="text" placeholder="Telefone" class="form-control"/>
+                    <input v-model="model.json_data.pedido.cliente.fone" id="phone" title="Ex: 55 1188888888" name="phone" type="text" placeholder="Telefone" class="form-control"/>
                 </div>
             </div>
 
@@ -31,46 +31,46 @@
             <div class="row">
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.vendedor" id="vendedor" title="Ex: Nome do vendedor" name="vendedor" type="text" placeholder="Nome do vendedor" class="form-control"/>
+                    <input v-model="model.json_data.pedido.vendedor" id="vendedor" title="Ex: Nome do vendedor" name="vendedor" type="text" placeholder="Nome do vendedor" class="form-control"/>
                 </div>
 
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.situacao" id="situacao" title="Ex: Em aberto" name="situacao" type="text" placeholder="Situação da venda" class="form-control"/>
+                    <input v-model="model.json_data.pedido.situacao" id="situacao" title="Ex: Em aberto" name="situacao" type="text" placeholder="Situação da venda" class="form-control"/>
                 </div>
                 
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.data" id="data" title="Ex: 31/12/2020" name="data" type="text" placeholder="Data da venda" class="form-control"/>
+                    <input v-model="model.json_data.pedido.data" id="data" title="Ex: 31/12/2020" name="data" type="text" placeholder="Data da venda" class="form-control"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.tipoIntegracao" id="tipoIntegracao" title="Ex: MercadoLivre" name="tipoIntegracao" type="text" placeholder="Tipo de Integracão" class="form-control"/>
+                    <input v-model="model.json_data.pedido.tipoIntegracao" id="tipoIntegracao" title="Ex: MercadoLivre" name="tipoIntegracao" type="text" placeholder="Tipo de Integracão" class="form-control"/>
                 </div>
                 
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.loja" id="loja" title="Ex: 88888888" name="loja" type="text" placeholder="Loja" class="form-control"/>
+                    <input v-model="model.json_data.pedido.loja" id="loja" title="Ex: 88888888" name="loja" type="text" placeholder="Loja" class="form-control"/>
                 </div>
 
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.numeroPedidoLoja" id="numeroPedidoLoja" title="Ex: 88888888" name="numeroPedidoLoja" type="text" placeholder="Número de Pedido da Loja" class="form-control"/>
+                    <input v-model="model.json_data.pedido.numeroPedidoLoja" id="numeroPedidoLoja" title="Ex: 88888888" name="numeroPedidoLoja" type="text" placeholder="Número de Pedido da Loja" class="form-control"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.numeroOrdemCompra" id="numeroOrdemCompra" title="Ex: 88888888" name="numeroOrdemCompra" type="text" placeholder="Número de Ordem de Compra" class="form-control"/>
+                    <input v-model="model.json_data.pedido.numeroOrdemCompra" id="numeroOrdemCompra" title="Ex: 88888888" name="numeroOrdemCompra" type="text" placeholder="Número de Ordem de Compra" class="form-control"/>
                 </div>
 
                 <div class="col-lg-8 form-group has-search">
                     <span class="fa fa-id-card form-control-feedback"></span>
-                    <input v-model="model.json_data.itens" id="produtos" title="Ex: 88888888" name="produtos" type="text" placeholder="Produtos comprados" class="form-control"/>
+                    <input v-model="model.json_data.pedido.itens" id="produtos" title="Ex: 88888888" name="produtos" type="text" placeholder="Produtos comprados" class="form-control"/>
                 </div>
             </div>
 
@@ -93,6 +93,7 @@
                 <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="formCancel">Cancelar</button>
             </div>                    
         </form>
+
     </b-container>
 </template>
 
@@ -119,15 +120,10 @@
         data(){
             return{
                 sales_id: "",
-                model:{ },
-
-                //---------New record properties-----------------------------
-                
-                // isSendingInsert: false,
+                model:{},
+                user_loggued:{},
                 isSendingUpdate: false,
                 isSendingDelete: false,
-
-                // flagReference: true,
             }
         },
 
@@ -154,13 +150,12 @@
                 //     this.flagReference = true;
                 //     return;
                 // }
-                 
+                
                 delete this.model.json_data.itensInHTML;
                 this.model.json_data = JSON.stringify(this.model.json_data);
 
-                ApiService.put(this.url+'/'+this.model.id, this.model) 
+                ApiService.put(this.url+'/'+this.user_loggued.company_id, this.model) 
                     .then(response => {
-
                         miniToastr.success("Venda atualizada com sucesso","Sucesso");
                             this.reload();
                             this.closeModals();
@@ -170,7 +165,6 @@
                     })
                     .finally(() => this.isSendingUpdate = false); 
             },
-
 
             deleteSales: function() { //D
                 
@@ -188,12 +182,7 @@
                     .finally(() => this.isSendingDelete = false);                   
             },
 
-
-
-
-
             //------ auxiliary methods--------------------
-      
 
             formCancel(){
                 this.$emit('modalclose');
@@ -203,81 +192,79 @@
                 this.$emit('onreloaddatas');
             }, 
 
+            /* trimDataModel: function(){
+                if(this.model.first_name) this.model.first_name = this.model.first_name.trim();
+                if(this.model.last_name) this.model.last_name = this.model.last_name.trim();
+                if(this.model.email) this.model.email = this.model.email.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+                if(this.model.remember) this.model.remember = this.model.remember.trim();
+                if(this.model.summary) this.model.summary = this.model.summary.trim();
+                if(this.model.description) this.model.description = this.model.description.trim();
+            },
 
-
-            // trimDataModel: function(){
-            //     if(this.model.first_name) this.model.first_name = this.model.first_name.trim();
-            //     if(this.model.last_name) this.model.last_name = this.model.last_name.trim();
-            //     if(this.model.email) this.model.email = this.model.email.trim();
-            //     if(this.model.phone) this.model.phone = this.model.phone.trim();
-            //     if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
-            //     if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
-            //     if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
-            //     if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
-            //     if(this.model.remember) this.model.remember = this.model.remember.trim();
-            //     if(this.model.summary) this.model.summary = this.model.summary.trim();
-            //     if(this.model.description) this.model.description = this.model.description.trim();
-            // },
-
-            // validateData: function(){
-            //     // Validação dos dados do contato
-            //     var check;
-            //     if(this.model.first_name && this.model.first_name !=''){
-            //         check = validation.check('complete_name', this.model.first_name)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }else{
-            //         miniToastr.error("Erro", "O nome do contato é obrigatório" );
-            //         this.flagReference = false;
-            //     }
-            //     if(this.model.email && this.model.email !=''){
-            //         check = validation.check('email', this.model.email)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }
-            //     if(this.model.phone && this.model.phone !=''){
-            //         check = validation.check('phone', this.model.phone)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }
-            //     if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
-            //         check = validation.check('whatsapp', this.model.whatsapp_id)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }else{
-            //         miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
-            //         this.flagReference = false;
-            //     }
-            //     if(this.model.facebook_id && this.model.facebook_id !=''){
-            //         check = validation.check('facebook_profile', this.model.facebook_id)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }
-            //     if(this.model.instagram_id && this.model.instagram_id !=''){
-            //         check = validation.check('instagram_profile', this.model.instagram_id)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }
-            //     if(this.model.linkedin_id && this.model.linkedin_id !=''){
-            //         check = validation.check('linkedin_profile', this.model.linkedin_id)
-            //         if(check.success==false){
-            //             miniToastr.error("Erro", check.error );
-            //             this.flagReference = false;
-            //         }
-            //     }
-            // },
+            validateData: function(){
+                // Validação dos dados do contato
+                var check;
+                if(this.model.first_name && this.model.first_name !=''){
+                    check = validation.check('complete_name', this.model.first_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do contato é obrigatório" );
+                    this.flagReference = false;
+                }
+                if(this.model.email && this.model.email !=''){
+                    check = validation.check('email', this.model.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                    check = validation.check('whatsapp', this.model.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
+                    this.flagReference = false;
+                }
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },*/
 
 
 
@@ -298,11 +285,12 @@
 
         },
 
-        beforeUpdate(){
-            },
+        beforeMount(){
+            this.user_loggued = JSON.parse(window.localStorage.getItem('user'));
+            this.editSale();
+        },
 
-        mounted(){
-            this.editSale();            
+        mounted(){            
         },
 
         created() {

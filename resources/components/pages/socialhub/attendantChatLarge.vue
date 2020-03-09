@@ -210,7 +210,7 @@
                                                     </b-dropdown-item>
                                                 </b-dropdown>
                                             </div>
-                                        </div> -->
+                               chatMessageScroling    </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +284,7 @@
                 </div>
 
                 <!-- Chat messages -->
-                <v-scroll :height="Height(170)" :vid="'chat-content'" color="#ccc" bar-width="8px" ref="message_scroller" :percent="percent" :seeSrolling="'true'" @onscrolling="chatMessageScroling" @ontop="onTopMessages" @oncontentresize="oncontentresize">
+                <v-scroll :height="Height(170)" :vid="'chat-content'" color="#ccc" bar-width="8px" ref="message_scroller" :percent="percent" :seeSrolling="'true'" @onscrolling="1" @ontop="onTopMessages" @oncontentresize="oncontentresize">
                     <ul >
                         <li v-for='(message,index) in messages' :key="index" :id="'message_' + message.id" :ref="'message_' + message.id">                            
                             <A :id="'message_lnk_' + message.id" :name="'#message_lnk_' + message.id"></A>
@@ -929,6 +929,8 @@
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
+
+                handleTimeToReloadContacts:null,
                 
                 messages:[],
                 searchMessageByStringInput:'',
@@ -1094,6 +1096,7 @@
                             } catch (error) {
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
+                            item.isPictUrlBroken = false;
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
@@ -1223,27 +1226,35 @@
                 }
             },
 
-            reloadContactPicUrl(contact,index){
-                if(typeof(this.allContacts[index].broken) != 'undefined' || typeof(this.contacts[index].broken) != 'undefined'){
-                    console.log('requesting ContactPicUrl');
+            reloadContactPicUrl(contact/*,index*/){
+                // if(this.allContacts[index].isPictUrlBroken && this.contacts[index].isPictUrlBroken){
+                if(contact.isPictUrlBroken){
                     ApiService.get('updateContactPicture/'+contact.id)
-                        .then(response => {
-                            this.contacts[index].json_data = response.data.json_data;
-                            // e.target.src = JSON.parse(response.data.json_data).picurl;
-                            this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
-                            delete this.allContacts[index].broken;
-                            delete this.contacts[index].broken;
-                            console.log('end requesting ContactPicUrl');
-                        })
-                        .catch(function(error) {
-                            miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                    .then(response => {
+                        this.contacts.forEach((item, i)=>{
+                            if(item.id == contact.id){
+                                item.json_data = response.data.json_data;
+                                this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                                item.isPictUrlBroken = false;
+                            }
                         });
+                        // this.allContacts.forEach(function(item, i){
+                        //     if(item.id == contact.id){
+                        //         item.json_data = response.data.json_data;
+                        //         this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                        //         item.isPictUrlBroken = false;
+                        //     }
+                        // });
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                    });
                 }
             },
 
             markAsBrokenUrl(contact,index){
-                this.contacts[index].broken = true;
-                this.allContacts[index].broken = true;
+                this.contacts[index].isPictUrlBroken = true;
+                this.allContacts[index].isPictUrlBroken = true;
             },
 
             chatCenterSideBack(){
@@ -1251,6 +1262,12 @@
             },
             
             updateContact: function() {
+
+                //TODO-Egberto (Urgente): solamente vas a mandar la petición si los objetos 
+                //this.selectedContactToEditActions y el this.selectedContact son diferentes, o sea, si realmente se edito algo
+                //busca en internet como compara si dos objetos son iguales en javascript, mira el ejemplo 5 del link
+                // https://medium.com/javascript-in-plain-english/comparing-objects-in-javascript-ce2dc1f3de7f
+                //testa bien antes de subir, mira el video que medina mando en el grupo de dev
                 
                 this.isUpdatingContact = true;
 
@@ -1264,32 +1281,47 @@
                     return;
                 }
 
-                delete this.selectedContactToEdit.status;                
-                delete this.selectedContactToEdit.created_at;
-                delete this.selectedContactToEdit.updated_at;
-                
-                var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
-                selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                if(selectedContactToEdit_cpy.phone){
-                    selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
-                    selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                var modifiedData = false;
+                if(this.selectedContact.first_name != this.selectedContactToEdit.first_name) modifiedData = true;
+                if(this.selectedContact.email != this.selectedContactToEdit.email) modifiedData = true;
+                if(this.selectedContact.whatsapp_id != this.selectedContactToEdit.whatsapp_id) modifiedData = true;
+                if(this.selectedContact.phone != this.selectedContactToEdit.phone) modifiedData = true;
+                if(this.selectedContact.cidade != this.selectedContactToEdit.cidade) modifiedData = true;
+                if(this.selectedContact.estado != this.selectedContactToEdit.estado) modifiedData = true;
+                if(this.selectedContact.categoria1 != this.selectedContactToEdit.categoria1) modifiedData = true;
+                if(this.selectedContact.categoria2 != this.selectedContactToEdit.categoria2) modifiedData = true;
+
+                if(modifiedData){
+
+                    delete this.selectedContactToEdit.status;                
+                    delete this.selectedContactToEdit.created_at;
+                    delete this.selectedContactToEdit.updated_at;
+                    
+                    var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                    if(selectedContactToEdit_cpy.phone){
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                    }
+                            
+                    ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
+                        .then(response => {
+                            if(this.isEditingContact)
+                                this.isEditingContact = false;
+                            if(this.isEditingContactSummary)
+                                this.isEditingContactSummary = false;
+                            miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                            this.selectedContactIndex = 0;
+                            this.getContacts();
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.contacts_url, "update");
+                        })
+                        .finally(() => this.isUpdatingContact = false);
                 }
-                        
-                ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
-                    .then(response => {
-                        if(this.isEditingContact)
-                            this.isEditingContact = false;
-                        if(this.isEditingContactSummary)
-                            this.isEditingContactSummary = false;
-                        miniToastr.success("Contato atualizado com sucesso.","Sucesso");
-                        this.selectedContactIndex = 0;
-                        this.getContacts();
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.contacts_url, "update");
-                    })
-                    .finally(() => this.isUpdatingContact = false);
+                this.isUpdatingContact = false;
+                this.isEditingContact = false;
             },
 
             getLastMessageTime: function(time){
@@ -1929,10 +1961,9 @@
                 this.isMuteNotifications = (contact.status_id == 6)? true: false;
             },
 
-
-
             getContactChat: function(contact,index) {
-                this.reloadContactPicUrl(contact,index);
+                console.log(contact.first_name+'  ----> '+index);
+                this.reloadContactPicUrl(contact/*,index*/);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
                     this.pageNumber = -1;
@@ -2024,7 +2055,6 @@
                 }
             },
 
-
         },
 
         updated(){
@@ -2037,8 +2067,21 @@
             this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
             this.getAmountContactsInBag();
+            
+            if(this.handleTimeToReloadContacts){
+                clearInterval(this.handleTimeToReloadContacts);
+            }
+            if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
+                this.handleTimeToReloadContacts = setInterval(()=>{
+                    console.log("Reloading all chats by time");
+                    this.getContacts();
+                    this.getAmountContactsInBag();
+                }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
+            }
+            
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
+
         },
 
         mounted(){

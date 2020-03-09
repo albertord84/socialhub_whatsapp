@@ -50,7 +50,7 @@ class Sales extends Model
         'source' => 'integer',
         'sended' => 'integer',
         'message' => 'string',
-        'json_data' => 'string'
+        // 'json_data' => 'string'
     ];
 
     /**
@@ -81,4 +81,12 @@ class Sales extends Model
 
         return $Sale;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     **/
+    public function contact()
+    {
+        return $this->belongsTo(\App\Models\ExtendedContact::class, 'contact_id');
+    }    
 }

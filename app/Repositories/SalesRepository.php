@@ -33,10 +33,27 @@ class SalesRepository extends BaseRepository
         $Sales = new Sales();
         $Sales->table = "$company_id";
 
-        return $Sales->where('id', '!=', null)->get();
+        return $Sales->with('contact')->get();
+        // return $Sales->with('contact')->where('id', '!=', null)->get();
     }
-    
 
+    public function findSale($company_id, $sales_id){
+        $saleModel = new $this->model();
+        $saleModel->table = (string)$company_id;
+        $saleModel->findOrFail($sales_id);
+        return $saleModel;
+    }
+
+    public function updateSale($datas, $company_id, $sales_id){
+        $saleModel = new $this->model();
+        $saleModel->table = (string)$company_id;
+        $sale = $saleModel->findOrFail($sales_id);
+        // dd($datas);
+        // dd($sale->json_data);
+        $json_data = $datas["json_data"];
+        $sale->json_data = $json_data;
+        return $sale->save();
+    }
 
 
     /**

@@ -152,8 +152,7 @@ class ExtendedChatRepository extends ChatRepository
         return $ChastMessages;
     }
 
-    public function createMessage(array $attributes)
-    {   
+    public function createMessage(array $attributes){   
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;
@@ -167,8 +166,7 @@ class ExtendedChatRepository extends ChatRepository
         return $chatModel->create($attributes);
     }
 
-    public function updateMessage(array $attributes, int $id)
-    {   
+    public function updateMessage(array $attributes, int $id){   
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
         $chatModel->table = (string)$attendant_id;

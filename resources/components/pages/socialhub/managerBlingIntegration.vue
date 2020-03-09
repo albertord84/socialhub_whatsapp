@@ -1,5 +1,5 @@
 <template>
-    <div class="card p-3">
+    <div class="card p-3 no-shadows">
         <form-wizard    title = '' subtitle = '' backButtonText = 'Voltar' nextButtonText = 'Seguinte'  finishButtonText = 'Finalizar' stepSize = 'xs' color = "#20a0ff">
             <template v-slot:backButtonText>
                 <h2>title hola mundo.com</h2>
@@ -77,7 +77,7 @@
                     </div>
                     <div class="row pl-5 pr-5 pb-3">
                         <div class="col-8">
-                            <b-card  header="Personalize a mensagem" header-tag="h4" class="bg-default-card ">
+                            <b-card  header="Personalize a mensagem" header-tag="h4" class="bg-default-card no-shadows">
                                 <template v-slot:header>
                                     <h6 class="mb-0" style="float:left">Personalize a mensagem</h6>
                                     <h6 class="mb-0" style="float:right">
@@ -88,7 +88,7 @@
                             </b-card>
                         </div>
                         <div class="col-4">
-                            <b-card header="Palavras chaves" header-tag="h4" class="bg-default-card" style="padding:0px !important; margin:0px !important">
+                            <b-card header="Palavras chaves" header-tag="h4" class="bg-default-card no-shadows" style="padding:0px !important; margin:0px !important">
                                 <div style="height:300px; overflow-x:hidden; overflow-y:auto"  class="pl-4 pl-0">                                    
                                     <div class="row header">Do pedido</div>
                                         <div class="row reserved-word" @click.prevent="insertReservedWord('@desconto')">@desconto</div>
@@ -264,9 +264,11 @@
 
         },
 
-        mounted(){
+        beforeMount(){
             this.logued_user = JSON.parse(window.localStorage.getItem('user'));
-            
+        },
+
+        mounted(){
             this.defaultMessage = "Olá, @cliente_nome \n\n"+
             "Obrigado pela compra do produto @item_descricao.\n"+
             "Quantidade de ítens: @item_quantidade.\n\n"+
@@ -312,6 +314,9 @@
 
     .hover:hover{
         cursor: pointer;
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 
 </style>

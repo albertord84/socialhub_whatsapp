@@ -1,27 +1,17 @@
 <template>
-    <div class="container-fluid">
-        <div class="row d-flex flex-row">
-            <div class="col-lg-12 ">
-                <div class="card" id="printableArea">
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-8 col-md-8">
-                                <div class="pt-3 pl-5">
-                                    <h4 class=""><Strong>Consulte o status atual do seu hardware</Strong></h4>
-                                    <div class="console-screen">
-                                        <p>{{statusMessage}}</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <button class="btn btn-primary mt-3 pl-5 pr-5" @click.prevent="getHardwareStatus">
-                                        <i v-show="isChecking" class="fa fa-spinner fa-spin"></i>    
-                                        Consultar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="card no-shadows" id="printableArea">
+        <div class="col-8 col-md-8">
+            <div class="pt-3 pl-5">
+                <h4 class=""><Strong>Consulte o status atual do seu hardware</Strong></h4>
+                <div class="console-screen">
+                    <p>{{statusMessage}}</p>
                 </div>
+            </div>
+            <div class="text-right pb-5">
+                <button class="btn btn-primary mt-3 pl-5 pr-5" @click.prevent="getHardwareStatus">
+                    <i v-show="isChecking" class="fa fa-spinner fa-spin"></i>    
+                    Consultar
+                </button>
             </div>
         </div>
     </div>
@@ -98,7 +88,6 @@
     #printableArea {
         border: 1px solid #ccc;
         margin-bottom: 1rem;
-        min-height: 110%;
     }    
 
     .console-screen{
@@ -106,5 +95,8 @@
         min-height: 26rem;
         background-color: black;
         border: 1px solid gray;
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 </style>

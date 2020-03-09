@@ -1,5 +1,5 @@
 <template>
-    <div class="card p-3">
+    <div class="card p-3 no-shadows">
         <!-- Contact DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
@@ -112,7 +112,7 @@
             <h5>Atenção:</h5>
             <p>   1. Para adicionar os contatos, o nome de usuário e o número de Whatsapp são obrigatórios.</p>
             <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato corretos.</p>
-            <p>      Ex: Nome | Whatsapp | email | facebook | instagram | linkedin </p>
+            <p>      Ex: Nome | Whatsapp | email | facebook | instagram | linkedin | estado | cidade | categoria 1 | categoria 2 </p>
             <p>Os contatos que não cumpram com os itens 1 e 2 não serão adicionados na lista de contatos.</p>
 
                 <div class="col-lg-12 mt-5 text-center">
@@ -555,5 +555,8 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 </style>
