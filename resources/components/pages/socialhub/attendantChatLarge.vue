@@ -2077,10 +2077,7 @@
                 this.handleTimeToReloadContacts = setInterval(()=>{
                     console.log("Reloading all chats by time");
                     this.getContacts();
-                    this.getAmountContactsInBag();
-                    if(this.selectedContactIndex){
-                        this.getContactChat(this.allContacts[this.selectedContactIndex], this.selectedContactIndex);
-                    }
+                    this.getAmountContactsInBag();                    
                 }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
             }
             
