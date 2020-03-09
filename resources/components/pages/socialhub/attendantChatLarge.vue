@@ -1260,6 +1260,12 @@
             },
             
             updateContact: function() {
+
+                //TODO-Egberto (Urgente): solamente vas a mandar la petición si los objetos 
+                //this.selectedContactToEditActions y el this.selectedContact son diferentes, o sea, si realmente se edito algo
+                //busca en internet como compara si dos objetos son iguales en javascript, mira el ejemplo 5 del link
+                // https://medium.com/javascript-in-plain-english/comparing-objects-in-javascript-ce2dc1f3de7f
+                //testa bien antes de subir, mira el video que medina mando en el grupo de dev
                 
                 this.isUpdatingContact = true;
 
