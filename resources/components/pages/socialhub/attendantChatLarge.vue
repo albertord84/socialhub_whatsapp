@@ -1086,13 +1086,14 @@
             },
             
             getContacts: function() { //R
+                console.log('getContacts');
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken
                     })
                     .then(response => {
                         this.contacts = response.data;
                         var This = this, i = 0;
-                        this.contacts.forEach(function(item, i){
+                        this.contacts.forEach((item, i)=>{
                             item.index = i++;
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
@@ -1101,17 +1102,22 @@
                             } catch (error) {
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
-                            item.isPictUrlBroken = false;
-
-                            if(this.selectedContactIndex>=0 && this.contacts[this.selectedContactIndex].id == item.id){
-                                this.selectedContactIndex = i;
-                            }
+                            item.isPictUrlBroken = false;                            
                         });
+                        
                         if(this.selectedContactIndex>=0){
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
-                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                            var flag =false;
+                            var This = this;
+                            this.contacts.forEach((item, i)=>{
+                                if(!flag && This.selectedContact.id == item.id){
+                                    This.selectedContactIndex = i;
+                                    This.selectedContact = This.contacts[This.selectedContactIndex];
+                                    This.selectedContactToEdit = Object.assign({}, This.contacts[This.selectedContactIndex]);
+                                    console.log(' aqui ---> '+This.selectedContactIndex);
+                                    flag = true;
+                                }
+                            });
                         }
-                        console.log('selectedContactIndex in getContacts: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                     })
                     .catch(error => {
                         this.processMessageError(error, this.contacts_url,"get");
