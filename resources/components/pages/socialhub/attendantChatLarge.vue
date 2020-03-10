@@ -1058,19 +1058,22 @@
                                 item.index = i++;
                             });
                             this.selectedContactIndex = 0;
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                            //------------------
+                            // this.selectedContact = this.contacts[this.selectedContactIndex];
 
-                            //----------update the message list and the last message of the contact-----
-                            this.messages.push(Object.assign({}, message));
-                            this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
-                            this.$refs.message_scroller.scrolltobottom();
+                            // //----------update the message list and the last message of the contact-----
+                            // this.messages.push(Object.assign({}, message));
+                            // this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            // this.$refs.message_scroller.scrolltobottom();
 
-                            if(this.recordingTime>0){
-                                this.timeRecordingAudio = "00:00";
-                                this.recordingTime = 0;
-                                this.isRecordingAudio = false;
-                            }
-                            console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
+                            // if(this.recordingTime>0){
+                            //     this.timeRecordingAudio = "00:00";
+                            //     this.recordingTime = 0;
+                            //     this.isRecordingAudio = false;
+                            // }
+                            // console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
+                            //-----------------
+                            this.getContacts();
                         })
                         .catch(error => {
                             this.processMessageError(error, this.chat_url,"send");
