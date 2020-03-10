@@ -2003,12 +2003,12 @@
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
-                        this.messages_copy=new Array();
+                        let messages_copy=new Array();
                         response.data.forEach((item, i)=>{
                             try {
                                 item.time = this.getMessageTime(item.created_at);
                                 if(item.time.date != this.messageTimeDelimeter){
-                                    this.messages_copy.push({
+                                    messages_copy.push({
                                         'type_id': 'date_separator',
                                         'time':{'date':item.time.date}
                                     });
@@ -2019,14 +2019,14 @@
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
-                                this.messages_copy.push(item);
+                                messages_copy.push(item);
                             } catch (error) {
                                 console.log(error);
                             }
                         });
                         if(this.messages.length)
                             this.messageInTop = this.messages[0];
-                        this.messages = this.messages_copy.concat(this.messages);
+                        this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
                     }                    
@@ -2055,52 +2055,52 @@
                 }
             },
 
-            getChatQuebraGalhoDeAlberto: function(){
+            gettingChatQuebraGalhoDeAlberto: function(){
                 if(this.selectedContactIndex<0) return;
-                this.pageNumber = 0;
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
-                    'message_id': this.findAroundMessageId,
-                    'page':this.pageNumber
+                    'message_id': null,
+                    'page':0
                 })
                 .then(response => {
                     if(response.data.length>0){
+                        this.messageTimeDelimeter = '';
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
-                        this.messages_copy=new Array();
+                        let messages_copy = new Array();
+
                         response.data.forEach((item, i)=>{
-                        try {
-                            item.time = this.getMessageTime(item.created_at);
-                            if(item.time.date != this.messageTimeDelimeter){
-                                this.messages_copy.push({
-                                    'type_id': 'date_separator',
-                                    'time':{'date':item.time.date}
-                                });
-                                this.messageTimeDelimeter = item.time.date;
+                            try {
+                                item.time = this.getMessageTime(item.created_at);
+                                if(item.time.date != this.messageTimeDelimeter){
+                                    messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    this.messageTimeDelimeter = item.time.date;
+                                }
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
                             }
-                            if(item.data != "" && item.data != null && item.data.length>0) {
-                                item.data = JSON.parse(item.data);
-                                if (item.type_id > 1)
-                                    item.path = item.data.FullPath;
-                            }
-                            this.messages_copy.push(item);
-                        } catch (error) {
-                            console.log(error);
-                        }
-                        });                     
-                        console.log('quebra galho '+this.messages.length+ ' -- '+ this.messages_copy.length);
-                        if(this.messages.length < this.messages_copy.length){
-                            this.messages = this.messages_copy;
+                        });
+                        console.log('quebra galho '+this.messages.length+ ' -- '+ messages_copy.length);
+                        if(this.messages.length < messages_copy.length){
                             console.log('lista de mensagem atualizada');
+                            this.messages = messages_copy.slice();
                         }   
                     }else{
                         this.hasMorePageMessage =false;
                     }                    
                 })
                 .catch(function(error) {
-                    miniToastr.error(error, "Error carregando os contatos");   
                 }).finally(()=>{                    
                 });
             },
@@ -2125,10 +2125,9 @@
             }
             if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
                 this.handleTimeToReloadContacts = setInterval(()=>{
-                    console.log("Reloading all chats by time");
                     this.getContacts();
                     this.getAmountContactsInBag();
-                    this.getChatQuebraGalhoDeAlberto();
+                    this.gettingChatQuebraGalhoDeAlberto();
                 }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
             }
             
