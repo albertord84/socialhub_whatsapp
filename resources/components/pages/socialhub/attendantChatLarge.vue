@@ -562,11 +562,11 @@
                                         <span class="text-muted" style="font-size:1.1rem">Informação</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
-                                        <i v-show="showContactInformation" @click.prevent="copyContact; isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
+                                        <i v-show="showContactInformation" @click.prevent="copyContact; isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" title="Editar informação" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left" >
-                                        <i v-show="!showContactInformation" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
-                                        <i v-show="showContactInformation"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
+                                        <i v-show="!showContactInformation" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Mostrar informação" @click.prevent="showContactInformation=!showContactInformation"></i>
+                                        <i v-show="showContactInformation"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Ocultar informação" @click.prevent="showContactInformation=!showContactInformation"></i>
                                     </div>
                                 </div>
                             </div>
@@ -637,6 +637,53 @@
                             </div>
                         </div>
 
+
+                        <!-- Etiquetas -->
+                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                            <div class="container-fluid">
+                                <div class="row flex-baseline" >
+                                    <div class="col-1 pt-2 pb-2">
+                                        <i class="mdi mdi-tag-multiple fa-1_5x text-muted" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-8 pt-2 pb-2" style="text-align:left">
+                                        <span class="text-muted" style="font-size:1.1rem">Etiquetas</span>
+                                    </div>
+                                    <div class="col-1 pt-2 pb-2" >
+                                        <i v-show="showTagInformation" @click.prevent="modalContactCRUDTags=!modalContactCRUDTags; isEditingTags=!isEditingTags"  class="fa fa-plus text-muted action-icons-fade" title="Adicionar etiqueta ao usuário" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-1 pt-2 pb-2 text-left" >
+                                        <i v-show="!showTagInformation" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Mostrar etiquetas do contato" @click.prevent="showTagInformation=!showTagInformation"></i>
+                                        <i v-show="showTagInformation"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Ocultar etiquetas do contato" @click.prevent="showTagInformation=!showTagInformation"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="showTagInformation" class="border border-top-0 p-1 mr-2 fadeIn">
+                            
+                            <!-- TODO:ECR.
+                            Nesta parte colocar la parte visual de:
+                            1. Mostrar etiquetas asociadas ao contato. 
+                            2. Adicionar uma nova etiqueta ao contato.
+                            3. Eliminar uma etiqueta ao contato.
+                            4. Sempre que é adicionada ou eliminada uma etiqueta, atualizar a lista de etiquetas.
+
+                            cuando se carga la informacion de user to edit obtener la informacion de Tags usando o metodo getContactTags getTags se necesario.
+                            se isEditingTags esta activo, mostrar Tags
+                            cuando: addContactTags abrir modal com tags disponíveis para o atendente para escolher uma. llamar addContactTagsen el crud
+                            cuando: deleteContactTags abrir modal de confirmação. -->
+
+                            
+                            <div v-show="isEditingTags">
+                                <!-- <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                    <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
+                                </button> -->
+                            </div>
+                           
+                        </div>
+
+
+
+
                         <!-- Nota resumo -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="container-fluid">
@@ -648,11 +695,11 @@
                                         <span class="text-muted" style="font-size:1.1em">Nota resumo</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
-                                        <i v-show="showContactSummary" style="" @click.prevent="copyContact; isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
+                                        <i v-show="showContactSummary" style="" @click.prevent="copyContact; isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" title="Editar nota resumo" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left">
-                                        <i v-show="!showContactSummary" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
-                                        <i v-show="showContactSummary"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
+                                        <i v-show="!showContactSummary" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" title="Mostrar nota resumo" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
+                                        <i v-show="showContactSummary"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" title="Ocultar nota resumo" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
                                     </div>
                                 </div>
                             </div>
@@ -682,8 +729,8 @@
                                     <div class="col-1 pt-2 pb-2" >
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left" >
-                                        <i v-show="!showContactMedia" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
-                                        <i v-show="showContactMedia"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
+                                        <i v-show="!showContactMedia" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" title="Mostrar imagens e mídias" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
+                                        <i v-show="showContactMedia"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" title="Ocultar imagens e mídias" aria-hidden="true" @click.prevent="showContactMedia=!showContactMedia"></i>
                                     </div>
                                 </div>
                             </div>
@@ -726,8 +773,8 @@
                                     <div class="col-1 pt-2 pb-2" >
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left" >
-                                        <i v-show="!showContacDocuments" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
-                                        <i v-show="showContacDocuments"  class="fa fa-minus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
+                                        <i v-show="!showContacDocuments" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" title="Mostrar arquivos e documentos" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
+                                        <i v-show="showContacDocuments"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" title="Ocultar arquivos e documentos" aria-hidden="true" @click.prevent="showContacDocuments=!showContacDocuments"></i>
                                     </div>
                                 </div>
                             </div>
@@ -869,8 +916,15 @@
                 </button>
                 <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
             </div> 
-
         </b-modal>
+
+        <!-- Modal to add Tags-->
+        <b-modal v-model="modalContactCRUDTags" centered :hide-footer="true" title="Adicionando uma etiqueta ao contato">
+            <span> Escolha uma das etiquetas disponíveis </span>
+            <!-- <contactCRUDTags :contacts='contacts'></contactCRUDTags> -->
+        </b-modal>
+        
+
     </div>
 </template>
 
@@ -955,6 +1009,7 @@
                 percent:0,
 
                 showContactInformation:false,
+                showTagInformation:false,
                 showContactSummary:false,
                 showContactMedia:false,
                 showContacDocuments:false,
@@ -964,6 +1019,7 @@
 
                 isSearchContact:false,
                 isEditingContact:false,
+                isEditingTags:false,
                 isEditingContactSummary:false,
                 isSendingNewMessage:false,
                 isUpdatingContact:false,                
@@ -992,6 +1048,7 @@
                 modalUserCRUDDatas:false,
                 modalTransferContact:false,
                 modalMuteNotificationsContacts:false,
+                modalContactCRUDTags: false,
                 
                 rightLayout:'toggle-edit-contact',
                 leftLayout:'toggle-add-contact',
@@ -1416,10 +1473,11 @@
                     this.showChatFindMessages = false;
                     this.showChatRightSide = false;
                 }
-                this.showContactInformation=true;
+                this.showContactInformation=false;
                 this.showContactSummary=false;
                 this.showContactMedia=false;
                 this.showContacDocuments=false;
+                this.showTagInformation=false;
             },
 
             displayChatFindMessage(){
