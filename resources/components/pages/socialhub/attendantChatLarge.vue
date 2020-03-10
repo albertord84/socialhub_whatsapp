@@ -1102,10 +1102,13 @@
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
                             item.isPictUrlBroken = false;
+
+                            if(this.selectedContactIndex>=0 && this.contacts[this.selectedContactIndex].id == item.id){
+                                this.selectedContactIndex = i;
+                            }
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
-                            // this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
                             this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
                         }
                         console.log('selectedContactIndex in getContacts: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
