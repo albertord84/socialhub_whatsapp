@@ -2092,7 +2092,7 @@
                             }
                         });
                         console.log('quebra galho '+this.messages.length+ ' -- '+ messages_copy.length);
-                        if(this.messages.length < messages_copy.length){
+                        if(this.messages.length != messages_copy.length){
                             console.log('lista de mensagem atualizada');
                             this.messages = messages_copy.slice();
                         }   
