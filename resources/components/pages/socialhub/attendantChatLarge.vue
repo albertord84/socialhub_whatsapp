@@ -2055,6 +2055,54 @@
                 }
             },
 
+            getChatQuebraGalhoDeAlberto: function(){
+                if(this.selectedContact.id<0) return;
+                this.pageNumber = 0;
+                ApiService.get(this.chat_url,{
+                    'contact_id':this.selectedContact.id,
+                    'message_id': this.findAroundMessageId,
+                    'page':this.pageNumber
+                })
+                .then(response => {
+                    if(response.data.length>0 && response.data.length!=this.messages.length){
+                        this.findAroundMessageId = null;
+                        this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
+                        this.messagesWhereLike = [];
+                        this.searchMessageByStringInput = [];
+                        this.messages_copy=new Array();
+                        response.data.forEach((item, i)=>{
+                            try {
+                                item.time = this.getMessageTime(item.created_at);
+                                if(item.time.date != this.messageTimeDelimeter){
+                                    this.messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    this.messageTimeDelimeter = item.time.date;
+                                }
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                this.messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
+                        if(this.messages.length)
+                            this.messageInTop = this.messages[0];
+                        this.messages = this.messages_copy.concat(this.messages);
+                    }else{
+                        this.hasMorePageMessage =false;
+                    }                    
+                })
+                .catch(function(error) {
+                    miniToastr.error(error, "Error carregando os contatos");   
+                }).finally(()=>{                    
+                });
+            },
+
         },
 
         updated(){
@@ -2077,7 +2125,8 @@
                 this.handleTimeToReloadContacts = setInterval(()=>{
                     console.log("Reloading all chats by time");
                     this.getContacts();
-                    this.getAmountContactsInBag();                    
+                    this.getAmountContactsInBag();
+                    this.getChatQuebraGalhoDeAlberto();
                 }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
             }
             
