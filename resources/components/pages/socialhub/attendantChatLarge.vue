@@ -1062,9 +1062,9 @@
                             // this.selectedContact = this.contacts[this.selectedContactIndex];
 
                             // //----------update the message list and the last message of the contact-----
-                            // this.messages.push(Object.assign({}, message));
+                            this.messages.push(Object.assign({}, message));
                             // this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
-                            // this.$refs.message_scroller.scrolltobottom();
+                            this.$refs.message_scroller.scrolltobottom();
 
                             // if(this.recordingTime>0){
                             //     this.timeRecordingAudio = "00:00";
