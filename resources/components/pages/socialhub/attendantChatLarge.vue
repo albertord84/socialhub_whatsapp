@@ -2101,16 +2101,23 @@
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                host: process.env.MIX_APP_HOST,                
-                wsPort: 6001,
+                host: process.env.MIX_APP_HOST,  
+
+
+                // No SSL
                 wsHost: process.env.MIX_APP_HOST,
-                // enabledTransports: ['ws'],
-                // encrypted: false,
-                wssHost: process.env.MIX_APP_HOST,
-                wssPort: 6001,
-                enabledTransports: ['ws', 'wss'],
-                forceTLS: true,
-                encrypted: true,
+                wsPort: 6001,
+                enabledTransports: ['ws'],
+                encrypted: false,
+                forceTLS: false,
+
+                // SSL
+                // wssHost: process.env.MIX_APP_HOST,
+                // wssPort: 6001,
+                // enabledTransports: ['ws', 'wss'],
+                // encrypted: true,
+                // forceTLS: true,
+
                 disableStats: false,
             });
 
