@@ -1930,7 +1930,8 @@
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': this.findAroundMessageId,
-                    'page':this.pageNumber
+                    'page':this.pageNumber,
+                    'set_as_readed':1,
                 })
                 .then(response => {
                     if(response.data.length){
