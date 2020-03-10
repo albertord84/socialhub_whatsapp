@@ -2065,34 +2065,36 @@
                 })
                 .then(response => {
                     if(response.data.length>0){
-                        console.log('quebra galjo '+response.data.length+ ' -- '+ this.messages.length);
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
                         this.messages_copy=new Array();
                         response.data.forEach((item, i)=>{
-                            try {
-                                item.time = this.getMessageTime(item.created_at);
-                                if(item.time.date != this.messageTimeDelimeter){
-                                    this.messages_copy.push({
-                                        'type_id': 'date_separator',
-                                        'time':{'date':item.time.date}
-                                    });
-                                    this.messageTimeDelimeter = item.time.date;
-                                }
-                                if(item.data != "" && item.data != null && item.data.length>0) {
-                                    item.data = JSON.parse(item.data);
-                                    if (item.type_id > 1)
-                                        item.path = item.data.FullPath;
-                                }
-                                this.messages_copy.push(item);
-                            } catch (error) {
-                                console.log(error);
+                        try {
+                            item.time = this.getMessageTime(item.created_at);
+                            if(item.time.date != this.messageTimeDelimeter){
+                                this.messages_copy.push({
+                                    'type_id': 'date_separator',
+                                    'time':{'date':item.time.date}
+                                });
+                                this.messageTimeDelimeter = item.time.date;
                             }
+                            if(item.data != "" && item.data != null && item.data.length>0) {
+                                item.data = JSON.parse(item.data);
+                                if (item.type_id > 1)
+                                    item.path = item.data.FullPath;
+                            }
+                            this.messages_copy.push(item);
+                        } catch (error) {
+                            console.log(error);
+                        }
                         });                     
-                        if(this.messages.length != this.messages_copy.length)   
+                        console.log('quebra galho '+this.messages.length+ ' -- '+ this.messages_copy.length);
+                        if(this.messages.length < this.messages_copy.length){
                             this.messages = this.messages_copy;
+                            console.log('lista de mensagem atualizada');
+                        }   
                     }else{
                         this.hasMorePageMessage =false;
                     }                    
