@@ -1008,6 +1008,7 @@
         },
         
         methods: {
+
             sendMessage() {
                 if (this.isSendingNewMessage) return;                
                 var This = this;
@@ -1038,7 +1039,7 @@
                         .then(response => {
                             //---------------then, prepare the response message to display------------
                             var message = response.data;
-                            message.time = this.getMessageTime(message.created_at)
+                            message.time = this.getMessageTime(message.created_at);
                             if (message.data) {
                                 message.data = JSON.parse(message.data);
                                 message.path = message.data.FullPath;
@@ -1103,7 +1104,7 @@
                             this.selectedContact = this.contacts[this.selectedContactIndex];
                             // this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
                             this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                        }   
+                        }
                         console.log('selectedContactIndex in getContacts: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                     })
                     .catch(error => {
