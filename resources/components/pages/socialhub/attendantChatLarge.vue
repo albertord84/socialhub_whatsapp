@@ -1154,7 +1154,8 @@
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
-                            this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
+                            // this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
+                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
                         }   
                     })
                     .catch(error => {
