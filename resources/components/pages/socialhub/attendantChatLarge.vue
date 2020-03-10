@@ -2066,7 +2066,7 @@
                     if(response.data.length>0){
                         this.messageTimeDelimeter = '';
                         this.findAroundMessageId = null;
-                        this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
+                        // this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
                         let messages_copy = new Array();
