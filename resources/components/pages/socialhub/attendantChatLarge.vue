@@ -2064,7 +2064,7 @@
                     'page':this.pageNumber
                 })
                 .then(response => {
-                    if(response.data.length>0 && response.data.length!=this.messages.length){
+                    if(response.data.length>0){
                         console.log('quebra galjo '+response.data.length+ ' -- '+ this.messages.length);
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
@@ -2090,8 +2090,9 @@
                             } catch (error) {
                                 console.log(error);
                             }
-                        });                        
-                        this.messages = this.messages_copy;
+                        });                     
+                        if(this.messages.length != this.messages_copy.length)   
+                            this.messages = this.messages_copy;
                     }else{
                         this.hasMorePageMessage =false;
                     }                    
