@@ -1069,6 +1069,7 @@
                                 this.recordingTime = 0;
                                 this.isRecordingAudio = false;
                             }
+                            console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                         })
                         .catch(error => {
                             this.processMessageError(error, this.chat_url,"send");
@@ -1103,6 +1104,7 @@
                             // this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
                             this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
                         }   
+                        console.log('selectedContactIndex in getContacts: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                     })
                     .catch(error => {
                         this.processMessageError(error, this.contacts_url,"get");
@@ -1928,7 +1930,7 @@
                     this.requestingNewPage = true;                
                 }
                 this.pageNumber = this.pageNumber+1;
-                
+
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': this.findAroundMessageId,
@@ -1967,7 +1969,8 @@
                         this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
-                    }                    
+                    }
+                    console.log('selectedContactIndex in getChat: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                     miniToastr.error(error, "Error carregando os contatos");   
@@ -2037,7 +2040,8 @@
                         }   
                     }else{
                         this.hasMorePageMessage =false;
-                    }                    
+                    }
+                    console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                 }).finally(()=>{                    
