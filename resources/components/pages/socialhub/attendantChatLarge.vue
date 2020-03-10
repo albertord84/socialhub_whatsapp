@@ -1008,6 +1008,7 @@
         },
         
         methods: {
+
             sendMessage() {
                 if (this.isSendingNewMessage) return;                
                 var This = this;
@@ -1038,7 +1039,7 @@
                         .then(response => {
                             //---------------then, prepare the response message to display------------
                             var message = response.data;
-                            message.time = this.getMessageTime(message.created_at)
+                            message.time = this.getMessageTime(message.created_at);
                             if (message.data) {
                                 message.data = JSON.parse(message.data);
                                 message.path = message.data.FullPath;
@@ -1057,18 +1058,22 @@
                                 item.index = i++;
                             });
                             this.selectedContactIndex = 0;
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                            //------------------
+                            // this.selectedContact = this.contacts[this.selectedContactIndex];
 
-                            //----------update the message list and the last message of the contact-----
+                            // //----------update the message list and the last message of the contact-----
                             this.messages.push(Object.assign({}, message));
-                            this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            // this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
 
-                            if(this.recordingTime>0){
-                                this.timeRecordingAudio = "00:00";
-                                this.recordingTime = 0;
-                                this.isRecordingAudio = false;
-                            }
+                            // if(this.recordingTime>0){
+                            //     this.timeRecordingAudio = "00:00";
+                            //     this.recordingTime = 0;
+                            //     this.isRecordingAudio = false;
+                            // }
+                            // console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
+                            //-----------------
+                            this.getContacts();
                         })
                         .catch(error => {
                             this.processMessageError(error, this.chat_url,"send");
@@ -1097,11 +1102,16 @@
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
                             item.isPictUrlBroken = false;
+
+                            if(this.selectedContactIndex>=0 && this.contacts[this.selectedContactIndex].id == item.id){
+                                this.selectedContactIndex = i;
+                            }
                         });
                         if(this.selectedContactIndex>=0){
                             this.selectedContact = this.contacts[this.selectedContactIndex];
-                            this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
-                        }   
+                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                        }
+                        console.log('selectedContactIndex in getContacts: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                     })
                     .catch(error => {
                         this.processMessageError(error, this.contacts_url,"get");
@@ -1141,71 +1151,6 @@
                     })
                     .finally(()=>{this.isAddingContactFromBag = false;});
             }, 
-
-            getContactChatOld: function(contact) {
-                if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
-                this.requestingNewPage=true;
-                if(this.showChatRightSide) this.displayChatRightSide();
-                if(this.showChatFindMessages) this.displayChatFindMessage();
-                this.messageTimeDelimeter = '';
-                this.selectedContactIndex = contact.index;
-                ApiService.get(this.chat_url,{
-                    'contact_id':contact.id,
-                    'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
-                    'page':this.pageNumber
-                    })
-                    .then(response => {
-                        if(response.data.length == 0){
-                            this.hasMorePageMessage = false;
-                            this.pageNumber --;
-                            return;
-                        }
-                        this.findAroundMessageId = null;
-                        this.contacts[this.selectedContactIndex].count_unread_messagess =0;
-                        this.messagesWhereLike = [];
-                        this.searchMessageByStringInput = [];
-                        this.messages = response.data; 
-                        this.messages_copy=new Array();
-                        var This = this;
-                        this.messages.forEach(function(item, i){
-                            try {
-                                item.time = This.getMessageTime(item.created_at);
-                                if(item.time.date!=This.messageTimeDelimeter){
-                                    This.messages_copy.push({
-                                        'type_id': 'date_separator',
-                                        'time':{'date':item.time.date}
-                                    });
-                                    This.messageTimeDelimeter = item.time.date;
-                                }
-                                if(item.data != "" && item.data != null && item.data.length>0) {
-                                    item.data = JSON.parse(item.data);
-                                    if (item.type_id > 1)
-                                        item.path = item.data.FullPath;
-                                }
-                                This.messages_copy.push(item);
-                            } catch (error) {
-                                console.log(error);
-                            }
-                        });
-                        This.messages = This.messages_copy;
-                        This.selectedContact = This.contacts[This.selectedContactIndex];
-                        This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
-                        This.selectedContactToEdit.index = This.selectedContactIndex;
-                        // This.$refs.chatCenterSide
-
-                        document.getElementById("chat-center-side").classList.add("chat-center-side-open");
-
-                        // if(This.selectedContactIndex >= 0 && This.$refs.message_scroller){
-                        //     This.$refs.message_scroller.scrolltobottom();
-                        // }
-
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.chat_url,"get");
-                    }).finally(()=>{
-                        this.requestingNewPage=false;
-                    });
-            },
 
             getContactChatWhereLike: function(cont) {
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
@@ -1992,10 +1937,12 @@
                     this.requestingNewPage = true;                
                 }
                 this.pageNumber = this.pageNumber+1;
+
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': this.findAroundMessageId,
-                    'page':this.pageNumber
+                    'page':this.pageNumber,
+                    'set_as_readed':1,
                 })
                 .then(response => {
                     if(response.data.length){
@@ -2003,12 +1950,12 @@
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
-                        this.messages_copy=new Array();
+                        let messages_copy=new Array();
                         response.data.forEach((item, i)=>{
                             try {
                                 item.time = this.getMessageTime(item.created_at);
                                 if(item.time.date != this.messageTimeDelimeter){
-                                    this.messages_copy.push({
+                                    messages_copy.push({
                                         'type_id': 'date_separator',
                                         'time':{'date':item.time.date}
                                     });
@@ -2019,17 +1966,18 @@
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
-                                this.messages_copy.push(item);
+                                messages_copy.push(item);
                             } catch (error) {
                                 console.log(error);
                             }
                         });
                         if(this.messages.length)
                             this.messageInTop = this.messages[0];
-                        this.messages = this.messages_copy.concat(this.messages);
+                        this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
-                    }                    
+                    }
+                    console.log('selectedContactIndex in getChat: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                     miniToastr.error(error, "Error carregando os contatos");   
@@ -2055,6 +2003,58 @@
                 }
             },
 
+            gettingChatQuebraGalhoDeAlberto: function(){
+                if(this.selectedContactIndex<0) return;
+                ApiService.get(this.chat_url,{
+                    'contact_id':this.selectedContact.id,
+                    'message_id': null,
+                    'page':0,
+                    'set_as_readed':0,
+                })
+                .then(response => {
+                    if(response.data.length>0){
+                        this.messageTimeDelimeter = '';
+                        this.findAroundMessageId = null;
+                        // this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
+                        this.messagesWhereLike = [];
+                        this.searchMessageByStringInput = [];
+                        let messages_copy = new Array();
+
+                        response.data.forEach((item, i)=>{
+                            try {
+                                item.time = this.getMessageTime(item.created_at);
+                                if(item.time.date != this.messageTimeDelimeter){
+                                    messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    this.messageTimeDelimeter = item.time.date;
+                                }
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
+                        console.log('quebra galho '+this.messages.length+ ' -- '+ messages_copy.length);
+                        if(this.messages.length != messages_copy.length){
+                            console.log('lista de mensagem atualizada');
+                            this.messages = messages_copy.slice();
+                        }   
+                    }else{
+                        this.hasMorePageMessage =false;
+                    }
+                    console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
+                })
+                .catch(function(error) {
+                }).finally(()=>{                    
+                });
+            },
+
         },
 
         updated(){
@@ -2070,16 +2070,16 @@
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
             
-            // if(this.handleTimeToReloadContacts){
-            //     clearInterval(this.handleTimeToReloadContacts);
-            // }
-            // if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
-            //     this.handleTimeToReloadContacts = setInterval(()=>{
-            //         console.log("Reloading all chats by time");
-            //         this.getContacts();
-            //         this.getAmountContactsInBag();                    
-            //     }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
-            // }
+            if(this.handleTimeToReloadContacts){
+                clearInterval(this.handleTimeToReloadContacts);
+            }
+            if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
+                this.handleTimeToReloadContacts = setInterval(()=>{
+                    this.getContacts();
+                    this.getAmountContactsInBag();
+                    // this.gettingChatQuebraGalhoDeAlberto();
+                }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
+            }
             
 
         },
