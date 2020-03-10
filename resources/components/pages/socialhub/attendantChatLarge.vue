@@ -2071,7 +2071,7 @@
                 this.handleTimeToReloadContacts = setInterval(()=>{
                     this.getContacts();
                     this.getAmountContactsInBag();
-                    this.gettingChatQuebraGalhoDeAlberto();
+                    // this.gettingChatQuebraGalhoDeAlberto();
                 }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
             }
             
