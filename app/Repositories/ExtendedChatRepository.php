@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 class ExtendedChatRepository extends ChatRepository
 {    
 
-    public function contactChatAllAttendants(int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
+    public function contactChatAllAttendants(int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed=1): Collection{
         $ContactChats = new Collection();
         try {
             $extAttContRepo = new ExtendedContactRepository(app()); 
@@ -24,7 +24,7 @@ class ExtendedChatRepository extends ChatRepository
             $Attendants = $extAttContRepo->getAttendants($contact_id);
 
             foreach ($Attendants as $key => $Attendant) {
-                $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput);
+                $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput, $set_as_readed);
 
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
@@ -134,14 +134,16 @@ class ExtendedChatRepository extends ChatRepository
         return $count->count();
     }
 
-    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
+    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed=true): Collection{
         $chatModel = new $this->model();
         $chatModel->table = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? 'chats' : (string)$attendant_id;
         
         // Mark all messages read
-        $chatModel->where('contact_id', $contact_id)->update([
-            'status_id' => MessagesStatusController::READED
-        ]);
+        if($set_as_readed){
+            $chatModel->where('contact_id', $contact_id)->update([
+                'status_id' => MessagesStatusController::READED
+            ]);
+        }
 
         if (!$searchMessageByStringInput) {
             $ChastMessages = $chatModel->where('contact_id', $contact_id)->get();

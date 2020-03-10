@@ -1142,71 +1142,6 @@
                     .finally(()=>{this.isAddingContactFromBag = false;});
             }, 
 
-            getContactChatOld: function(contact) {
-                if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
-                this.requestingNewPage=true;
-                if(this.showChatRightSide) this.displayChatRightSide();
-                if(this.showChatFindMessages) this.displayChatFindMessage();
-                this.messageTimeDelimeter = '';
-                this.selectedContactIndex = contact.index;
-                ApiService.get(this.chat_url,{
-                    'contact_id':contact.id,
-                    'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
-                    'page':this.pageNumber
-                    })
-                    .then(response => {
-                        if(response.data.length == 0){
-                            this.hasMorePageMessage = false;
-                            this.pageNumber --;
-                            return;
-                        }
-                        this.findAroundMessageId = null;
-                        this.contacts[this.selectedContactIndex].count_unread_messagess =0;
-                        this.messagesWhereLike = [];
-                        this.searchMessageByStringInput = [];
-                        this.messages = response.data; 
-                        this.messages_copy=new Array();
-                        var This = this;
-                        this.messages.forEach(function(item, i){
-                            try {
-                                item.time = This.getMessageTime(item.created_at);
-                                if(item.time.date!=This.messageTimeDelimeter){
-                                    This.messages_copy.push({
-                                        'type_id': 'date_separator',
-                                        'time':{'date':item.time.date}
-                                    });
-                                    This.messageTimeDelimeter = item.time.date;
-                                }
-                                if(item.data != "" && item.data != null && item.data.length>0) {
-                                    item.data = JSON.parse(item.data);
-                                    if (item.type_id > 1)
-                                        item.path = item.data.FullPath;
-                                }
-                                This.messages_copy.push(item);
-                            } catch (error) {
-                                console.log(error);
-                            }
-                        });
-                        This.messages = This.messages_copy;
-                        This.selectedContact = This.contacts[This.selectedContactIndex];
-                        This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
-                        This.selectedContactToEdit.index = This.selectedContactIndex;
-                        // This.$refs.chatCenterSide
-
-                        document.getElementById("chat-center-side").classList.add("chat-center-side-open");
-
-                        // if(This.selectedContactIndex >= 0 && This.$refs.message_scroller){
-                        //     This.$refs.message_scroller.scrolltobottom();
-                        // }
-
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.chat_url,"get");
-                    }).finally(()=>{
-                        this.requestingNewPage=false;
-                    });
-            },
-
             getContactChatWhereLike: function(cont) {
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
                 if (this.searchMessageByStringInput.length > 1){
@@ -2060,7 +1995,8 @@
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': null,
-                    'page':0
+                    'page':0,
+                    'set_as_readed':0,
                 })
                 .then(response => {
                     if(response.data.length>0){
