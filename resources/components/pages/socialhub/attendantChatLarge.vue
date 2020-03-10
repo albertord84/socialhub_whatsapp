@@ -929,6 +929,8 @@
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
+
+                handleTimeToReloadContacts:null,
                 
                 messages:[],
                 searchMessageByStringInput:'',
@@ -1140,71 +1142,6 @@
                     })
                     .finally(()=>{this.isAddingContactFromBag = false;});
             }, 
-
-            getContactChatOld: function(contact) {
-                if(!this.hasMorePageMessage || this.isSendingNewMessage || this.requestingNewPage) return;
-                this.requestingNewPage=true;
-                if(this.showChatRightSide) this.displayChatRightSide();
-                if(this.showChatFindMessages) this.displayChatFindMessage();
-                this.messageTimeDelimeter = '';
-                this.selectedContactIndex = contact.index;
-                ApiService.get(this.chat_url,{
-                    'contact_id':contact.id,
-                    'message_id': this.findAroundMessageId, //for find in database when clicked founded message is not in actual page
-                    'page':this.pageNumber
-                    })
-                    .then(response => {
-                        if(response.data.length == 0){
-                            this.hasMorePageMessage = false;
-                            this.pageNumber --;
-                            return;
-                        }
-                        this.findAroundMessageId = null;
-                        this.contacts[this.selectedContactIndex].count_unread_messagess =0;
-                        this.messagesWhereLike = [];
-                        this.searchMessageByStringInput = [];
-                        this.messages = response.data; 
-                        this.messages_copy=new Array();
-                        var This = this;
-                        this.messages.forEach(function(item, i){
-                            try {
-                                item.time = This.getMessageTime(item.created_at);
-                                if(item.time.date!=This.messageTimeDelimeter){
-                                    This.messages_copy.push({
-                                        'type_id': 'date_separator',
-                                        'time':{'date':item.time.date}
-                                    });
-                                    This.messageTimeDelimeter = item.time.date;
-                                }
-                                if(item.data != "" && item.data != null && item.data.length>0) {
-                                    item.data = JSON.parse(item.data);
-                                    if (item.type_id > 1)
-                                        item.path = item.data.FullPath;
-                                }
-                                This.messages_copy.push(item);
-                            } catch (error) {
-                                console.log(error);
-                            }
-                        });
-                        This.messages = This.messages_copy;
-                        This.selectedContact = This.contacts[This.selectedContactIndex];
-                        This.selectedContactToEdit = This.getContactInfoToEdit(This.selectedContact);
-                        This.selectedContactToEdit.index = This.selectedContactIndex;
-                        // This.$refs.chatCenterSide
-
-                        document.getElementById("chat-center-side").classList.add("chat-center-side-open");
-
-                        // if(This.selectedContactIndex >= 0 && This.$refs.message_scroller){
-                        //     This.$refs.message_scroller.scrolltobottom();
-                        // }
-
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.chat_url,"get");
-                    }).finally(()=>{
-                        this.requestingNewPage=false;
-                    });
-            },
 
             getContactChatWhereLike: function(cont) {
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
@@ -1991,10 +1928,12 @@
                     this.requestingNewPage = true;                
                 }
                 this.pageNumber = this.pageNumber+1;
+                
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': this.findAroundMessageId,
-                    'page':this.pageNumber
+                    'page':this.pageNumber,
+                    'set_as_readed':1,
                 })
                 .then(response => {
                     if(response.data.length){
@@ -2002,12 +1941,12 @@
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = [];
-                        this.messages_copy=new Array();
+                        let messages_copy=new Array();
                         response.data.forEach((item, i)=>{
                             try {
                                 item.time = this.getMessageTime(item.created_at);
                                 if(item.time.date != this.messageTimeDelimeter){
-                                    this.messages_copy.push({
+                                    messages_copy.push({
                                         'type_id': 'date_separator',
                                         'time':{'date':item.time.date}
                                     });
@@ -2018,14 +1957,14 @@
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
-                                this.messages_copy.push(item);
+                                messages_copy.push(item);
                             } catch (error) {
                                 console.log(error);
                             }
                         });
                         if(this.messages.length)
                             this.messageInTop = this.messages[0];
-                        this.messages = this.messages_copy.concat(this.messages);
+                        this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
                     }                    
@@ -2054,6 +1993,57 @@
                 }
             },
 
+            gettingChatQuebraGalhoDeAlberto: function(){
+                if(this.selectedContactIndex<0) return;
+                ApiService.get(this.chat_url,{
+                    'contact_id':this.selectedContact.id,
+                    'message_id': null,
+                    'page':0,
+                    'set_as_readed':0,
+                })
+                .then(response => {
+                    if(response.data.length>0){
+                        this.messageTimeDelimeter = '';
+                        this.findAroundMessageId = null;
+                        // this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
+                        this.messagesWhereLike = [];
+                        this.searchMessageByStringInput = [];
+                        let messages_copy = new Array();
+
+                        response.data.forEach((item, i)=>{
+                            try {
+                                item.time = this.getMessageTime(item.created_at);
+                                if(item.time.date != this.messageTimeDelimeter){
+                                    messages_copy.push({
+                                        'type_id': 'date_separator',
+                                        'time':{'date':item.time.date}
+                                    });
+                                    this.messageTimeDelimeter = item.time.date;
+                                }
+                                if(item.data != "" && item.data != null && item.data.length>0) {
+                                    item.data = JSON.parse(item.data);
+                                    if (item.type_id > 1)
+                                        item.path = item.data.FullPath;
+                                }
+                                messages_copy.push(item);
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
+                        console.log('quebra galho '+this.messages.length+ ' -- '+ messages_copy.length);
+                        if(this.messages.length != messages_copy.length){
+                            console.log('lista de mensagem atualizada');
+                            this.messages = messages_copy.slice();
+                        }   
+                    }else{
+                        this.hasMorePageMessage =false;
+                    }                    
+                })
+                .catch(function(error) {
+                }).finally(()=>{                    
+                });
+            },
+
         },
 
         updated(){
@@ -2068,6 +2058,19 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
+            
+            if(this.handleTimeToReloadContacts){
+                clearInterval(this.handleTimeToReloadContacts);
+            }
+            if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
+                this.handleTimeToReloadContacts = setInterval(()=>{
+                    this.getContacts();
+                    this.getAmountContactsInBag();
+                    this.gettingChatQuebraGalhoDeAlberto();
+                }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
+            }
+            
+
         },
 
         mounted(){
@@ -2087,16 +2090,23 @@
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                host: process.env.MIX_APP_HOST,                
-                wsPort: 6001,
+                host: process.env.MIX_APP_HOST,  
+
+
+                // No SSL
                 wsHost: process.env.MIX_APP_HOST,
-                // enabledTransports: ['ws'],
-                // encrypted: false,
-                wssHost: process.env.MIX_APP_HOST,
-                wssPort: 6001,
-                enabledTransports: ['ws', 'wss'],
-                forceTLS: true,
-                encrypted: true,
+                wsPort: 6001,
+                enabledTransports: ['ws'],
+                encrypted: false,
+                forceTLS: false,
+
+                // SSL
+                // wssHost: process.env.MIX_APP_HOST,
+                // wssPort: 6001,
+                // enabledTransports: ['ws', 'wss'],
+                // encrypted: true,
+                // forceTLS: true,
+
                 disableStats: false,
             });
 

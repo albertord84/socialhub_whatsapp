@@ -102,31 +102,32 @@ return [
      * Define the optional SSL context for your WebSocket connections.
      * You can see all available options at: http://php.net/manual/en/context.ssl.php
      */
-    'ssl' => [
-        /*
-         * Path to local certificate file on filesystem. It must be a PEM encoded file which
-         * contains your certificate and private key. It can optionally contain the
-         * certificate chain of issuers. The private key also may be contained
-         * in a separate file specified by local_pk.
-         */
-        'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullchain.pem'),
-        // 'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullcert.crt'),
+    // 'ssl' => [
+    //     /*
+    //      * Path to local certificate file on filesystem. It must be a PEM encoded file which
+    //      * contains your certificate and private key. It can optionally contain the
+    //      * certificate chain of issuers. The private key also may be contained
+    //      * in a separate file specified by local_pk.
+    //      */
+    //     'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullchain.pem'),
+    //     // 'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '/etc/letsencrypt/live/app.socialhub.pro/fullcert.crt'),
 
-        /*
-         * Path to local private key file on filesystem in case of separate files for
-         * certificate (local_cert) and private key.
-         */
-        'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '/etc/letsencrypt/live/app.socialhub.pro/privkey.key'),
+    //     /*
+    //      * Path to local private key file on filesystem in case of separate files for
+    //      * certificate (local_cert) and private key.
+    //      */
+    //     'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '/etc/letsencrypt/live/app.socialhub.pro/privkey.pem'),
+    //     // 'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '/etc/letsencrypt/live/app.socialhub.pro/privkey.key'),
 
-        /*
-         * Passphrase for your local_cert file.
-         */
-        // 'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
-        'passphrase' => null,
+    //     /*
+    //      * Passphrase for your local_cert file.
+    //      */
+    //     // 'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
+    //     'passphrase' => null,
 
-        'verify_peer' => false,
+    //     'verify_peer' => false,
         
-    ],
+    // ],
 
     /*
      * Channel Manager
