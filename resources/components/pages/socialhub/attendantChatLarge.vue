@@ -2091,7 +2091,7 @@
                                 console.log(error);
                             }
                         });                        
-                        this.messages = this.messages_copy.concat(this.messages);
+                        this.messages = this.messages_copy;
                     }else{
                         this.hasMorePageMessage =false;
                     }                    
