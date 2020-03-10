@@ -404,9 +404,11 @@ class ExternalRPIController extends Controller
             $Chat->type_id = $type_id;
             $Chat->status_id = MessagesStatusController::UNREADED;
             $Attendnat = isset($AttendantsContact->attendant_id) ? UsersAttendant::find($AttendantsContact->attendant_id) : null;
-            if ($Attendnat && $Contact && $Attendnat->selected_contact_id == $Contact->id) {
-                $Chat->status_id = MessagesStatusController::READED;
-            }
+            //************************TODO: descomentar depois del quebragalho
+            // if ($Attendnat && $Contact && $Attendnat->selected_contact_id == $Contact->id) {
+            //     $Chat->status_id = MessagesStatusController::READED;
+            // }
+            //*********************
             $Chat->socialnetwork_id = 1; // WhatsApp
             $Chat->message = $input['Msg'];
             // $Chat->created_at = $input['Date'];
