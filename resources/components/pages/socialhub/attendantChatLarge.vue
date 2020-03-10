@@ -1932,6 +1932,8 @@
                     'message_id': this.findAroundMessageId,
                     'page':this.pageNumber,
                     'set_as_readed':1,
+
+                    
                 })
                 .then(response => {
                     if(response.data.length){
