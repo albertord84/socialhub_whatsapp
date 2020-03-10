@@ -2131,6 +2131,7 @@
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
                     var message = JSON.parse(e.message);
+                    console.log(message);
                     message.time = this.getMessageTime(message.created_at);
                     try {
                         if(message.data != "" && message.data != null && message.data.length>0) {
