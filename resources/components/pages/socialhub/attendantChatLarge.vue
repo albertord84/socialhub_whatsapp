@@ -2056,8 +2056,7 @@
             },
 
             getChatQuebraGalhoDeAlberto: function(){
-                console.log(this.selectedContact.id);
-                if(this.selectedContact.id<0) return;
+                if(this.selectedContactIndex<0) return;
                 this.pageNumber = 0;
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
