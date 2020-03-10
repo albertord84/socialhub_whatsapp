@@ -134,7 +134,7 @@ class ExtendedChatRepository extends ChatRepository
         return $count->count();
     }
 
-    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed=true): Collection{
+    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed=1): Collection{
         $chatModel = new $this->model();
         $chatModel->table = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? 'chats' : (string)$attendant_id;
         
