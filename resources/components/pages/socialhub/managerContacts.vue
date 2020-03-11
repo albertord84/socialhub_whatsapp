@@ -20,7 +20,7 @@
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="triggerEvent()" title="Importar contatos">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="/*abri la modal de seleccion o descarga de plantilla*/triggerEvent()" title="Importar contatos">
                         <i class="mdi mdi-file-import fa-lg"  ></i>
                         <!-- <i class="fa fa-id-card-o"></i> -->
                     </a>
