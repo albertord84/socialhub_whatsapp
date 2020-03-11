@@ -84,59 +84,52 @@ class ExtendedContactController extends ContactController
             if(count($array)>1 && count($array[1])<2 ){
                 $array = $this->csv_to_array($file->getRealPath(), ';');
             }
-
-            // $csv = file_get_contents($file->getRealPath());            
-            // $array = array_map("str_getcsv", explode("\n", $csv));            
-            // $json = json_encode($array);
             unlink($file->getRealPath());
             
             //insert contacts in database
             foreach($array as $contact){
                 try{
-                    $name = $contact['Nome'];
-                    var_dump($contact['Nome']." ----------> ". $whatsapp = $contact['Whatsapp']);
-                    $name = trim($name);
                     $whatsapp = $contact['Whatsapp'];
                     $whatsapp= trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
-                    // $Contact = new Contact();
-                    // $Contact->company_id = $User->company_id;
-                    // $Contact->origin = 3;
+                    $Contact = new Contact();
+                    $Contact->company_id = $User->company_id;
+                    $Contact->origin = 3;
                     
-                    // if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact[0])) {
-                    //     $Contact->first_name = trim($contact[0]);
-                    // }
-                    // if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
-                    //     $Contact->whatsapp_id = $whatsapp;
-                    // }
-                    // if ($contact[2] && filter_var(trim($contact[2]), FILTER_VALIDATE_EMAIL)) {
-                    //     $Contact->email = trim($contact[2]);
-                    // }
+                    if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
+                        $Contact->first_name = trim($contact['Nome']);
+                    }
+                    if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
+                        $Contact->whatsapp_id = $whatsapp;
+                    }
 
-                    // if ($contact[3] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[3])) {
-                    //     $Contact->facebook_id = trim($contact[3]);
-                    // }
-                    // if ($contact[4] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[4])) {
-                    //     $Contact->instagram_id = trim($contact[4]);
-                    // }
-                    // if ($contact[5] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact[5])) {
-                    //     $Contact->linkedin_id = trim($contact[5]);
-                    // }
-                    // if ($contact[6] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[6])) {
-                    //     $Contact->estado = trim($contact[6]);
-                    // }
-                    // if ($contact[7] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[7])) {
-                    //     $Contact->cidade = trim($contact[7]);
-                    // }
-                    // if ($contact[8] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[8])) {
-                    //     $Contact->categoria1 = trim($contact[8]);
-                    // }
-                    // if ($contact[9] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact[9])) {
-                    //     $Contact->categoria2 = trim($contact[9]);
-                    // }
+                    if ($contact['Email'] && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
+                        $Contact->email = trim($contact['Email']);
+                    }
 
-                    // if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
-                    //     $Contact->save();
-                    // }
+                    if ($contact['Facebook'] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Facebook'])) {
+                        $Contact->facebook_id = trim($contact['Facebook']);
+                    }
+                    if ($contact['Instagram'] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Instagram'])) {
+                        $Contact->instagram_id = trim($contact['Instagram']);
+                    }
+                    if ($contact['LinkedIn'] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['LinkedIn'])) {
+                        $Contact->linkedin_id = trim($contact['LinkedIn']);
+                    }
+                    if ($contact['Estado'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Estado'])) {
+                        $Contact->estado = trim($contact['Estado']);
+                    }
+                    if ($contact['Cidade'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Cidade'])) {
+                        $Contact->cidade = trim($contact['Cidade']);
+                    }
+                    if ($contact['Categoria1'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria1'])) {
+                        $Contact->categoria1 = trim($contact['Categoria1']);
+                    }
+                    if ($contact['Categoria2'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
+                        $Contact->categoria2 = trim($contact['Categoria2']);
+                    }
+                    if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
+                        $Contact->save();
+                    }
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
