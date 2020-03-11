@@ -937,7 +937,7 @@
 
         <!-- Modal to delete Tags-->
         <b-modal v-model="modalDeleteContactTags" centered :hide-footer="true" title="Verificação de exclusão">
-            <span> Tem certeza que deseja remover esse Contato? </span>
+            <span> Tem certeza que deseja remover a etiqueta do contato? </span>
             <!-- <contactCRUDTags :contacts='contacts'></contactCRUDTags> -->
         </b-modal>
         
