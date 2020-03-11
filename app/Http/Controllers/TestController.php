@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Business\SalesBusiness;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Contact;
 use App\Models\Company;
 use App\Models\Sales;
 // use App\Repositories\ExtendedUsersSellerRepository;
@@ -34,16 +35,27 @@ class TestController extends AppBaseController
     public function index(Request $request)
     {
 
+        $contact_id = 7276;
+        $contact_Jid = "5521976550734";
+        // $contact_Jid = "5521965536174";
+        // $Contact = Contact::find($contact_id);
+
+        $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->where(['whatsapp_id' => $contact_Jid, 'company_id' => 3])
+                ->first();
+
+        dd($Contact);
+
         // Build Bling message by Sales object
-        $Company = Company::with('rpi')->find(1);
-        $SaleModel = new Sales;
-        $SaleModel->table = "$Company->id";
-        $firstSale = $SaleModel->first();
-        $SalesBussines = new SalesBusiness;
+        // $Company = Company::with('rpi')->find(1);
+        // $SaleModel = new Sales;
+        // $SaleModel->table = "$Company->id";
+        // $firstSale = $SaleModel->first();
+        // $SalesBussines = new SalesBusiness;
 
-        $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+        // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
 
-        dd($message);
+        // dd($message);
 
         // Check contact info by company
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);

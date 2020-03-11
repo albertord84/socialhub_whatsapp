@@ -270,7 +270,7 @@ class ExternalRPIController extends Controller
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
                 ->first();
-            // Log::debug('\n\rreciveTextMessage to Contact: ', [$Contact]);
+            Log::debug('\n\rreciveTextMessage to Contact: ', [$Contact]);
 
             $Chat = $this->messageToChatModel($input, $Contact);
             if (!$Chat) {
@@ -278,6 +278,7 @@ class ExternalRPIController extends Controller
             }
 
             $Chat->save();
+            Log::debug('\n\r Contact chat2: ', [$Chat]);
 
             if ($Contact) {
                 // Send event to attendants with new chat message
@@ -405,9 +406,9 @@ class ExternalRPIController extends Controller
             $Chat->status_id = MessagesStatusController::UNREADED;
             $Attendnat = isset($AttendantsContact->attendant_id) ? UsersAttendant::find($AttendantsContact->attendant_id) : null;
             //************************TODO: descomentar depois del quebragalho
-            // if ($Attendnat && $Contact && $Attendnat->selected_contact_id == $Contact->id) {
-            //     $Chat->status_id = MessagesStatusController::READED;
-            // }
+            if ($Attendnat && $Contact && $Attendnat->selected_contact_id == $Contact->id) {
+                $Chat->status_id = MessagesStatusController::READED;
+            }
             //*********************
             $Chat->socialnetwork_id = 1; // WhatsApp
             $Chat->message = $input['Msg'];
@@ -436,6 +437,7 @@ class ExternalRPIController extends Controller
 
             $Chat->contact_id = $Contact->id;
             $Chat->company_id = $Contact->company_id;
+            Log::debug('\n\r Contact chat: ', [$Chat]);
             $Chat->save();
 
         } catch (\Throwable $th) {
