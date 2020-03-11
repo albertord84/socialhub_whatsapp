@@ -1008,6 +1008,7 @@
         },
         
         methods: {
+
             sendMessage() {
                 if (this.isSendingNewMessage) return;                
                 var This = this;
@@ -1046,7 +1047,7 @@
                             
                             //---------------then, prepare the response message to display------------
                             var message = response.data;
-                            message.time = this.getMessageTime(message.created_at)
+                            message.time = this.getMessageTime(message.created_at);
                             if (message.data) {
                                 message.data = JSON.parse(message.data);
                                 message.path = message.data.FullPath;
@@ -1065,18 +1066,22 @@
                                 item.index = i++;
                             });
                             this.selectedContactIndex = 0;
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                            //------------------
+                            // this.selectedContact = this.contacts[this.selectedContactIndex];
 
-                            //----------update the message list and the last message of the contact-----
+                            // //----------update the message list and the last message of the contact-----
                             this.messages.push(Object.assign({}, message));
-                            this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            // this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
 
-                            if(this.recordingTime>0){
-                                this.timeRecordingAudio = "00:00";
-                                this.recordingTime = 0;
-                                this.isRecordingAudio = false;
-                            }
+                            // if(this.recordingTime>0){
+                            //     this.timeRecordingAudio = "00:00";
+                            //     this.recordingTime = 0;
+                            //     this.isRecordingAudio = false;
+                            // }
+                            // console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
+                            //-----------------
+                            this.getContacts();
                         })
                         .catch(error => {
                             this.processMessageError(error, this.chat_url,"send");
@@ -1089,13 +1094,14 @@
             },
             
             getContacts: function() { //R
+                console.log('getContacts');
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken
                     })
                     .then(response => {
                         this.contacts = response.data;
                         var This = this, i = 0;
-                        this.contacts.forEach(function(item, i){
+                        this.contacts.forEach((item, i)=>{
                             item.index = i++;
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
@@ -1104,13 +1110,22 @@
                             } catch (error) {
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
-                            item.isPictUrlBroken = false;
+                            item.isPictUrlBroken = false;                            
                         });
+                        
                         if(this.selectedContactIndex>=0){
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
-                            // this.selectedContactToEdit = this.contacts[this.selectedContactIndex];
-                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                        }   
+                            var flag =false;
+                            var This = this;
+                            this.contacts.forEach((item, i)=>{
+                                if(!flag && This.selectedContact.id == item.id){
+                                    This.selectedContactIndex = i;
+                                    This.selectedContact = This.contacts[This.selectedContactIndex];
+                                    This.selectedContactToEdit = Object.assign({}, This.contacts[This.selectedContactIndex]);
+                                    console.log(' aqui ---> '+This.selectedContactIndex);
+                                    flag = true;
+                                }
+                            });
+                        }
                     })
                     .catch(error => {
                         this.processMessageError(error, this.contacts_url,"get");
@@ -1936,7 +1951,7 @@
                     this.requestingNewPage = true;                
                 }
                 this.pageNumber = this.pageNumber+1;
-                
+
                 ApiService.get(this.chat_url,{
                     'contact_id':this.selectedContact.id,
                     'message_id': this.findAroundMessageId,
@@ -1975,7 +1990,8 @@
                         this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
-                    }                    
+                    }
+                    console.log('selectedContactIndex in getChat: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                     miniToastr.error(error, "Error carregando os contatos");   
@@ -2045,7 +2061,8 @@
                         }   
                     }else{
                         this.hasMorePageMessage =false;
-                    }                    
+                    }
+                    console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                 }).finally(()=>{                    
@@ -2067,16 +2084,16 @@
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
             
-            if(this.handleTimeToReloadContacts){
-                clearInterval(this.handleTimeToReloadContacts);
-            }
-            if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
-                this.handleTimeToReloadContacts = setInterval(()=>{
-                    this.getContacts();
-                    this.getAmountContactsInBag();
-                    this.gettingChatQuebraGalhoDeAlberto();
-                }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
-            }
+            // if(this.handleTimeToReloadContacts){
+            //     clearInterval(this.handleTimeToReloadContacts);
+            // }
+            // if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
+            //     this.handleTimeToReloadContacts = setInterval(()=>{
+            //         this.getContacts();
+            //         this.getAmountContactsInBag();
+            //         // this.gettingChatQuebraGalhoDeAlberto();
+            //     }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
+            // }
             
 
         },
@@ -2122,6 +2139,7 @@
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
                     var message = JSON.parse(e.message);
+                    console.log(message);
                     message.time = this.getMessageTime(message.created_at);
                     try {
                         if(message.data != "" && message.data != null && message.data.length>0) {

@@ -189,3 +189,13 @@ php artisan up
 
 #  Ativar ambiente de test no RPi
 export RPI_DEV=true ele usa o endpoint http://test.app.socialhub.pro/, e para voltar ao endpoint app.socialhub.pro só rodar export RPI_DEV=
+
+
+
+## Utils Arquivo
+
+# Procurar texto em pasta
+grep -iRl "laravel-websockets" ./
+
+# Procurar arquivo em pasta
+find "xxx" .
