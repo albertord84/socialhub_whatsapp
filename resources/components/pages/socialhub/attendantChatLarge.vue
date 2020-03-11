@@ -1177,8 +1177,7 @@
                 }
             },
 
-            reloadContactPicUrl(contact/*,index*/){
-                // if(this.allContacts[index].isPictUrlBroken && this.contacts[index].isPictUrlBroken){
+            reloadContactPicUrl(contact){
                 if(contact.isPictUrlBroken){
                     ApiService.get('updateContactPicture/'+contact.id)
                     .then(response => {
@@ -1189,13 +1188,6 @@
                                 item.isPictUrlBroken = false;
                             }
                         });
-                        // this.allContacts.forEach(function(item, i){
-                        //     if(item.id == contact.id){
-                        //         item.json_data = response.data.json_data;
-                        //         this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
-                        //         item.isPictUrlBroken = false;
-                        //     }
-                        // });
                     })
                     .catch(function(error) {
                         miniToastr.error(error, "Error atualizando informação do contato os contatos");   
@@ -1912,9 +1904,10 @@
                 this.isMuteNotifications = (contact.status_id == 6)? true: false;
             },
 
+
+
             getContactChat: function(contact,index) {
-                console.log(contact.first_name+'  ----> '+index);
-                this.reloadContactPicUrl(contact/*,index*/);
+                this.reloadContactPicUrl(contact);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
                     this.pageNumber = -1;
@@ -2094,14 +2087,14 @@
             // this.recorderMP3 = this.createMP3Recorder();
 
             // Check if MediaRecorder available.
-            if (!window.MediaRecorder) {
-                window.MediaRecorder = OpusMediaRecorder;
-            }
+            // if (!window.MediaRecorder) {
+            //     window.MediaRecorder = OpusMediaRecorder;
+            // }
             // Check if a target format (e.g. audio/ogg) is supported.
-            else 
-            if (!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-                window.MediaRecorder = OpusMediaRecorder;
-            }
+            // else 
+            // if (!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+            //     window.MediaRecorder = OpusMediaRecorder;
+            // }
 
             window.Echo = new Echo({
                 broadcaster: 'pusher',
@@ -2131,7 +2124,6 @@
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
                     var message = JSON.parse(e.message);
-                    console.log(message);
                     message.time = this.getMessageTime(message.created_at);
                     try {
                         if(message.data != "" && message.data != null && message.data.length>0) {
@@ -2143,8 +2135,6 @@
                         console.log(error);
                     }
                     
-                    console.log(this.selectedContact);
-
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
                         this.messages.push(Object.assign({}, message));
@@ -2154,28 +2144,27 @@
                             this.$refs.message_scroller.scrolltobottom();                        
                     }else{
                         //-------find contact and update count_unread_messagess and last_message-------                    
-                        var This = this;
-                        This.contacts.forEach((item, index) => {
+                        this.contacts.forEach((item, index) => {
                             if(item.id == message.contact_id){
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
                                 var targetContact = Object.assign({}, item);
-                                delete This.contacts[index];
-                                This.contacts.unshift(targetContact);
+                                delete this.contacts[index];
+                                this.contacts.unshift(targetContact);
                                 var i = 0;
-                                This.contacts.forEach(function(item2, i){
+                                this.contacts.forEach((item2, i)=>{
                                     item2.index = i++;
                                 });
 
                                 //---------update the index of the selected contact
-                                if(This.selectedContactIndex >=0 ){
-                                    This.selectedContactIndex ++;
-                                    This.selectedContact = This.contacts[This.selectedContactIndex];
+                                if(this.selectedContactIndex >=0 ){
+                                    this.selectedContactIndex ++;
+                                    this.selectedContact = this.contacts[this.selectedContactIndex];
                                 }
 
                             }
                         });
-                        if(!this.logguedAttendant.mute_notifications && !This.contacts[This.selectedContactIndex].status_id==6)
+                        if(!this.logguedAttendant.mute_notifications && this.selectedContactIndex>-1 && !this.contacts[this.selectedContactIndex].status_id==6)
                             this.$refs.newMessageSound.play();
                     }                    
             });
