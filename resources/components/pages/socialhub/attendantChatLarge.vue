@@ -649,7 +649,7 @@
                                         <span class="text-muted" style="font-size:1.1rem">Etiquetas</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
-                                        <i v-show="showTagInformation" @click.prevent="modalContactCRUDTags=!modalContactCRUDTags; isEditingTags=!isEditingTags"  class="fa fa-plus text-muted action-icons-fade" title="Adicionar etiqueta ao usuário" aria-hidden="true"></i>
+                                        <i v-show="showTagInformation" @click.prevent="modalAddContactTags=!modalAddContactTags; isEditingTags=!isEditingTags"  class="mdi mdi-tag-plus fa-lg text-muted action-icons-fade" title="Adicionar etiqueta ao usuário" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left" >
                                         <i v-show="!showTagInformation" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Mostrar etiquetas do contato" @click.prevent="showTagInformation=!showTagInformation"></i>
@@ -673,10 +673,21 @@
                             cuando: deleteContactTags abrir modal de confirmação. -->
 
                             
-                            <div v-show="isEditingTags">
-                                <!-- <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
-                                    <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
-                                </button> -->
+                            <div v-show="showTagInformation">
+                            <!-- ECR: incluir uma tabela dinámica visualizando em cada row as etiquetas que estão asociadas ao contato -->
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <p class="border mt-3 p-1 mr-2" style="background-color:blue"> Etiqueta 1 </p>
+                                                </td>
+                                                <td>
+                                                    <a class="text-18" href="javascript:void(0)" title="Eliminar etiqueta" @click.prevent="deleteContactTags(row)"><i class='mdi mdi-tag-remove fa-1_5x text-danger'></i> </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
                             </div>
                            
                         </div>
@@ -919,11 +930,21 @@
         </b-modal>
 
         <!-- Modal to add Tags-->
-        <b-modal v-model="modalContactCRUDTags" centered :hide-footer="true" title="Adicionando uma etiqueta ao contato">
+        <b-modal v-model="modalAddContactTags" centered :hide-footer="true" title="Adicionando uma etiqueta ao contato">
             <span> Escolha uma das etiquetas disponíveis </span>
             <!-- <contactCRUDTags :contacts='contacts'></contactCRUDTags> -->
         </b-modal>
+
+        <!-- Modal to delete Tags-->
+        <b-modal v-model="modalDeleteContactTags" centered :hide-footer="true" title="Verificação de exclusão">
+            <span> Tem certeza que deseja remover esse Contato? </span>
+            <!-- <contactCRUDTags :contacts='contacts'></contactCRUDTags> -->
+        </b-modal>
         
+         <!-- Delete Attendant Modal
+        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
+            <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
+        </b-modal> -->
 
     </div>
 </template>
@@ -1048,7 +1069,8 @@
                 modalUserCRUDDatas:false,
                 modalTransferContact:false,
                 modalMuteNotificationsContacts:false,
-                modalContactCRUDTags: false,
+                modalAddContactTags: false,
+                modalDeleteContactTags: false,
                 
                 rightLayout:'toggle-edit-contact',
                 leftLayout:'toggle-add-contact',
@@ -1988,8 +2010,6 @@
                 this.isMuteNotifications = (contact.status_id == 6)? true: false;
             },
 
-
-
             getContactChat: function(contact,index) {
                 this.reloadContactPicUrl(contact,index);
                 this.selectedContactIndex = -2;
@@ -2083,6 +2103,11 @@
                 }
             },
 
+            deleteContactTags: function(value){
+                // ECR: carregar dados para pasar ao CRUD: TAG, Contact,
+                this.modalDeleteContactTags = !this.modalDeleteContactTags; 
+                // ECR: Ativa modal con el CRUD para eliminar TAG
+            },
 
         },
 
