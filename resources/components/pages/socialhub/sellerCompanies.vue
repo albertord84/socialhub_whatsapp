@@ -159,6 +159,11 @@
                 rows:[],
                 columns: [
                     {
+                        label: 'Id', 
+                        field: 'id', 
+                        numeric: false, 
+                        html: false, 
+                    },{
                         label: 'Nome', 
                         field: 'name', 
                         numeric: false, 
