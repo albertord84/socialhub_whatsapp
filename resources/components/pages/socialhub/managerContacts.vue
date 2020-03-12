@@ -15,16 +15,12 @@
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
                         <i class="mdi mdi-file-export fa-lg"  ></i>
-                        <!-- <i class="fa fa-download"></i> -->
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="/*abri la modal de seleccion o descarga de plantilla*/triggerEvent()" title="Importar contatos">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
                         <i class="mdi mdi-file-import fa-lg"  ></i>
-                        <!-- <i class="fa fa-id-card-o"></i> -->
                     </a>
-
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
@@ -101,30 +97,36 @@
 
         <!-- Confirm import cantacts Modal -->
         <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Confirmação de importação de contatos">
-            <!-- Você adicionará novos contatos a partir do arquivo selecionado.
-            Atenção: 
-               1. Para adicionar os contatos, o nome de usuario e o número de Whatsapp são obrigatorios.
-               2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato correto.
-                  Ex: João Silva | 55 11 999999999 | joao@gmail.com |
-            Os dados que nao cumpram com os itens 1 e 2 nã serão adicionados. -->
 
             <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
-            <h5>Atenção:</h5>
-            <p>   1. Para adicionar os contatos, o nome de usuário e o número de Whatsapp são obrigatórios.</p>
-            <p>   2. Os dados dos contatos no arquivo .csv devem ter a ordem e formato corretos.</p>
-            <p>      Ex: Nome | Whatsapp | email | facebook | instagram | linkedin | estado | cidade | categoria 1 | categoria 2 </p>
-            <p>Os contatos que não cumpram com os itens 1 e 2 não serão adicionados na lista de contatos.</p>
+            <h6>Clique no botão enviar para adicionar os contatos!</h6>
 
-                <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
-                        <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
-                        Enviar
-                    </button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, file=null">Cancelar</button>
-                </div>
+            <div class="col-lg-12 mt-5 text-center">
+                <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
+                    <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
+                    Enviar
+                </button>
+                <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, showModalTemplateToImportContact=!showModalTemplateToImportContact, file=null">Cancelar</button>
+            </div>
+        </b-modal>
+
+        <!-- Upload template to import cantacts Modal -->
+        <b-modal ref="modal-template-contact" v-model="showModalTemplateToImportContact" id="showModalTemplateToImportContact" :hide-footer="true" title="Informação para importação de contatos">
+            <h5>Atenção:</h5>
+            <h6>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template!</h6>
+            <hr>
+            <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
+            <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
+            <div class="col-lg-12 mt-5 text-center" >
+                <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
+
+                <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
+                <a class="btn btn-primary  pl-5 pr-5 text-white" href="javascript:undefined" @click="triggerEvent()">Subir planilha</a>
+            </div>
         </b-modal>
 
     </div>
+
 </template>
 <script>
     import Fuse from 'fuse.js';
@@ -175,6 +177,7 @@
                 model:{},
                 
                 isSendingContactFromCSV:false,
+                isSendingTemplateToImportContact: false,
                 file:null,
                 //---------New record properties-----------------------------
                 
@@ -185,6 +188,7 @@
                 modalEditContact: false,
                 modalDeleteContact: false,
                 showModalFileUploadCSV: false,
+                showModalTemplateToImportContact: false,
 
                 //---------Externals properties-----------------------------
                 attendants:null,
@@ -306,7 +310,8 @@
                                 this.processMessageError(error, this.url, "get");
                             })
                             .finally(()=>{this.isSendingContactFromCSV=false;
-                                          this.showModalFileUploadCSV=!this.showModalFileUploadCSV });
+                                          this.showModalFileUploadCSV=!this.showModalFileUploadCSV; 
+                                          this.showModalTemplateToImportContact=!this.showModalTemplateToImportContact});
                                         //   this.showModalFileUploadCSV=false;});
                     }
                 } else{
