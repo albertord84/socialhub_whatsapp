@@ -102,7 +102,7 @@
             <h6>Clique no botão enviar para adicionar os contatos!</h6>
 
             <div class="col-lg-12 mt-5 text-center">
-                <button type="submit" class="btn btn-primary btn_width" @click.prevent="addContactsFromCSV">
+                <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingContactFromCSV==true" @click.prevent="addContactsFromCSV">
                     <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
                     Enviar
                 </button>
@@ -177,7 +177,6 @@
                 model:{},
                 
                 isSendingContactFromCSV:false,
-                isSendingTemplateToImportContact: false,
                 file:null,
                 //---------New record properties-----------------------------
                 
