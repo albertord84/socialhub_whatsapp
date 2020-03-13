@@ -168,11 +168,11 @@
                         width: "90px",
                         html: false,
                     },{
-                        label: 'Login', 
-                        field: 'login', 
-                        numeric: false, 
-                        html: false, 
-                    },{
+                    //     label: 'Login', 
+                    //     field: 'login', 
+                    //     numeric: false, 
+                    //     html: false, 
+                    // },{
                         label: 'Nome completo', 
                         field: 'name', 
                         numeric: false, 
@@ -188,11 +188,11 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'CPF',
-                        field: 'CPF',
-                        numeric: false,
-                        html: false,
-                    }, {
+                    //     label: 'CPF',
+                    //     field: 'CPF',
+                    //     numeric: false,
+                    //     html: false,
+                    // }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,

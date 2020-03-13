@@ -21,7 +21,7 @@
                         </div>
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-envelope form-control-feedback"></span>
-                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="emailCompany" name="emailCompany" type="emailCompany" required placeholder="Email empresarial(*)" class="form-control"/>                            
+                            <input v-model="modelCompany.email" title="Ex: company@gmail.com" id="emailCompany" name="emailCompany" type="emailCompany" required placeholder="Email empresarial (*)" class="form-control"/>                            
                         </div>                                                      
                     </div>
                     <div class="row">
@@ -37,19 +37,10 @@
                     </div>
 
 
-                    <h6>Endereço postal </h6>
+                    <!-- <h6>Endereço postal </h6>
                     <div class="row">
-                        <!-- <div class="col-lg-3 form-group has-search">
-                            <span class="fa fa-map-marker form-control-feedback"></span>
-                            <input v-model="modelCompany.CEP" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>
-                        </div>
-                        <div class="col-lg-1" >
-                            <button class="btn btn-info text-18" href="javascript:void(0)" title="Validar CEP" @click.prevent="validateCEP"><i class="fa fa-check-circle-o" aria-hidden="true"></i> </button>
-                        </div> -->
-
                         <div class="col-lg-4" >
                             <div class="input-group">
-                                <!-- <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
                                     <input v-model="modelCompany.CEP" v-mask="'#####-###'" title="Ex: 00000-000" name="CEP" id="CEP" type="text" required placeholder="CEP (*)" class="form-control"/>                                <div class="input-group-append">
                                     <div class="input-group-text hover-pointer" id="btnGroupAddon"  @click.prevent="getAddressByCEP">
                                         <i v-if="isSendingValidationCEP==false" class="fa fa-search" aria-hidden="true"></i>
@@ -58,7 +49,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div  class="col-lg-4 form-group has-search">
                             <span class="fa fa-map-marker form-control-feedback"></span>
                             <input v-model="modelCompany.cidade" title="Ex: Niterói" id="cidade" name="cidade" type="text" required placeholder="Cidade (*)"  class="form-control"/>                            
@@ -89,7 +79,7 @@
                             <span class="fa fa-map-marker form-control-feedback"></span>
                             <input v-model="modelCompany.bairro" title="Ex: Centro" name="bairro" id="bairro" type="text" required placeholder="Bairro (*)" class="form-control"/>
                         </div>
-                    </div>
+                    </div> -->
 
                     <h6>Descrição da empresa</h6>
                     <div class="row">
@@ -101,7 +91,7 @@
                 </div>
                 <hr>
 
-                <div class="pb-5">
+                <div>
                     <h3>Dados do manager da empresa</h3>
                     <div class="row">
                         <div  class="col-lg-6 form-group has-search">
@@ -114,21 +104,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 form-group has-search">
+                        <!-- <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-id-card form-control-feedback"></span>
                             <input v-model="modelManager.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                        </div> -->
+                        <div class="col-lg-6 form-group has-search">
+                            <span class="fa fa-whatsapp form-control-feedback"></span>
+                            <input v-model="modelManager.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" name="whatsappManager" id="whatsappManager" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
                         </div>
                         <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-phone form-control-feedback"></span>
                             <input v-model="modelManager.phone" v-mask="'###############'" title="Ex: 551188888888" id="phoneManager" name="phoneManager" type="text" required placeholder="Telefone fixo" class="form-control"/>
                         </div>
-                    </div> 
-                    <div class="row">
-                        <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-whatsapp form-control-feedback"></span>
-                            <input v-model="modelManager.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" name="whatsappManager" id="whatsappManager" type="text" required placeholder="Whatsapp (*)" class="form-control"/>
-                        </div>
-                    </div>                                  
+                    </div>
                 </div> 
                 
                 <hr>
@@ -682,79 +670,80 @@
                     this.flagReference = false;
                 }
 
-                if(this.modelCompany.CEP && this.modelCompany.CEP !=''){
-                    check = validation.check('cep', this.modelCompany.CEP)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O CEP da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelCompany.CEP && this.modelCompany.CEP !=''){
+                //     check = validation.check('cep', this.modelCompany.CEP)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O CEP da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.modelCompany.numero && this.modelCompany.numero !=''){
-                    check = validation.check('house_number', this.modelCompany.numero)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O número no endereço da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelCompany.numero && this.modelCompany.numero !=''){
+                //     check = validation.check('house_number', this.modelCompany.numero)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O número no endereço da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.modelCompany.complemento && this.modelCompany.complemento !=''){
-                    check = validation.check('complement_address', this.modelCompany.complemento)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
+                // if(this.modelCompany.complemento && this.modelCompany.complemento !=''){
+                //     check = validation.check('complement_address', this.modelCompany.complemento)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
 
-                if(this.modelCompany.estado && this.modelCompany.estado !=''){
-                    check = validation.check('state_address', this.modelCompany.estado)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O estado no endereço da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelCompany.estado && this.modelCompany.estado !=''){
+                //     check = validation.check('state_address', this.modelCompany.estado)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O estado no endereço da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.modelCompany.bairro && this.modelCompany.bairro !=''){
-                    check = validation.check('neighborhood_address', this.modelCompany.bairro)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O bairro no endereço da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelCompany.bairro && this.modelCompany.bairro !=''){
+                //     check = validation.check('neighborhood_address', this.modelCompany.bairro)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O bairro no endereço da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.modelCompany.cidade && this.modelCompany.cidade !=''){
-                    check = validation.check('municipality_address', this.modelCompany.cidade)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "A cidade no endereço da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelCompany.cidade && this.modelCompany.cidade !=''){
+                //     check = validation.check('municipality_address', this.modelCompany.cidade)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "A cidade no endereço da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.modelCompany.rua && this.modelCompany.rua !=''){
-                    check = validation.check('street_address', this.modelCompany.rua)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "A rua no endereço da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelCompany.rua && this.modelCompany.rua !=''){
+                //     check = validation.check('street_address', this.modelCompany.rua)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "A rua no endereço da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
             },
 
             validateDataModelManager: function(){
@@ -782,16 +771,16 @@
                     this.flagReference = false;
                 }
 
-                if(this.modelManager.CPF && this.modelManager.CPF !=''){
-                    check = validation.validate_cpf('cpf', this.modelManager.CPF)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O CPF do manager da empresa é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.modelManager.CPF && this.modelManager.CPF !=''){
+                //     check = validation.validate_cpf('cpf', this.modelManager.CPF)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O CPF do manager da empresa é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
                 if(this.modelManager.phone && this.modelManager.phone !=''){
                     check = validation.check('phone', this.modelManager.phone)
