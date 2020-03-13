@@ -1038,9 +1038,9 @@
                     try {
                         ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                         .then(response => {
-                            
-                            if(response.data && response.data.includes("Exception: Erro enviando mensagem, verifique conectividade!")){
-                                miniToastr.error("Erro enviando mensagem, verifique conectividade!","Erro");
+                            console.log();
+                            if(typeof(response.data) != "object" && response.data.includes("Exception: Erro enviando mensagem, verifique conectividade!")){
+                                miniToastr.error("Erro ao enviar mensagem. Verifique se o aparelho está conectado a internet","Erro");
                                 This.newMessage.message = "";
                                 This.isSendingNewMessage = false;
                                 return;
