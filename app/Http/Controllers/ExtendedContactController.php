@@ -6,8 +6,11 @@ use App\Business\FileUtils;
 use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
+use App\Models\AttendantsContact;
 use App\Repositories\ExtendedAttendantsContactRepository;
 use App\Repositories\ExtendedContactRepository;
+use App\Repositories\ExtendedUserRepository;
+use App\Repositories\ExtendedUsersAttendantRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
@@ -85,6 +88,16 @@ class ExtendedContactController extends ContactController
                 $array = $this->csv_to_array($file->getRealPath(), ';');
             }
             unlink($file->getRealPath());
+
+            //obtainin emails and ids of attendants
+            $extendedUserRepository = new ExtendedUserRepository(app());
+            $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
+            $attendantsUser = $ExtendedUsersAttendantRepository->Attendants_User_By_Attendant($User->company_id,4);
+            $attendatn_ids = array();
+            foreach ($attendantsUser as $key => $attendant) {
+                $user = $extendedUserRepository->findWithoutFail($attendant->user_id);
+                $attendatn_ids[$user->email] = $attendant->user_id;
+            }
             
             //insert contacts in database
             foreach($array as $contact){
@@ -128,8 +141,27 @@ class ExtendedContactController extends ContactController
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
-                        $Contact->save();
+                        $cnt = $Contact->save();
+
+                        //processar atendentes
+                        if ($contact['Email-Atendente'] && filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
+                            $attendant_email = trim($contact['Email-Atendente']);
+                            //1. buscar el id del atendiente segun la empresa y el email dado
+                            if(isset($attendatn_ids[$attendant_email])){
+                                //2. crear una fila en la tabla attendants_contacts
+                                $AttendantsContact = new AttendantsContact();
+                                $AttendantsContact->attendant_id = (int)$attendatn_ids[$attendant_email];
+                                $AttendantsContact->contact_id = $cnt->id;
+                                $AttendantsContact->save();
+                            }else{
+                                print_r("O email ".$attendatn_ids[$attendant_email]."não pertence a um attendente cadastrado nesta empresa");
+                            }
+                        }
+
+
                     }
+
+
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
