@@ -89,7 +89,7 @@ class ExtendedContactController extends ContactController
             }
             unlink($file->getRealPath());
 
-            //obtainin emails and ids of attendants
+            //obtaining emails and ids of attendants
             $extendedUserRepository = new ExtendedUserRepository(app());
             $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
             $attendantsUser = $ExtendedUsersAttendantRepository->Attendants_User_By_Attendant($User->company_id,4);
@@ -114,37 +114,35 @@ class ExtendedContactController extends ContactController
                     if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
                         $Contact->whatsapp_id = $whatsapp;
                     }
-
-                    if ($contact['Email'] && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
+                    if (isset($contact['Email']) && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
                         $Contact->email = trim($contact['Email']);
                     }
-
-                    if ($contact['Facebook'] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Facebook'])) {
+                    if (isset($contact['Facebook']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Facebook'])) {
                         $Contact->facebook_id = trim($contact['Facebook']);
                     }
-                    if ($contact['Instagram'] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Instagram'])) {
+                    if (isset($contact['Instagram']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Instagram'])) {
                         $Contact->instagram_id = trim($contact['Instagram']);
                     }
-                    if ($contact['LinkedIn'] && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['LinkedIn'])) {
+                    if (isset($contact['LinkedIn']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['LinkedIn'])) {
                         $Contact->linkedin_id = trim($contact['LinkedIn']);
                     }
-                    if ($contact['Estado'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Estado'])) {
+                    if (isset($contact['Estado']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Estado'])) {
                         $Contact->estado = trim($contact['Estado']);
                     }
-                    if ($contact['Cidade'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Cidade'])) {
+                    if (isset($contact['Cidade']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Cidade'])) {
                         $Contact->cidade = trim($contact['Cidade']);
                     }
-                    if ($contact['Categoria1'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria1'])) {
+                    if (isset($contact['Categoria1']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria1'])) {
                         $Contact->categoria1 = trim($contact['Categoria1']);
                     }
-                    if ($contact['Categoria2'] && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
+                    if (isset($contact['Categoria2']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
                         $cnt = $Contact->save();
 
                         //processar atendentes
-                        if ($contact['Email-Atendente'] && filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
+                        if (isset($contact['Email-Atendente']) && filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
                             $attendant_email = trim($contact['Email-Atendente']);
                             //1. buscar el id del atendiente segun la empresa y el email dado
                             if(isset($attendatn_ids[$attendant_email])){
@@ -154,7 +152,7 @@ class ExtendedContactController extends ContactController
                                 $AttendantsContact->contact_id = $cnt->id;
                                 $AttendantsContact->save();
                             }else{
-                                print_r("O email ".$attendatn_ids[$attendant_email]."não pertence a um attendente cadastrado nesta empresa");
+                                print_r("O email ".$attendatn_ids[$attendant_email]." não pertence a um attendente cadastrado nesta empresa");
                             }
                         }
 
