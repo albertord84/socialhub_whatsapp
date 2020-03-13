@@ -139,7 +139,9 @@ class ExtendedContactController extends ContactController
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
-                        $cnt = $Contact->save();
+                        $Contact->status_id = 2;
+                        $Contact->save();
+
 
                         //processar atendentes
                         if (isset($contact['Email-Atendente']) && filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
@@ -149,13 +151,14 @@ class ExtendedContactController extends ContactController
                                 //2. crear una fila en la tabla attendants_contacts
                                 $AttendantsContact = new AttendantsContact();
                                 $AttendantsContact->attendant_id = (int)$attendatn_ids[$attendant_email];
-                                $AttendantsContact->contact_id = $cnt->id;
+                                $AttendantsContact->contact_id = $Contact->id;
                                 $AttendantsContact->save();
+                                $Contact->status_id = 1;
+                                $Contact->save();
                             }else{
                                 print_r("O email ".$attendatn_ids[$attendant_email]." não pertence a um attendente cadastrado nesta empresa");
                             }
                         }
-
 
                     }
 
