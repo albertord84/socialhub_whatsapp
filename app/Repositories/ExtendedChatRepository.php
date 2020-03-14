@@ -98,7 +98,8 @@ class ExtendedChatRepository extends ChatRepository
 
                 
                 // Construct Contact with full data that chat need
-                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $ChastMessages->contact_id])->first();
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                                    ->where(['id' => $ChastMessages->contact_id])->first();
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
