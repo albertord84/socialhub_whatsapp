@@ -35,15 +35,15 @@ class TestController extends AppBaseController
     {
 
         // Build Bling message by Sales object
-        $Company = Company::with('rpi')->find(1);
-        $SaleModel = new Sales;
-        $SaleModel->table = "$Company->id";
-        $firstSale = $SaleModel->first();
-        $SalesBussines = new SalesBusiness;
+        // $Company = Company::with('rpi')->find(35);
+        // $SaleModel = new Sales;
+        // $SaleModel->table = "$Company->id";
+        // $firstSale = $SaleModel->first();
+        // $SalesBussines = new SalesBusiness;
 
-        $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+        // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
 
-        dd($message);
+        // dd($message);
 
         // Check contact info by company
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -177,7 +177,7 @@ class TestController extends AppBaseController
 
         
         $usuario = '2689761400';
-        $senha = 'H10R;3@Y@M';
+        $senha = 'H1OR;3@Y@M';
         $cnpjEmpresa = '26897614000101';
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
@@ -187,11 +187,11 @@ class TestController extends AppBaseController
         $accessData = new \PhpSigep\Model\AccessDataHomologacao();
         $accessData->setUsuario($usuario);
         $accessData->setSenha($senha);
-        $accessData->setCnpjEmpresa($cnpjEmpresa);
-        $accessData->setCodAdministrativo($codigoadm);
-        $accessData->setNumeroContrato($numcontrato);
-        $accessData->setCartaoPostagem($cartaopostagem);
-        $accessData->setAnoContrato(null);
+        // $accessData->setCnpjEmpresa($cnpjEmpresa);
+        // $accessData->setCodAdministrativo($codigoadm);
+        // $accessData->setNumeroContrato($numcontrato);
+        // $accessData->setCartaoPostagem($cartaopostagem);
+        // $accessData->setAnoContrato(null);
         // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
         
         $this->initCorreios($accessData);
@@ -208,7 +208,8 @@ class TestController extends AppBaseController
         
         // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
         $etiqueta = new \PhpSigep\Model\Etiqueta();
-        $etiqueta->setEtiquetaSemDv('PM499951504BR');
+        // $etiqueta->setEtiquetaSemDv('PM499951504BR');
+        $etiqueta->setEtiquetaComDv('SI192420171BR');
         // $etiqueta->setEtiquetaComDv('PM499951504BR');
         
         $params = new \PhpSigep\Model\RastrearObjeto();
@@ -218,7 +219,8 @@ class TestController extends AppBaseController
         $phpSigep = new \PhpSigep\Services\SoapClient\Real();
         $result = $phpSigep->rastrearObjeto($params);
         
-        var_dump((array)$result);
+        dd($result);
+        // var_dump((array)$result);
     }
 
     public function testsalesbling(Request $request)
@@ -307,7 +309,7 @@ Razão Social : COMERCIAL HORUS EIRELI
         
 Omologation:
     User: 2689761400
-    Root: H10R;3@Y@M
+    Root: H1OR;3@Y@M
 
 
 https://apps.correios.com.br/cas/login
