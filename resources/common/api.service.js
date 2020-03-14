@@ -187,7 +187,11 @@ const ApiService = {
                 if (url == "auth/add_user" && action == "add") object.message = "Erro adicionando usuário."; 
                 if (url == "auth/password_save" && action == "add") object.message = "Erro salvando sua nova senha.";
 
-                if (url == "blings" && action == "add") object.message = "Erro atualizando os dados da integração."; 
+                if (url == "blings" && action == "add") object.message = "Erro atualizando os dados da integração.";
+
+                if (url == "sales" && action == "get") object.message = "Erro carregando as vendas."; 
+                if (url == "sales" && action == "update") object.message = "Erro atualizando venda."; 
+                if (url == "sales" && action == "delete") object.message = "Erro eliminando venda."; 
 
             }
 

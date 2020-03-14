@@ -429,6 +429,10 @@ var ApiService = {
                 if (url == "auth/password_save" && action == "add") object.message = "Erro salvando sua nova senha.";
 
                 if (url == "blings" && action == "add") object.message = "Erro atualizando os dados da integração.";
+
+                if (url == "sales" && action == "get") object.message = "Erro carregando as vendas.";
+                if (url == "sales" && action == "update") object.message = "Erro atualizando venda.";
+                if (url == "sales" && action == "delete") object.message = "Erro eliminando venda.";
             }
         } else if (error.request) {
             // The request was made but no response was received
