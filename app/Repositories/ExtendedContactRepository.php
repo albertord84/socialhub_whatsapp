@@ -63,6 +63,7 @@ class ExtendedContactRepository extends ContactRepository
                 'company_id' => $company_id,
                 ['updated_at', '>', $lastContact->updated_at]
             ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+            
             foreach ($Contacts as $key => $Contact) {
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
