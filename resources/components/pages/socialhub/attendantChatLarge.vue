@@ -210,7 +210,7 @@
                                                     </b-dropdown-item>
                                                 </b-dropdown>
                                             </div>
-                               chatMessageScroling    </div> -->
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -732,6 +732,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div v-if="showContacDocuments" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-4">
                                 <!-- <div class="row">
@@ -1008,8 +1009,8 @@
         },
         
         methods: {
-
-            sendMessage() {
+            //----------------Messages------------------------------------
+            sendMessage: function() {
                 if (this.isSendingNewMessage) return;                
                 var This = this;
                 this.newMessage.message = this.newMessage.message.trim();
@@ -1037,6 +1038,14 @@
                     try {
                         ApiService.post(this.chat_url,formData, {headers: { "Content-Type": "multipart/form-data" }})
                         .then(response => {
+                            console.log();
+                            if(typeof(response.data) != "object" && response.data.includes("Exception: Erro enviando mensagem, verifique conectividade!")){
+                                miniToastr.error("Erro ao enviar mensagem. Verifique se o aparelho está conectado a internet","Erro");
+                                This.newMessage.message = "";
+                                This.isSendingNewMessage = false;
+                                return;
+                            }
+                            
                             //---------------then, prepare the response message to display------------
                             var message = response.data;
                             message.time = this.getMessageTime(message.created_at);
@@ -1058,22 +1067,15 @@
                                 item.index = i++;
                             });
                             this.selectedContactIndex = 0;
-                            //------------------
-                            // this.selectedContact = this.contacts[this.selectedContactIndex];
+                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
 
                             // //----------update the message list and the last message of the contact-----
                             this.messages.push(Object.assign({}, message));
-                            // this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
 
-                            // if(this.recordingTime>0){
-                            //     this.timeRecordingAudio = "00:00";
-                            //     this.recordingTime = 0;
-                            //     this.isRecordingAudio = false;
-                            // }
-                            // console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
-                            //-----------------
-                            this.getContacts();
+                            // this.getContacts();
                         })
                         .catch(error => {
                             this.processMessageError(error, this.chat_url,"send");
@@ -1084,189 +1086,30 @@
                     }
                 }
             },
-            
-            getContacts: function() { //R
-                ApiService.get(this.contacts_url,{
-                    'filterContactToken': this.filterContactToken
-                    })
-                    .then(response => {
-                        this.contacts = response.data;
-                        var This = this, i = 0;
-                        this.contacts.forEach(function(item, i){
-                            item.index = i++;
-                            try {
-                                if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
-                                    item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
-                                }
-                            } catch (error) {
-                                item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
-                            }
-                            item.isPictUrlBroken = false;
 
-                            if(this.selectedContactIndex>=0 && this.contacts[this.selectedContactIndex].id == item.id){
-                                this.selectedContactIndex = i;
-                            }
-                        });
-                        if(this.selectedContactIndex>=0){
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
-                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                        }
-                        console.log('selectedContactIndex in getContacts: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.contacts_url,"get");
-                    });
-            },
-
-            getAmountContactsInBag: function() { //R
-                ApiService.get('getBagContactsCount')
-                    .then(response => {
-                        this.amountContactsInBag = response.data;                        
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, "getBagContact","get");
-                    });
-            },
-
-            getNewContactFromBag: function() { //R
-                if(this.amountContactsInBag==0){
-                    miniToastr.info("Informação", "Não existem novos contatos para adicionar a sua lista");  
-                    return;
-                }
-                this.isAddingContactFromBag = true;
-                ApiService.get(this.contacts_bag_url)
-                    .then(response => {
-                        this.modalNewContactFromBag = !this.modalNewContactFromBag;
-                        var newContact = response.data;
-                        newContact.index = this.contacts.length;
-                        this.contacts.unshift(newContact);
-                        var i = 0;
-                        this.contacts.forEach(function(item, i){
-                            item.index = i++;
-                        });
-                        miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.contacts_bag_url,"add");
-                    })
-                    .finally(()=>{this.isAddingContactFromBag = false;});
-            }, 
-
-            getContactChatWhereLike: function(cont) {
-                this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
-                if (this.searchMessageByStringInput.length > 1){
-                    ApiService.get(this.chat_url,{
-                            'contact_id': this.selectedContact.id,
-                            'searchMessageByStringInput': this.searchMessageByStringInput,
-                            'page': 1
-                        })
-                        .then(response => {
-                            this.messagesWhereLike = response.data;
-                        })
-                        .catch(error => {
-                            this.processMessageError(error, this.chat_url,"get");
-                        });
+            getMessageTime: function(time){
+                var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+                var date_format = new Date(time);
+                var date1 = Date.parse(time); //to timestamp
+                var date2 = Date.now(); //to timestamp
+                var Difference_In_Time = date2 - date1; 
+                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                var timeString =date_format.getHours().toString().padStart(2, '0') + ':' + date_format.getMinutes().toString().padStart(2, '0');
+                //menos de 24 horas retornar "a hora"
+                if(Difference_In_Days < 1){
+                    return {'hour':timeString,'date':'Hoje'};
+                } else
+                //entre 1 e 2 dias retornar "Ontem"
+                if(Difference_In_Days >= 1 && Difference_In_Days < 2){
+                    return {'hour':timeString,'date':'Ontem'};
+                } else
+                //entre 2 e até 7 dias atrás retornar "Dia da semana"
+                if(Difference_In_Days >= 2 && Difference_In_Days <= 7){
+                    return {'hour':timeString,'date':weekDays[date_format.getDay()]};
                 } else{
-                    this.messagesWhereLike = [];
+                    //mais de 7 dias atrás retornar "dia/mes/ano"
+                    return {'hour':timeString,'date':date_format.getDate().toString().padStart(2, '0') + '/' + (date_format.getMonth()+1).toString().padStart(2, '0')+ '/' + date_format.getFullYear().toString().padStart(4, '0')};
                 }
-            },
-
-            reloadContactPicUrl(contact/*,index*/){
-                // if(this.allContacts[index].isPictUrlBroken && this.contacts[index].isPictUrlBroken){
-                if(contact.isPictUrlBroken){
-                    ApiService.get('updateContactPicture/'+contact.id)
-                    .then(response => {
-                        this.contacts.forEach((item, i)=>{
-                            if(item.id == contact.id){
-                                item.json_data = response.data.json_data;
-                                this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
-                                item.isPictUrlBroken = false;
-                            }
-                        });
-                        // this.allContacts.forEach(function(item, i){
-                        //     if(item.id == contact.id){
-                        //         item.json_data = response.data.json_data;
-                        //         this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
-                        //         item.isPictUrlBroken = false;
-                        //     }
-                        // });
-                    })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error atualizando informação do contato os contatos");   
-                    });
-                }
-            },
-
-            markAsBrokenUrl(contact,index){
-                this.contacts[index].isPictUrlBroken = true;
-                this.allContacts[index].isPictUrlBroken = true;
-            },
-
-            chatCenterSideBack(){
-                document.getElementById("chat-center-side").classList.remove("chat-center-side-open");
-            },
-            
-            updateContact: function() {
-
-                //TODO-Egberto (Urgente): solamente vas a mandar la petición si los objetos 
-                //this.selectedContactToEditActions y el this.selectedContact son diferentes, o sea, si realmente se edito algo
-                //busca en internet como compara si dos objetos son iguales en javascript, mira el ejemplo 5 del link
-                // https://medium.com/javascript-in-plain-english/comparing-objects-in-javascript-ce2dc1f3de7f
-                //testa bien antes de subir, mira el video que medina mando en el grupo de dev
-                
-                this.isUpdatingContact = true;
-
-                // Validando dados
-                this.trimDataSelectedContactToEdit();
-                this.validateDataSelectedContactToEdit();
-                if (this.flagReference == false){
-                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
-                    this.isUpdatingContact = false;
-                    this.flagReference = true;
-                    return;
-                }
-
-                var modifiedData = false;
-                if(this.selectedContact.first_name != this.selectedContactToEdit.first_name) modifiedData = true;
-                if(this.selectedContact.email != this.selectedContactToEdit.email) modifiedData = true;
-                if(this.selectedContact.whatsapp_id != this.selectedContactToEdit.whatsapp_id) modifiedData = true;
-                if(this.selectedContact.phone != this.selectedContactToEdit.phone) modifiedData = true;
-                if(this.selectedContact.cidade != this.selectedContactToEdit.cidade) modifiedData = true;
-                if(this.selectedContact.estado != this.selectedContactToEdit.estado) modifiedData = true;
-                if(this.selectedContact.categoria1 != this.selectedContactToEdit.categoria1) modifiedData = true;
-                if(this.selectedContact.categoria2 != this.selectedContactToEdit.categoria2) modifiedData = true;
-
-                if(modifiedData){
-
-                    delete this.selectedContactToEdit.status;                
-                    delete this.selectedContactToEdit.created_at;
-                    delete this.selectedContactToEdit.updated_at;
-                    
-                    var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
-                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                    if(selectedContactToEdit_cpy.phone){
-                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
-                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
-                    }
-                            
-                    ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
-                        .then(response => {
-                            if(this.isEditingContact)
-                                this.isEditingContact = false;
-                            if(this.isEditingContactSummary)
-                                this.isEditingContactSummary = false;
-                            miniToastr.success("Contato atualizado com sucesso.","Sucesso");
-                            this.selectedContactIndex = 0;
-                            this.getContacts();
-                        })
-                        .catch(error => {
-                            this.processMessageError(error, this.contacts_url, "update");
-                        })
-                        .finally(() => this.isUpdatingContact = false);
-                }
-                this.isUpdatingContact = false;
-                this.isEditingContact = false;
             },
 
             getLastMessageTime: function(time){
@@ -1291,624 +1134,83 @@
                     return timeString;
                 }
             },
-
-            getMessageTime: function(time){
-                var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-                var date_format = new Date(time);
-                var date1 = Date.parse(time); //to timestamp
-                var date2 = Date.now(); //to timestamp
-                var Difference_In_Time = date2 - date1; 
-                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-                
-                var timeString =date_format.getHours().toString().padStart(2, '0') + ':' + date_format.getMinutes().toString().padStart(2, '0');
-                
-                //menos de 24 horas retornar "a hora"
-                if(Difference_In_Days < 1){
-                    return {'hour':timeString,'date':'Hoje'};
-                } else
-                
-                //entre 1 e 2 dias retornar "Ontem"
-                if(Difference_In_Days >= 1 && Difference_In_Days < 2){
-                    return {'hour':timeString,'date':'Ontem'};
-                } else
-                
-                //entre 2 e até 7 dias atrás retornar "Dia da semana"
-                if(Difference_In_Days >= 2 && Difference_In_Days <= 7){
-                    return {'hour':timeString,'date':weekDays[date_format.getDay()]};
-                } else{
-                    
-                    //mais de 7 dias atrás retornar "dia/mes/ano"
-                    return {'hour':timeString,'date':date_format.getDate().toString().padStart(2, '0') + '/' + (date_format.getMonth()+1).toString().padStart(2, '0')+ '/' + date_format.getFullYear().toString().padStart(4, '0')};
-                }
-            },
-
-            triggerEvent (referenceFile) {
-                switch(referenceFile){
-                    case 'fileInputImage':
-                        this.newMessage.type_id = 2; //imagem message type 
-                        this.referenceFileInput = this.$refs.fileInputImage;
-                        this.$refs.fileInputImage.click();
-                        break;
-                    case 'fileInputAudio':
-                        this.newMessage.type_id = 3; //audio message type 
-                        this.referenceFileInput = this.$refs.fileInputAudio;
-                        this.$refs.fileInputAudio.click();
-                        break;
-                    case 'fileInputVideo':
-                        this.newMessage.type_id = 4; //video message type 
-                        this.referenceFileInput = this.$refs.fileInputVideo;
-                        this.$refs.fileInputVideo.click();
-                        break;
-                    case 'fileInputDocument':
-                        this.newMessage.type_id = 5; //document message type 
-                        this.referenceFileInput = this.$refs.fileInputDocument;
-                        this.$refs.fileInputDocument.click();
-                        break;
-                }
-            },
-
-            handleFileUploadContent: function() {
-                this.file = null;
-                if(this.referenceFileInput !== undefined && this.newMessage.type_id > 1){
-                    if(this.referenceFileInput.files[0].size < 10*1024*1024) {
-                        this.file = this.referenceFileInput.files[0];
-                        // this.modalSendMessageFiles = true;
-                    } else{
-                        miniToastr.error("O arquivo deve ter tamanho inferior a 10MB", "Erro"); 
-                    }
-                }
-            },
             
-            mouseOverMessage(id){
-                document.getElementById(id).classList.remove("message-hout");
-                document.getElementById(id).classList.add("message-hover");
-            },
-
-            mouseLeaveMessage(id){
-                document.getElementById(id).classList.add("message-hout");
-                document.getElementById(id).classList.remove("message-hover");
-            },
-
-            mouseOverContact(id){
-                document.getElementById(id).classList.remove("contact-hout");
-                document.getElementById(id).classList.add("contact-hover");
-            },
-
-            mouseLeaveContact(id){
-                document.getElementById(id).classList.add("contact-hout");
-                document.getElementById(id).classList.remove("contact-hover");
-            },
-
-            displayChatRightSide(){
-                if(this.showChatRightSide==false){
-                    document.getElementById("chat-center-side").classList.remove("width-70");
-                    document.getElementById("chat-center-side").classList.add("width-45");
-                    document.getElementById("chat-right-side").classList.add("chat-right-side-open");
-                    this.showChatFindMessages = false;
-                    this.showChatRightSide = true;
-                }else{
-                    document.getElementById("chat-center-side").classList.remove("width-45");
-                    document.getElementById("chat-center-side").classList.add("width-70");
-                    document.getElementById("chat-right-side").classList.remove("chat-right-side-open");
-                    this.showChatFindMessages = false;
-                    this.showChatRightSide = false;
-                }
-                this.showContactInformation=true;
-                this.showContactSummary=false;
-                this.showContactMedia=false;
-                this.showContacDocuments=false;
-            },
-
-            displayChatFindMessage(){
-                if(this.showChatFindMessages==false){
-                    document.getElementById("chat-center-side").classList.remove("width-70");
-                    document.getElementById("chat-center-side").classList.add("width-45");
-                    document.getElementById("chat-find-side").classList.add("chat-find-side-open");
-                    this.showChatRightSide = false;
-                    this.showChatFindMessages = true;
-                }else{
-                    document.getElementById("chat-center-side").classList.remove("width-45");
-                    document.getElementById("chat-center-side").classList.add("width-70");
-                    document.getElementById("chat-find-side").classList.remove("chat-find-side-open");
-                    this.showChatRightSide = false;
-                    this.showChatFindMessages = false;
-                }
-            },
-
-            displayDeleteContact(){
-                this.item = this.selectedContact; 
-                this.modalDeleteContact=!this.modalDeleteContact;
-            },
-
-            muteNotifications(){
-                var val = (this.logguedAttendant.mute_notifications)?0:1;
-                ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {
-                    "id": this.logguedAttendant.id,
-                    "mute_notifications": val
-                })
-                .then(response => {     
-                    if(val)
-                        miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
-                    else
-                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
-                    this.logguedAttendant.mute_notifications = val;
-                })
-                .catch(error => {
-                    this.processMessageError(error, this.users_url, "mute_notifications");
-                })
-                .finally(() => this.isUpdatingContact = false);
-            },
-
-            Height(val){
-                return (this.window.height-val)+'px';
-            },
-
-            toggleLeft(val) {
-                this.leftLayout = val;
-                this.$store.commit('leftside_bar', "toggle");
-            },
-
-            textTruncate (str, length, ending) {
-                if (length == null) {
-                    length = 100;
-                }
-                if (ending == null) {
-                    ending = '...';
-                }
-                if (str == null) {
-                    str = "";
-                }
-                if (str.length > length) {
-                    return str.substring(0, length - ending.length) + ending;
-                } else {
-                    return str;
-                }
-            },
-
-            handleResize() {
-                this.window.width = window.innerWidth;
-                this.window.height = window.innerHeight;
-            },
-
-            reloadContacts(){
-                this.getContacts();
-            },
-
-            reloadContactsAfterDelete(){
-                this.displayChatRightSide();
-                this.getContacts();
-                this.selectedContact={};
-                this.selectedContactIndex = -1;
-            },
-
-            reloadAfterTransferContact(){
-                this.selectedContactIndex = -1;
-                this.selectedContact = null;
-                this.displayChatRightSide();
-                this.getContacts();
-            },
-
-            closemodal(){
-                this.modalDeleteContact = false;
-                this.modalTransferContact = false;
-                this.modalMuteNotificationsContacts = false;
-            },
-            
-            logout() {
-                ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
-                    'user_id':this.logguedAttendant.id,
-                    'selected_contact_id':0
+            //----------------Get contacts-------------------------------
+            getContacts: function() { //R
+                ApiService.get(this.contacts_url,{
+                    'filterContactToken': this.filterContactToken
                 })
                 .then(response => {
-                    window.localStorage.removeItem('token');
-                    window.localStorage.removeItem('user');
-                    delete axios.defaults.headers.common['Authorization'];
-                    this.$router.push({name: "login"});                    
+                    this.contacts = response.data;
+                    var This = this, i = 0;
+                    this.contacts.forEach((item, i)=>{
+                        item.index = i++;
+                        try {
+                            if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
+                                item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                            }
+                        } catch (error) {
+                            item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                        }
+                        item.isPictUrlBroken = false;                            
+                    });
+                    
+                    if(this.selectedContactIndex>=0){
+                        var flag =false;
+                        var This = this;
+                        this.contacts.forEach((item, i)=>{
+                            if(!flag && This.selectedContact.id == item.id){
+                                This.selectedContactIndex = i;
+                                This.selectedContact = This.contacts[This.selectedContactIndex];
+                                This.selectedContactToEdit = Object.assign({}, This.contacts[This.selectedContactIndex]);
+                                console.log(' aqui ---> '+This.selectedContactIndex);
+                                flag = true;
+                            }
+                        });
+                    }
                 })
                 .catch(error => {
-                    this.processMessageError(error, "contacts", "get");
+                    this.processMessageError(error, this.contacts_url,"get");
                 });
             },
 
-            copyContact(){
-                this.item= Object.assign({}, this.selectedContact);
+            getAmountContactsInBag: function() { //R
+                ApiService.get('getBagContactsCount')
+                .then(response => {
+                    this.amountContactsInBag = response.data;                        
+                })
+                .catch(error => {
+                    this.processMessageError(error, "getBagContact","get");
+                });
             },
 
-            getContactInfoToEdit(cont){
-                var tmp = Object.assign({}, cont);
-                delete tmp.count_unread_messagess;
-                delete tmp.index;
-                delete tmp.last_message;
-                delete tmp.latest_attendant;
-                delete tmp.latest_attendant_contact;
-                delete tmp.created_at;
-                delete tmp.updated_at;
-                delete tmp.deleted_at;
-                return tmp;
-            },
-
-            scrollAroundMessageId(message){
-                var percent =- 1, total = this.messages.length;
-                for (var i = 0; i < total; i++) {
-                    if (this.messages[i].id == message.id) {
-                        percent = i;
-                        break; 
-                    }
-                }
-                if(percent > -1){
-                    percent = (percent*100)/total;
-                    this.$refs.message_scroller.scrolltopercent(percent);
-                }
-            },
-
-            trimDataSelectedContactToEdit: function(){
-                if(this.selectedContactToEdit.first_name) this.selectedContactToEdit.first_name = this.selectedContactToEdit.first_name.trim();
-                if(this.selectedContactToEdit.last_name) this.selectedContactToEdit.last_name = this.selectedContactToEdit.last_name.trim();
-                if(this.selectedContactToEdit.email) this.selectedContactToEdit.email = this.selectedContactToEdit.email.trim();
-                if(this.selectedContactToEdit.phone) this.selectedContactToEdit.phone = this.selectedContactToEdit.phone.trim();
-                if(this.selectedContactToEdit.whatsapp_id) this.selectedContactToEdit.whatsapp_id = this.selectedContactToEdit.whatsapp_id.trim();
-                if(this.selectedContactToEdit.facebook_id) this.selectedContactToEdit.facebook_id = this.selectedContactToEdit.facebook_id.trim();
-                if(this.selectedContactToEdit.instagram_id) this.selectedContactToEdit.instagram_id = this.selectedContactToEdit.instagram_id.trim();
-                if(this.selectedContactToEdit.linkedin_id) this.selectedContactToEdit.linkedin_id = this.selectedContactToEdit.linkedin_id.trim();
-                if(this.selectedContactToEdit.remember) this.selectedContactToEdit.remember = this.selectedContactToEdit.remember.trim();
-                if(this.selectedContactToEdit.summary) this.selectedContactToEdit.summary = this.selectedContactToEdit.summary.trim();
-                if(this.selectedContactToEdit.description) this.selectedContactToEdit.description = this.selectedContactToEdit.description.trim();
-            },
-
-            validateDataSelectedContactToEdit: function(){
-                // Validação dos dados do contato
-                var check;
-                if(this.selectedContactToEdit.first_name && this.selectedContactToEdit.first_name !=''){
-                    check = validation.check('complete_name', this.selectedContactToEdit.first_name)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O nome do contato é obrigatório" );
-                    this.flagReference = false;
-                }
-                if(this.selectedContactToEdit.last_name && this.selectedContactToEdit.last_name !=''){
-                    check = validation.check('complete_name', this.selectedContactToEdit.last_name)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
-                if(this.selectedContactToEdit.email && this.selectedContactToEdit.email !=''){
-                    check = validation.check('email', this.selectedContactToEdit.email)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
-                if(this.selectedContactToEdit.phone && this.selectedContactToEdit.phone !=''){
-                    check = validation.check('phone', this.selectedContactToEdit.phone)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
-                if(this.selectedContactToEdit.whatsapp_id && this.selectedContactToEdit.whatsapp_id !=''){
-                    check = validation.check('whatsapp', this.selectedContactToEdit.whatsapp_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
-                    this.flagReference = false;
-                }
-                if(this.selectedContactToEdit.facebook_id && this.selectedContactToEdit.facebook_id !=''){
-                    check = validation.check('facebook_profile', this.selectedContactToEdit.facebook_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
-                if(this.selectedContactToEdit.instagram_id && this.selectedContactToEdit.instagram_id !=''){
-                    check = validation.check('instagram_profile', this.selectedContactToEdit.instagram_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
-                if(this.selectedContactToEdit.linkedin_id && this.selectedContactToEdit.linkedin_id !=''){
-                    check = validation.check('linkedin_profile', this.selectedContactToEdit.linkedin_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
-            },
-            
-            timer(){
-                this.recordingTime ++;
-                var minutes = parseInt(this.recordingTime / 60);
-                var seconds = this.recordingTime % 60;
-                this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
-            },
-
-            //MP3
-            createMP3Recorder(){
-                return new MicRecorder({bitRate: 128});
-            },
-
-            startMP3RecordVoice: function() {
-                if(!navigator.mediaDevices){
-                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+            getNewContactFromBag: function() { //R
+                if(this.amountContactsInBag==0){
+                    miniToastr.info("Informação", "Não existem novos contatos para adicionar a sua lista");  
                     return;
                 }
-                this.recorderMP3.start()
-                    .then(() => {
-                        console.log('starting record audio');
-                        this.timeRecordingAudio = "00:00";
-                        this.recordingTime = 0;
-                        this.isRecordingAudio = true;
-                        this.handleTimerCounter = setInterval(this.timer, 1000);
-                    }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
-                    }).finally(()=>{this.isRecordingAudio = true;});
-            },
-
-            stopMP3RecordVoice: function() {
-                clearInterval(this.handleTimerCounter);
-                this.recorderMP3.stop().getMp3()
-                    .then(([buffer, blob]) => {
-                        if(this.isRecordingAudio){
-                            const file = new File(buffer, 'me-at-thevoice.mp3', {
-                                type: blob.type,
-                                lastModified: Date.now()
-                            });
-                            // const player = new Audio(URL.createObjectURL(file)); player.play();
-                            this.newMessage.type_id = 3;
-                            this.file = file;
-                            this.sendMessage();
-                        }else{
-                            this.timeRecordingAudio = "00:00";
-                            this.recordingTime = 0;
-                            this.isRecordingAudio = false;
-                        }                     
-                    }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
+                this.isAddingContactFromBag = true;
+                ApiService.get(this.contacts_bag_url)
+                .then(response => {
+                    this.modalNewContactFromBag = !this.modalNewContactFromBag;
+                    var newContact = response.data;
+                    newContact.index = this.contacts.length;
+                    this.contacts.unshift(newContact);
+                    var i = 0;
+                    this.contacts.forEach(function(item, i){
+                        item.index = i++;
                     });
-            },
-            
-            
-            //OGG-OPUS
-            createOGGRecorder(stream) {
-                const options = { mimeType: 'audio/ogg; codecs=opus' };
-                const workerOptions = {
-                    encoderWorkerFactory: function () {
-                        return new Worker('opus-media-recorder/encoderWorker.js');
-                        // return new Worker('opus-media-recorder/encoderWorker.umd.js');
-                    },
-                    OggOpusEncoderWasmPath: 'opus-media-recorder/OggOpusEncoder.wasm',
-                    WebMOpusEncoderWasmPath: 'opus-media-recorder/WebMOpusEncoder.wasm'
-                };
-
-                window.MediaRecorder = OpusMediaRecorder;
-                this.rec = new MediaRecorder(stream, options, workerOptions);
-                console.log("created recorderOGG object");
-                console.log(this.rec);
-
-                var that = this;
-                this.rec.start = () => {
-                    console.log("started audio recorder");                    
-                };
-
-                // this.rec.dataavailable = (e) => {
-                //     console.log('dataChunk available');
-                //     this.dataChunks.push(e.data);                            
-                // };
-
-                this.rec.stop = () => {
-                    console.log('stopped audio recorder');
-                    let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
-                    this.rec.stream.getTracks().forEach(i => i.stop());
-                    console.log(blob);
-                };
-
-                this.rec.error = (e) => {
-                    console.log('an error in worker ocurr');                    
-                    console.log(e);                    
-                    this.rec.stream.getTracks().forEach(i => i.stop());
-                };
-
-                this.dataChunks = [];
-                this.rec.start();
+                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.contacts_bag_url,"add");
+                })
+                .finally(()=>{this.isAddingContactFromBag = false;});
             },
 
-            startOGGRecordVoice: function() {                
-                if(!navigator.mediaDevices){
-                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
-                    return;
-                }
-                var This = this;
-                console.log("requesting permission to browser");
-                navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
-                    .then(stream => {
-                        This.createOGGRecorder(stream);
-                        This.timeRecordingAudio = "00:00";
-                        This.recordingTime = 0;
-                        This.isRecordingAudio = true;
-                        This.handleTimerCounter = setInterval(This.timer, 1000);
-                        // This.recorderOGG.addEventListener('dataavailable', (e) => {
-                        //     console.log(e.data);
-                        //     // audioElement.src = URL.createObjectURL(e.data);
-                        // });
-                    }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
-                    }).finally(()=>{This.isRecordingAudio = true;});
-            },
-
-            stopOGGRecordVoice: function() {                                
-                this.rec.stop();
-                return;
-
-                clearInterval(This.handleTimerCounter);
-                This.recorderOGG.stop().getMp3()
-                    .then(([buffer, blob]) => {
-                        if(This.isRecordingAudio){
-                            const file = new File(buffer, 'me-at-thevoice.mp3', {
-                                type: blob.type,
-                                lastModified: Date.now()
-                            });
-                            // const player = new Audio(URL.createObjectURL(file)); player.play();
-                            This.newMessage.type_id = 3;
-                            This.file = file;
-                            This.sendMessage();
-                        }else{
-                            This.timeRecordingAudio = "00:00";
-                            This.recordingTime = 0;
-                            This.isRecordingAudio = false;
-                        }                     
-                    }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
-                    });
-
-            },
-
-            //OGG-OPUS-native
-            createNativeRecorder(stream) {
-                this.rec = new MediaRecorder(stream);
-                console.log("created recorderOGG object");
-
-                var that = this;
-                this.rec.start = () => {
-                    console.log("started audio recorder");                    
-                };
-
-                // var This = this;
-                // this.rec.addEventListener('dataavailable', function(e) { 
-                //     console.log(e.data);
-                //     This.dataChunks.push(e.data);
-                // });
-
-                // this.rec.dataavailable = (e) => {
-                //     console.log('dataChunk available');
-                //     this.dataChunks.push(e.data);                            
-                // };
-
-                this.rec.ondataavailable = (e) => {
-                    console.log('dataChunk on available');
-                    this.dataChunks.push(e.data);                            
-                };
-
-                this.rec.stop = (e) => {
-                    console.log('stopped audio recorder');
-                    let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
-                    this.rec.stream.getTracks().forEach(i => i.stop());
-                    console.log(this.dataChunks);
-                    console.log(blob);
-                };
-
-                this.dataChunks = [];
-                this.rec.start();
-            },
-
-            startNativeRecordVoice: function() {                
-                if(!navigator.mediaDevices){
-                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
-                    return;
-                }
-                var This = this;
-                console.log("requesting permission to browser");
-                navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
-                    .then(stream => {
-                        This.createNativeRecorder(stream);
-                        This.timeRecordingAudio = "00:00";
-                        This.recordingTime = 0;
-                        This.isRecordingAudio = true;
-                        This.handleTimerCounter = setInterval(This.timer, 1000);
-                    }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
-                    }).finally(()=>{This.isRecordingAudio = true;});
-            },
-
-            stopNativeRecordVoice: function() {                                
-                this.rec.stop();
-                return;
-
-                clearInterval(This.handleTimerCounter);
-                This.recorderOGG.stop().getMp3()
-                    .then(([buffer, blob]) => {
-                        if(This.isRecordingAudio){
-                            const file = new File(buffer, 'me-at-thevoice.mp3', {
-                                type: blob.type,
-                                lastModified: Date.now()
-                            });
-                            // const player = new Audio(URL.createObjectURL(file)); player.play();
-                            This.newMessage.type_id = 3;
-                            This.file = file;
-                            This.sendMessage();
-                        }else{
-                            This.timeRecordingAudio = "00:00";
-                            This.recordingTime = 0;
-                            This.isRecordingAudio = false;
-                        }                     
-                    }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
-                    });
-
-            },
-
-            //------ Specific exceptions methods------------
-            processMessageError: function(error, url, action) {
-                var info = ApiService.process_request_error(error, url, action);
-                if(info.typeException == "expiredSection"){
-                    miniToastr.warn(info.message,"Atenção");
-                    this.$router.push({name:'login'});
-                    window.location.reload(false);
-                }else if(info.typeMessage == "warn"){
-                    miniToastr.warn(info.message,"Atenção");
-                }else{
-                    miniToastr.error(info.erro, info.message); 
-                }
-            },
-
-            editNotificationsContacts: function() {
-                this.isSendingNotificationsContacts = true;
-                delete this.selectedContactToEditActions.status;                
-                delete this.selectedContactToEditActions.created_at;
-                delete this.selectedContactToEditActions.updated_at;
-                
-                this.selectedContactToEditActions.status_id = (this.selectedContactToEditActions.status_id !=6)? 6:1;
-                ApiService.put(this.contacts_url+'/'+this.selectedContactToEditActions.id, this.selectedContactToEditActions)
-                    .then(response => {
-                        if(response.data.status_id != 6) miniToastr.success("As notificações foram ativadas com sucesso.","Sucesso");
-                        if(response.data.status_id == 6) miniToastr.success("As notificações foram silenciadas com sucesso.","Sucesso");
-                        this.selectedContactToEdit == this.getContactInfoToEdit(response.data);
-                        
-                        if(this.selectedContactIndex == this.selectedContactToEditActions.index){
-                            this.selectedContactIndex = 0;
-                        }else
-                        if(this.selectedContactIndex < this.selectedContactToEditActions.index){
-                            this.selectedContactIndex ++;
-                        }
-                        this.getContacts();
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.contacts_url, "update");
-                    })
-                this.isSendingNotificationsContacts = false;
-                this.closemodal();
-            },
-
-            getContactToEditActions: function(contact) {    
-                this.selectedContactToEditActions = Object.assign({}, contact);
-                this.isMuteNotifications = (contact.status_id == 6)? true: false;
-            },
-
+            //------------------Get chats----------------------------
             getContactChat: function(contact,index) {
-                console.log(contact.first_name+'  ----> '+index);
-                this.reloadContactPicUrl(contact/*,index*/);
+                this.reloadContactPicUrl(contact);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
                     this.pageNumber = -1;
@@ -2055,6 +1357,806 @@
                 });
             },
 
+            getContactChatWhereLike: function(cont) {
+                this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
+                if (this.searchMessageByStringInput.length > 1){
+                    ApiService.get(this.chat_url,{
+                        'contact_id': this.selectedContact.id,
+                        'searchMessageByStringInput': this.searchMessageByStringInput,
+                        'page': 1
+                    })
+                    .then(response => {
+                        this.messagesWhereLike = response.data;
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.chat_url,"get");
+                    });
+                } else{
+                    this.messagesWhereLike = [];
+                }
+            },
+
+            scrollAroundMessageId: function(message){
+                var percent =- 1, total = this.messages.length;
+                for (var i = 0; i < total; i++) {
+                    if (this.messages[i].id == message.id) {
+                        percent = i;
+                        break; 
+                    }
+                }
+                if(percent > -1){
+                    percent = (percent*100)/total;
+                    this.$refs.message_scroller.scrolltopercent(percent);
+                }
+            },
+
+            //----------------Edit contact------------------------------
+            markAsBrokenUrl: function(contact,index){
+                this.contacts[index].isPictUrlBroken = true;
+                this.allContacts[index].isPictUrlBroken = true;
+            },
+
+            reloadContactPicUrl: function(contact){
+                if(contact.isPictUrlBroken){
+                    ApiService.get('updateContactPicture/'+contact.id)
+                    .then(response => {
+                        this.contacts.forEach((item, i)=>{
+                            if(item.id == contact.id){
+                                item.json_data = response.data.json_data;
+                                this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
+                                item.isPictUrlBroken = false;
+                            }
+                        });
+                    })
+                    .catch(function(error) {
+                        miniToastr.error(error, "Error atualizando informação do contato os contatos");   
+                    });
+                }
+            },
+
+            getContactInfoToEdit: function(cont){
+                var tmp = Object.assign({}, cont);
+                delete tmp.count_unread_messagess;
+                delete tmp.index;
+                delete tmp.last_message;
+                delete tmp.latest_attendant;
+                delete tmp.latest_attendant_contact;
+                delete tmp.created_at;
+                delete tmp.updated_at;
+                delete tmp.deleted_at;
+                return tmp;
+            },
+
+            editNotificationsContacts: function() {
+                this.isSendingNotificationsContacts = true;
+                delete this.selectedContactToEditActions.status;                
+                delete this.selectedContactToEditActions.created_at;
+                delete this.selectedContactToEditActions.updated_at;
+                
+                this.selectedContactToEditActions.status_id = (this.selectedContactToEditActions.status_id !=6)? 6:1;
+                ApiService.put(this.contacts_url+'/'+this.selectedContactToEditActions.id, this.selectedContactToEditActions)
+                    .then(response => {
+                        if(response.data.status_id != 6) miniToastr.success("As notificações foram ativadas com sucesso.","Sucesso");
+                        if(response.data.status_id == 6) miniToastr.success("As notificações foram silenciadas com sucesso.","Sucesso");
+                        this.selectedContactToEdit == this.getContactInfoToEdit(response.data);
+                        
+                        if(this.selectedContactIndex == this.selectedContactToEditActions.index){
+                            this.selectedContactIndex = 0;
+                        }else
+                        if(this.selectedContactIndex < this.selectedContactToEditActions.index){
+                            this.selectedContactIndex ++;
+                        }
+                        this.getContacts();
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.contacts_url, "update");
+                    })
+                this.isSendingNotificationsContacts = false;
+                this.closemodal();
+            },
+
+            getContactToEditActions: function(contact) {    
+                this.selectedContactToEditActions = Object.assign({}, contact);
+                this.isMuteNotifications = (contact.status_id == 6)? true: false;
+            },
+            
+            trimDataSelectedContactToEdit: function(){
+                if(this.selectedContactToEdit.first_name) this.selectedContactToEdit.first_name = this.selectedContactToEdit.first_name.trim();
+                if(this.selectedContactToEdit.last_name) this.selectedContactToEdit.last_name = this.selectedContactToEdit.last_name.trim();
+                if(this.selectedContactToEdit.email) this.selectedContactToEdit.email = this.selectedContactToEdit.email.trim();
+                if(this.selectedContactToEdit.phone) this.selectedContactToEdit.phone = this.selectedContactToEdit.phone.trim();
+                if(this.selectedContactToEdit.whatsapp_id) this.selectedContactToEdit.whatsapp_id = this.selectedContactToEdit.whatsapp_id.trim();
+                if(this.selectedContactToEdit.facebook_id) this.selectedContactToEdit.facebook_id = this.selectedContactToEdit.facebook_id.trim();
+                if(this.selectedContactToEdit.instagram_id) this.selectedContactToEdit.instagram_id = this.selectedContactToEdit.instagram_id.trim();
+                if(this.selectedContactToEdit.linkedin_id) this.selectedContactToEdit.linkedin_id = this.selectedContactToEdit.linkedin_id.trim();
+                if(this.selectedContactToEdit.remember) this.selectedContactToEdit.remember = this.selectedContactToEdit.remember.trim();
+                if(this.selectedContactToEdit.summary) this.selectedContactToEdit.summary = this.selectedContactToEdit.summary.trim();
+                if(this.selectedContactToEdit.description) this.selectedContactToEdit.description = this.selectedContactToEdit.description.trim();
+            },
+
+            validateDataSelectedContactToEdit: function(){
+                // Validação dos dados do contato
+                var check;
+                if(this.selectedContactToEdit.first_name && this.selectedContactToEdit.first_name !=''){
+                    check = validation.check('complete_name', this.selectedContactToEdit.first_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do contato é obrigatório" );
+                    this.flagReference = false;
+                }
+                if(this.selectedContactToEdit.last_name && this.selectedContactToEdit.last_name !=''){
+                    check = validation.check('complete_name', this.selectedContactToEdit.last_name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.email && this.selectedContactToEdit.email !=''){
+                    check = validation.check('email', this.selectedContactToEdit.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.phone && this.selectedContactToEdit.phone !=''){
+                    check = validation.check('phone', this.selectedContactToEdit.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.whatsapp_id && this.selectedContactToEdit.whatsapp_id !=''){
+                    check = validation.check('whatsapp', this.selectedContactToEdit.whatsapp_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O whatsapp do contato é obrigatório" );
+                    this.flagReference = false;
+                }
+                if(this.selectedContactToEdit.facebook_id && this.selectedContactToEdit.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.selectedContactToEdit.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.instagram_id && this.selectedContactToEdit.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.selectedContactToEdit.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.selectedContactToEdit.linkedin_id && this.selectedContactToEdit.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.selectedContactToEdit.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },       
+
+            updateContact: function() {
+                this.isUpdatingContact = true;
+                // Validando dados
+                this.trimDataSelectedContactToEdit();
+                this.validateDataSelectedContactToEdit();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isUpdatingContact = false;
+                    this.flagReference = true;
+                    return;
+                }
+                var modifiedData = false;
+                if(this.selectedContact.first_name != this.selectedContactToEdit.first_name) modifiedData = true;
+                if(this.selectedContact.email != this.selectedContactToEdit.email) modifiedData = true;
+                if(this.selectedContact.whatsapp_id != this.selectedContactToEdit.whatsapp_id) modifiedData = true;
+                if(this.selectedContact.phone != this.selectedContactToEdit.phone) modifiedData = true;
+                if(this.selectedContact.cidade != this.selectedContactToEdit.cidade) modifiedData = true;
+                if(this.selectedContact.estado != this.selectedContactToEdit.estado) modifiedData = true;
+                if(this.selectedContact.categoria1 != this.selectedContactToEdit.categoria1) modifiedData = true;
+                if(this.selectedContact.categoria2 != this.selectedContactToEdit.categoria2) modifiedData = true;
+
+                if(modifiedData){
+                    delete this.selectedContactToEdit.status;                
+                    delete this.selectedContactToEdit.created_at;
+                    delete this.selectedContactToEdit.updated_at;
+                    var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                    if(selectedContactToEdit_cpy.phone){
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
+                    }
+                            
+                    ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
+                        .then(response => {
+                            if(this.isEditingContact)
+                                this.isEditingContact = false;
+                            if(this.isEditingContactSummary)
+                                this.isEditingContactSummary = false;
+                            miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+                            this.selectedContactIndex = 0;
+                            this.getContacts();
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.contacts_url, "update");
+                        })
+                        .finally(() => this.isUpdatingContact = false);
+                }
+                this.isUpdatingContact = false;
+                this.isEditingContact = false;
+            },
+
+            //-------------------Secundary functions----------------------
+            muteNotifications: function(){
+                var val = (this.logguedAttendant.mute_notifications)?0:1;
+                ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {
+                    "id": this.logguedAttendant.id,
+                    "mute_notifications": val
+                })
+                .then(response => {     
+                    if(val)
+                        miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
+                    else
+                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
+                    this.logguedAttendant.mute_notifications = val;
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.users_url, "mute_notifications");
+                })
+                .finally(() => this.isUpdatingContact = false);
+            },
+
+            textTruncate: function(str, length, ending) {
+                if (length == null) {
+                    length = 100;
+                }
+                if (ending == null) {
+                    ending = '...';
+                }
+                if (str == null) {
+                    str = "";
+                }
+                if (str.length > length) {
+                    return str.substring(0, length - ending.length) + ending;
+                } else {
+                    return str;
+                }
+            },
+
+            chatCenterSideBack: function(){
+                document.getElementById("chat-center-side").classList.remove("chat-center-side-open");
+            },            
+
+            triggerEvent: function(referenceFile) {
+                switch(referenceFile){
+                    case 'fileInputImage':
+                        this.newMessage.type_id = 2; //imagem message type 
+                        this.referenceFileInput = this.$refs.fileInputImage;
+                        this.$refs.fileInputImage.click();
+                        break;
+                    case 'fileInputAudio':
+                        this.newMessage.type_id = 3; //audio message type 
+                        this.referenceFileInput = this.$refs.fileInputAudio;
+                        this.$refs.fileInputAudio.click();
+                        break;
+                    case 'fileInputVideo':
+                        this.newMessage.type_id = 4; //video message type 
+                        this.referenceFileInput = this.$refs.fileInputVideo;
+                        this.$refs.fileInputVideo.click();
+                        break;
+                    case 'fileInputDocument':
+                        this.newMessage.type_id = 5; //document message type 
+                        this.referenceFileInput = this.$refs.fileInputDocument;
+                        this.$refs.fileInputDocument.click();
+                        break;
+                }
+            },
+
+            handleFileUploadContent: function() {
+                this.file = null;
+                if(this.referenceFileInput !== undefined && this.newMessage.type_id > 1){
+                    if(this.referenceFileInput.files[0].size < 10*1024*1024) {
+                        this.file = this.referenceFileInput.files[0];
+                        // this.modalSendMessageFiles = true;
+                    } else{
+                        miniToastr.error("O arquivo deve ter tamanho inferior a 10MB", "Erro"); 
+                    }
+                }
+            },
+            
+            mouseOverMessage: function(id){
+                document.getElementById(id).classList.remove("message-hout");
+                document.getElementById(id).classList.add("message-hover");
+            },
+
+            mouseLeaveMessage: function(id){
+                document.getElementById(id).classList.add("message-hout");
+                document.getElementById(id).classList.remove("message-hover");
+            },
+
+            mouseOverContact: function(id){
+                document.getElementById(id).classList.remove("contact-hout");
+                document.getElementById(id).classList.add("contact-hover");
+            },
+
+            mouseLeaveContact: function(id){
+                document.getElementById(id).classList.add("contact-hout");
+                document.getElementById(id).classList.remove("contact-hover");
+            },
+
+            displayChatRightSide: function(){
+                if(this.showChatRightSide==false){
+                    document.getElementById("chat-center-side").classList.remove("width-70");
+                    document.getElementById("chat-center-side").classList.add("width-45");
+                    document.getElementById("chat-right-side").classList.add("chat-right-side-open");
+                    this.showChatFindMessages = false;
+                    this.showChatRightSide = true;
+                }else{
+                    document.getElementById("chat-center-side").classList.remove("width-45");
+                    document.getElementById("chat-center-side").classList.add("width-70");
+                    document.getElementById("chat-right-side").classList.remove("chat-right-side-open");
+                    this.showChatFindMessages = false;
+                    this.showChatRightSide = false;
+                }
+                this.showContactInformation=true;
+                this.showContactSummary=false;
+                this.showContactMedia=false;
+                this.showContacDocuments=false;
+            },
+
+            displayChatFindMessage: function(){
+                if(this.showChatFindMessages==false){
+                    document.getElementById("chat-center-side").classList.remove("width-70");
+                    document.getElementById("chat-center-side").classList.add("width-45");
+                    document.getElementById("chat-find-side").classList.add("chat-find-side-open");
+                    this.showChatRightSide = false;
+                    this.showChatFindMessages = true;
+                }else{
+                    document.getElementById("chat-center-side").classList.remove("width-45");
+                    document.getElementById("chat-center-side").classList.add("width-70");
+                    document.getElementById("chat-find-side").classList.remove("chat-find-side-open");
+                    this.showChatRightSide = false;
+                    this.showChatFindMessages = false;
+                }
+            },
+
+            displayDeleteContact: function(){
+                this.item = this.selectedContact; 
+                this.modalDeleteContact=!this.modalDeleteContact;
+            },            
+
+            Height: function(val){
+                return (this.window.height-val)+'px';
+            },
+
+            toggleLeft: function(val) {
+                this.leftLayout = val;
+                this.$store.commit('leftside_bar', "toggle");
+            },
+
+            handleResize: function() {
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
+            },
+
+            reloadContacts: function(){
+                this.getContacts();
+            },
+
+            reloadContactsAfterDelete: function(){
+                this.displayChatRightSide();
+                this.getContacts();
+                this.selectedContact={};
+                this.selectedContactIndex = -1;
+            },
+
+            reloadAfterTransferContact: function(){
+                this.selectedContactIndex = -1;
+                this.selectedContact = null;
+                this.displayChatRightSide();
+                this.getContacts();
+            },
+
+            closemodal: function(){
+                this.modalDeleteContact = false;
+                this.modalTransferContact = false;
+                this.modalMuteNotificationsContacts = false;
+            },
+            
+            logout: function() {
+                ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
+                    'user_id':this.logguedAttendant.id,
+                    'selected_contact_id':0
+                })
+                .then(response => {
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('user');
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.$router.push({name: "login"});                    
+                })
+                .catch(error => {
+                    this.processMessageError(error, "contacts", "get");
+                });
+            },
+
+            copyContact: function(){
+                this.item= Object.assign({}, this.selectedContact);
+            },
+
+            //------------------Audio messages--------------------------
+            preConfigAudio: function(){
+                // this.recorderMP3 = this.createMP3Recorder();
+    
+                // Check if MediaRecorder available.
+                // if (!window.MediaRecorder) {
+                //     window.MediaRecorder = OpusMediaRecorder;
+                // }
+                // Check if a target format (e.g. audio/ogg) is supported.
+                // else 
+                // if (!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+                //     window.MediaRecorder = OpusMediaRecorder;
+                // }
+            },
+            
+            timer: function(){
+                this.recordingTime ++;
+                var minutes = parseInt(this.recordingTime / 60);
+                var seconds = this.recordingTime % 60;
+                this.timeRecordingAudio = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+            },
+
+            createMP3Recorder: function(){
+                return new MicRecorder({bitRate: 128});
+            },
+
+            startMP3RecordVoice: function() {
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                this.recorderMP3.start()
+                    .then(() => {
+                        console.log('starting record audio');
+                        this.timeRecordingAudio = "00:00";
+                        this.recordingTime = 0;
+                        this.isRecordingAudio = true;
+                        this.handleTimerCounter = setInterval(this.timer, 1000);
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{this.isRecordingAudio = true;});
+            },
+
+            stopMP3RecordVoice: function() {
+                clearInterval(this.handleTimerCounter);
+                this.recorderMP3.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(this.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            this.newMessage.type_id = 3;
+                            this.file = file;
+                            this.sendMessage();
+                        }else{
+                            this.timeRecordingAudio = "00:00";
+                            this.recordingTime = 0;
+                            this.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+            },
+
+            createOGGRecorder: function(stream) {
+                const options = { mimeType: 'audio/ogg; codecs=opus' };
+                const workerOptions = {
+                    encoderWorkerFactory: function () {
+                        return new Worker('opus-media-recorder/encoderWorker.js');
+                        // return new Worker('opus-media-recorder/encoderWorker.umd.js');
+                    },
+                    OggOpusEncoderWasmPath: 'opus-media-recorder/OggOpusEncoder.wasm',
+                    WebMOpusEncoderWasmPath: 'opus-media-recorder/WebMOpusEncoder.wasm'
+                };
+
+                window.MediaRecorder = OpusMediaRecorder;
+                this.rec = new MediaRecorder(stream, options, workerOptions);
+                console.log("created recorderOGG object");
+                console.log(this.rec);
+
+                var that = this;
+                this.rec.start = () => {
+                    console.log("started audio recorder");                    
+                };
+
+                // this.rec.dataavailable = (e) => {
+                //     console.log('dataChunk available');
+                //     this.dataChunks.push(e.data);                            
+                // };
+
+                this.rec.stop = () => {
+                    console.log('stopped audio recorder');
+                    let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
+                    this.rec.stream.getTracks().forEach(i => i.stop());
+                    console.log(blob);
+                };
+
+                this.rec.error = (e) => {
+                    console.log('an error in worker ocurr');                    
+                    console.log(e);                    
+                    this.rec.stream.getTracks().forEach(i => i.stop());
+                };
+
+                this.dataChunks = [];
+                this.rec.start();
+            },
+
+            startOGGRecordVoice: function() {                
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                var This = this;
+                console.log("requesting permission to browser");
+                navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
+                    .then(stream => {
+                        This.createOGGRecorder(stream);
+                        This.timeRecordingAudio = "00:00";
+                        This.recordingTime = 0;
+                        This.isRecordingAudio = true;
+                        This.handleTimerCounter = setInterval(This.timer, 1000);
+                        // This.recorderOGG.addEventListener('dataavailable', (e) => {
+                        //     console.log(e.data);
+                        //     // audioElement.src = URL.createObjectURL(e.data);
+                        // });
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{This.isRecordingAudio = true;});
+            },
+
+            stopOGGRecordVoice: function() {                                
+                this.rec.stop();
+                return;
+
+                clearInterval(This.handleTimerCounter);
+                This.recorderOGG.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(This.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            This.newMessage.type_id = 3;
+                            This.file = file;
+                            This.sendMessage();
+                        }else{
+                            This.timeRecordingAudio = "00:00";
+                            This.recordingTime = 0;
+                            This.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+
+            },
+
+            createNativeRecorder: function(stream) {
+                this.rec = new MediaRecorder(stream);
+                console.log("created recorderOGG object");
+
+                var that = this;
+                this.rec.start = () => {
+                    console.log("started audio recorder");                    
+                };
+
+                // var This = this;
+                // this.rec.addEventListener('dataavailable', function(e) { 
+                //     console.log(e.data);
+                //     This.dataChunks.push(e.data);
+                // });
+
+                // this.rec.dataavailable = (e) => {
+                //     console.log('dataChunk available');
+                //     this.dataChunks.push(e.data);                            
+                // };
+
+                this.rec.ondataavailable = (e) => {
+                    console.log('dataChunk on available');
+                    this.dataChunks.push(e.data);                            
+                };
+
+                this.rec.stop = (e) => {
+                    console.log('stopped audio recorder');
+                    let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
+                    this.rec.stream.getTracks().forEach(i => i.stop());
+                    console.log(this.dataChunks);
+                    console.log(blob);
+                };
+
+                this.dataChunks = [];
+                this.rec.start();
+            },
+
+            startNativeRecordVoice: function() {                
+                if(!navigator.mediaDevices){
+                    miniToastr.warn("Essa função não é suportada pelo seu navegador", "Atenção");
+                    return;
+                }
+                var This = this;
+                console.log("requesting permission to browser");
+                navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
+                    .then(stream => {
+                        This.createNativeRecorder(stream);
+                        This.timeRecordingAudio = "00:00";
+                        This.recordingTime = 0;
+                        This.isRecordingAudio = true;
+                        This.handleTimerCounter = setInterval(This.timer, 1000);
+                    }).catch((e) => {
+                        console.log('an exception occurr when starting record audio');
+                        console.error(e);
+                    }).finally(()=>{This.isRecordingAudio = true;});
+            },
+
+            stopNativeRecordVoice: function() {                                
+                this.rec.stop();
+                return;
+
+                clearInterval(This.handleTimerCounter);
+                This.recorderOGG.stop().getMp3()
+                    .then(([buffer, blob]) => {
+                        if(This.isRecordingAudio){
+                            const file = new File(buffer, 'me-at-thevoice.mp3', {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            // const player = new Audio(URL.createObjectURL(file)); player.play();
+                            This.newMessage.type_id = 3;
+                            This.file = file;
+                            This.sendMessage();
+                        }else{
+                            This.timeRecordingAudio = "00:00";
+                            This.recordingTime = 0;
+                            This.isRecordingAudio = false;
+                        }                     
+                    }).catch((e) => {
+                        console.log('We could not retrieve your message');
+                        console.log(e);
+                    });
+
+            },            
+
+            //---------------Websockets---------------------
+            wsCriateTunnel: function(){
+                window.Echo = new Echo({
+                    broadcaster: 'pusher',
+                    key: process.env.MIX_PUSHER_APP_KEY,
+                    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                    host: process.env.MIX_APP_HOST,  
+
+
+                    // No SSL
+                    wsHost: process.env.MIX_APP_HOST,
+                    wsPort: 6001,
+                    enabledTransports: ['ws'],
+                    encrypted: false,
+                    forceTLS: false,
+
+                    // SSL
+                    // wssHost: process.env.MIX_APP_HOST,
+                    // wssPort: 6001,
+                    // enabledTransports: ['ws', 'wss'],
+                    // encrypted: true,
+                    // forceTLS: true,
+
+                    disableStats: false,
+                });
+            },
+
+            wsMessageToAttendant: function(){
+                window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
+                .listen('MessageToAttendant', (e) => {
+                    //------------prepare message datas to be displayed------------------------
+                    var message = JSON.parse(e.message);
+                    message.time = this.getMessageTime(message.created_at);
+                    try {
+                        if(message.data != "" && message.data != null && message.data.length>0) {
+                            message.data = JSON.parse(message.data);
+                            if(message.type_id > 1)
+                                message.path = message.data.FullPath;
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    
+                    //------show the recived message if the target contact is selected----------
+                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
+                        this.messages.push(Object.assign({}, message));
+                        this.contacts[this.selectedContactIndex].last_message = message;
+                        this.selectedContact.last_message = message;
+                        if(this.$refs.message_scroller)
+                            this.$refs.message_scroller.scrolltobottom();                        
+                    }else{
+                        //-------find contact and update count_unread_messagess and last_message-------                    
+                        this.contacts.forEach((item, index) => {
+                            if(item.id == message.contact_id){
+                                item.count_unread_messagess = item.count_unread_messagess + 1;
+                                item.last_message = message;
+                                var targetContact = Object.assign({}, item);
+                                delete this.contacts[index];
+                                this.contacts.unshift(targetContact);
+                                var i = 0;
+                                this.contacts.forEach((item2, i)=>{
+                                    item2.index = i++;
+                                });
+
+                                //---------update the index of the selected contact
+                                if(this.selectedContactIndex >=0 ){
+                                    this.selectedContactIndex ++;
+                                    this.selectedContact = this.contacts[this.selectedContactIndex];
+                                }
+
+                            }
+                        });
+                        if(!this.logguedAttendant.mute_notifications && this.selectedContactIndex>-1 && !this.contacts[this.selectedContactIndex].status_id==6)
+                            this.$refs.newMessageSound.play();
+                    }                    
+                });
+            },
+
+            wsContactToBag: function(){
+                window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
+                .listen('NewContactMessage', (e) => {
+                    if(this.amountContactsInBag<e.message && !this.logguedAttendant.mute_notifications)
+                        this.$refs.newContactInBag.play();
+                    this.amountContactsInBag = e.message;
+                });
+            },
+
+            wsTransferredContact: function(){
+                window.Echo.channel('sh.transferred-contact.' + this.logguedAttendant.id)
+                .listen('NewTransferredContact', (e) => {
+                    var newContact = JSON.parse(e.message);
+                    // newContact.index = this.contacts.length;
+                    this.contacts.unshift(newContact);
+                    var i = 0;
+                    this.contacts.forEach(function(item, i){
+                        item.index = i++;
+                    });
+                    if(this.selectedContactIndex >=0){
+                        this.selectedContactIndex ++;
+                        this.selectedContact = this.contacts[this.selectedContactIndex];
+                    }
+                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
+                });
+            },
+
+            //---------------Exceptions---------------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
         },
 
         updated(){
@@ -2070,132 +2172,29 @@
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
             
-            if(this.handleTimeToReloadContacts){
-                clearInterval(this.handleTimeToReloadContacts);
-            }
-            if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
-                this.handleTimeToReloadContacts = setInterval(()=>{
-                    this.getContacts();
-                    this.getAmountContactsInBag();
-                    // this.gettingChatQuebraGalhoDeAlberto();
-                }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
-            }
+            // if(this.handleTimeToReloadContacts){
+            //     clearInterval(this.handleTimeToReloadContacts);
+            // }
+            // if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
+            //     this.handleTimeToReloadContacts = setInterval(()=>{
+            //         this.getContacts();
+            //         this.getAmountContactsInBag();
+            //         // this.gettingChatQuebraGalhoDeAlberto();
+            //     }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
+            // }
             
 
         },
 
         mounted(){
-            // this.recorderMP3 = this.createMP3Recorder();
-
-            // Check if MediaRecorder available.
-            if (!window.MediaRecorder) {
-                window.MediaRecorder = OpusMediaRecorder;
-            }
-            // Check if a target format (e.g. audio/ogg) is supported.
-            else 
-            if (!window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-                window.MediaRecorder = OpusMediaRecorder;
-            }
-
-            window.Echo = new Echo({
-                broadcaster: 'pusher',
-                key: process.env.MIX_PUSHER_APP_KEY,
-                cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                host: process.env.MIX_APP_HOST,  
-
-
-                // No SSL
-                wsHost: process.env.MIX_APP_HOST,
-                wsPort: 6001,
-                enabledTransports: ['ws'],
-                encrypted: false,
-                forceTLS: false,
-
-                // SSL
-                // wssHost: process.env.MIX_APP_HOST,
-                // wssPort: 6001,
-                // enabledTransports: ['ws', 'wss'],
-                // encrypted: true,
-                // forceTLS: true,
-
-                disableStats: false,
-            });
-
-            window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
-                .listen('MessageToAttendant', (e) => {
-                    //------------prepare message datas to be displayed------------------------
-                    var message = JSON.parse(e.message);
-                    message.time = this.getMessageTime(message.created_at);
-                    try {
-                        if(message.data != "" && message.data != null && message.data.length>0) {
-                            message.data = JSON.parse(message.data);
-                            if(message.type_id > 1)
-                                message.path = message.data.FullPath;
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                    
-                    console.log(this.selectedContact);
-
-                    //------show the recived message if the target contact is selected----------
-                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
-                        this.messages.push(Object.assign({}, message));
-                        this.contacts[this.selectedContactIndex].last_message = message;
-                        this.selectedContact.last_message = message;
-                        if(this.$refs.message_scroller)
-                            this.$refs.message_scroller.scrolltobottom();                        
-                    }else{
-                        //-------find contact and update count_unread_messagess and last_message-------                    
-                        var This = this;
-                        This.contacts.forEach((item, index) => {
-                            if(item.id == message.contact_id){
-                                item.count_unread_messagess = item.count_unread_messagess + 1;
-                                item.last_message = message;
-                                var targetContact = Object.assign({}, item);
-                                delete This.contacts[index];
-                                This.contacts.unshift(targetContact);
-                                var i = 0;
-                                This.contacts.forEach(function(item2, i){
-                                    item2.index = i++;
-                                });
-
-                                //---------update the index of the selected contact
-                                if(This.selectedContactIndex >=0 ){
-                                    This.selectedContactIndex ++;
-                                    This.selectedContact = This.contacts[This.selectedContactIndex];
-                                }
-
-                            }
-                        });
-                        if(!this.logguedAttendant.mute_notifications && !This.contacts[This.selectedContactIndex].status_id==6)
-                            this.$refs.newMessageSound.play();
-                    }                    
-            });
-
-            window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
-                .listen('NewContactMessage', (e) => {
-                    if(this.amountContactsInBag<e.message && !this.logguedAttendant.mute_notifications)
-                        this.$refs.newContactInBag.play();
-                    this.amountContactsInBag = e.message;
-            });
-
-            window.Echo.channel('sh.transferred-contact.' + this.logguedAttendant.id)
-                .listen('NewTransferredContact', (e) => {
-                    var newContact = JSON.parse(e.message);
-                    // newContact.index = this.contacts.length;
-                    this.contacts.unshift(newContact);
-                    var i = 0;
-                    this.contacts.forEach(function(item, i){
-                        item.index = i++;
-                    });
-                    if(this.selectedContactIndex >=0){
-                        this.selectedContactIndex ++;
-                        this.selectedContact = this.contacts[this.selectedContactIndex];
-                    }
-                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
-            });
-
+            this.preConfigAudio();
+            
+            //wbsocket events
+            this.wsCriateTunnel();
+            this.wsMessageToAttendant();
+            this.wsContactToBag();
+            this.wsTransferredContact();
+            
         },
 
         created() {
@@ -2503,10 +2502,16 @@
         color: #007bff;
     }
     .document_sent_download{
-        float:right; padding:0.1rem 0.6rem; border:1px solid white; border-radius:50%
+        float:right; 
+        padding:0.1rem 0.6rem; 
+        border:1px solid white;
+        border-radius:50%
     }
     .document_received_download{
-        float:right; padding:0.1rem 0.6rem; border:1px solid #007bff; border-radius:50%
+        float:right;
+        padding:0.1rem 0.6rem;
+        border:1px solid #007bff;
+        border-radius:50%
     }
     .midia-files{
         width: 15em;
@@ -2789,6 +2794,15 @@
             position: absolute;
             z-index: 99999;
         }
+        .width-30{
+            width: 100% !important;
+        }
+        .width-70{
+            width: 100% !important;
+        }
+        .width-25{
+            width: 100% !important;
+        }
     }
 
     @media screen and (max-width: 700px) {
@@ -2818,7 +2832,15 @@
             top: -0.6em;
             // right: 0em;
         }
+        .width-30{
+            width: 100% !important;
+        }
+        .width-70{
+            width: 100% !important;
+        }
+        .width-25{
+            width: 100% !important;
+        }
     }
     
-   
 </style>

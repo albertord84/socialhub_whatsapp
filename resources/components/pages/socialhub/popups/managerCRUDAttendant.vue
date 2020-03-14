@@ -6,9 +6,13 @@
                     {{model.user_id}}
                 </div>    
                 <div class="row">
-                    <div class="col-lg-6 form-group has-search">
+                    <!-- <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-user form-control-feedback"></span>
                         <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login (*)" class="form-control"/>
+                    </div> -->
+                    <div  class="col-lg-6 form-group has-search">
+                        <span class="fa fa-user form-control-feedback"></span>
+                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                     </div>
                     <div  class="col-lg-6 form-group has-search">
                         <span class="fa fa-envelope form-control-feedback"></span>
@@ -16,29 +20,27 @@
                     </div>                                                      
                 </div>
                 <div class="row">
-                    <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
-                    </div>
-                    <div class="col-lg-3 form-group has-search">
+                    <!-- <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-id-card form-control-feedback"></span>
                         <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
-                    </div>
-                    <div class="col-lg-3 form-group has-search">
-                        <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" v-mask="'###############'" title="Ex: 551188888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
-                    </div>  
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 form-group has-search">
+                    </div> -->
+
+                    <!-- <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp" class="form-control"/>
+                    </div> -->
+
+                    <div class="col-lg-6 form-group has-search">
+                        <span class="fa fa-phone form-control-feedback"></span>
+                        <input v-model="model.phone" v-mask="'###############'" title="Ex: 551188888888" id="phone" name="phone" type="text" required placeholder="Telefone" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
                         <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
                     </div>
+
                 </div>
+               
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-instagram form-control-feedback"></span>
@@ -49,6 +51,7 @@
                         <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
                     </div>
                 </div>
+
                 <div v-if="action=='edit'" class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
@@ -156,8 +159,10 @@
                 }
 
                 var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
-                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                if(model_cpy.whatsapp_id){
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                }
                 if(model_cpy.phone){
                     model_cpy.phone = model_cpy.phone.replace(/ /g, '');    //ECR
                     model_cpy.phone = model_cpy.phone.replace(/-/i, '');    //ECR
@@ -221,9 +226,11 @@
                     delete model_cpy.password;
                     delete model_cpy.repeat_password;
                 }
-
-                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                
+                if(model_cpy.whatsapp_id){
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                }
                 if(model_cpy.phone){
                     model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
                     model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
@@ -290,7 +297,6 @@
                 this.$emit('onreloaddatas');
             }, 
 
-
             trimDataModel: function(){
                 if(this.model.login) this.model.login = this.model.login.trim();
                 if(this.model.email) this.model.email = this.model.email.trim();
@@ -309,16 +315,17 @@
             validateData: function(){
                 // Validação dos dados do atendente
                 var check;
-                if(this.model.login && this.model.login !=''){
-                    check = validation.check('user', this.model.login)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O login do usuário é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.model.login && this.model.login !=''){
+                //     check = validation.check('user', this.model.login)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O login do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
                 if(this.model.email && this.model.email !=''){
                     check = validation.check('email', this.model.email)
                     if(check.success==false){
@@ -340,16 +347,16 @@
                     this.flagReference = false;
                 }
 
-                if(this.model.CPF && this.model.CPF !=''){
-                    check = validation.validate_cpf('cpf', this.model.CPF)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.model.CPF && this.model.CPF !=''){
+                //     check = validation.validate_cpf('cpf', this.model.CPF)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
                 
                 if(this.model.phone && this.model.phone !=''){
                     check = validation.check('phone', this.model.phone)
@@ -359,16 +366,17 @@
                     }
                 }
 
-                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
-                    check = validation.check('whatsapp', this.model.whatsapp_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                //     check = validation.check('whatsapp', this.model.whatsapp_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
                 if(this.model.facebook_id && this.model.facebook_id !=''){
                     check = validation.check('facebook_profile', this.model.facebook_id)
                     if(check.success==false){

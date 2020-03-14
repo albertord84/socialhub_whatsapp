@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Business\SalesBusiness;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Contact;
 use App\Models\Company;
 use App\Models\Sales;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
+use App\Repositories\ExtendedUsersAttendantRepository;
+use App\Repositories\ExtendedUserRepository;
 use App\User;
 use Illuminate\Http\Request;
 use PhpSigep\Model\AccessData;
@@ -31,8 +34,34 @@ class TestController extends AppBaseController
         $this->repository = $repository;
     }
 
+    public function testJR(){        
+        $extendedUserRepository = new ExtendedUserRepository(app());
+        $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
+        $attendantsUser = $ExtendedUsersAttendantRepository->Attendants_User_By_Attendant(1,4);
+        
+        $attendants = array();
+        foreach ($attendantsUser as $key => $attendant) {
+            $user = $extendedUserRepository->findWithoutFail($attendant->user_id);
+            $attendants[$user->email] = $attendant->user_id;
+        }
+
+        dd($attendants);
+    }
+
     public function index(Request $request)
     {
+        $this->testJR();
+
+        // $contact_id = 7276;
+        // $contact_Jid = "5521976550734";
+        // // $contact_Jid = "5521965536174";
+        // // $Contact = Contact::find($contact_id);
+
+        // $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+        //         ->where(['whatsapp_id' => $contact_Jid, 'company_id' => 3])
+        //         ->first();
+
+        // dd($Contact);
 
         // Build Bling message by Sales object
         // $Company = Company::with('rpi')->find(35);
