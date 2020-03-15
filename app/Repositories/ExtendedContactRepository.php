@@ -64,13 +64,13 @@ class ExtendedContactRepository extends ContactRepository
                     ->findWhere([
                         'company_id' => $company_id,
                         ['updated_at', '>', $lastContact->updated_at]])
-                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));//->get();
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             }else{
                 $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
                     ->orderBy('updated_at', 'desc')
                     ->findWhere([
                         'company_id' => $company_id])
-                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));//->get();
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             }
             
             foreach ($Contacts as $key => $Contact) {
