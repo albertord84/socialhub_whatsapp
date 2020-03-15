@@ -1066,6 +1066,7 @@
                         This.newMessage.message = "";
                         This.isSendingNewMessage = false;                        
                     }
+                    console.log(this.contacts);
                 }
             },
 
@@ -1124,8 +1125,7 @@
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                 })
                 .then(response => {
-                    this.contacts = response.data;
-                    console.log(response.data);
+                    this.contacts = response.data;                    
                     var This = this, i = 0;
                     this.contacts.forEach((item, i)=>{
                         item.index = i++;
@@ -1152,6 +1152,7 @@
                             }
                         });
                     }
+                    console.log(this.contacts);
                 })
                 .catch(error => {
                     this.processMessageError(error, this.contacts_url,"get");
@@ -1263,7 +1264,6 @@
                     }else{
                         this.hasMorePageMessage =false;
                     }
-                    console.log('selectedContactIndex in getChat: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                     miniToastr.error(error, "Error carregando os contatos");   
@@ -2054,8 +2054,8 @@
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
                     var message = JSON.parse(e.message);
-                    var contact = message.Contact;
-                    delete message.Contact;
+                    // var contact = message.Contact; //conferir isso
+                    // delete message.Contact;
                     message.time = this.getMessageTime(message.created_at);
                     try {
                         if(message.data != "" && message.data != null && message.data.length>0) {
@@ -2067,55 +2067,68 @@
                         console.log(error);
                     }
                     
+                    let targetIndex = -1; 
+                    var isSelectedContact = false;
                     //------show the recived message if the target contact is selected----------
                     if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
                         this.messages.push(Object.assign({}, message));
                         this.contacts[this.selectedContactIndex].last_message = message;
                         this.selectedContact.last_message = message;
                         if(this.$refs.message_scroller)
-                            this.$refs.message_scroller.scrolltobottom();                        
+                            this.$refs.message_scroller.scrolltobottom();
+                        targetIndex = this.selectedContact.index;
+                        isSelectedContact = true;
                     }else{
                         //-------find contact and update count_unread_messagess and last_message-------
-                        let isContactInList = false;
-                        this.contacts.forEach((item, index) => {
+                        this.contacts.some((item, index) => {
                             if(item.id == message.contact_id){
-                                isContactInList = true;
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
-                                var targetContact = Object.assign({}, item);
-                                delete this.contacts[index];
-                                this.contacts.unshift(targetContact);
-                                var i = 0;
-                                this.contacts.forEach((item2, i)=>{
-                                    item2.index = i++;
-                                });
-                                //---------update the index of the selected contact
-                                if(this.selectedContactIndex >=0 ){
-                                    this.selectedContactIndex ++;
-                                    this.selectedContact = this.contacts[this.selectedContactIndex];
-                                }
+                                targetIndex = index;
+                                return;
                             }
                         });
+                    }
 
-                        //-------------if contact isent in list-----------------------
-                        if(!isContactInList){                            
-                            contact.count_unread_messagess = 1;
-                            contact.last_message = message;
-                            this.contacts.unshift(contact);
-                            var i = 0;
-                            this.contacts.forEach((item2, i)=>{
-                                item2.index = i++;
-                            });
-                            //---------update the index of the selected contact
-                            if(this.selectedContactIndex >=0 ){
+                    if(targetIndex > -1){
+                        console.log(targetIndex);
+                        var targetContact = Object.assign({}, this.contacts[targetIndex]);
+                        var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
+                        var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
+                        this.contacts = A.concat(B);
+                        this.contacts.unshift(targetContact);
+
+                        for(i=0; i<=targetIndex;i++)
+                            this.contacts[i].index = i;
+
+                        if(this.selectedContactIndex>=0){
+                            if(targetIndex == this.selectedContactIndex)
+                                this.selectedContactIndex = 0;
+                            else
                                 this.selectedContactIndex ++;
-                                this.selectedContact = this.contacts[this.selectedContactIndex];
-                            }
+                            this.selectedContact = this.contacts[this.selectedContactIndex];
                         }
+                    }else{
+                        //-------------if contact isen't in list-----------------------
+                        contact.count_unread_messagess = 1;
+                        contact.last_message = message;
+                        this.contacts.unshift(contact);
+                        var i = 0;
+                        this.contacts.forEach((item2, i)=>{
+                            item2.index = i++;
+                        });
+                        if(isSelectedContact){
+                            this.selectedContactIndex ++;
+                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                        }
+                    }
 
-                        if(!this.logguedAttendant.mute_notifications && this.selectedContactIndex>-1 && !this.contacts[this.selectedContactIndex].status_id==6)
-                            this.$refs.newMessageSound.play();
-                    }                    
+                    console.log(this.contacts);
+                    if(!this.logguedAttendant.mute_notifications
+                            && this.selectedContactIndex >-1 
+                            && !this.contacts[this.selectedContactIndex].status_id==6)
+                        this.$refs.newMessageSound.play();
+                    
                 });
             },
 
@@ -2241,10 +2254,10 @@
 
             isSendingNewMessage: function(value){
                 if(value){
-                    console.log('sending message');
+                    // console.log('sending message');
                     //disable new message, and upload and send buttons
                 }else{
-                    console.log('sended message');
+                    // console.log('sended message');
                     //enable new message, and upload and send buttons
                 }
             },             
