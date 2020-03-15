@@ -1123,7 +1123,10 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
-                console.log("request new contact page");
+
+                var xxx = (this.contacts.length>0)? this.contacts[this.contacts.length-1].id : 0;
+                console.log("request new contact page with last_contact_id = "+ xxx);
+
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
@@ -1144,6 +1147,9 @@
                         });
     
                         this.contacts = this.contacts.concat(response.data);
+                        this.contacts.some((item,i)=>{
+                            console.log(item.id);
+                        });
                         
                         if(this.selectedContactIndex>=0){
                             this.contacts.some((item, i)=>{
