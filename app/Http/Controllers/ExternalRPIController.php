@@ -295,6 +295,7 @@ class ExternalRPIController extends Controller
             return MyResponse::makeExceptionJson($th);
         }
 
+        $Chat->Contact = $Contact;
         return $Chat->toJson();
     }
 
@@ -363,6 +364,7 @@ class ExternalRPIController extends Controller
             return MyResponse::makeExceptionJson($th);
         }
 
+        $Chat->Contact = $Contact;
         return $Chat->toJson();
     }
 

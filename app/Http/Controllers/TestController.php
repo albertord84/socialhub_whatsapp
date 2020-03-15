@@ -6,6 +6,7 @@ use App\Business\SalesBusiness;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Contact;
 use App\Models\Company;
+use App\Models\ExtendedChat;
 use App\Models\Sales;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -50,18 +51,28 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $this->testJR();
+        $last_contact_id = 16;
+        $company_id = 1;
+        $lastContact = Contact::find($last_contact_id);
 
-        // $contact_id = 7276;
-        // $contact_Jid = "5521976550734";
-        // // $contact_Jid = "5521965536174";
-        // // $Contact = Contact::find($contact_id);
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $ExtendedChat = $ExtendedChat->find(1);
 
-        // $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-        //         ->where(['whatsapp_id' => $contact_Jid, 'company_id' => 3])
-        //         ->first();
+        $ExtendedChat->Contact = $lastContact;
+        dd($ExtendedChat->toJson());
+        $Contacts = $this->repository
+            ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+            ->orderBy('updated_at', 'asc')
+            ->findWhere([
+                'company_id' => $company_id,
+                ['updated_at', '>', $lastContact->updated_at]
+        ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
 
-        // dd($Contact);
+
+        // $Contacts->orderBy('updated_at', 'asc');
+
+        dd($Contacts);
 
         // Build Bling message by Sales object
         // $Company = Company::with('rpi')->find(1);
@@ -71,6 +82,8 @@ class TestController extends AppBaseController
         // $SalesBussines = new SalesBusiness;
 
         // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+
+        // dd($message);
 
         // dd($message);
 
@@ -206,7 +219,7 @@ class TestController extends AppBaseController
 
         
         $usuario = '2689761400';
-        $senha = 'H10R;3@Y@M';
+        $senha = 'H1OR;3@Y@M';
         $cnpjEmpresa = '26897614000101';
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
@@ -216,11 +229,11 @@ class TestController extends AppBaseController
         $accessData = new \PhpSigep\Model\AccessDataHomologacao();
         $accessData->setUsuario($usuario);
         $accessData->setSenha($senha);
-        $accessData->setCnpjEmpresa($cnpjEmpresa);
-        $accessData->setCodAdministrativo($codigoadm);
-        $accessData->setNumeroContrato($numcontrato);
-        $accessData->setCartaoPostagem($cartaopostagem);
-        $accessData->setAnoContrato(null);
+        // $accessData->setCnpjEmpresa($cnpjEmpresa);
+        // $accessData->setCodAdministrativo($codigoadm);
+        // $accessData->setNumeroContrato($numcontrato);
+        // $accessData->setCartaoPostagem($cartaopostagem);
+        // $accessData->setAnoContrato(null);
         // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
         
         $this->initCorreios($accessData);
@@ -237,7 +250,8 @@ class TestController extends AppBaseController
         
         // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
         $etiqueta = new \PhpSigep\Model\Etiqueta();
-        $etiqueta->setEtiquetaSemDv('PM499951504BR');
+        // $etiqueta->setEtiquetaSemDv('PM499951504BR');
+        $etiqueta->setEtiquetaComDv('SI192420171BR');
         // $etiqueta->setEtiquetaComDv('PM499951504BR');
         
         $params = new \PhpSigep\Model\RastrearObjeto();
@@ -247,7 +261,8 @@ class TestController extends AppBaseController
         $phpSigep = new \PhpSigep\Services\SoapClient\Real();
         $result = $phpSigep->rastrearObjeto($params);
         
-        var_dump((array)$result);
+        dd($result);
+        // var_dump((array)$result);
     }
 
     public function testsalesbling(Request $request)
@@ -336,7 +351,7 @@ Razão Social : COMERCIAL HORUS EIRELI
         
 Omologation:
     User: 2689761400
-    Root: H10R;3@Y@M
+    Root: H1OR;3@Y@M
 
 
 https://apps.correios.com.br/cas/login
