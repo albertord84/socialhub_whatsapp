@@ -166,6 +166,21 @@
                                                             <i class="mdi mdi-volume-high"></i> Reativar notificações
                                                         </a>
                                                     </b-dropdown-item>
+                                                    <!-- <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="mdi mdi-pin mdi-rotate-45"></i> Fixar conversa
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="mdi mdi-broom"></i> Limpar conversa
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                            <i class="mdi mdi-circle"></i> Marcar como não lida
+                                                        </a>
+                                                    </b-dropdown-item> -->
                                                     <b-dropdown-item exact class="dropdown_content">
                                                         <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
                                                             <i class="fa fa-trash-o"></i> Eliminar contato
@@ -174,43 +189,6 @@
                                                 </b-dropdown>
                                             </div>
                                         </div>
-
-
-                                        <!-- <div class="row">
-                                            <div class="col-3">
-                                                <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted fa-1_5x" style="margin-top: 7px; margin-left:-12px" title="Notificações silenciadas"></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:-15px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
-                                                <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
-                                            </div>
-
-                                            <div class="col-3">
-                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="left:-15px"  right="">
-                                                    <template v-slot:button-content>
-                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
-                                                    </template>
-                                                    <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
-                                                            <i class="fa fa-exchange"></i> Transferir contato
-                                                        </a>
-                                                    </b-dropdown-item>
-                                                    <b-dropdown-item exact class="dropdown_content" >
-                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
-                                                            <i class="mdi mdi-volume-off"></i> Silenciar notificações
-                                                        </a>
-                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
-                                                            <i class="mdi mdi-volume-high"></i> Reativar notificações
-                                                        </a>
-                                                    </b-dropdown-item>
-                                                    <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
-                                                            <i class="fa fa-trash-o"></i> Eliminar contato
-                                                        </a>
-                                                    </b-dropdown-item>
-                                                </b-dropdown>
-                                            </div>
-                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -801,6 +779,11 @@
             <!-- ECR -->
             <attendantCRUDContact :action='"delete"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
         </b-modal>
+
+        <!-- Modal to delete the conversation with a contact-->
+        <!-- <b-modal v-model="modalDeleteConversation" :hide-footer="true" title="Verificação de exclusão">
+            <attendantCRUDContact :action='"deleteConversation"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
+        </b-modal> -->
 
         <!-- Modal to show image-->
         <b-modal v-model="modalShowImage" :hide-footer="true" centered class="" :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent">
