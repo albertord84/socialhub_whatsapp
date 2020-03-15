@@ -1121,7 +1121,8 @@
             //----------------Get contacts-------------------------------
             getContacts: function() { //R
                 ApiService.get(this.contacts_url,{
-                    'filterContactToken': this.filterContactToken
+                    'filterContactToken': this.filterContactToken,
+                    'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                 })
                 .then(response => {
                     this.contacts = response.data;
@@ -2053,6 +2054,8 @@
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
                     var message = JSON.parse(e.message);
+                    var contact = message.Contact;
+                    delete message.Contact;
                     message.time = this.getMessageTime(message.created_at);
                     try {
                         if(message.data != "" && message.data != null && message.data.length>0) {
@@ -2072,9 +2075,11 @@
                         if(this.$refs.message_scroller)
                             this.$refs.message_scroller.scrolltobottom();                        
                     }else{
-                        //-------find contact and update count_unread_messagess and last_message-------                    
+                        //-------find contact and update count_unread_messagess and last_message-------
+                        let isContactInList = false;
                         this.contacts.forEach((item, index) => {
                             if(item.id == message.contact_id){
+                                isContactInList = true;
                                 item.count_unread_messagess = item.count_unread_messagess + 1;
                                 item.last_message = message;
                                 var targetContact = Object.assign({}, item);
@@ -2090,9 +2095,26 @@
                                     this.selectedContactIndex ++;
                                     this.selectedContact = this.contacts[this.selectedContactIndex];
                                 }
-
                             }
                         });
+
+                        //-------------if contact isent in list-----------------------
+                        if(!isContactInList){                            
+                            contact.count_unread_messagess = 1;
+                            contact.last_message = message;
+                            this.contacts.unshift(contact);
+                            var i = 0;
+                            this.contacts.forEach((item2, i)=>{
+                                item2.index = i++;
+                            });
+
+                            //---------update the index of the selected contact
+                            if(this.selectedContactIndex >=0 ){
+                                this.selectedContactIndex ++;
+                                this.selectedContact = this.contacts[this.selectedContactIndex];
+                            }
+                        }
+
                         if(!this.logguedAttendant.mute_notifications && this.selectedContactIndex>-1 && !this.contacts[this.selectedContactIndex].status_id==6)
                             this.$refs.newMessageSound.play();
                     }                    
