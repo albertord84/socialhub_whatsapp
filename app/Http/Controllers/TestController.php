@@ -6,6 +6,7 @@ use App\Business\SalesBusiness;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Contact;
 use App\Models\Company;
+use App\Models\ExtendedChat;
 use App\Models\Sales;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -50,28 +51,28 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        // $last_contact_id = 16;
-        // $company_id = 1;
-        // $lastContact = Contact::find($last_contact_id);
+        $last_contact_id = 16;
+        $company_id = 1;
+        $lastContact = Contact::find($last_contact_id);
 
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = '4';
-        // $ExtendedChat = $ExtendedChat->find(1);
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = '4';
+        $ExtendedChat = $ExtendedChat->find(1);
 
-        // $ExtendedChat->Contact = $lastContact;
-        // dd($ExtendedChat->toJson());
-        // $Contacts = $this->repository
-        //     ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
-        //     ->orderBy('updated_at', 'asc')
-        //     ->findWhere([
-        //         'company_id' => $company_id,
-        //         ['updated_at', '>', $lastContact->updated_at]
-        // ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
+        $ExtendedChat->Contact = $lastContact;
+        dd($ExtendedChat->toJson());
+        $Contacts = $this->repository
+            ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+            ->orderBy('updated_at', 'asc')
+            ->findWhere([
+                'company_id' => $company_id,
+                ['updated_at', '>', $lastContact->updated_at]
+        ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
 
 
         // $Contacts->orderBy('updated_at', 'asc');
 
-        // dd($Contacts);
+        dd($Contacts);
 
         // Build Bling message by Sales object
         // $Company = Company::with('rpi')->find(1);
