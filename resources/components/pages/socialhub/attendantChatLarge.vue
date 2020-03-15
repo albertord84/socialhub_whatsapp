@@ -90,7 +90,7 @@
                         </ul>
                     </div>
                 </div>
-                <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px">
+                <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px" ref="contact_scroller" :seeSrolling="'true'" @onbottom="onBottomContacts" @oncontentresize="1">
                     <ul>
                         <li v-for="(contact,index) in allContacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
                             <div class="">
@@ -262,7 +262,7 @@
                 </div>
 
                 <!-- Chat messages -->
-                <v-scroll :height="Height(170)" :vid="'chat-content'" color="#ccc" bar-width="8px" ref="message_scroller" :percent="percent" :seeSrolling="'true'" @onscrolling="1" @ontop="onTopMessages" @oncontentresize="oncontentresize">
+                <v-scroll :height="Height(170)" :vid="'chat-content'" color="#ccc" bar-width="8px" ref="message_scroller" :percent="percent" :seeSrolling="'true'" @ontop="onTopMessages" @oncontentresize="onContentResize">
                     <ul >
                         <li v-for='(message,index) in messages' :key="index" :id="'message_' + message.id" :ref="'message_' + message.id">                            
                             <A :id="'message_lnk_' + message.id" :name="'#message_lnk_' + message.id"></A>
@@ -913,6 +913,8 @@
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
                 filterContactToken: '',
+                hasMorePageContacts:true,
+                requestingNewPageContacts:false,
 
                 handleTimeToReloadContacts:null,
                 
@@ -1042,7 +1044,9 @@
                             
                             //---------------set the target contact as the first----------------------
                             var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                            delete this.contacts[this.selectedContactIndex];
+                            var A = this.contacts.slice(0, this.selectedContactIndex);
+                            var B = this.contacts.slice(this.selectedContactIndex+1, this.contacts.length);
+                            this.contacts = A.concat(B); 
                             this.contacts.unshift(targetContact);
                             var i = 0;
                             this.contacts.forEach(function(item, i){
@@ -1056,17 +1060,14 @@
                             this.messages.push(Object.assign({}, message));
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
-
-                            // this.getContacts();
                         })
                         .catch(error => {
                             this.processMessageError(error, this.chat_url,"send");
                         }).finally(() => {This.isSendingNewMessage = false;});
                     } catch (error) {
                         This.newMessage.message = "";
-                        This.isSendingNewMessage = false;                        
+                        This.isSendingNewMessage = false;
                     }
-                    console.log(this.contacts);
                 }
             },
 
@@ -1120,43 +1121,52 @@
             
             //----------------Get contacts-------------------------------
             getContacts: function() { //R
+                if(this.requestingNewPageContacts) return;
+                this.requestingNewPageContacts = true;
+                console.log("request new contact page");
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                 })
                 .then(response => {
-                    this.contacts = response.data;                    
-                    var This = this, i = 0;
-                    this.contacts.forEach((item, i)=>{
-                        item.index = i++;
-                        try {
-                            if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
+                    if(response.data.length){
+                        var This = this, i = this.contacts.length;
+                        response.data.forEach((item, index)=>{
+                            item.index = i++;
+                            try {
+                                if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
+                                    item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
+                                }
+                            } catch (error) {
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
-                        } catch (error) {
-                            item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
-                        }
-                        item.isPictUrlBroken = false;                            
-                    });
-                    
-                    if(this.selectedContactIndex>=0){
-                        var flag =false;
-                        var This = this;
-                        this.contacts.forEach((item, i)=>{
-                            if(!flag && This.selectedContact.id == item.id){
-                                This.selectedContactIndex = i;
-                                This.selectedContact = This.contacts[This.selectedContactIndex];
-                                This.selectedContactToEdit = Object.assign({}, This.contacts[This.selectedContactIndex]);
-                                console.log(' aqui ---> '+This.selectedContactIndex);
-                                flag = true;
-                            }
+                            item.isPictUrlBroken = false;                            
                         });
+    
+                        this.contacts = this.contacts.concat(response.data);
+                        
+                        if(this.selectedContactIndex>=0){
+                            this.contacts.some((item, i)=>{
+                                if(!flag && this.selectedContact.id == item.id){
+                                    this.selectedContactIndex = i;
+                                    this.selectedContact = this.contacts[this.selectedContactIndex];
+                                    this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                                    return;
+                                }
+                            });
+                        }
+                    }else{
+                        this.hasMorePageContacts = false;
                     }
-                    console.log(this.contacts);
                 })
-                .catch(error => {
-                    this.processMessageError(error, this.contacts_url,"get");
-                });
+                .catch(error => {this.processMessageError(error, this.contacts_url,"get");})
+                .finally(()=>{this.requestingNewPageContacts = false;});
+            },
+
+            onBottomContacts: function(){
+                if(!this.requestingNewPageContacts && this.hasMorePageContacts){
+                    this.getContacts();                    
+                }
             },
 
             getAmountContactsInBag: function() { //R
@@ -1273,11 +1283,11 @@
 
             onTopMessages: function(scrollTop, totalHeight){
                 if(!this.requestingNewPage && this.hasMorePageMessage){
-                    this.getChat();                    
+                    this.getChat();
                 }
             },
 
-            oncontentresize: function(val){
+            onContentResize: function(val){
                 if(this.requestingNewPage && this.hasMorePageMessage){
                     this.scrollHeights.push(val);
                     var n = this.scrollHeights.length;
@@ -2123,7 +2133,6 @@
                         }
                     }
 
-                    console.log(this.contacts);
                     if(!this.logguedAttendant.mute_notifications
                             && this.selectedContactIndex >-1 
                             && !this.contacts[this.selectedContactIndex].status_id==6)
