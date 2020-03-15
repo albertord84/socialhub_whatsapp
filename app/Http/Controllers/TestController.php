@@ -50,27 +50,39 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $this->testJR();
+        // $last_contact_id = 16;
+        // $company_id = 1;
+        // $lastContact = Contact::find($last_contact_id);
 
-        // $contact_id = 7276;
-        // $contact_Jid = "5521976550734";
-        // // $contact_Jid = "5521965536174";
-        // // $Contact = Contact::find($contact_id);
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = '4';
+        // $ExtendedChat = $ExtendedChat->find(1);
 
-        // $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-        //         ->where(['whatsapp_id' => $contact_Jid, 'company_id' => 3])
-        //         ->first();
+        // $ExtendedChat->Contact = $lastContact;
+        // dd($ExtendedChat->toJson());
+        // $Contacts = $this->repository
+        //     ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+        //     ->orderBy('updated_at', 'asc')
+        //     ->findWhere([
+        //         'company_id' => $company_id,
+        //         ['updated_at', '>', $lastContact->updated_at]
+        // ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
 
-        // dd($Contact);
+
+        // $Contacts->orderBy('updated_at', 'asc');
+
+        // dd($Contacts);
 
         // Build Bling message by Sales object
-        // $Company = Company::with('rpi')->find(35);
+        // $Company = Company::with('rpi')->find(1);
         // $SaleModel = new Sales;
         // $SaleModel->table = "$Company->id";
         // $firstSale = $SaleModel->first();
         // $SalesBussines = new SalesBusiness;
 
         // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+
+        // dd($message);
 
         // dd($message);
 
