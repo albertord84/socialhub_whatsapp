@@ -57,12 +57,21 @@ class ExtendedContactRepository extends ContactRepository
             //     $Contacts[$key]['last_message'] = $lastMesssage;
             //     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
             // }
-            
-            $lastContact = Contact::find($last_contact_id);
-            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->orderBy('updated_at', 'desc')->findWhere([
-                'company_id' => $company_id,
-                ['updated_at', '>', $lastContact->updated_at]
-            ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+            if($last_contact_id){
+                $lastContact = Contact::find($last_contact_id);
+                $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->orderBy('updated_at', 'desc')
+                    ->findWhere([
+                        'company_id' => $company_id,
+                        ['updated_at', '>', $lastContact->updated_at]])
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+            }else{
+                $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->orderBy('updated_at', 'desc')
+                    ->findWhere([
+                        'company_id' => $company_id])
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+            }
             
             foreach ($Contacts as $key => $Contact) {
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
