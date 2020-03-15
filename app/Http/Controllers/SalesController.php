@@ -94,7 +94,6 @@ class SalesController extends AppBaseController
 
         if (empty($sales)) {
             Flash::error('Sales not found');
-
             return redirect(route('sales.index'));
         }
 
@@ -131,22 +130,15 @@ class SalesController extends AppBaseController
      */
     public function update($id, UpdateSalesRequest $request)
     {
-        // $sales = $this->salesRepository->findWithoutFail($id);
-        $company_id = $id;
-        $sales_id = $request['id'];
-        // $sales = $this->salesRepository->findSale($company_id, $sales_id);
+        $sales = $this->salesRepository->findWithoutFail($id);
         
-        // if (empty($sales)) {
-        //     Flash::error('Sales not found');
-        //     // return redirect(route('sales.index'));
-        //     return null;
-        // }
-        
-        // $sales = $this->salesRepository->update($request->all(), $id);
-        $sales = $this->salesRepository->updateSale($request->all(), $company_id, $sales_id);
-        
+        if (empty($sales)) {
+            Flash::error('Sales not found');
+            return $sales->toJson();
+        }
+        $sales = $this->salesRepository->update($request->all(), $id);
+
         Flash::success('Sales updated successfully.');
-        
         // return redirect(route('sales.index'));
         return (string)$sales;
         // return $sales->toJson();
@@ -165,14 +157,13 @@ class SalesController extends AppBaseController
 
         if (empty($sales)) {
             Flash::error('Sales not found');
-
-            return redirect(route('sales.index'));
+            // return redirect(route('sales.index'));
+            return $sales->toJson();
         }
 
         $this->salesRepository->delete($id);
 
         Flash::success('Sales deleted successfully.');
-
         // return redirect(route('sales.index'));
         
     }

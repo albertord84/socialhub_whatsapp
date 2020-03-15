@@ -79,4 +79,12 @@ class Chat extends Model
 
         $this->connection = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function contact()
+    {
+        return $this->belongsTo(\App\Models\Contact::class, 'contact_id');
+    }
 }
