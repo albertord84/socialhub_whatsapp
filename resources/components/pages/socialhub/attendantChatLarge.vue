@@ -1120,7 +1120,6 @@
             
             //----------------Get contacts-------------------------------
             getContacts: function() { //R
-                console.log((this.contacts.length)? this.contacts[this.contacts.length-1].id : 0);
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
@@ -2090,7 +2089,6 @@
                                 this.contacts.forEach((item2, i)=>{
                                     item2.index = i++;
                                 });
-
                                 //---------update the index of the selected contact
                                 if(this.selectedContactIndex >=0 ){
                                     this.selectedContactIndex ++;
@@ -2108,7 +2106,6 @@
                             this.contacts.forEach((item2, i)=>{
                                 item2.index = i++;
                             });
-
                             //---------update the index of the selected contact
                             if(this.selectedContactIndex >=0 ){
                                 this.selectedContactIndex ++;
