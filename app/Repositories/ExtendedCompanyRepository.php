@@ -37,7 +37,7 @@ class ExtendedCompanyRepository extends CompanyRepository
             require_once($chatsMigrationsDir);
 
             $queueTable = new CreateQueueTable();
-            $queueTable->up((string)$company_id);
+            $queueTable->up('queue_'.(string)$company_id);
         } catch (\Throwable $th) {
             print("Erro creating Company Queue Table...! " + $th);
             throw $th;
