@@ -74,6 +74,7 @@ class ExtendedContactRepository extends ContactRepository
             }
             
             foreach ($Contacts as $key => $Contact) {
+                // print_r($Contact->latestAttendant->attendant_id.'<br>');
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
