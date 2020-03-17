@@ -29,6 +29,14 @@
                                             Inserir contato
                                         </a>
                                     </b-dropdown-item>
+
+                                    <b-dropdown-item title="Crear, editar e eliminar etiquetas" class="dropdown_content">                                        
+                                        <a href='javascript:void(0)' class="drpodowtext text-muted" @click.prevent="modalAttendantCRUDTags=!modalAttendantCRUDTags">
+                                            <i class="fa fa-tags fa-xs " ></i> 
+                                            Gerenciar etiquetas
+                                        </a>
+                                    </b-dropdown-item>
+
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
                                         <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotifications">
                                             <span v-if="logguedAttendant.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
@@ -649,16 +657,16 @@
                                         <span class="text-muted" style="font-size:1.1rem">Etiquetas</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
-                                        <i v-show="showTagInformation" @click.prevent="modalAddContactTags=!modalAddContactTags; isEditingTags=!isEditingTags"  class="mdi mdi-tag-plus fa-lg text-muted action-icons-fade" title="Adicionar etiqueta ao usuário" aria-hidden="true"></i>
+                                        <i v-show="showContactTagInformation" @click.prevent="modalAddContactTags=!modalAddContactTags; isEditingTags=!isEditingTags"  class="mdi mdi-tag-plus fa-lg text-muted action-icons-fade" title="Adicionar etiqueta ao usuário" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left" >
-                                        <i v-show="!showTagInformation" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Mostrar etiquetas do contato" @click.prevent="showTagInformation=!showTagInformation"></i>
-                                        <i v-show="showTagInformation"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Ocultar etiquetas do contato" @click.prevent="showTagInformation=!showTagInformation"></i>
+                                        <i v-show="!showContactTagInformation" class="fa fa-angle-down fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Mostrar etiquetas do contato" @click.prevent="showContactTagInformation=!showContactTagInformation"></i>
+                                        <i v-show="showContactTagInformation"  class="fa fa-angle-up fa-1_5x text-muted action-icons-fade" aria-hidden="true" title="Ocultar etiquetas do contato" @click.prevent="showContactTagInformation=!showContactTagInformation"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div v-if="showTagInformation" class="border border-top-0 p-1 mr-2 fadeIn">
+                        <div v-if="showContactTagInformation" class="border border-top-0 p-1 mr-2 fadeIn">
                             
                             <!-- TODO:ECR.
                             Nesta parte colocar la parte visual de:
@@ -673,7 +681,7 @@
                             cuando: deleteContactTags abrir modal de confirmação. -->
 
                             
-                            <div v-show="showTagInformation">
+                            <div v-show="showContactTagInformation">
                             <!-- ECR: incluir uma tabela dinámica visualizando em cada row as etiquetas que estão asociadas ao contato -->
                                     <table class="table table-borderless">
                                         <tbody>
@@ -929,22 +937,26 @@
             </div> 
         </b-modal>
 
-        <!-- Modal to add Tags-->
+        <!-- Modal to add Tags to Contact -->
         <b-modal v-model="modalAddContactTags" centered :hide-footer="true" title="Adicionando uma etiqueta ao contato">
             <span> Escolha uma das etiquetas disponíveis </span>
             <!-- <contactCRUDTags :contacts='contacts'></contactCRUDTags> -->
         </b-modal>
 
-        <!-- Modal to delete Tags-->
+        <!-- Modal to delete Tags to Contact -->
         <b-modal v-model="modalDeleteContactTags" centered :hide-footer="true" title="Verificação de exclusão">
             <span> Tem certeza que deseja remover a etiqueta do contato? </span>
             <!-- <contactCRUDTags :contacts='contacts'></contactCRUDTags> -->
         </b-modal>
         
-         <!-- Delete Attendant Modal
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteAttendant" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>            
-        </b-modal> -->
+         <!-- Modal to Attendant Manage Tags -->
+        <b-modal v-model="modalAttendantCRUDTags" size="lg" id="modalAttendantCRUDTags" :hide-footer="true" title="Gerenciamento de etiquetas">
+            <!-- <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>             -->
+            <!-- <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>             -->
+            <!-- <span> Modal para AttendantCRUDTags  </span> -->
+            <attendantCRUDTags  :attendant_id='attendant_id' :attendantTags_url='attendantTags_url' :item='model_attendantTags' > </attendantCRUDTags>            
+            <!-- <attendantCRUDTags   > </attendantCRUDTags>             -->
+        </b-modal>
 
     </div>
 </template>
@@ -961,6 +973,8 @@
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
+
+    import attendantCRUDTags from "src/components/pages/socialhub/popups/attendantCRUDTags";  // ECR
 
     // import MicRecorder from "mic-recorder-to-mp3"; 
     import routes from '../../../router/index'; //ECR    
@@ -983,6 +997,7 @@
             userCRUDDatas,
             attendantCRUDContact,
             sendMessageFiles,
+            attendantCRUDTags,
         },
 
         data() {
@@ -995,6 +1010,8 @@
                 contacts_url: 'contacts',
                 contacts_bag_url: 'getBagContact',
                 chat_url: 'chats',
+
+                attendantTags_url: 'attendantsTags', // ECR
 
                 contacts:[],
                 selectedContact:{},
@@ -1030,7 +1047,7 @@
                 percent:0,
 
                 showContactInformation:false,
-                showTagInformation:false,
+                showContactTagInformation:false,    // ECR
                 showContactSummary:false,
                 showContactMedia:false,
                 showContacDocuments:false,
@@ -1069,8 +1086,10 @@
                 modalUserCRUDDatas:false,
                 modalTransferContact:false,
                 modalMuteNotificationsContacts:false,
-                modalAddContactTags: false,
-                modalDeleteContactTags: false,
+
+                modalAddContactTags: false,         // ECR
+                modalDeleteContactTags: false,      // ECR
+                modalAttendantCRUDTags:false,   // ECR
                 
                 rightLayout:'toggle-edit-contact',
                 leftLayout:'toggle-add-contact',
@@ -1500,7 +1519,7 @@
                 this.showContactSummary=false;
                 this.showContactMedia=false;
                 this.showContacDocuments=false;
-                this.showTagInformation=false;
+                this.showContactTagInformation=false;
             },
 
             displayChatFindMessage(){
