@@ -120,7 +120,7 @@
             <div class="col-lg-12 mt-5 text-center" >
                 <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
 
-                <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
+                <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact, showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
                 <a class="btn btn-primary  pl-5 pr-5 text-white" href="javascript:undefined" @click="triggerEvent()">Subir planilha</a>
             </div>
         </b-modal>
