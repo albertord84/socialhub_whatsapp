@@ -27,11 +27,11 @@
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
-                        <template v-for="(column,index) in columns">
-                            <td v-if="!column.html && !column.json" :key="index">{{ collect(row,column.field) }}</td>
-                            <td v-if="column.sended" :key="index" v-html="collect(row, column.field)"></td>
-                            <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
-                            <td v-if="column.actions" :key="index">
+                        <template v-for="(column,indexColumn) in columns">
+                            <td v-if="!column.html && !column.json" :key="indexColumn">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="indexColumn" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="indexColumn" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="indexColumn">
                                 <div style="position:relative; margin-left:-80px;">
                                     <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a>
                                     <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
@@ -199,7 +199,9 @@
                         this.rows = response.data;
                     })
                     .catch(error => {
+                        console.log(error);
                         this.processMessageError(error, this.url, "get");
+
                     });
             }, 
 
