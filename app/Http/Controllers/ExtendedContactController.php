@@ -138,6 +138,9 @@ class ExtendedContactController extends ContactController
                     if (isset($contact['Categoria2']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
+                    // if (isset($contact['Categoria3']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria3'])) {
+                    //     $Contact->categoria2 = trim($contact['Categoria3']);
+                    // }
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
                         $Contact->status_id = 2;
                         $Contact->save();
