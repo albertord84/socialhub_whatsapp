@@ -104,8 +104,16 @@ class ExtendedContactController extends ContactController
             foreach($array as $contact){
                 try{
                     $whatsapp = $contact['Whatsapp'];
-                    $whatsapp= trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
+                    $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
+                    
                     $Contact = new Contact();
+                    $Contact = $Contact
+                            ->where('whatsapp_id' ,$whatsapp)
+                            ->where('company_id', '=', $User->company_id)
+                            ->first();
+
+                    $last_attendant_id = null; //get_last_attendant_contact_id($Contact->id); //TODO:Alberto
+
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
                     
@@ -140,22 +148,31 @@ class ExtendedContactController extends ContactController
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
-                        $Contact->status_id = 2;
+                        if(!isset($Contact->status_id))
+                            $Contact->status_id = 2;
+                        $Contact->created_at = '1959-01-01 00:00:07';
+                        $Contact->updated_at = '1959-01-01 00:00:07';
                         $Contact->save();
-
-
+                        
                         //processar atendentes
                         if (isset($contact['Email-Atendente']) && filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
                             $attendant_email = trim($contact['Email-Atendente']);
                             //1. buscar el id del atendiente segun la empresa y el email dado
-                            if(isset($attendatn_ids[$attendant_email])){
-                                //2. crear una fila en la tabla attendants_contacts
+                            if(isset($attendatn_ids[$attendant_email]) && ($last_attendant_id==null) || ($attendatn_ids[$attendant_email] != $last_attendant_id) ){
+                                //2. crear una fila en la tabla attendants_contacts                                
                                 $AttendantsContact = new AttendantsContact();
                                 $AttendantsContact->attendant_id = (int)$attendatn_ids[$attendant_email];
                                 $AttendantsContact->contact_id = $Contact->id;
                                 $AttendantsContact->save();
-                                $Contact->status_id = 1;
-                                $Contact->save();
+                                
+                                $Contact = $Contact
+                                    ->where('whatsapp_id' ,$whatsapp)
+                                    ->where('company_id', '=', $User->company_id)
+                                    ->first();
+                                if($Contact->status_id == 2){
+                                    $Contact->status_id = 1;
+                                    $Contact->save();
+                                }
                             }else{
                                 print_r("O email ".$attendatn_ids[$attendant_email]." não pertence a um attendente cadastrado nesta empresa");
                             }
