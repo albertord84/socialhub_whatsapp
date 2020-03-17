@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Company;
+use CreateQueueTable;
 
 /**
  * Class CompanyRepository
@@ -27,6 +28,20 @@ class ExtendedCompanyRepository extends CompanyRepository
     {
         $Company = $this->findWhere(['id' => $company_id]);
         return $Company;
+    }
+
+    public function createCompanyQueueTable(int $company_id)
+    {
+        try {
+            $chatsMigrationsDir = __DIR__.'/../../database/migrations/2020_03_17_172912_create_queue_table.php';
+            require_once($chatsMigrationsDir);
+
+            $queueTable = new CreateQueueTable();
+            $queueTable->up((string)$company_id);
+        } catch (\Throwable $th) {
+            print("Erro creating Company Queue Table...! " + $th);
+            throw $th;
+        }
     }
 
     /**
