@@ -63,17 +63,18 @@ class ExtendedContactRepository extends ContactRepository
                     ->orderBy('updated_at', 'desc')
                     ->findWhere([
                         'company_id' => $company_id,
-                        ['updated_at', '>', $lastContact->updated_at]])
-                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+                        ['updated_at', '>', $lastContact->updated_at]]);
+                    // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             }else{
                 $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
                     ->orderBy('updated_at', 'desc')
                     ->findWhere([
-                        'company_id' => $company_id])
-                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+                        'company_id' => $company_id]);
+                    // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             }
             
             foreach ($Contacts as $key => $Contact) {
+                // print_r($Contact->latestAttendant->attendant_id.'<br>');
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
@@ -92,7 +93,7 @@ class ExtendedContactRepository extends ContactRepository
                     $Collection->add($Contacts[$key]);
                 }
             }
-            return $Collection;
+            return $Collection->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
         } else {
             // $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->get();
             $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->each(function ($Contact, $key) {

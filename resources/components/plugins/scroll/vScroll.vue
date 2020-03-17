@@ -77,10 +77,13 @@ export default {
                 bar.classList.add('ss-hidden');
             } else {
                 if(this.seeSrolling){
-                    var value = parseInt((content.scrollTop / totalHeight) * 100);
-                    this.$emit('onscrolling',value);
+                    var value = parseInt((content.scrollTop / totalHeight) * 100);                    
+                    // this.$emit('onscrolling',value);
                     if(value === 0)
-                        this.$emit('ontop',content.scrollTop, totalHeight);
+                        this.$emit('ontop',content.scrollTop, totalHeight);                    
+                    if(content.scrollTop + content.clientHeight >= content.scrollHeight) {
+                        this.$emit('onbottom');
+                    }
                 }
                 bar.classList.remove('ss-hidden');
                 bar.style.cssText = 'height:' + (this.scrollRatio) * 100 + '%; top:' + (content.scrollTop / totalHeight) * 100 + '%;right:-' + (this.$refs.vscroll.clientWidth - bar.clientWidth) + 'px;background-color:' + this.color + ';width:' + this.barWidth;
