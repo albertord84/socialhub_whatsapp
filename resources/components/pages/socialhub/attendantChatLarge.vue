@@ -2218,6 +2218,10 @@
         },
 
         mounted(){
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
+            
             this.preConfigAudio();
             
             //wbsocket events

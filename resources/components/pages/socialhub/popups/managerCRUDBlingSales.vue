@@ -315,7 +315,10 @@
             this.editSale();
         },
 
-        mounted(){            
+        mounted(){        
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }    
         },
 
         created() {

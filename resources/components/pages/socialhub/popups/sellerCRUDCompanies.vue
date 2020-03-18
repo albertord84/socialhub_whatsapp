@@ -910,6 +910,10 @@
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         mounted(){
+            if(this.userLogged.role_id > 2){
+                this.$router.push({name: "login"});
+            }
+            
             if(this.action!='insert')
                 this.editCompany();
         },

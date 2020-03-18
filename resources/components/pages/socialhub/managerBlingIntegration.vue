@@ -269,6 +269,10 @@
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.defaultMessage = "Olá, @cliente_nome \n\n"+
             "Obrigado pela compra do produto @item_descricao.\n"+
             "Quantidade de ítens: @item_quantidade.\n\n"+

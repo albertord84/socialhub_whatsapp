@@ -211,9 +211,12 @@
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         mounted: function () {
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
         },
-        destroyed: function () {
 
+        destroyed: function () {
         }
     }
 </script>

@@ -596,6 +596,12 @@
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
+        mounted(){
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
+        },
+
         created() {
             miniToastr.setIcon("error", "i", {class: "fa fa-times"});
             miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});

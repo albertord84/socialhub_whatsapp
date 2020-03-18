@@ -354,6 +354,10 @@
         },
 
         mounted() {
+            if(this.userLogged.role_id > 1){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 
