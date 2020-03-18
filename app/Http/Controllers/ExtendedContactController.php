@@ -181,32 +181,32 @@ class ExtendedContactController extends ContactController
                                             $Contact->save();
                                         }
                                         $response[$i] = array(
-                                            "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato atribuido ao atendente ",
+                                            "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato atribuido ao atendente.",
                                             "code" => "success"
                                         );
                                     }
                                 }else{
                                     $response[$i] = array(
-                                        "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa",
+                                        "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa.",
                                         "code" => "warning"
                                     );
                                 }
                             }else{
                                 $response[$i] = array(
-                                    "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido",
+                                    "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido.",
                                     "code" => "warning"
                                 );
                             }
                         }else{
                             $response[$i] = array(
-                                "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado",
+                                "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado.",
                                 "code" => "warning"
                             );
                         }
                     }else{
                         if(empty($Contact->whatsapp_id))
                             $response[$i] = array(
-                                "message" => "Linha $i: contem um número de whatsapp inválido",
+                                "message" => "Linha $i: contem um número de whatsapp inválido.",
                                 "code" => "error"
                             );
                     }

@@ -96,18 +96,62 @@
         </b-modal>
 
         <!-- Confirm import cantacts Modal -->
-        <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Confirmação de importação de contatos">
+        <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Importação de contatos">
+            <div v-show="showImportContactsReport==false">
+                <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
 
-            <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
-            <h6>Clique no botão enviar para adicionar os contatos!</h6>
+                <div v-if="!isSendingContactFromCSV" class="col-lg-12 mt-5 text-center">
+                    <h6 class=" pb-5"> Clique no botão enviar para adicionar os contatos!</h6>
 
-            <div class="col-lg-12 mt-5 text-center">
-                <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingContactFromCSV==true" @click.prevent="addContactsFromCSV">
-                    <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
-                    Enviar
-                </button>
-                <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, showModalTemplateToImportContact=!showModalTemplateToImportContact, file=null">Cancelar</button>
+                    <button type="submit" class="btn btn-primary btn_width"  @click.prevent="addContactsFromCSV">
+                    <!-- <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingContactFromCSV==true" @click.prevent="addContactsFromCSV"> -->
+                        <!-- <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i> -->
+                        Enviar
+                    </button>
+                    
+                    <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, showModalTemplateToImportContact=!showModalTemplateToImportContact, file=null">Cancelar</button>
+                </div>
+
+                <div v-if="isSendingContactFromCSV" class="col-lg-12 mt-5 text-center">
+                    <div class="spinner-border text-primary"></div>
+                    <h6 class=" pt-5">Esta acção pode demorar vários segundos!</h6>
+                </div>
+
             </div>
+
+            <div v-show="showImportContactsReport==true" >
+                <h6>Informação sobre a importação de contatos.</h6>
+                
+                <v-scroll :height="100"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
+                    
+                        <div class="col-lg-12 mt-5 text-left">
+                        
+                            <!-- <ul>
+                                <li v-for="item in importContactsReport" v-bind:key="item.message"></li>
+                            </ul> -->
+
+
+                            <div class="table-responsive">
+                                <table ref="table" class="table" >
+                                    <tbody>
+                                        <tr v-for="item in importContactsReport" :key="item">
+                                            {{ item.message }}
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </v-scroll>
+            
+
+
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, showModalTemplateToImportContact=!showModalTemplateToImportContact, file=null">Cancelar</button>
+                </div>
+            </div>
+
+
         </b-modal>
 
         <!-- Upload template to import cantacts Modal -->
@@ -135,6 +179,7 @@
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDContact from "./popups/managerCRUDContact";
+    import vScroll from "components/plugins/scroll/vScroll.vue"
 
     export default {
         props: {
@@ -178,8 +223,11 @@
                 contact_atendant_id: 0,
                 model:{},
                 
-                isSendingContactFromCSV:false,
+                isSendingContactFromCSV: false,
                 file:null,
+                importContactsReport: "",
+                showImportContactsReport: false,
+                
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -290,6 +338,7 @@
             },
 
             addContactsFromCSV:function(){
+                this.isSendingContactFromCSV = true;
                 this.file = null;
                 if(!this.$refs.fileInputCSV.files[0].name.includes('.csv')){
                     miniToastr.error("O arquivo selecionado deve estar em formato .CSV", "Erro"); 
@@ -301,18 +350,28 @@
                         let formData = new FormData();
                         formData.append("id",'0');
                         formData.append("file",this.file);
-                        this.isSendingContactFromCSV = true;
+                        // this.isSendingContactFromCSV = true;
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
+                                this.importContactsReport = response.data;
+                                this.showImportContactsReport = true;
+                                this.isSendingContactFromCSV = false;
+
                                 this.getContacts();
                                 miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso"); 
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.url, "get");
-                            })
-                            .finally(()=>{this.isSendingContactFromCSV=false;
-                                          this.showModalFileUploadCSV=!this.showModalFileUploadCSV; 
-                                          this.showModalTemplateToImportContact=!this.showModalTemplateToImportContact});
+                                this.isSendingContactFromCSV=false;
+
+                            });
+                            // .finally(()=>{this.isSendingContactFromCSV=false;
+                            //               this.showModalFileUploadCSV=!this.showModalFileUploadCSV; 
+                            //               this.showModalTemplateToImportContact=!this.showModalTemplateToImportContact});
+                                        //   this.showModalFileUploadCSV=false;});
+                            // .finally(()=>{this.isSendingContactFromCSV=false;
+                            //               this.showModalFileUploadCSV=!this.showModalFileUploadCSV; 
+                            //               this.showModalTemplateToImportContact=!this.showModalTemplateToImportContact});
                                         //   this.showModalFileUploadCSV=false;});
                     }
                 } else{
