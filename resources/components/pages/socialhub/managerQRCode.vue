@@ -161,12 +161,19 @@
             logoutWhatsapp(){
                 ApiService.post('RPI/logout')
                     .then(response => {
-                        this.beforeRequest=true;
-                        this.duringRequest=false;
-                        this.qrcodebase64=false;
-                        this.isLoggued=false;
-                        this.isError=false;
-                        this.erroMessage='';
+                        if(typeof(response.data !="undefined") 
+                            && typeof(response.data.message) != 'undefined'
+                            && response.data.message == "Logout feito"){
+                                miniToastr.success("Sucesso", "Operação realizada com sucesso");   
+                                this.beforeRequest=true;
+                                this.duringRequest=false;
+                                this.qrcodebase64=false;
+                                this.isLoggued=false;
+                                this.isError=false;
+                                this.erroMessage='';
+                        } else{
+                            miniToastr.error("Error", response.data);   
+                        }
                     })
                     .catch(error => {
                         this.processMessageError(error, "RPI","logout");
