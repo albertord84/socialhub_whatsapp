@@ -47,9 +47,10 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        // $last_contact_id = 16;
-        // $company_id = 1;
-        // $lastContact = Contact::find($last_contact_id);
+        $last_contact_id = 16;
+        $company_id = 1;
+        $attendant_id = 4;
+        $lastContact = Contact::find($last_contact_id);
         
         // $ExtendedChat = new ExtendedChat();
         // $ExtendedChat->table = '4';
@@ -57,26 +58,30 @@ class TestController extends AppBaseController
         
         // $ExtendedChat->Contact = $lastContact;
         // dd($ExtendedChat->toJson());
-        // $Contacts = $this->repository
-        //     ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
-        //     ->orderBy('updated_at', 'asc')
-        //     ->findWhere([
-            //         'company_id' => $company_id,
-        //         ['updated_at', '>', $lastContact->updated_at]
-        // ])->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
+        $Contacts = $this->repository
+            ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+            ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+                $query->where('attendant_id', $attendant_id);
+            })
+            ->orderBy('updated_at', 'asc')
+            ->findWhere([
+                'company_id' => $company_id,
+                // ['updated_at', '>', $lastContact->updated_at]
+            ]);
+        // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
 
         
         // $Contacts->orderBy('updated_at', 'asc');
 
-        // dd($Contacts);
+        dd($Contacts);
 
         // Build Bling message by Sales object
-        $company_id = 35;
-        $Company = Company::with('rpi')->find($company_id);
-        $BlingController = app()->make(BlingController::class);
+        // $company_id = 35;
+        // $Company = Company::with('rpi')->find($company_id);
+        // $BlingController = app()->make(BlingController::class);
 
-        $BlingBussinesC = new BlingBusiness();
-        $Sales = $BlingBussinesC->getBlingCompanySales($Company);
+        // $BlingBussinesC = new BlingBusiness();
+        // $Sales = $BlingBussinesC->getBlingCompanySales($Company);
 
         // dd($Sales[51]);
 

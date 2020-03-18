@@ -60,17 +60,23 @@ class ExtendedContactRepository extends ContactRepository
             if($last_contact_id){
                 $lastContact = Contact::find($last_contact_id);
                 $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+                        $query->where('attendant_id', $attendant_id);
+                    })
                     ->orderBy('updated_at', 'desc')
                     ->findWhere([
                         'company_id' => $company_id,
-                        ['updated_at', '>', $lastContact->updated_at]]);
-                    // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+                        ['updated_at', '>', $lastContact->updated_at]])
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             }else{
                 $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+                        $query->where('attendant_id', $attendant_id);
+                    })
                     ->orderBy('updated_at', 'desc')
                     ->findWhere([
-                        'company_id' => $company_id]);
-                    // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+                        'company_id' => $company_id])
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             }
             
             foreach ($Contacts as $key => $Contact) {
@@ -85,9 +91,9 @@ class ExtendedContactRepository extends ContactRepository
                     
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
-                    ->where('contact_id', $Contact->id)
-                    ->where('status_id', 6) //UNREADED message for me
-                    ->count();
+                        ->where('contact_id', $Contact->id)
+                        ->where('status_id', 6) //UNREADED message for me
+                        ->count();
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
                     $Collection->add($Contacts[$key]);
