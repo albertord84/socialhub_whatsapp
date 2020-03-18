@@ -135,6 +135,7 @@
         name: "attendantEditContact",
         data() {
             return {
+                userLogged:{},
                 formstate: {},
                 isSending:false,
                 model: {
@@ -205,6 +206,9 @@
                     miniToastr.error(info.erro, info.message); 
                 }
             },
+        },
+        beforeMount: function () {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         mounted: function () {
         },

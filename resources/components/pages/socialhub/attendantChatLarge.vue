@@ -12,7 +12,7 @@
                         <ul class='row flex-baseline'>
                             <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
-                                    <img :src="logguedAttendant.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
+                                    <img :src="userLogged.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
@@ -31,8 +31,8 @@
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
                                         <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotifications">
-                                            <span v-if="logguedAttendant.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
-                                            <span v-if="!logguedAttendant.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
+                                            <span v-if="userLogged.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
+                                            <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
                                         </a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
@@ -384,7 +384,7 @@
                                         <div style="float:right" class="thetime">{{message.time.hour}}</div>
                                     </div>
                                     <div class="col-1">
-                                        <img :src="logguedAttendant.image_path" alt="" class="conversation-picture sendedMessageImg">
+                                        <img :src="userLogged.image_path" alt="" class="conversation-picture sendedMessageImg">
                                     </div>
                                 </div>
                             </div>
@@ -896,7 +896,7 @@
 
         data() {
             return {                
-                logguedAttendant:{},
+                userLogged:{},
 
                 isMaouseOverContact:false,
 
@@ -1595,9 +1595,9 @@
 
             //-------------------Secundary functions----------------------
             muteNotifications: function(){
-                var val = (this.logguedAttendant.mute_notifications)?0:1;
-                ApiService.put(this.users_url+'/'+this.logguedAttendant.id, {
-                    "id": this.logguedAttendant.id,
+                var val = (this.userLogged.mute_notifications)?0:1;
+                ApiService.put(this.users_url+'/'+this.userLogged.id, {
+                    "id": this.userLogged.id,
                     "mute_notifications": val
                 })
                 .then(response => {     
@@ -1605,7 +1605,7 @@
                         miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
                     else
                         miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
-                    this.logguedAttendant.mute_notifications = val;
+                    this.userLogged.mute_notifications = val;
                 })
                 .catch(error => {
                     this.processMessageError(error, this.users_url, "mute_notifications");
@@ -1771,8 +1771,8 @@
             },
             
             logout: function() {
-                ApiService.put('usersAttendants/'+this.logguedAttendant.id,{
-                    'user_id':this.logguedAttendant.id,
+                ApiService.put('usersAttendants/'+this.userLogged.id,{
+                    'user_id':this.userLogged.id,
                     'selected_contact_id':0
                 })
                 .then(response => {
@@ -2066,7 +2066,7 @@
             },
 
             wsMessageToAttendant: function(){
-                window.Echo.channel('sh.message-to-attendant.' + this.logguedAttendant.id)
+                window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
                     var message = JSON.parse(e.message);
@@ -2139,7 +2139,7 @@
                         }
                     }
 
-                    if(!this.logguedAttendant.mute_notifications
+                    if(!this.userLogged.mute_notifications
                             && this.selectedContactIndex >-1 
                             && !this.contacts[this.selectedContactIndex].status_id==6)
                         this.$refs.newMessageSound.play();
@@ -2148,16 +2148,16 @@
             },
 
             wsContactToBag: function(){
-                window.Echo.channel('sh.contact-to-bag.' + this.logguedAttendant.company_id)
+                window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
                 .listen('NewContactMessage', (e) => {
-                    if(this.amountContactsInBag<e.message && !this.logguedAttendant.mute_notifications)
+                    if(this.amountContactsInBag<e.message && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
                     this.amountContactsInBag = e.message;
                 });
             },
 
             wsTransferredContact: function(){
-                window.Echo.channel('sh.transferred-contact.' + this.logguedAttendant.id)
+                window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
                 .listen('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
                     // newContact.index = this.contacts.length;
@@ -2197,7 +2197,7 @@
         },
 
         beforeMount() {
-            this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getContacts();
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");

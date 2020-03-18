@@ -134,7 +134,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
-                // logguedManager:{},
+                userLogged:{},
                 attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
                 first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
@@ -383,7 +383,7 @@
         },
 
         beforeMount(){
-            // this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
             this.getCompanyOFManager();
         },

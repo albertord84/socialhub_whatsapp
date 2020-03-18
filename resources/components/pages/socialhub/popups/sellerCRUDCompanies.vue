@@ -283,7 +283,7 @@
                     linkedin_id: "",
                 },
 
-                logued_user:null,
+                userLogged:{},
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
@@ -295,7 +295,7 @@
         methods:{
             addCompany: function() { //C
                 this.modelCompany.id=0;
-                this.modelCompany.user_seller_id=this.logued_user.id;
+                this.modelCompany.user_seller_id=this.userLogged.id;
                 this.modelCompany.amount_attendants=3;
                 this.modelManager.id=0;
                 this.modelManager.role_id=3;
@@ -906,10 +906,12 @@
             },
         },
 
+        beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
         mounted(){
             if(this.action!='insert')
                 this.editCompany();
-            this.logued_user = JSON.parse(window.localStorage.getItem('user'));
         },
 
         created() {

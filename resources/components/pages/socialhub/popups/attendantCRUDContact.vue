@@ -152,14 +152,14 @@
             <h6> Tranferir contato para: <b>{{(selectedAttendantToTransfer)? selectedAttendantToTransfer.user.name : ""}}</b></h6> 
             <v-scroll :height="100"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
                 <ul v-for="(attendant,index) in attendants" :key="index" class="list-group list-group-horizontal" @click.prevent="selectedAttendantToTransfer = attendant">
-                    <li v-if="attendant.user_id != loggedAttendant.id" class="list-group-item border-0">
+                    <li v-if="attendant.user_id != userLogged.id" class="list-group-item border-0">
                         <img :src="attendant.user.image_path" width="50px" height="50px" class="my-rounded-circle mt-1 " alt="Foto">
                     </li>
-                    <li v-if="attendant.user_id != loggedAttendant.id" class="list-group-item border-0">
+                    <li v-if="attendant.user_id != userLogged.id" class="list-group-item border-0">
                         <span style="font-size:1em">{{attendant.user.name}}</span>
                         <br><span class="text-muted" style="font-size:0.8em">{{attendant.user.email}}</span>
                     </li>
-                    <li v-if="attendant.user_id != loggedAttendant.id" class="ml-5">
+                    <li v-if="attendant.user_id != userLogged.id" class="ml-5">
                         <i v-show="selectedAttendantToTransfer && selectedAttendantToTransfer.user_id == attendant.user_id" class="fa fa-check fa-2x mt-3" style="color:green"></i>
                     </li>
                 </ul>
@@ -202,6 +202,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                userLogged:{},
                 url:'contacts',  //route to controller
                 secondUrl:'attendantsContacts',  //route to controller
                 
@@ -244,7 +245,6 @@
                 attendants:null,
                 selectedAttendantToTransfer:null,
                 isTransferingContact:false,
-                loggedAttendant:{},
 
                 summary_length:0,
                 remember_length:0,
@@ -593,7 +593,7 @@
                 this.editContact();
                 this.getAttendants();
             }
-            this.loggedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         created() {

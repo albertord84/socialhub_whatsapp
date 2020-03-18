@@ -167,6 +167,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                userLogged:{},
                 url:'contacts',  //route to controller
                 secondUrl:'attendantsContacts',
                 url_attendants:'usersAttendants',  //route to controller
@@ -455,6 +456,7 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendantList();
             this.getContacts();
         },

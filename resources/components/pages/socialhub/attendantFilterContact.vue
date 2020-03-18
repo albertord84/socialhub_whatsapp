@@ -64,6 +64,7 @@
         name: "filter_user",
         data() {
             return {
+                userLogged:{},
                 formstate: {},
                 model: {
                     name: "",
@@ -133,6 +134,9 @@
                     miniToastr.error(info.erro, info.message); 
                 }
             },
+        },
+        beforeMount: function () {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         mounted: function () {
 

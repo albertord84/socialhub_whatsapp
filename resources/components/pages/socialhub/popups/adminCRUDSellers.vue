@@ -88,6 +88,7 @@
 
         data(){
             return{
+                userLogged:{},
                 attendant_id: "",
                 model:{
                     name: "",
@@ -208,6 +209,10 @@
                 }
             },
 
+        },
+
+        beforeMount: function() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         mounted(){

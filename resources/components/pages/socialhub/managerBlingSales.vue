@@ -123,6 +123,7 @@
 
         data() {
             return {
+                userLogged:{},
                 url:'sales',  
                 sales_id: "",
                 model:{},
@@ -382,6 +383,7 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getSales();
         },
 

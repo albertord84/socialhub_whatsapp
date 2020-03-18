@@ -108,6 +108,7 @@
         },
         data() {
             return {
+                userLogged:{},
                 serverdata: [],
                 instances: [],
                 loading: false,
@@ -337,6 +338,9 @@
                 .catch(error => {
                 });
 
+        },
+        beforeMount() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         beforeRouteLeave(to, from, next) {
             unsub();

@@ -134,6 +134,7 @@
 
         data() {
             return {
+                userLogged:{},
                 //---------General properties-----------------------------
                 first_url:'users',  //route to controller
                 url:'usersSellers',  //route to controller
@@ -348,6 +349,7 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getSellers();
         },
 

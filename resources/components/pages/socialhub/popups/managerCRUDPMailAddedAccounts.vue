@@ -124,6 +124,7 @@
 
         data(){
             return{
+                userLogged:{},
                 contact_id: "",
                 contact_atendant_id:0,
 
@@ -429,8 +430,11 @@
 
         },
 
+        beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
         beforeUpdate(){
-            },
+        },
 
         mounted(){
             this.editContact();            

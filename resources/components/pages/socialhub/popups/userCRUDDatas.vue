@@ -162,7 +162,7 @@
         data() {
             return {
                 url:'users',
-                user:{},
+                userLogged:{},
                 model: {},
                 editMode:false,
                 isSending:false,
@@ -383,7 +383,7 @@
         },
 
         beforeMount(){
-            this.user = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));            
         },
 
         created() {

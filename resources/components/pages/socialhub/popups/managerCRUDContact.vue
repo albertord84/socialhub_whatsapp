@@ -124,6 +124,7 @@
 
         data(){
             return{
+                userLogged:{},
                 contact_id: "",
                 contact_atendant_id:0,
 
@@ -242,7 +243,7 @@
                     this.flagReference = true;
                     return;
                 }
-                 
+
                 if(this.contact_atendant_id>0)
                     this.model.status_id = 1;
 
@@ -429,8 +430,11 @@
 
         },
 
+        beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
         beforeUpdate(){
-            },
+        },
 
         mounted(){
             this.editContact();            
