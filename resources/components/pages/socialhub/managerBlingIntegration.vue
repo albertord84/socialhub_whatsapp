@@ -148,7 +148,7 @@
             <tab-content title="Fim da integração" :beforeChange='steepEnd'>
                 <div class="mt-5 mb-5 pt-5 pb-5 text-center">
                     <h4 style="color:#34AD70; text-align: left; margin-left:100px">
-                        Parabéns {{logued_user.name}}, <br> sua integração foi concluída!
+                        Parabéns {{userLogged.name}}, <br> sua integração foi concluída!
                     </h4>
                 </div>
             </tab-content>
@@ -176,10 +176,10 @@
 
         data(){
             return{
+                userLogged:{},
                 companies_url:"companies",
                 sales_url:"companies",
                 bling_url:"blings",
-                logued_user:null,
                 message:"",
                 defaultMessage:"",
                 apikey:"",
@@ -213,7 +213,7 @@
                     return new Promise((resolve, reject) => {                    
                         //update company and create the respective sales table
                         ApiService.post(this.bling_url, {
-                            "company_id":this.logued_user.company_id,
+                            "company_id":this.userLogged.company_id,
                             "bling_apikey":this.apikey,
                             "bling_message":this.message,
                             // "blingtoken":'',
@@ -265,10 +265,14 @@
         },
 
         beforeMount(){
-            this.logued_user = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.defaultMessage = "Olá, @cliente_nome \n\n"+
             "Obrigado pela compra do produto @item_descricao.\n"+
             "Quantidade de ítens: @item_quantidade.\n\n"+

@@ -159,7 +159,7 @@
             <tab-content title="Fim da integração" :beforeChange='steepEnd'>
                 <div class="mt-5 mb-5 pt-5 pb-5 text-center">
                     <h4 style="color:#34AD70; text-align: left; margin-left:100px">
-                        Parabéns {{logued_user.name}}, <br><br> sua integração com os Correios foi concluída!
+                        Parabéns {{userLogged.name}}, <br><br> sua integração com os Correios foi concluída!
                     </h4>
                 </div>
             </tab-content>
@@ -189,8 +189,8 @@
 
         data(){
             return{
+                userLogged:{},
                 pmail_accounts_url:"contacts", // "pmail_accounts_url",
-                logued_user:null,
                 message:"",
                 defaultMessage:"",                
                 username:'',
@@ -206,7 +206,7 @@
 
                 this.isAddingPMailAccount =true;
                 ApiService.post(this.pmail_accounts_url, {
-                    "company_id":this.logued_user.company_id,
+                    "company_id":this.userLogged.company_id,
                     "username":this.username,
                     "password":this.password
                 })
@@ -225,7 +225,7 @@
             },
 
             reloadPMailAccounts(){
-                ApiService.get(this.pmail_accounts_url, this.logued_user.company_id) 
+                ApiService.get(this.pmail_accounts_url, this.userLogged.company_id) 
                 .then(response => {
                     this.pmailAccounts = response.data;
                 })
@@ -261,7 +261,7 @@
                     return new Promise((resolve, reject) => {                    
                         //update company and create the respective sales table
                         ApiService.post(this.bling_url, {
-                            "company_id":this.logued_user.company_id,
+                            "company_id":this.userLogged.company_id,
                             "bling_apikey":this.apikey,
                             "bling_message":this.message,
                             // "blingtoken":'',
@@ -313,11 +313,15 @@
         },
 
         beforeMount(){
-            this.logued_user = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.reloadPMailAccounts();
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.defaultMessage = "Olá, @cliente_nome \n\n"+
             "Obrigado pela compra do produto @item_descricao.\n"+
             "Quantidade de ítens: @item_quantidade.\n\n"+

@@ -15,7 +15,7 @@ class MessagesStatusController extends AppBaseController
 {
     const ROUTED = 1; 
     const SENDED = 2; 
-    const RECEVEIVED = 3; 
+    const RECEIVED = 3; 
     const READED = 4; 
     const DELETED = 5; 
     const UNREADED = 6; 

@@ -134,6 +134,7 @@
 
         data() {
             return {
+                userLogged:{},
                 //---------General properties-----------------------------
                 first_url:'users',  //route to controller
                 url:'usersSellers',  //route to controller
@@ -348,10 +349,15 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getSellers();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 1){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 

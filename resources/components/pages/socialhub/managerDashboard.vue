@@ -108,6 +108,7 @@
         },
         data() {
             return {
+                userLogged:{},
                 serverdata: [],
                 instances: [],
                 loading: false,
@@ -306,6 +307,10 @@
             }
         },
         mounted: function () {
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             unsub = this.$store.subscribe((mutation, state) => {
                 if (mutation.type == "left_menu") {
                     this.instances.forEach(function (item, index) {
@@ -337,6 +342,9 @@
                 .catch(error => {
                 });
 
+        },
+        beforeMount() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         beforeRouteLeave(to, from, next) {
             unsub();

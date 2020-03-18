@@ -30,7 +30,7 @@
 
         data() {
             return {
-                logguedManager:{},
+                userLogged:{},
                 url:'rpis',
 
                 isChecking:false,
@@ -71,7 +71,13 @@
         },
 
         beforeMount: function() {
-            this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
+
+        mounted: function(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
         },
 
         created: function() {

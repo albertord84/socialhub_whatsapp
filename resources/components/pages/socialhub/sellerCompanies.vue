@@ -133,6 +133,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                userLogged:{},
                 companies_url:'companies',  //route to controller
                 users_url:'users',  //route to controller
                 usersManager_url:'usersManagers',  //route to controller
@@ -443,6 +444,7 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getCompanies();
         },
 

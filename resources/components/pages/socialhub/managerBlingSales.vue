@@ -123,6 +123,7 @@
 
         data() {
             return {
+                userLogged:{},
                 url:'sales',  
                 sales_id: "",
                 model:{},
@@ -382,10 +383,15 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getSales();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 

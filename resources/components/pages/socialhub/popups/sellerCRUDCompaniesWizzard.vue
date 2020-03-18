@@ -157,7 +157,7 @@
                     instagram_id: "",
                     linkedin_id: "",
                 },
-                logued_user:null
+                userLogged:{}
             }
         },
 
@@ -178,7 +178,7 @@
 
             addCompanyOld: function() { //C
                 this.modelCompany.id=1;
-                this.modelCompany.user_seller_id=this.logued_user.id;
+                this.modelCompany.user_seller_id=this.userLogged.id;
                 this.modelManager.id=1;
                 this.modelManager.role_id=3;
                 this.modelManager.image_path = "images/user.jpg";
@@ -308,10 +308,17 @@
 
         },
 
+        beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
+
         mounted(){
+            if(this.userLogged.role_id > 2){
+                this.$router.push({name: "login"});
+            }
+
             if(this.action!='insert')
                 this.editCompany();
-            this.logued_user = JSON.parse(window.localStorage.getItem('user'));
             
         },
 

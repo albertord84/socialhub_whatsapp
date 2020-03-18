@@ -64,6 +64,7 @@
         name: "filter_user",
         data() {
             return {
+                userLogged:{},
                 formstate: {},
                 model: {
                     name: "",
@@ -134,8 +135,13 @@
                 }
             },
         },
+        beforeMount: function () {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
         mounted: function () {
-
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
         },
         destroyed: function () {
 
