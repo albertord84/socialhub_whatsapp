@@ -107,13 +107,16 @@ class ExtendedContactController extends ContactController
                     $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
                     
                     $Contact = new Contact();
-                    $Contact = $Contact
+                    $Contact1 = new Contact();
+
+                    $Contact1 = $Contact1
                             ->where('whatsapp_id' ,$whatsapp)
                             ->where('company_id', '=', $User->company_id)
                             ->first();
+                    
+                    if($Contact1)$Contact = $Contact1;
 
                     $last_attendant_id = null; //get_last_attendant_contact_id($Contact->id); //TODO:Alberto
-
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
                     
@@ -147,14 +150,11 @@ class ExtendedContactController extends ContactController
                     if (isset($contact['Categoria2']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
-                    // if (isset($contact['Categoria3']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria3'])) {
-                    //     $Contact->categoria2 = trim($contact['Categoria3']);
-                    // }
                     if(!empty($Contact->first_name) && !empty($Contact->whatsapp_id)){
                         if(!isset($Contact->status_id))
                             $Contact->status_id = 2;
-                        $Contact->created_at = '1959-01-01 00:00:07';
-                        $Contact->updated_at = '1959-01-01 00:00:07';
+                        $Contact->created_at = '1959-01-01 00:00:00';
+                        $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
                         
                         //processar atendentes
@@ -164,6 +164,10 @@ class ExtendedContactController extends ContactController
                             if(isset($attendatn_ids[$attendant_email]) && ($last_attendant_id==null) || ($attendatn_ids[$attendant_email] != $last_attendant_id) ){
                                 //2. crear una fila en la tabla attendants_contacts                                
                                 $AttendantsContact = new AttendantsContact();
+
+                                $AttendantsContact->created_at = '1959-01-01 00:00:00';
+                                $AttendantsContact->updated_at = '1959-01-01 00:00:00';
+
                                 $AttendantsContact->attendant_id = (int)$attendatn_ids[$attendant_email];
                                 $AttendantsContact->contact_id = $Contact->id;
                                 $AttendantsContact->save();
@@ -172,6 +176,9 @@ class ExtendedContactController extends ContactController
                                     ->where('whatsapp_id' ,$whatsapp)
                                     ->where('company_id', '=', $User->company_id)
                                     ->first();
+                                $Contact->created_at = '1959-01-01 00:00:00';
+                                $Contact->updated_at = '1959-01-01 00:00:00';
+
                                 if($Contact->status_id == 2){
                                     $Contact->status_id = 1;
                                     $Contact->save();
@@ -182,7 +189,6 @@ class ExtendedContactController extends ContactController
                         }
 
                     }
-
 
                 } catch (\Throwable $th) {
                     //throw $th;
