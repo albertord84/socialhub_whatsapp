@@ -135,6 +135,7 @@
         name: "attendantEditContact",
         data() {
             return {
+                userLogged:{},
                 formstate: {},
                 isSending:false,
                 model: {
@@ -206,10 +207,16 @@
                 }
             },
         },
-        mounted: function () {
+        beforeMount: function () {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
-        destroyed: function () {
+        mounted: function () {
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
+        },
 
+        destroyed: function () {
         }
     }
 </script>

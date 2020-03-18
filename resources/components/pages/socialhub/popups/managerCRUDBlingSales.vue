@@ -120,9 +120,9 @@
 
         data(){
             return{
+                userLogged:{},
                 sales_id: "",
                 model:{},
-                user_loggued:{},
                 isSendingUpdate: false,
                 isSendingDelete: false,
             }
@@ -168,7 +168,7 @@
                 delete this.model.deleted_at;
                 this.model.json_data = JSON.stringify(this.model.json_data);
 
-                ApiService.put(this.url+'/'+this.user_loggued.company_id, this.model) 
+                ApiService.put(this.url+'/'+this.userLogged.company_id, this.model) 
                     .then(response => {
                         miniToastr.success("Venda atualizada com sucesso","Sucesso");
 
@@ -311,11 +311,14 @@
         },
 
         beforeMount(){
-            this.user_loggued = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.editSale();
         },
 
-        mounted(){            
+        mounted(){        
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }    
         },
 
         created() {

@@ -111,6 +111,7 @@
 
         data(){
             return{
+                userLogged:{},
                 attendant_id: "",
                 model:{
                     name: "",
@@ -145,7 +146,7 @@
                 this.model.role_id=4;
                 this.model.password='';
                 this.model.image_path = "images/user.jpg";
-                this.model.company_id = this.logguedAttendant.company_id;
+                this.model.company_id = this.userLogged.company_id;
                 this.isSendingInsert = true;
 
                 // Validando dados
@@ -433,10 +434,14 @@
         },
 
         beforeMount(){
-            this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.editAttendant();
         },
 

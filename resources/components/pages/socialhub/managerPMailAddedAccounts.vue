@@ -107,6 +107,7 @@
 
         data() {
             return {
+                userLogged:{},
                 url:'contacts',  //route to controller
                 // url:'pmail_accounts_url',  //route to controller
                 
@@ -269,10 +270,15 @@
         },
 
         beforeMount(){            
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getPMailAddedAccounts();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 
