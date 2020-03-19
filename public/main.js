@@ -290,10 +290,6 @@ var ApiService = {
             }).join('&');
         }
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.get("" + resource + params);
-        //ECR
-        // return Vue.axios.get(`${resource}${params}`).catch(error => {
-        //     throw new Error(`[RWV] ApiService ${error}`);
-        // });
     },
     post: function post(resource, params) {
         if (__WEBPACK_IMPORTED_MODULE_3__jwt_service__["a" /* default */].getToken() !== null) {
@@ -360,7 +356,17 @@ var ApiService = {
                 // Quando tenta verificar número de whatsapp e o hardware está desconectado
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
+            } else if (error.response.data.message && error.response.data.message.includes("Trying to get property 'company_id' of non-object")) {
+                // Secção expirada.
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
             } else if (error.response.status == 419 && error.response.data.message.includes("")) {
+                // Secção expirada.
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+            } else if (error.response.data && error.response.data.includes("count_unread_messagess")) {
                 // Secção expirada.
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
@@ -5461,7 +5467,7 @@ var layout = [{
     path: '/manager',
     name: 'manager', //
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(11).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(805)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(10).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(805)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Contatos"
@@ -5533,7 +5539,7 @@ var layout = [{
 }, {
     path: '/manager/pmailSales',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(10).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(813)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(11).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(813)]; ((resolve).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: "Envios"
