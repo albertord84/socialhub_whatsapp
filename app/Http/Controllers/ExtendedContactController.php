@@ -79,7 +79,151 @@ class ExtendedContactController extends ContactController
 
     public function contactsFromCSV(CreateContactRequest $request)
     {
-       
+        $input = $request->all();
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+
+        if ($file = $request->file('file')) {
+
+            $array = $this->csv_to_array($file->getRealPath(), ',');
+            if(count($array)>1 && count($array[1])<2 ){
+                $array = $this->csv_to_array($file->getRealPath(), ';');
+            }
+            unlink($file->getRealPath());
+
+            //obtaining emails and ids of attendants
+            $extendedUserRepository = new ExtendedUserRepository(app());
+            $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
+            $attendantsUser = $ExtendedUsersAttendantRepository->Attendants_User_By_Attendant($User->company_id,4);
+            $attendatn_ids = array();
+            foreach ($attendantsUser as $key => $attendant) {
+                $user = $extendedUserRepository->findWithoutFail($attendant->user_id);
+                $attendatn_ids[$user->email] = $attendant->user_id;
+            }
+            $response = array();
+            
+            //insert contacts in database
+            $i=2;
+            foreach($array as $contact){
+                try{
+                    $whatsapp = $contact['Whatsapp'];
+                    $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
+                    $Contact = new Contact();
+                    $Contact1 = new Contact();
+                    $Contact1 = $Contact1
+                            ->where('whatsapp_id' ,$whatsapp)
+                            ->where('company_id', '=', $User->company_id)
+                            ->first();
+                    if($Contact1)$Contact = $Contact1;
+
+                    $last_attendant_id = null; //get_last_attendant_contact_id($Contact->id); //TODO:Alberto
+                    $Contact->company_id = $User->company_id;
+                    $Contact->origin = 3;
+                    
+                    if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
+                        $Contact->first_name = trim($contact['Nome']);
+                    }
+                    if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
+                        $Contact->whatsapp_id = $whatsapp;
+                    }
+                    if (isset($contact['Email']) && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
+                        $Contact->email = trim($contact['Email']);
+                    }
+                    if (isset($contact['Facebook']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Facebook'])) {
+                        $Contact->facebook_id = trim($contact['Facebook']);
+                    }
+                    if (isset($contact['Instagram']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Instagram'])) {
+                        $Contact->instagram_id = trim($contact['Instagram']);
+                    }
+                    if (isset($contact['LinkedIn']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['LinkedIn'])) {
+                        $Contact->linkedin_id = trim($contact['LinkedIn']);
+                    }
+                    if (isset($contact['Estado']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Estado'])) {
+                        $Contact->estado = trim($contact['Estado']);
+                    }
+                    if (isset($contact['Cidade']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Cidade'])) {
+                        $Contact->cidade = trim($contact['Cidade']);
+                    }
+                    if (isset($contact['Categoria1']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria1'])) {
+                        $Contact->categoria1 = trim($contact['Categoria1']);
+                    }
+                    if (isset($contact['Categoria2']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
+                        $Contact->categoria2 = trim($contact['Categoria2']);
+                    }
+                    if(!empty($Contact->whatsapp_id)){
+                        if(!isset($Contact->status_id))
+                            $Contact->status_id = 2;
+                        $Contact->created_at = '1959-01-01 00:00:00';
+                        $Contact->updated_at = '1959-01-01 00:00:00';
+                        $Contact->save();
+                        
+                        //processar atendentes
+                        if ($contact['Email-Atendente']!=""){
+                            if(filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
+                                $attendant_email = trim($contact['Email-Atendente']);
+                                //1. buscar el id del atendiente segun la empresa y el email dado
+                                if (array_key_exists($attendant_email, $attendatn_ids)){
+                                    if(isset($attendatn_ids[$attendant_email]) && ($last_attendant_id==null) || ($attendatn_ids[$attendant_email] != $last_attendant_id) ){
+                                        //2. crear una fila en la tabla attendants_contacts                                
+                                        $AttendantsContact = new AttendantsContact();
+                                        $AttendantsContact->created_at = '1959-01-01 00:00:00';
+                                        $AttendantsContact->updated_at = '1959-01-01 00:00:00';
+                                        $AttendantsContact->attendant_id = (int)$attendatn_ids[$attendant_email];
+                                        $AttendantsContact->contact_id = $Contact->id;
+                                        $AttendantsContact->save();
+                                        $Contact = $Contact
+                                            ->where('whatsapp_id' ,$whatsapp)
+                                            ->where('company_id', '=', $User->company_id)
+                                            ->first();
+                                        $Contact->created_at = '1959-01-01 00:00:00';
+                                        $Contact->updated_at = '1959-01-01 00:00:00';
+                                        if($Contact->status_id == 2){
+                                            $Contact->status_id = 1;
+                                            $Contact->save();
+                                        }
+                                        $response[$i] = array(
+                                            "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato atribuido ao atendente.",
+                                            "code" => "success"
+                                        );
+                                    }
+                                }else{
+                                    $response[$i] = array(
+                                        "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa.",
+                                        "code" => "warning"
+                                    );
+                                }
+                            }else{
+                                $response[$i] = array(
+                                    "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido.",
+                                    "code" => "warning"
+                                );
+                            }
+                        }else{
+                            $response[$i] = array(
+                                "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado.",
+                                "code" => "warning"
+                            );
+                        }
+                    }else{
+                        if(empty($Contact->whatsapp_id))
+                            $response[$i] = array(
+                                "message" => "Linha $i: contem um número de whatsapp inválido.",
+                                "code" => "error"
+                            );
+                    }
+
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+                $i++;
+            }
+            
+        } else {
+            abort(302, "Error uploading file!");
+        }
+
+        // Flash::success('Contact saved successfully.');
+        return json_encode($response);
+        // return $response->toJson();
     }
 
     /**
