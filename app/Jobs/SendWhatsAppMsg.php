@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\ExternalRPIController;
+use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
+use App\Models\ExtendedChat;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -36,7 +38,8 @@ class SendWhatsAppMsg implements ShouldQueue
     private $rpiController;
 
     private $Contact;
-    private $message;
+    private $Chat;
+    private $chat_input;
 
     private $file_content;
     private $file_name;
@@ -47,12 +50,14 @@ class SendWhatsAppMsg implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ExternalRPIController $rpiController, Contact $Contact, string $message, string $file_content = null, string $file_name = null, string $file_type = null)
+    // public function __construct(ExternalRPIController $rpiController, Contact $Contact, array $chat_input)
+    public function __construct(ExternalRPIController $rpiController, Contact $Contact, array $chat_input, string $file_content = null, string $file_name = null, string $file_type = null)
     {
         $this->rpiController = $rpiController;
 
         $this->Contact = $Contact;
-        $this->message = $message;
+        $this->chat_input = $chat_input;
+        // $this->Chat = new ExtendedChat;
         $this->file_content = $file_content;
         $this->file_name = $file_name;
         $this->file_type = $file_type;
@@ -61,7 +66,8 @@ class SendWhatsAppMsg implements ShouldQueue
 
         $this->queue = 'whatsapp';
 
-        $this->delay = 5;
+        // Time to wait before allow process Job
+        $this->delay = 1;
     }
 
     /**
@@ -71,14 +77,29 @@ class SendWhatsAppMsg implements ShouldQueue
      */
     public function handle()
     {
+        Log::debug('Handle...: ', [$this->chat_input]);
+
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = $this->chat_input['attendant_id'];
+        $ExtendedChat = $ExtendedChat->find($this->chat_input['chat_id']);
+
         if (!$this->file_content) { // Send normal message
-            Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job: ', [$this->Contact->whatsapp_id]);
-            $this->rpiController->sendTextMessage($this->message, $this->Contact);
+            $response = $this->rpiController->sendTextMessage($ExtendedChat->message, $this->Contact);
+            Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job handled: ', [$this->Contact->whatsapp_id]);
         }
         else {
-            Log::debug('\n\r SendingFileMessage to Contact contact_Jid from Job: ', [$this->Contact->whatsapp_id]);
-            $this->rpiController->sendFileMessage($this->file_content, $this->file_name, $this->file_type, $this->message, $this->Contact);
+            $response = $this->rpiController->sendFileMessage($this->file_content, $this->file_name, $this->file_type, $ExtendedChat->message, $this->Contact);
+            Log::debug('\n\r SendingFileMessage to Contact contact_Jid from Job handled: ', [$this->Contact->whatsapp_id]);
         }
 
+        $responseJson = json_decode($response);
+        if (isset($responseJson->MsgID)) {
+            $ExtendedChat->status_id = MessagesStatusController::SENDED;
+        } else {
+            $ExtendedChat->status_id = MessagesStatusController::FAIL;
+            // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
+        }
+
+        $ExtendedChat->save();
     }
 }

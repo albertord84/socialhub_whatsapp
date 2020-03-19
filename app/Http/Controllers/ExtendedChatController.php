@@ -170,9 +170,10 @@ class ExtendedChatController extends ChatController
             $input['attendant_id'] = $User->id;
 
             $Contact = Contact::findOrFail($input['contact_id']);
-            // $externalRPiController = new ExternalRPIController(null);
 
             $chat = $this->chatRepository->createMessage($input);
+
+            $input['chat_id'] = $chat->id;
 
             if (isset($input['file'])) {
                 $fileName = $chat->id; // Laravel Auto gerated file name
@@ -202,30 +203,26 @@ class ExtendedChatController extends ChatController
                     // $chat = $this->chatRepository->updateMessage($input, $chat->id);
                 }
             } else {
+                $externalRPiController = new ExternalRPIController(null);
+                // SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $chat);
+                SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input);
+
+                Log::debug('\n\r SendingTextMessage Job to Contact contact_Jid: ', [$Contact->whatsapp_id]);
                 // $response = $externalRPiController->sendTextMessage($input['message'], $Contact);
                 // $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
-
-                SendWhatsAppMsg::dispatch();
             }
 
-            $responseJson = json_decode($response);
-            if (isset($responseJson->MsgID)) {
-                Flash::success('Chat saved successfully.');
+            Flash::success('Chat queued successfully.');
+            return $chat->toJson();
 
-                
-
-                return $chat->toJson();
-            } else {
-                
-                throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
-            }
         } catch (\Throwable $th) {
+            Log::debug('\n\r ExtendedChatController error handler', [$th]);
             if (isset($chat->id)) {
                 $ExtendedChat = new ExtendedChat();
                 $ExtendedChat->table = $chat->attendant_id;
                 $ExtendedChat = $ExtendedChat->find($chat->id);
                 $ExtendedChat->delete($chat->id);
-                Log::debug('\n\rDelete message', [$ExtendedChat]);
+                Log::debug('\n\rDeleted message', [$ExtendedChat]);
             }
             // return MyHandler::toJson($th, 500);
             return $th;

@@ -19,6 +19,7 @@ class MessagesStatusController extends AppBaseController
     const READED = 4; 
     const DELETED = 5; 
     const UNREADED = 6; 
+    const FAIL = 7; 
     
     /** @var  MessagesStatusRepository */
     private $messagesStatusRepository;
