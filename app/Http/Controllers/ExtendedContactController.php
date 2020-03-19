@@ -102,7 +102,12 @@ class ExtendedContactController extends ContactController
             $response = array();
             
             //insert contacts in database
-            $i=2;
+            $cntMessage1 = 0;
+            $cntMessage2 = 0;
+            $cntMessage3 = 0;
+            $cntMessage4 = 0;
+            $cntMessage5 = 0;
+            $i = 2;
             foreach($array as $contact){
                 try{
                     $whatsapp = $contact['Whatsapp'];
@@ -180,35 +185,22 @@ class ExtendedContactController extends ContactController
                                             $Contact->status_id = 1;
                                             $Contact->save();
                                         }
-                                        $response[$i] = array(
-                                            "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato atribuido ao atendente.",
-                                            "code" => "success"
-                                        );
+                                        
+                                        $response["message1"][$cntMessage1++]= array('line'=>$i, "ws"=>$Contact->whatsapp_id,"code"=>"success"); //Contato adicionado corretamente. Contato atribuido ao atendente
                                     }
                                 }else{
-                                    $response[$i] = array(
-                                        "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa.",
-                                        "code" => "warning"
-                                    );
+                                    $response["message2"][$cntMessage2++]= array('line'=>$i,"ws"=>$Contact->whatsapp_id,"code"=>"warning"); //Contato adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa
                                 }
                             }else{
-                                $response[$i] = array(
-                                    "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido.",
-                                    "code" => "warning"
-                                );
+                                $response["message3"][$cntMessage3++]= array('line'=>$i, "ws"=>$Contact->whatsapp_id, "code"=>"warning"); //Contato adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido
                             }
                         }else{
-                            $response[$i] = array(
-                                "message" => "Linha $i: contato $Contact->whatsapp_id adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado.",
-                                "code" => "warning"
-                            );
+                            $response["message4"][$cntMessage4++]= array('line'=>$i, "ws"=>$Contact->whatsapp_id, "code"=>"warning"); //Contato adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado
                         }
                     }else{
                         if(empty($Contact->whatsapp_id))
-                            $response[$i] = array(
-                                "message" => "Linha $i: contem um número de whatsapp inválido.",
-                                "code" => "error"
-                            );
+                        $response["message5"][$cntMessage5++]= array('line'=>$i,"ws"=>$Contact->whatsapp_id, "code"=>"error"); //Contem um número de whatsapp inválido
+                            
                     }
 
                 } catch (\Throwable $th) {
