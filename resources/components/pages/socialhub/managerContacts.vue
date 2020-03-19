@@ -98,18 +98,22 @@
         <!-- Upload template to import cantacts Modal -->
         <b-modal ref="modal-template-contact" size="lg" v-model="showModalTemplateToImportContact" id="showModalTemplateToImportContact" :hide-footer="true" title="Informação para importação de contatos">
             <div v-if="steepUploadFile==1">
-                <h5>Atenção:</h5>
-                <h6>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template!</h6>
-                <hr>
-                <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
-                <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
+                <div class="ml-5">
+                    <h5>Atenção:</h5>
+                    <h6>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template!</h6>
+                </div>
+                <div class="pl-5 pr-5"> <hr ></div>
+                <div class="ml-5">
+                    <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
+                    <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
+                </div>
                 <div class="col-lg-12 mt-5 text-center" >
                     <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
                     <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
                     <a class="btn btn-primary  pl-5 pr-5 text-white" href="javascript:undefined" @click="triggerEvent()">Subir planilha</a>
                 </div>
             </div>
-            <div v-if="steepUploadFile==2">
+            <div v-if="steepUploadFile==2" class="col-lg-12 mt-5 text-center">
                 <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
                 <div class="col-lg-12 mt-5 text-center">
                     <h6 class=" pb-5"> Clique no botão enviar para adicionar os contatos!</h6>
@@ -120,11 +124,11 @@
             <div v-if="steepUploadFile==3">
                 <div class="col-lg-12 mt-5 text-center">
                     <div class="spinner-border text-primary"></div>
-                    <h6 class=" pt-5">Esta acção pode demorar vários segundos!</h6>
+                    <h5 class=" pt-5">Esta acção pode demorar vários segundos!</h5>
                 </div>
             </div>
             <div v-if="steepUploadFile==4">
-                <h6>Resultado da importação de contatos.</h6>
+                <h5 class="text-center">Resultado da importação de contatos.</h5>
                 <div style="max-height: 200px; overflow-y: auto;">
                    <ul id="Report">
                         <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]">
