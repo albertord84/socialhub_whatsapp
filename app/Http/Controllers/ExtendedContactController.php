@@ -212,7 +212,7 @@ class ExtendedContactController extends ContactController
         } else {
             abort(302, "Error uploading file!");
         }
-
+            
         // Flash::success('Contact saved successfully.');
         return json_encode($response);
         // return $response->toJson();
