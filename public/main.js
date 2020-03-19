@@ -346,7 +346,7 @@ var ApiService = {
                 object.typeException = "duplicateEntry";
                 object.typeMessage = "warn";
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
-                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
+                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado nessa empresa.";
             } else if (error.response.data.message && error.response.data.message.includes("Could not resolve host")) {
 
                 object.typeException = "WithoutConnection";

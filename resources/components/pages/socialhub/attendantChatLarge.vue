@@ -1132,6 +1132,7 @@
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                 })
                 .then(response => {
+                    console.log(333333);
                     if(response.data.length){
                         var This = this, i = this.contacts.length;
                         response.data.forEach((item, index)=>{
@@ -1145,7 +1146,7 @@
                             }
                             item.isPictUrlBroken = false;                            
                         });
-    
+                        console.log(444444444);
                         this.contacts = this.contacts.concat(response.data);
                         this.contacts.some((item,i)=>{
                             console.log(item.id);
@@ -1154,6 +1155,7 @@
                         if(this.selectedContactIndex>=0){
                             this.contacts.some((item, i)=>{
                                 if(!flag && this.selectedContact.id == item.id){
+                                    console.log(55555555555);
                                     this.selectedContactIndex = i;
                                     this.selectedContact = this.contacts[this.selectedContactIndex];
                                     this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
@@ -1759,8 +1761,8 @@
 
             reloadAfterTransferContact: function(){
                 this.selectedContactIndex = -1;
-                this.selectedContact = null;
                 this.displayChatRightSide();
+                this.contacts = [];
                 this.getContacts();
             },
 

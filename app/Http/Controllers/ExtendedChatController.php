@@ -8,6 +8,7 @@ use App\Events\NewContactMessage;
 use App\Exceptions\MyHandler;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
+use App\Jobs\SendWhatsAppMsg;
 use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
@@ -169,7 +170,7 @@ class ExtendedChatController extends ChatController
             $input['attendant_id'] = $User->id;
 
             $Contact = Contact::findOrFail($input['contact_id']);
-            $externalRPiController = new ExternalRPIController(null);
+            // $externalRPiController = new ExternalRPIController(null);
 
             $chat = $this->chatRepository->createMessage($input);
 
@@ -190,7 +191,7 @@ class ExtendedChatController extends ChatController
                         $FileName = $FileNameOgg;
                     }
                     $fileContent = Storage::disk('chats_files')->get($FileName); // Retrive file like file_get_content(...)
-                    $response = $externalRPiController->sendFileMessage(
+                    $response = $this->externalRPiController->sendFileMessage(
                         $fileContent, $json_data->SavedFileName, $input['type_id'],
                         $input['message'], $Contact
                     );
@@ -202,7 +203,9 @@ class ExtendedChatController extends ChatController
                 }
             } else {
                 // $response = $externalRPiController->sendTextMessage($input['message'], $Contact);
-                $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
+                // $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
+
+                SendWhatsAppMsg::dispatch();
             }
 
             $responseJson = json_decode($response);
