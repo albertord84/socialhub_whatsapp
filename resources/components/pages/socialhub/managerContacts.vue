@@ -138,7 +138,7 @@
                 </div>
 
                 <div class="col-lg-12 mt-5 text-center">
-                    <button type="reset" class="btn btn-secondary btn_width" @click.prevent="getContacts, showModalTemplateToImportContact=!showModalTemplateToImportContact">Fechar</button>
+                    <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact">Fechar</button>
                 </div>
             </div>
 
@@ -286,12 +286,10 @@
             }, 
 
             reloadDatas(){
-
                 this.getContacts();
             },
             
             closeModals(){
-
                 this.modalAddContact = false;
                 this.modalEditContact = false;
                 this.modalDeleteContact = false;
@@ -335,9 +333,9 @@
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
                                 this.importContactsReport = response.data;
-                                console.log(response.data);
                                 this.steepUploadFile=4;
-                                miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso"); 
+                                miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
+                                this.getContacts();
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.url, "get");
@@ -400,9 +398,7 @@
             exportExcel() {
                 const mimeType = 'data:application/vnd.ms-excel';
                 const html = this.renderTable().replace(/ /g, '%20');
-
                 const d = new Date();
-
                 var dummy = document.createElement('a');
                 dummy.href = mimeType + ', ' + html;
                 dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
