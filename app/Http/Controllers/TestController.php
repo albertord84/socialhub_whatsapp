@@ -8,6 +8,7 @@ use App\Business\SalesBusiness;
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
+use App\Jobs\SendWhatsAppMsg;
 use App\Mail\EmailSigninCompany;
 use App\Mail\EmailSigninAttendant;
 use App\Models\Company;
@@ -70,22 +71,21 @@ class TestController extends AppBaseController
         
         // $ExtendedChat->Contact = $lastContact;
         // dd($ExtendedChat->toJson());
-        $Contacts = $this->repository
-            ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
-            ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
-                $query->where('attendant_id', $attendant_id);
-            })
-            ->orderBy('updated_at', 'asc')
-            ->findWhere([
-                'company_id' => $company_id,
-                // ['updated_at', '>', $lastContact->updated_at]
-            ]);
+        // $Contacts = $this->repository
+        //     ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+        //     ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+        //         $query->where('attendant_id', $attendant_id);
+        //     })
+        //     ->orderBy('updated_at', 'asc')
+        //     ->findWhere([
+        //         'company_id' => $company_id,
+        //         // ['updated_at', '>', $lastContact->updated_at]
+        //     ]);
         // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
 
         
         // $Contacts->orderBy('updated_at', 'asc');
-
-        dd($Contacts);
+        // dd($Contacts);
 
         // Build Bling message by Sales object
         // $company_id = 35;
@@ -222,6 +222,32 @@ class TestController extends AppBaseController
         // $Controller = new ExtendedUsersSellerController($this->repository);
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
+
+        $this->testJobsQueue();
+    }
+
+    public function testJobsQueue() {
+        $company_id = 35;
+        $Company = Company::with('rpi')->find($company_id);
+        $ExternalRPIController = new ExternalRPIController($Company->rpi);
+
+        $contact_id = 1;
+        $Contact = Contact::find($contact_id);
+
+        $message = 'Teste queue job message 1';
+
+        $sendWAMsg = new SendWhatsAppMsg($ExternalRPIController, $Contact, $message);
+
+        // dd($sendWAMsg);
+
+        // $sendWAMsg->connection = 'database';
+
+        // $pending =  SendWhatsAppMsg::withChain([$sendWAMsg])->dispatch();
+        // $pending =  $sendWAMsg->dispatch();
+
+        $pending =  SendWhatsAppMsg::dispatch($ExternalRPIController, $Contact, $message);
+
+        dd($pending);
     }
 
     public function testsalesbling(Request $request)

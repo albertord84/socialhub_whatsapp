@@ -42,7 +42,7 @@ class StatusTableSeeder extends Seeder
         $this->command->info('Messages Status SENDED');
         MessagesStatus::create([
             'id' => '3',
-            'name' => 'RECEVEIVED',
+            'name' => 'RECEIVED',
             'description' => 'Message was received by contact',
         ]);
         $this->command->info('Messages Status RECEVEIVED');
