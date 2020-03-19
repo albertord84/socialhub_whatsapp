@@ -1540,7 +1540,7 @@
                 }
             },       
 
-            updateContact: function() {
+            updateContact: function() {                
                 this.isUpdatingContact = true;
                 // Validando dados
                 this.trimDataSelectedContactToEdit();
@@ -1560,6 +1560,7 @@
                 if(this.selectedContact.estado != this.selectedContactToEdit.estado) modifiedData = true;
                 if(this.selectedContact.categoria1 != this.selectedContactToEdit.categoria1) modifiedData = true;
                 if(this.selectedContact.categoria2 != this.selectedContactToEdit.categoria2) modifiedData = true;
+                if(this.selectedContact.summary != this.selectedContactToEdit.summary) modifiedData = true;
 
                 if(modifiedData){
                     delete this.selectedContactToEdit.status;                
@@ -1572,7 +1573,6 @@
                         selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
                         selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
                     }
-                            
                     ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
                         .then(response => {
                             if(this.isEditingContact)
@@ -1758,7 +1758,7 @@
 
             reloadAfterTransferContact: function(){
                 this.selectedContactIndex = -1;
-                this.selectedContact = null;
+                // this.selectedContact = null;
                 this.displayChatRightSide();
                 this.getContacts();
             },
