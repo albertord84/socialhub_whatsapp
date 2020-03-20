@@ -99,15 +99,15 @@
         <b-modal ref="modal-template-contact" size="lg" v-model="showModalTemplateToImportContact" id="showModalTemplateToImportContact" :hide-footer="true" title="Informação para importação de contatos">
             <div v-if="steepUploadFile==1">
                 <div class="ml-5">
-                    <h5>Atenção:</h5>
-                    <h6>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template!</h6>
-                </div>
-                <div class="pl-5 pr-5"> <hr ></div>
-                <div class="ml-5">
+                    <h5 class="mb-3" >Atenção</h5>
+                    <p>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template.</p>
                     <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
-                    <p>  Para cada importação a planilha deve ter no máximo 1000 contatos a serem importados.</p>
+                    <p>  A planilha de importação deve ter no máximo 1000 contatos.</p>
                     <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
                 </div>
+                <!-- <div class="pl-5 pr-5"> <hr ></div> -->
+                <!-- <div class="ml-5">
+                </div> -->
                 <div class="col-lg-12 mt-5 text-center" >
                     <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
                     <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
