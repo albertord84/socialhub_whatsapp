@@ -114,7 +114,7 @@ class ExtendedChatRepository extends ChatRepository
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                         ->where('contact_id', $Contact->id)
-                        ->where('status_id', 6) //UNREADED message for me
+                        ->where('status_id', MessagesStatusController::UNREADED) // UNREADED message for me
                         ->count();
 
                     $Contact['count_unread_messagess'] = $countUnreadMessages;
@@ -141,9 +141,10 @@ class ExtendedChatRepository extends ChatRepository
         
         // Mark all messages read
         if($set_as_readed){
-            $chatModel->where('contact_id', $contact_id)->update([
-                'status_id' => MessagesStatusController::READED
-            ]);
+            $chatModel
+                ->where('contact_id', $contact_id)
+                ->where('status_id', MessagesStatusController::UNREADED)
+                ->update(['status_id' => MessagesStatusController::READED]);
         }
 
         if (!$searchMessageByStringInput) {

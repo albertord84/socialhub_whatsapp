@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\MessageToAttendant;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
@@ -92,6 +93,7 @@ class SendWhatsAppMsg implements ShouldQueue
             Log::debug('\n\r SendingFileMessage to Contact contact_Jid from Job handled: ', [$this->Contact->whatsapp_id]);
         }
 
+        
         $responseJson = json_decode($response);
         if (isset($responseJson->MsgID)) {
             $ExtendedChat->status_id = MessagesStatusController::SENDED;
@@ -99,7 +101,9 @@ class SendWhatsAppMsg implements ShouldQueue
             $ExtendedChat->status_id = MessagesStatusController::FAIL;
             // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
         }
-
+        
         $ExtendedChat->save();
+        
+        broadcast(new MessageToAttendant($ExtendedChat));
     }
 }
