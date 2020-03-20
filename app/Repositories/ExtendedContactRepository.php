@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\UsersAttendant;
@@ -92,7 +93,7 @@ class ExtendedContactRepository extends ContactRepository
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                         ->where('contact_id', $Contact->id)
-                        ->where('status_id', 6) //UNREADED message for me
+                        ->where('status_id', MessagesStatusController::UNREADED) //UNREADED message for me
                         ->count();
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
