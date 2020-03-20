@@ -272,6 +272,7 @@
                             </div>
                             
                             <div v-if="message.type_id!='date_separator'">
+                                <!-- sended messages-->
                                 <div v-if="message.source==1" class="row mt-2">
                                     <div class="container-fluid">
                                         <div class="row">
@@ -319,6 +320,7 @@
                                                         {{ message.message ? message.message : "" }}
                                                     </span>
                                                     <br>
+                                                    
                                                 </p>                                                 
                                             </div>
                                         </div>
@@ -332,8 +334,9 @@
                                     </div>
                                 </div>
 
+                                <!-- received messages-->
                                 <div v-if="message.source==0" class="row mt-2">
-                                    <div class="col-11" >
+                                    <div class="col-11">
                                         <p style="float:right" class="sendedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
                                             <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>                                            
                                             <span v-if='message.type_id == "2"' class='mb-2 text-center'>
@@ -376,7 +379,12 @@
                                                 {{ message.message ? message.message : "" }}
                                             </span>
                                             <br>
-                                        </p>
+                                            <span class="pt-2" style="float:right; font-size:1.3rem">
+                                                <span v-if="message.status_id==4" class="mdi mdi-check     cl-white" title="Encaminhado"></span>
+                                                <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
+                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio. Click para reenviar"></span>
+                                            </span>
+                                        </p>                                        
                                     </div>
                                     <div class="col-1"></div>
                                     
@@ -1136,6 +1144,7 @@
                         var This = this, i = this.contacts.length;
                         response.data.forEach((item, index)=>{
                             item.index = i++;
+                            console.log(item.id);
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
                                     item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
@@ -1146,9 +1155,9 @@
                             item.isPictUrlBroken = false;                            
                         });
                         this.contacts = this.contacts.concat(response.data);
-                        this.contacts.some((item,i)=>{
-                            console.log(item.id);
-                        });
+                        // this.contacts.some((item,i)=>{
+                        //     console.log(item.id);
+                        // });
                         
                         if(this.selectedContactIndex>=0){
                             this.contacts.some((item, i)=>{
@@ -2437,6 +2446,12 @@
     }
     .cl-blue{
         color: #007bff;
+    }
+    .cl-white{
+        color: #ffffff;
+    }
+    .cl-danger{
+        color: red;
     }
     .cl-gray{
         background-color: silver;
