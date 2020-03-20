@@ -91,6 +91,10 @@ class ExtendedContactController extends ContactController
             }
             unlink($file->getRealPath());
 
+            //select the old updated contact
+            $oldestUpdatedContact = Contact::where('company_id', '=', $User->company_id)->orderBy('updated_at', 'asc')->first();
+            $oldestUpdatedContactTime = isset($oldestUpdatedContact->update_at)? time($oldestUpdatedContact->update_at) : time();
+
             //obtaining emails and ids of attendants
             $extendedUserRepository = new ExtendedUserRepository(app());
             $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
@@ -117,7 +121,8 @@ class ExtendedContactController extends ContactController
                             ->where('company_id', '=', $User->company_id)
                             ->first();
 
-                    $last_attendant_id = $Contact->latestAttendant->attendant_id ?? null; //TODO:Alberto
+                    $last_attendant_id = $Contact->latestAttendant->attendant_id ?? null; 
+                    $Contact = $Contact ?? new Contact(); 
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
