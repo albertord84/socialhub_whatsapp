@@ -124,7 +124,7 @@
             <div v-if="steepUploadFile==3">
                 <div class="col-lg-12 mt-5 text-center">
                     <div class="spinner-border text-primary"></div>
-                    <h5 class=" pt-5">Esta acção pode demorar vários segundos!</h5>
+                    <h5 class=" pt-5"> Esta acção pode demorar vários segundos!</h5>
                 </div>
             </div>
             <div v-if="steepUploadFile==4">
@@ -133,6 +133,13 @@
                    <ul id="Report">
                         <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]">
                             {{ item.message }}
+                            <!-- Linha {{ item.line }}: contato {{ item.line }} {{
+                                    [{ 'adicionado corretamente. Contato atribuido ao atendente.' : item.message=='1' },
+                                     { 'adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa.' : item.message=='2'},
+                                     { 'adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido'  : item.message=='3' },
+                                     { 'adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado.'  : item.message=='4' },
+                                     { 'não foi adicionado; causa: contem um número de whatsapp inválido."'  : item.message=='5' }
+                                    ]}} -->
                         </li>
                     </ul>
                 </div>
