@@ -47,18 +47,6 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $response = array();
-
-        $response["message1"][0]= array('line'=>2,"code"=>"success");
-        $response["message1"][1]= array('line'=>3,"code"=>"error");
-
-        $response["message2"][0]= array('line'=>4,"code"=>"error");
-        $response["message2"][1]= array('line'=>5,"code"=>"warning");
-        $response["message3"][2]= array('line'=>6,"code"=>"success");
-        var_dump($response);
-        
-        return;
-        
         $last_contact_id = 16;
         $company_id = 1;
         $attendant_id = 4;
