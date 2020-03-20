@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\UsersAttendant;
@@ -92,7 +93,7 @@ class ExtendedContactRepository extends ContactRepository
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                         ->where('contact_id', $Contact->id)
-                        ->where('status_id', 6) //UNREADED message for me
+                        ->where('status_id', MessagesStatusController::UNREADED) //UNREADED message for me
                         ->count();
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
@@ -102,10 +103,16 @@ class ExtendedContactRepository extends ContactRepository
             return $Collection->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
         } else {
             // $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->get();
-            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->each(function ($Contact, $key) {
-                if ($Contact->latestAttendant) {
-                    $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                }
+            $lastContact = $last_contact_id ? Contact::find($last_contact_id) : Contact::where('company_id', $company_id)->first();
+            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->findWhere([
+                    'company_id' => $company_id,
+                    ['updated_at', '>', $lastContact->updated_at
+                ]])
+                ->each(function ($Contact, $key) {
+                    if ($Contact->latestAttendant) {
+                        $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+                    }
             });
             return $Contacts;
         }
