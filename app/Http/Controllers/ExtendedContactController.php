@@ -77,6 +77,7 @@ class ExtendedContactController extends ContactController
         //return redirect(route('contacts.index'));
     }
 
+
     public function contactsFromCSV(CreateContactRequest $request)
     {
         $input = $request->all();
@@ -100,14 +101,13 @@ class ExtendedContactController extends ContactController
                 $attendatn_ids[$user->email] = $attendant->user_id;
             }
             $response = array();
+            $lineError = array();
             
             //insert contacts in database
             $cntMessage1 = 0;
             $cntMessage2 = 0;
             $cntMessage3 = 0;
-            $cntMessage4 = 0;
-            $cntMessage5 = 0;
-            $i = 2;
+            $i=2;
             foreach($array as $contact){
                 try{
                     $whatsapp = $contact['Whatsapp'];
@@ -119,11 +119,9 @@ class ExtendedContactController extends ContactController
                             ->where('company_id', '=', $User->company_id)
                             ->first();
                     if($Contact1)$Contact = $Contact1;
-
                     $last_attendant_id = null; //get_last_attendant_contact_id($Contact->id); //TODO:Alberto
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
-                    
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
                         $Contact->first_name = trim($contact['Nome']);
                     }
@@ -185,22 +183,19 @@ class ExtendedContactController extends ContactController
                                             $Contact->status_id = 1;
                                             $Contact->save();
                                         }
-                                        
-                                        $response["message1"][$cntMessage1++]= array('line'=>$i, "ws"=>$Contact->whatsapp_id,"code"=>"success"); //Contato adicionado corretamente. Contato atribuido ao atendente
+                                        $cntMessage1++;
                                     }
                                 }else{
-                                    $response["message2"][$cntMessage2++]= array('line'=>$i,"ws"=>$Contact->whatsapp_id,"code"=>"warning"); //Contato adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa
+                                    $cntMessage2++;
                                 }
                             }else{
-                                $response["message3"][$cntMessage3++]= array('line'=>$i, "ws"=>$Contact->whatsapp_id, "code"=>"warning"); //Contato adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido
+                                $cntMessage2++;
                             }
                         }else{
-                            $response["message4"][$cntMessage4++]= array('line'=>$i, "ws"=>$Contact->whatsapp_id, "code"=>"warning"); //Contato adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado
+                            $cntMessage2++;
                         }
                     }else{
-                        if(empty($Contact->whatsapp_id))
-                        $response["message5"][$cntMessage5++]= array('line'=>$i,"ws"=>$Contact->whatsapp_id, "code"=>"error"); //Contem um número de whatsapp inválido
-                            
+                        $cntMessage3++;
                     }
 
                 } catch (\Throwable $th) {
@@ -208,15 +203,33 @@ class ExtendedContactController extends ContactController
                 }
                 $i++;
             }
-            
+        
+            $response["message1"] = array(
+                "message" => "contatos adicionados corretamente. Contatos atribuídos ao atendente.",
+                "code" => "success",
+                "cnt" => "$cntMessage1"
+            );
+
+            $response["message2"] = array(
+                "message" => "contatos adicionados corretamente. Contatos não atribuídos a um atendente. Confira se o atendente foi indicado, se o email do atendente é válido ou o atendente pertence a esta empresa.",
+                "code" => "warning",
+                "cnt" => "$cntMessage2"
+            );
+
+            $response["message3"] = array(
+                "message" => "contatos não foram adicionados porque contêm números de whatsapp inválido.",
+                "code" => "error",
+                "cnt" => "$cntMessage3"
+            );
+
         } else {
             abort(302, "Error uploading file!");
         }
-
         // Flash::success('Contact saved successfully.');
         return json_encode($response);
         // return $response->toJson();
     }
+
 
     /**
      * Update the specified Contact in storage.

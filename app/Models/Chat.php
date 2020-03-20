@@ -71,12 +71,12 @@ class Chat extends Model
     /**
      * Class constructor.
      */
-    // public function __construct(array $attributes = [])
-    // {
-    //     parent::__construct($attributes);
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
 
-    //     $this->connection = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
-    // }
+        $this->connection = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

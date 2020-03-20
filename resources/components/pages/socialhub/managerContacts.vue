@@ -99,14 +99,15 @@
         <b-modal ref="modal-template-contact" size="lg" v-model="showModalTemplateToImportContact" id="showModalTemplateToImportContact" :hide-footer="true" title="Informação para importação de contatos">
             <div v-if="steepUploadFile==1">
                 <div class="ml-5">
-                    <h5>Atenção:</h5>
-                    <h6>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template!</h6>
-                </div>
-                <div class="pl-5 pr-5"> <hr ></div>
-                <div class="ml-5">
+                    <h5 class="mb-3" >Atenção</h5>
+                    <p>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template.</p>
                     <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
+                    <p>  A planilha de importação deve ter no máximo 1000 contatos.</p>
                     <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
                 </div>
+                <!-- <div class="pl-5 pr-5"> <hr ></div> -->
+                <!-- <div class="ml-5">
+                </div> -->
                 <div class="col-lg-12 mt-5 text-center" >
                     <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
                     <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
@@ -124,15 +125,15 @@
             <div v-if="steepUploadFile==3">
                 <div class="col-lg-12 mt-5 text-center">
                     <div class="spinner-border text-primary"></div>
-                    <h5 class=" pt-5">Esta acção pode demorar vários segundos!</h5>
+                    <h5 class=" pt-5"> Esta acção pode demorar vários segundos!</h5>
                 </div>
             </div>
             <div v-if="steepUploadFile==4">
                 <h5 class="text-center">Resultado da importação de contatos.</h5>
                 <div style="max-height: 200px; overflow-y: auto;">
                    <ul id="Report">
-                        <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]">
-                            {{ item.message }}
+                        <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
+                            {{ item.cnt }} {{ item.message }}
                         </li>
                     </ul>
                 </div>
@@ -256,7 +257,7 @@
                 sortType: 'asc',
                 searchInput: '',     
                 steepUploadFile: 1,  
-                fileInputCSV: null,   
+                fileInputCSV: null,  
             }
         },
 
@@ -332,7 +333,7 @@
                         this.steepUploadFile = 3;
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
-                                this.importContactsReport = response.data;
+                                this.importContactsReport =  response.data;
                                 this.steepUploadFile=4;
                                 miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
                                 this.getContacts();

@@ -168,6 +168,7 @@ class ExtendedChatController extends ChatController
             $input = $request->all();
             $input['company_id'] = $User->company_id;
             $input['attendant_id'] = $User->id;
+            $input['status_id'] = MessagesStatusController::UNREADED;
 
             $Contact = Contact::findOrFail($input['contact_id']);
 
