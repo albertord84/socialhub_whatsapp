@@ -380,9 +380,9 @@
                                             </span>
                                             <br>
                                             <span class="pt-2" style="float:right; font-size:1.3rem">
-                                                <span v-if="message.status_id==4" class="mdi mdi-check     cl-white" title="Encaminhado"></span>
+                                                <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
                                                 <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
-                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio. Click para reenviar"></span>
+                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
                                             </span>
                                         </p>                                        
                                     </div>
@@ -2079,80 +2079,102 @@
                 window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
                 .listen('MessageToAttendant', (e) => {
                     //------------prepare message datas to be displayed------------------------
-                    var message = JSON.parse(e.message);
-                    // var contact = message.Contact; //conferir isso
-                    // delete message.Contact;
-                    message.time = this.getMessageTime(message.created_at);
-                    try {
-                        if(message.data != "" && message.data != null && message.data.length>0) {
-                            message.data = JSON.parse(message.data);
-                            if(message.type_id > 1)
-                                message.path = message.data.FullPath;
+                    var message = JSON.parse(e.message);                    
+
+                    if(message.source == 0){ //message to update the message status to 2 or 7
+                        if(this.selectedContactIndex>-1 && message.contact_id == this.isSelectedContact.id){
+                            this.messages.some((item,i)=>{
+                                if(message.id == item.id){
+                                    item.status_id = message.status_id;
+                                    return;
+                                }
+                            });
                         }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                    
-                    let targetIndex = -1; 
-                    var isSelectedContact = false;
-                    //------show the recived message if the target contact is selected----------
-                    if(this.selectedContactIndex >= 0 && this.selectedContact.id == message.contact_id){
-                        this.messages.push(Object.assign({}, message));
-                        this.contacts[this.selectedContactIndex].last_message = message;
-                        this.selectedContact.last_message = message;
-                        if(this.$refs.message_scroller)
-                            this.$refs.message_scroller.scrolltobottom();
-                        targetIndex = this.selectedContact.index;
-                        isSelectedContact = true;
-                    }else{
-                        //-------find contact and update count_unread_messagess and last_message-------
-                        this.contacts.some((item, index) => {
-                            if(item.id == message.contact_id){
-                                item.count_unread_messagess = item.count_unread_messagess + 1;
-                                item.last_message = message;
-                                targetIndex = index;
-                                return;
+                    }else 
+                    if(message.source == 1){ //message from contact
+                        
+                        //analyse if the contact is in this.contacts list or not
+                        var subjacentContact = null;
+                        if(typeof(message.Contact)!='undefined'){
+                            subjacentContact = message.Contact;
+                            delete message.Contact;
+                        }
+
+                        message.time = this.getMessageTime(message.created_at);
+                        try {
+                            if(message.data != "" && message.data != null && message.data.length>0) {
+                                message.data = JSON.parse(message.data);
+                                if(message.type_id > 1)
+                                    message.path = message.data.FullPath;
                             }
-                        });
-                    }
-
-                    if(targetIndex > -1){
-                        console.log(targetIndex);
-                        var targetContact = Object.assign({}, this.contacts[targetIndex]);
-                        var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
-                        var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
-                        this.contacts = A.concat(B);
-                        this.contacts.unshift(targetContact);
-
-                        for(i=0; i<=targetIndex;i++)
-                            this.contacts[i].index = i;
-
-                        if(this.selectedContactIndex>=0){
-                            if(targetIndex == this.selectedContactIndex)
-                                this.selectedContactIndex = 0;
-                            else
+                        } catch (error) {
+                            console.log(error);
+                        }
+                        
+                        let targetIndex = -1; 
+                        var isSelectedContact = false;
+                        //------show the recived message if the target contact is selected----------
+                        if(this.selectedContactIndex > -1 && this.selectedContact.id == message.contact_id){
+                            this.messages.push(Object.assign({}, message));
+                            this.contacts[this.selectedContactIndex].last_message = message;
+                            this.selectedContact.last_message = message;
+                            if(this.$refs.message_scroller)
+                                this.$refs.message_scroller.scrolltobottom();
+                            targetIndex = this.selectedContact.index;
+                            isSelectedContact = true;
+                        }else{
+                            //-------find contact and update count_unread_messagess and last_message-------
+                            this.contacts.some((item, index) => {
+                                if(item.id == message.contact_id){
+                                    item.count_unread_messagess = item.count_unread_messagess + 1;
+                                    item.last_message = message;
+                                    targetIndex = index;
+                                    return;
+                                }
+                            });
+                        }
+    
+                        if(targetIndex > -1){ // set the target contact as firt if is in contacts list
+                            console.log(targetIndex);
+                            var targetContact = Object.assign({}, this.contacts[targetIndex]);
+                            var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
+                            var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
+                            this.contacts = A.concat(B);
+                            this.contacts.unshift(targetContact);
+    
+                            for(i=0; i<=targetIndex;i++)
+                                this.contacts[i].index = i;
+    
+                            if(this.selectedContactIndex>=0){
+                                if(targetIndex == this.selectedContactIndex)
+                                    this.selectedContactIndex = 0;
+                                else
+                                    this.selectedContactIndex ++;
+                                this.selectedContact = this.contacts[this.selectedContactIndex];
+                            }
+                        }else{ //insert the target contact in contacts list if isnt
+                            subjacentContact.count_unread_messagess = 1;
+                            subjacentContact.last_message = message;
+                            this.contacts.unshift(subjacentContact);
+                            var i = 0;
+                            this.contacts.forEach((item2, i)=>{
+                                item2.index = i++;
+                            });
+                            if(isSelectedContact){
                                 this.selectedContactIndex ++;
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
+                                this.selectedContact = this.contacts[this.selectedContactIndex];
+                            }
                         }
-                    }else{
-                        //-------------if contact isen't in list-----------------------
-                        contact.count_unread_messagess = 1;
-                        contact.last_message = message;
-                        this.contacts.unshift(contact);
-                        var i = 0;
-                        this.contacts.forEach((item2, i)=>{
-                            item2.index = i++;
-                        });
-                        if(isSelectedContact){
-                            this.selectedContactIndex ++;
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
-                        }
+    
+                        if(!this.userLogged.mute_notifications
+                                && this.selectedContactIndex >-1 
+                                && !this.contacts[this.selectedContactIndex].status_id==6)
+                            this.$refs.newMessageSound.play();
+
                     }
 
-                    if(!this.userLogged.mute_notifications
-                            && this.selectedContactIndex >-1 
-                            && !this.contacts[this.selectedContactIndex].status_id==6)
-                        this.$refs.newMessageSound.play();
+
+
                     
                 });
             },
