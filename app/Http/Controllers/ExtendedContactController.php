@@ -112,14 +112,12 @@ class ExtendedContactController extends ContactController
                 try{
                     $whatsapp = $contact['Whatsapp'];
                     $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
-                    $Contact = new Contact();
-                    $Contact1 = new Contact();
-                    $Contact1 = $Contact1
+                    $Contact = Contact::with('latestAttendant')
                             ->where('whatsapp_id' ,$whatsapp)
                             ->where('company_id', '=', $User->company_id)
                             ->first();
-                    if($Contact1)$Contact = $Contact1;
-                    $last_attendant_id = null; //get_last_attendant_contact_id($Contact->id); //TODO:Alberto
+
+                    $last_attendant_id = $Contact->latestAttendant->attendant_id ?? null; //TODO:Alberto
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
