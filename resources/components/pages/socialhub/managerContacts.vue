@@ -105,6 +105,7 @@
                 <div class="pl-5 pr-5"> <hr ></div>
                 <div class="ml-5">
                     <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
+                    <p>  Para cada importação a planilha deve ter no máximo 1000 contatos a serem importados.</p>
                     <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
                 </div>
                 <div class="col-lg-12 mt-5 text-center" >
@@ -131,15 +132,8 @@
                 <h5 class="text-center">Resultado da importação de contatos.</h5>
                 <div style="max-height: 200px; overflow-y: auto;">
                    <ul id="Report">
-                        <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]">
-                            {{ item.message }}
-                            <!-- Linha {{ item.line }}: contato {{ item.line }} {{
-                                    [{ 'adicionado corretamente. Contato atribuido ao atendente.' : item.message=='1' },
-                                     { 'adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente não pertence a esta empresa.' : item.message=='2'},
-                                     { 'adicionado corretamente. Contato não atribuido a um atendente; causa: email do atendente inválido'  : item.message=='3' },
-                                     { 'adicionado corretamente. Contato não atribuido a um atendente; email do atendente não indicado.'  : item.message=='4' },
-                                     { 'não foi adicionado; causa: contem um número de whatsapp inválido."'  : item.message=='5' }
-                                    ]}} -->
+                        <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
+                            {{ item.cnt }} {{ item.message }}
                         </li>
                     </ul>
                 </div>
@@ -263,7 +257,7 @@
                 sortType: 'asc',
                 searchInput: '',     
                 steepUploadFile: 1,  
-                fileInputCSV: null,   
+                fileInputCSV: null,  
             }
         },
 
@@ -339,7 +333,7 @@
                         this.steepUploadFile = 3;
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
-                                this.importContactsReport = response.data;
+                                this.importContactsReport =  response.data;
                                 this.steepUploadFile=4;
                                 miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
                                 this.getContacts();
