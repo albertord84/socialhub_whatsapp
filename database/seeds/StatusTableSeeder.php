@@ -65,6 +65,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'Message not readed by me, i.e., new incomming messages',
         ]);
         $this->command->info('MessagesStatus UNREADED');
+
+        MessagesStatus::create([
+            'id' => '7',
+            'name' => 'FAIL',
+            'description' => 'Message fail sending through rpi',
+        ]);
+        $this->command->info('MessagesStatus FAIL');
     }
 
     function CreateContactsStatus() {
