@@ -103,10 +103,16 @@ class ExtendedContactRepository extends ContactRepository
             return $Collection->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
         } else {
             // $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->get();
-            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->each(function ($Contact, $key) {
-                if ($Contact->latestAttendant) {
-                    $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                }
+            $lastContact = $last_contact_id ? Contact::find($last_contact_id) : Contact::where('company_id', $company_id)->first();
+            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->findWhere([
+                    'company_id' => $company_id,
+                    ['updated_at', '>', $lastContact->updated_at
+                ]])
+                ->each(function ($Contact, $key) {
+                    if ($Contact->latestAttendant) {
+                        $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+                    }
             });
             return $Contacts;
         }
