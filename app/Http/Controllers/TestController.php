@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Business\BlingBusiness;
 use App\Business\ChatsBusiness;
 use App\Business\SalesBusiness;
+<<<<<<< HEAD
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
+=======
+use App\Business\BlingBusiness;
+>>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
 use App\Http\Controllers\AppBaseController;
 use App\Jobs\SendWhatsAppMsg;
 use App\Mail\EmailSigninCompany;
@@ -29,6 +33,8 @@ use Illuminate\Support\Facades\Mail;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Log;
 
 class TestController extends AppBaseController
 {
@@ -75,10 +81,16 @@ class TestController extends AppBaseController
         // $Contacts->orderBy('updated_at', 'asc');
         // dd($Contacts);
 
+<<<<<<< HEAD
         // Build Bling message by Sales object
         // $company_id = 35;
         // $Company = Company::with('rpi')->find($company_id);
         // $BlingController = app()->make(BlingController::class);
+=======
+    public function index(Request $request)
+    {
+        // $this->testJR();
+>>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
 
         // $BlingBussinesC = new BlingBusiness();
         // $Sales = $BlingBussinesC->getBlingCompanySales($Company);
@@ -87,6 +99,21 @@ class TestController extends AppBaseController
 
         // $BlingController->
 
+<<<<<<< HEAD
+=======
+        // Build Bling message by Sales object
+        $company_id = 35;
+        $Company = Company::with('rpi')->find($company_id);
+        $BlingController = app()->make(BlingController::class);
+
+        $BlingBussinesC = new BlingBusiness();
+        $Sales = $BlingBussinesC->getBlingCompanySales($Company);
+
+        dd($Sales);
+
+        // $BlingController->
+
+>>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
         // $SaleModel = new Sales;
         // $SaleModel->table = "$Company->id";
         // $firstSale = $SaleModel->first();
