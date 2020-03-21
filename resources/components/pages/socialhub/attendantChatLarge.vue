@@ -950,7 +950,7 @@
         </b-modal>
         
          <!-- Modal to Attendant Manage Tags -->
-        <b-modal v-model="modalAttendantCRUDTags" size="lg" id="modalAttendantCRUDTags" :hide-footer="true" title="Gerenciamento de etiquetas">
+        <b-modal v-model="modalAttendantCRUDTags" id="modalAttendantCRUDTags" :hide-footer="true" title="Gerenciamento de etiquetas">
             <!-- <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>             -->
             <!-- <managerCRUDAttendant :attendant_contact_url='attendant_contact_url' :url='url' :first_url='first_url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDAttendant>             -->
             <!-- <span> Modal para AttendantCRUDTags  </span> -->

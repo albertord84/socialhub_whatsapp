@@ -1,152 +1,180 @@
 <template>
     <div>
 
-        <div>
-
-            <h5> Etiquetas disponíveis para uso</h5>
-        
-        
-            <div class="table-responsive">
-                <table ref="table" class="table">
-                    <thead>
-                        <!-- <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr> -->
-                    </thead>
-                    <tbody>
-                        <!-- <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
-                            <template v-for="(column,index) in columns">
-                                <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                    {{ collect(row, column.field) }}
-                                </td>
-                                <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                    <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                    <a class="text-18" href="javascript:void(0)" title="Eliminar atendente" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
-                                </td>
-                            </template>
-                            <slot name="tbody-tr" :row="row"></slot>
-                        </tr> -->
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
 
         
         <b-container fluid>  
 
-            <hr>
+                <!-- <div v-show="show_tag==true"> -->
+            <form v-show="showAttendantCRUDTagModal==0">
+                <div >
+                    <h5> Etiquetas disponíveis para uso:</h5>
+                
+                
+                    <div  class="table-responsive text-center">
+                        <table ref="table" class="table table-borderless" style="width:100%">
+                            <thead>
+                                <!-- <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr> -->
+                            </thead>
+                            <tbody>
+                                <!-- <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                                    <template v-for="(column,index) in columns">
+                                        <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
+                                            {{ collect(row, column.field) }}
+                                        </td>
+                                        <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
+                                            <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditAttendant(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                            <a class="text-18" href="javascript:void(0)" title="Eliminar atendente" @click.prevent="actionDeleteAttendant(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                        </td>
+                                    </template>
+                                    <slot name="tbody-tr" :row="row"></slot>
+                                </tr> -->
 
-            <form v-show="action!='delete'">                                        
-                <div class="row">
-                    {{model.user_id}}
-                </div>    
-                <div class="row">
-                    <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo *" class="form-control"/>
+                                <tr>
+                                    <td>
+                                        <p class=" mt-3 p-1 mr-2" style="background-color:blue"> Etiqueta 1 </p>
+                                    </td>
+                                    <td>
+                                        <a class="text-18" href="javascript:void(0)" title="Editar etiqueta" @click.prevent="showAttendantCRUDTagModal=2"> <i class='fa fa-pencil fa-1_5x '></i> </a>
+                                    </td>
+                                    <td>
+                                        <a class="text-18" href="javascript:void(0)" title="Eliminar etiqueta" @click.prevent="showAttendantCRUDTagModal=3"><i class='mdi mdi-tag-remove fa-1_5x text-danger'></i> </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-lg-6 form-group has-search">
-                        <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login" class="form-control"/>
+
+                    <div class="col-lg-12 text-center">
+                        <button id="addTag" type="submit" class="btn btn-primary " :disabled="isSendingAddTag==true" @click.prevent="showAttendantCRUDTagModal=1">
+                            <i v-show="isSendingAddTag==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Criar Etiqueta
+                        </button>
+                        <button id="cancel2" type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModal">Cancelar</button>
+                    </div>
+
+                </div>
+            </form>
+            
+            <form v-show="showAttendantCRUDTagModal==1"> 
+                <h5 class="mb-5"> Adicionando uma nova etiqueta</h5>
+                <div class="row mb-2 text-center">
+                    <div  class="col-lg-8 form-group has-search">
+                        <span class="fa fa-tag form-control-feedback"></span>
+                        <input v-model="model.name" title="Ex: Nome da etiqueta" id="tag_name" name="tag_name" type="text" required autofocus placeholder="Nome da etiqueta" class="form-control"/>
+                    </div>
+                    <div class="col-lg-4 form-group has-search">
+                        <input v-model="model.color" title="Ex: Cor da etiqueta" name="tag_cor" id="tag_cor" type="text" :disabled="true" class="form-control"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-envelope form-control-feedback"></span>
-                        <input v-model="model.email" title="Ex: atendente@gmail.com" id="email" name="email" type="email" required placeholder="Email *" class="form-control"/>                            
-                    </div> 
-                    <div class="col-lg-3 form-group has-search">
-                        <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF *" class="form-control"/>
-                    </div>
-                    <div class="col-lg-3 form-group has-search">
-                        <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" v-mask="'###############'" title="Ex: 551188888888" id="phone" name="phone" type="text" required placeholder="Telefone fixo" class="form-control"/>
-                    </div>  
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 form-group has-search">
-                        <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp *" class="form-control"/>
-                    </div>
-                    <div class="col-lg-6 form-group has-search">
-                        <span class="fa fa-facebook form-control-feedback"></span>
-                        <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
+                <div class="row ">
+                    <div class="col-lg-12 mb-2">
+                        <h5> Selecione uma cor para a etiqueta </h5>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-instagram form-control-feedback"></span>
-                            <input v-model="model.instagram_id" title="Ex: instagram_id" id="instagram" name="instagram" type="text" placeholder="Instagram" class="form-control"/>
-                        </div>
-                    <div class="col-lg-6 form-group has-search">
-                        <span class="fa fa-linkedin form-control-feedback"></span>
-                        <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
+                <div class="row mb-1 text-center">
+                    <div class="col-lg-12">
+                        <button id="colorTag1" type="submit" class="btn btn-sm btn-tag " style="background-color:#00FF00;" @click.prevent="model.color='#00FF00', colorTag1=!colorTag1">
+                            <i v-show="colorTag1==true" class="fa fa-check" style="color:white" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag2" type="submit" class="btn btn-sm btn-tag " style="background-color:#FFFF00;" @click.prevent="model.color='#FFFF00', colorTag2=!colorTag2">
+                            <i v-show="colorTag2==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag3" type="submit" class="btn btn-sm btn-tag " style="background-color:#FF9900;" @click.prevent="model.color='#FF9900', colorTag3=!colorTag3">
+                            <i v-show="colorTag3==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag4" type="submit" class="btn btn-sm btn-tag " style="background-color:#FF0000;" @click.prevent="model.color='#FF0000', colorTag4=!colorTag4">
+                            <i v-show="colorTag4==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag5" type="submit" class="btn btn-sm btn-tag " style="background-color:#CC6699;" @click.prevent="model.color='#CC6699', colorTag5=!colorTag5">
+                            <i v-show="colorTag5==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag6" type="submit" class="btn btn-sm btn-tag " style="background-color:#0000FF;" @click.prevent="model.color='#0000FF', colorTag6=!colorTag6">
+                            <i v-show="colorTag6==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
                     </div>
                 </div>
-                <div v-if="action=='edit'" class="row">
-                    <div class="col-lg-6 form-group has-search">
-                            <span class="fa fa-key form-control-feedback"></span>
-                            <input v-model="model.password" title="Inserir a nova senha" type="password" placeholder="Senha" class="form-control"/>
-                        </div>
-                    <div class="col-lg-6 form-group has-search">
-                        <span class="fa fa-key form-control-feedback"></span>
-                        <input v-model="model.repeat_password" title="Repetir a nova senha" type="password" placeholder="Repetir senha" class="form-control"/>
+                <div class="row mb-5 text-center">
+                    <div class="col-lg-12">
+                        <button id="colorTag7" type="submit" class="btn btn-sm btn-tag " style="background-color:#33CCFF;" @click.prevent="model.color='#33CCFF', colorTag7=!colorTag7">
+                            <i v-show="colorTag7==true" class="fa fa-check" style="color:white" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag8" type="submit" class="btn btn-sm btn-tag " style="background-color:#CCFF66;" @click.prevent="model.color='#CCFF66', colorTag8=!colorTag8">
+                            <i v-show="colorTag8==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag9" type="submit" class="btn btn-sm btn-tag " style="background-color:#FF66CC;" @click.prevent="model.color='#FF66CC', colorTag9=!colorTag9">
+                            <i v-show="colorTag9==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag10" type="submit" class="btn btn-sm btn-tag " style="background-color:#660066;" @click.prevent="model.color='#660066', colorTag10=!colorTag10">
+                            <i v-show="colorTag10==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag11" type="submit" class="btn btn-sm btn-tag " style="background-color:#333300;" @click.prevent="model.color='#333300', colorTag11=!colorTag11">
+                            <i v-show="colorTag11==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag12" type="submit" class="btn btn-sm btn-tag " style="background-color:#121742;" @click.prevent="model.color='#121742', colorTag12=!colorTag12">
+                            <i v-show="colorTag12==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
                     </div>
                 </div>
                 <div class="col-lg-12 m-t-25 text-center">
-                    <button v-show='action=="insert"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingInsert==true" @click.prevent="addAttendant">
-                        <i v-show="isSendingInsert==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Adicionar
+                    <button id="addTag" type="submit" class="btn btn-primary btn_width" :disabled="isSendingAddTag==true" @click.prevent="addTag, showAttendantCRUDTagModal=0">
+                        <i v-show="isSendingAddTag==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Criar
                     </button>
-
-                    <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateAttendant">
-                        <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
-                    </button>
-
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button id="cancel2" type="reset" class="btn  btn-secondary btn_width" @click.prevent="showAttendantCRUDTagModal=0">Cancelar</button>
                 </div>
             </form>
 
-            <form v-show="edit_tag">                                        
-
-
-                <div class="row">
-                    <div  class="col-lg-6 form-group has-search">
+            <form v-show="showAttendantCRUDTagModal==2">
+                <h5 class="mb-5"> Editando a etiqueta selecionada</h5>
+                <div class="row mb-2 text-center">
+                    <div  class="col-lg-8 form-group has-search">
                         <span class="fa fa-tag form-control-feedback"></span>
-                        <input v-model="model.name" title="Ex: Nome da etiqueta" id="tag_name" name="tag_name" type="text" required autofocus placeholder="Nome da etiqueta *" class="form-control"/>
+                        <input v-model="model.name" title="Ex: Nome da etiqueta" id="tag_name" name="tag_name" type="text" required autofocus placeholder="Nome da etiqueta" class="form-control"/>
                     </div>
-                    <div class="col-lg-6 form-group has-search" style="background-color:#0033CC">
-                        <span class="fa fa-tag form-control-feedback"></span>
-                        <input v-model="model.color" title="Ex: Cor da etiqueta" name="tag_cor" id="tag_cor" type="text" :disabled="true" required placeholder="Cor da etiqueta" class="form-control"/>
+                    <div class="col-lg-4 form-group has-search">
+                        <input v-model="model.color" title="Ex: Cor da etiqueta" name="tag_cor" id="tag_cor" type="text" :disabled="true" class="form-control"/>
                     </div>
                 </div>
-
-                <div class="row">
-                    <span> Para mudar a cor da etiqueta, escolha uma nova cor na paleta de cores. </span>
-
-
+                <div class="row ">
+                    <div class="col-lg-12 mb-2">
+                        <h5> Selecione uma cor para a etiqueta </h5>
+                    </div>
                 </div>
-
-                
-                
-                
-
+                <div class="row mb-1 text-center">
+                    <div class="col-lg-12">
+                        <button id="colorTag1" type="submit" class="btn btn-sm btn-tag " style="background-color:#00FF00;" @click.prevent="model.color='#00FF00', colorTag1=!colorTag1">
+                            <i v-show="colorTag1==true" class="fa fa-check" style="color:white" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag2" type="submit" class="btn btn-sm btn-tag " style="background-color:#FFFF00;" @click.prevent="model.color='#FFFF00', colorTag2=!colorTag2">
+                            <i v-show="colorTag2==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag3" type="submit" class="btn btn-sm btn-tag " style="background-color:#FF9900;" @click.prevent="model.color='#FF9900', colorTag3=!colorTag3">
+                            <i v-show="colorTag3==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag4" type="submit" class="btn btn-sm btn-tag " style="background-color:#FF0000;" @click.prevent="model.color='#FF0000', colorTag4=!colorTag4">
+                            <i v-show="colorTag4==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag5" type="submit" class="btn btn-sm btn-tag " style="background-color:#CC6699;" @click.prevent="model.color='#CC6699', colorTag5=!colorTag5">
+                            <i v-show="colorTag5==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag6" type="submit" class="btn btn-sm btn-tag " style="background-color:#0000FF;" @click.prevent="model.color='#0000FF', colorTag6=!colorTag6">
+                            <i v-show="colorTag6==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                    </div>
+                </div>
+                <div class="row mb-5 text-center">
+                    <div class="col-lg-12">
+                        <button id="colorTag7" type="submit" class="btn btn-sm btn-tag " style="background-color:#33CCFF;" @click.prevent="model.color='#33CCFF', colorTag7=!colorTag7">
+                            <i v-show="colorTag7==true" class="fa fa-check" style="color:white" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag8" type="submit" class="btn btn-sm btn-tag " style="background-color:#CCFF66;" @click.prevent="model.color='#CCFF66', colorTag8=!colorTag8">
+                            <i v-show="colorTag8==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag9" type="submit" class="btn btn-sm btn-tag " style="background-color:#FF66CC;" @click.prevent="model.color='#FF66CC', colorTag9=!colorTag9">
+                            <i v-show="colorTag9==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag10" type="submit" class="btn btn-sm btn-tag " style="background-color:#660066;" @click.prevent="model.color='#660066', colorTag10=!colorTag10">
+                            <i v-show="colorTag10==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag11" type="submit" class="btn btn-sm btn-tag " style="background-color:#333300;" @click.prevent="model.color='#333300', colorTag11=!colorTag11">
+                            <i v-show="colorTag11==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                        <button id="colorTag12" type="submit" class="btn btn-sm btn-tag " style="background-color:#121742;" @click.prevent="model.color='#121742', colorTag12=!colorTag12">
+                            <i v-show="colorTag12==true" style="color:white" class="fa fa-check" aria-hidden="true"></i> &nbsp;</button>
+                    </div>
+                </div>
                 <div class="col-lg-12 m-t-25 text-center">
-                    
-                    <button id="updateTag" type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdateTag==true" @click.prevent="updateTag">
+                    <button id="updateTag" type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdateTag==true" @click.prevent="updateTag, showAttendantCRUDTagModal=0">
                         <i v-show="isSendingUpdateTag==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
                     </button>
-
-                    <button id="cancel2" type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button id="cancel2" type="reset" class="btn  btn-secondary btn_width" @click.prevent="showAttendantCRUDTagModal=0">Cancelar</button>
                 </div>
             </form>
 
-            <form v-show="delete_tag">
+            <form v-show="showAttendantCRUDTagModal==3">
+                <h5 class="mb-5"> Verificação de exclusão</h5>
                 Tem certeza que deseja remover a etiqueta selecionada?
                 <div class="col-lg-12 mt-5 text-center">
-                    <button id="deleteTag" type="submit" class="btn btn-primary btn_width" :disabled="isSendingDeleteTag==true" @click.prevent="deleteTag">
+                    <button id="deleteTag" type="submit" class="btn btn-primary btn_width" :disabled="isSendingDeleteTag==true" @click.prevent="deleteTag, showAttendantCRUDTagModal=0">
                         <i v-show="isSendingDeleteTag==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Eliminar
                     </button>
-                    <button id="cancel3" type="reset" class="btn  btn-secondary btn_width" @click.prevent="closeModals">Cancelar</button>
+                    <button id="cancel3" type="reset" class="btn  btn-secondary btn_width" @click.prevent="showAttendantCRUDTagModal=0">Cancelar</button>
                 </div>                    
             </form>
 
@@ -181,7 +209,10 @@
                     name: "",
                     color: "",
                 },
-                
+
+                showAttendantCRUDTagModal: 0,
+
+                show_tag: true,
                 add_tag: false,
                 edit_tag: false,
                 delete_tag: false,
@@ -218,7 +249,9 @@
 
             addTag: function() { //C
 
-                this.model.attendant_id = this.logguedAttendant.id;
+                // this.model.attendant_id = this.logguedAttendant.id;
+                this.add_tag =true;
+                this.show_tag =false;
 
                 // this.isSendingInsert = true;
 
@@ -426,5 +459,9 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .btn-tag{
+        /* width: 100%; */
+        width: 50px;
     }
 </style>
