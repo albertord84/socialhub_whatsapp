@@ -272,7 +272,7 @@
                             </div>
                             
                             <div v-if="message.type_id!='date_separator'">
-                                <!-- sended messages-->
+                                <!-- received messages-->
                                 <div v-if="message.source==1" class="row mt-2">
                                     <div class="container-fluid">
                                         <div class="row">
@@ -333,8 +333,8 @@
                                         <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>
                                     </div>
                                 </div>
-
-                                <!-- received messages-->
+                                
+                                <!-- sended messages-->
                                 <div v-if="message.source==0" class="row mt-2">
                                     <div class="col-11">
                                         <p style="float:right" class="sendedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
@@ -1065,6 +1065,7 @@
                             this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
 
                             // //----------update the message list and the last message of the contact-----
+                            message.status_id = 4;
                             this.messages.push(Object.assign({}, message));
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
@@ -1583,7 +1584,6 @@
                         selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
                         selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
                     }
-                            
                     ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
                         .then(response => {
                             if(this.isEditingContact)
@@ -1592,9 +1592,22 @@
                                 this.isEditingContactSummary = false;
                             miniToastr.success("Contato atualizado com sucesso.","Sucesso");
                             this.selectedContactIndex = 0;
-                            this.getContacts();
+                            
+                            this.contacts.some((item,i)=>{
+                                if(item.id == response.data.id){
+                                    item = Object.assign({}, response.data);
+                                    if(this.selectedContact.id == item.id){
+                                        this.selectedContact = Object.assign({}, item);
+                                        this.selectedContactToEdit = Object.assign({}, item);
+                                    }
+                                    return;
+                                }
+
+                            });
+                            // this.getContacts();
                         })
                         .catch(error => {
+                            console.log(error);
                             this.processMessageError(error, this.contacts_url, "update");
                         })
                         .finally(() => this.isUpdatingContact = false);
@@ -2082,7 +2095,7 @@
                     var message = JSON.parse(e.message);                    
 
                     if(message.source == 0){ //message to update the message status to 2 or 7
-                        if(this.selectedContactIndex>-1 && message.contact_id == this.isSelectedContact.id){
+                        if(this.selectedContactIndex>-1 && message.contact_id == this.selectedContact.id){
                             this.messages.some((item,i)=>{
                                 if(message.id == item.id){
                                     item.status_id = message.status_id;
