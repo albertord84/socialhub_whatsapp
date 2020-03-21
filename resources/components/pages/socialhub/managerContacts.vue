@@ -125,7 +125,7 @@
             <div v-if="steepUploadFile==3">
                 <div class="col-lg-12 mt-5 text-center">
                     <div class="spinner-border text-primary"></div>
-                    <h5 class=" pt-5"> Esta acção pode demorar vários segundos!</h5>
+                    <h5 class=" pt-5"> Esta acção pode demorar alguns minutos!</h5>
                 </div>
             </div>
             <div v-if="steepUploadFile==4">
@@ -267,10 +267,8 @@
                     'filterContactToken': "",
                     'last_contact_id': 0,
                 })
-                    .then(response => {
-                        this.rows = response.data;
-                        var This=this;
-                        response.data.forEach(function(item, i){                            
+                    .then(response => {  
+                        response.data.forEach((item, i)=>{                            
                             if(item.status)
                                 item.status_name = item.status.name;
                             var name = "";
@@ -280,6 +278,7 @@
                                 item.contact_atendant_id = item.latestAttendant.id;
                             }
                         });
+                        this.rows = response.data;
                     })
                     .catch(error => {
                         this.processMessageError(error, this.url, "get");

@@ -2240,7 +2240,7 @@
         updated(){
             if(this.selectedContactIndex >= 0 && this.$refs.message_scroller && this.pageNumber == 0) {
                 this.$refs.message_scroller.scrolltobottom();
-            }            
+            }
         },
 
         beforeMount() {
@@ -2276,7 +2276,6 @@
             this.wsMessageToAttendant();
             this.wsContactToBag();
             this.wsTransferredContact();
-            
         },
 
         created() {

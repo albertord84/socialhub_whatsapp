@@ -37,7 +37,7 @@ class ExtendedContactRepository extends ContactRepository
         return $Collection;
     }
 
-    public function fullContacts(int $company_id, ?int $attendant_id, ?array $filters, ?int $last_contact_id): Collection
+    public function fullContactsAlberto(int $company_id, ?int $attendant_id, ?array $filters, ?int $last_contact_id): Collection
     {
         $Collection = new Collection();
         if ($attendant_id) {
@@ -93,7 +93,7 @@ class ExtendedContactRepository extends ContactRepository
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                         ->where('contact_id', $Contact->id)
-                        ->where('status_id', MessagesStatusController::UNREADED) //UNREADED message for me
+                        ->where('status_id', 6) //UNREADED message for me
                         ->count();
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
@@ -103,17 +103,75 @@ class ExtendedContactRepository extends ContactRepository
             return $Collection->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
         } else {
             // $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->get();
+            $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])->findWhere(['company_id' => $company_id])->each(function ($Contact, $key) {
+                if ($Contact->latestAttendant) {
+                    $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+                }
+            });
+            return $Contacts;
+        }
+    }
+
+    public function fullContacts(int $company_id, ?int $attendant_id, ?array $filters, ?int $last_contact_id): Collection
+    {
+        $Collection = new Collection();
+        if ($attendant_id) {
+            $chatModel = new ExtendedChat();
+            $chatModel->table = (string) $attendant_id;
+            
+            if($last_contact_id){
+                $lastContact = Contact::find($last_contact_id);
+                $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+                        $query->where('attendant_id', $attendant_id);
+                    })
+                    ->orderBy('updated_at', 'desc')
+                    ->findWhere([
+                        'company_id' => $company_id,
+                        ['updated_at', '>', $lastContact->updated_at]])
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+            }else{
+                $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+                        $query->where('attendant_id', $attendant_id);
+                    })
+                    ->orderBy('updated_at', 'desc')
+                    ->findWhere([
+                        'company_id' => $company_id])
+                    ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+            }
+            
+            foreach ($Contacts as $key => $Contact) {
+                // print_r($Contact->latestAttendant->attendant_id.'<br>');
+                if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
+                    // Get Contact Status
+                    $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
+                    
+                    // Last Chat Message
+                    $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+                    $Contacts[$key]['last_message'] = $lastMesssage;
+                    
+                    // Unreaded Messages Count
+                    $countUnreadMessages = $chatModel
+                        ->where('contact_id', $Contact->id)
+                        ->where('status_id', MessagesStatusController::UNREADED) //UNREADED message for me
+                        ->count();
+                    $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
+
+                    $Collection->add($Contacts[$key]);
+                }
+            }
+            return $Collection->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+        } else {
             $lastContact = $last_contact_id ? Contact::find($last_contact_id) : Contact::where('company_id', $company_id)->first();
             $Contacts = $this->with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                ->findWhere([
-                    'company_id' => $company_id,
-                    ['updated_at', '>', $lastContact->updated_at
-                ]])
+                ->orderBy('contacts.updated_at', 'desc')
+                ->findWhere(['contacts.company_id' => $company_id])
                 ->each(function ($Contact, $key) {
                     if ($Contact->latestAttendant) {
                         $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
-                    }
-            });
+                    }});
+                // ->take(100);
             return $Contacts;
         }
     }
