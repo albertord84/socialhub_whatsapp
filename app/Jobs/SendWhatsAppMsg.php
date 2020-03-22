@@ -42,7 +42,6 @@ class SendWhatsAppMsg implements ShouldQueue
     private $Chat;
     private $chat_input;
 
-    private $file_content;
     private $file_name;
     private $file_type;
 
@@ -52,14 +51,13 @@ class SendWhatsAppMsg implements ShouldQueue
      * @return void
      */
     // public function __construct(ExternalRPIController $rpiController, Contact $Contact, array $chat_input)
-    public function __construct(ExternalRPIController $rpiController, Contact $Contact, array $chat_input, string $file_content = null, string $file_name = null, string $file_type = null)
+    public function __construct(ExternalRPIController $rpiController, Contact $Contact, array $chat_input, string $file_name = null, string $file_type = null)
     {
         $this->rpiController = $rpiController;
 
         $this->Contact = $Contact;
         $this->chat_input = $chat_input;
         // $this->Chat = new ExtendedChat;
-        $this->file_content = $file_content;
         $this->file_name = $file_name;
         $this->file_type = $file_type;
 
@@ -84,12 +82,12 @@ class SendWhatsAppMsg implements ShouldQueue
         $ExtendedChat->table = $this->chat_input['attendant_id'];
         $ExtendedChat = $ExtendedChat->find($this->chat_input['chat_id']);
 
-        if (!$this->file_content) { // Send normal message
+        if (!$this->file_name) { // Send normal message
             $response = $this->rpiController->sendTextMessage($ExtendedChat->message, $this->Contact);
             Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job handled: ', [$this->Contact->whatsapp_id]);
         }
         else {
-            $response = $this->rpiController->sendFileMessage($this->file_content, $this->file_name, $this->file_type, $ExtendedChat->message, $this->Contact);
+            $response = $this->rpiController->sendFileMessage($this->file_name, $this->file_type, $ExtendedChat->message, $this->Contact);
             Log::debug('\n\r SendingFileMessage to Contact contact_Jid from Job handled: ', [$this->Contact->whatsapp_id]);
         }
 

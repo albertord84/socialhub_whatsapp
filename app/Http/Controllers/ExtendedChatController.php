@@ -176,6 +176,7 @@ class ExtendedChatController extends ChatController
 
             $input['chat_id'] = $chat->id;
 
+            $externalRPiController = new ExternalRPIController(null);
             if (isset($input['file'])) {
                 $fileName = $chat->id; // Laravel Auto gerated file name
                 // $envFilePath = env('APP_FILE_PATH');
@@ -192,19 +193,23 @@ class ExtendedChatController extends ChatController
                         $code = exec("ffmpeg -y -i $BaseDir/$FileName -acodec libvorbis $BaseDir/$FileNameOgg");
                         $FileName = $FileNameOgg;
                     }
-                    $fileContent = Storage::disk('chats_files')->get($FileName); // Retrive file like file_get_content(...)
-                    $response = $this->externalRPiController->sendFileMessage(
-                        $fileContent, $json_data->SavedFileName, $input['type_id'],
-                        $input['message'], $Contact
-                    );
+                    // $fileContent = Storage::disk('chats_files')->get($FileName); // Retrive file like file_get_content(...)
 
                     $chat->data = json_encode($json_data); 
-
                     $chat->save();
+
+                    unset($input['file']); // Because not serializable with Jobs
+                    SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input, $FileName, $input['type_id']);
+
+                    Log::debug('\n\r SendingFileMessage Job to Contact contact_Jid: ', [$Contact->whatsapp_id]);
+    
+                    // $response = $this->externalRPiController->sendFileMessage(
+                    //     $fileContent, $json_data->SavedFileName, $input['type_id'],
+                    //     $input['message'], $Contact
+                    // );
                     // $chat = $this->chatRepository->updateMessage($input, $chat->id);
                 }
             } else {
-                $externalRPiController = new ExternalRPIController(null);
                 // SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $chat);
                 SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input);
 
