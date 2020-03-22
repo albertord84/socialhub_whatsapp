@@ -37,15 +37,15 @@ class ExtendedContactController extends ContactController
     public function index(Request $request)
     {
         try {
-            $request->last_contact_id = $request->last_contact_id ?? null;
+            $request->last_contact_idx = $request->last_contact_idx ?? null;
             $User = Auth::check() ? Auth::user() : session('logged_user');
             if($User){
                 $Contacts = $this->contactRepository->all();
                 if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, null, $request->last_contact_id);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, null, $request->last_contact_idx);
                 } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
                     $filter = $request->filter_contact;
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter, $request->last_contact_id);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter, $request->last_contact_idx);
                 }    
                 return $Contacts->toJson();
             }else{
