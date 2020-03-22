@@ -14,6 +14,7 @@ use App\Repositories\ExtendedUsersAttendantRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Response;
 
 class ExtendedContactController extends ContactController
@@ -36,15 +37,15 @@ class ExtendedContactController extends ContactController
     public function index(Request $request)
     {
         try {
-            $request->last_contact_id = $request->last_contact_id ?? null;
+            $request->last_contact_idx = $request->last_contact_idx ?? null;
             $User = Auth::check() ? Auth::user() : session('logged_user');
             if($User){
                 $Contacts = $this->contactRepository->all();
                 if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, null, $request->last_contact_id);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, null, $request->last_contact_idx);
                 } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
                     $filter = $request->filter_contact;
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter, $request->last_contact_id);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter, $request->last_contact_idx);
                 }    
                 return $Contacts->toJson();
             }else{
@@ -85,17 +86,19 @@ class ExtendedContactController extends ContactController
 
         if ($file = $request->file('file')) {
 
-            $array = $this->csv_to_array($file->getRealPath(), ',');
-            if(count($array)>1 && count($array[1])<2 ){
-                $array = $this->csv_to_array($file->getRealPath(), ';');
+            //conver the file content to a Contacts array
+            $Contacts = $this->csv_to_array($file->getRealPath(), ',');
+            if(count($Contacts)>1 && count($Contacts[1])<2 ){
+                $Contacts = $this->csv_to_array($file->getRealPath(), ';');
             }
             unlink($file->getRealPath());
 
-            //select the old updated contact
+            //get the updated time from the oldest updated contact
             $oldestUpdatedContact = Contact::where('company_id', '=', $User->company_id)->orderBy('updated_at', 'asc')->first();
-            $oldestUpdatedContactTime = isset($oldestUpdatedContact->update_at)? time($oldestUpdatedContact->update_at) : time();
+            $oldestUpdatedContactTime = isset($oldestUpdatedContact->updated_at)?strtotime($oldestUpdatedContact->updated_at):time();
+            $oldestUpdatedContactTime--;
 
-            //obtaining emails and ids of attendants
+            //obtaining emails and ids of attendants of this company
             $extendedUserRepository = new ExtendedUserRepository(app());
             $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
             $attendantsUser = $ExtendedUsersAttendantRepository->Attendants_User_By_Attendant($User->company_id,4);
@@ -112,27 +115,28 @@ class ExtendedContactController extends ContactController
             $cntMessage2 = 0;
             $cntMessage3 = 0;
             $i=2;
-            foreach($array as $contact){
+            foreach($Contacts as $contact){
                 try{
                     $whatsapp = $contact['Whatsapp'];
                     $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
-                    $Contact = Contact::with('latestAttendant')
-                            ->where('whatsapp_id' ,$whatsapp)
+                    $Contact = Contact::where('whatsapp_id' ,$whatsapp)
                             ->where('company_id', '=', $User->company_id)
                             ->first();
 
-                    $last_attendant_id = $Contact->latestAttendant->attendant_id ?? null; 
-                    $Contact = $Contact ?? new Contact(); 
+                    $Contact = $Contact ?? new Contact;
+                    $latestAttendantContact = $Contact->latestAttendantContact()->first();
+
+                    $last_attendant_id = $latestAttendantContact->attendant_id ?? null; //TODO:Alberto
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
                         $Contact->first_name = trim($contact['Nome']);
                     }
-                    if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
-                        $Contact->whatsapp_id = $whatsapp;
-                    }
                     if (isset($contact['Email']) && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
                         $Contact->email = trim($contact['Email']);
+                    }
+                    if (preg_match("/^[0-9]{1,3}\ ?[0-9]{1,3}\ ?[0-9]{3,5}(?:-)?[0-9]{4}$/", $whatsapp) ) {
+                        $Contact->whatsapp_id = $whatsapp;
                     }
                     if (isset($contact['Facebook']) && preg_match("/^[a-zA-Z0-9\._]{1,300}$/" , $contact['Facebook'])) {
                         $Contact->facebook_id = trim($contact['Facebook']);
@@ -155,35 +159,40 @@ class ExtendedContactController extends ContactController
                     if (isset($contact['Categoria2']) && preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\.,_-]{2,80}$/" , $contact['Categoria2'])) {
                         $Contact->categoria2 = trim($contact['Categoria2']);
                     }
+                    $Contact->description = "Adicionado ou atualizado desde planilha CSV";
+                    $Contact->json_data = '{"picurl":"images/contacts/default.png"}';
+                    $Contact->company_id = $User->company_id;
+                    $Contact->origin = $Contact->origin ?? 3; //original origin or 3->by spreadsheed
+
                     if(!empty($Contact->whatsapp_id)){
                         if(!isset($Contact->status_id))
                             $Contact->status_id = 2;
-                        $Contact->created_at = '1959-01-01 00:00:00';
-                        $Contact->updated_at = '1959-01-01 00:00:00';
+                        $Contact->created_at = Carbon::minValue();
+                        $Contact->updated_at = Carbon::minValue();
+                        // $Contact->created_at = '1959-01-01 00:00:00';
+                        // $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
                         
-                        //processar atendentes
-                        if ($contact['Email-Atendente']!=""){
+                        //process the respective atendent email in the actual csv row
+                        if (trim($contact['Email-Atendente']) != ""){
                             if(filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
-                                $attendant_email = trim($contact['Email-Atendente']);
-                                //1. buscar el id del atendiente segun la empresa y el email dado
-                                if (array_key_exists($attendant_email, $attendatn_ids)){
-                                    if(isset($attendatn_ids[$attendant_email]) && ($last_attendant_id==null) || ($attendatn_ids[$attendant_email] != $last_attendant_id) ){
-                                        //2. crear una fila en la tabla attendants_contacts                                
+                                $csv_attendant_email = trim($contact['Email-Atendente']);
+                                //1. process only if csv-email is an attendant of actual company
+                                if (array_key_exists($csv_attendant_email, $attendatn_ids)){
+                                    //2. process only if the contact dont has attendant, or if csv-email is different of the current attendant (i.e. contact it is transferring to a new attendant)
+                                    if(($last_attendant_id == null) || ($attendatn_ids[$csv_attendant_email] != $last_attendant_id) ){
+                                        //3. find the saved contact object
+                                        $Contact = $Contact->where('whatsapp_id' ,$whatsapp)->where('company_id', '=', $User->company_id)->first();
+                                        //4. criate new record in attendants_contacts table (created_at and updated_at dates must be the current date for this record)
                                         $AttendantsContact = new AttendantsContact();
-                                        $AttendantsContact->created_at = '1959-01-01 00:00:00';
-                                        $AttendantsContact->updated_at = '1959-01-01 00:00:00';
-                                        $AttendantsContact->attendant_id = (int)$attendatn_ids[$attendant_email];
+                                        $AttendantsContact->attendant_id = (int)$attendatn_ids[$csv_attendant_email];
                                         $AttendantsContact->contact_id = $Contact->id;
                                         $AttendantsContact->save();
-                                        $Contact = $Contact
-                                            ->where('whatsapp_id' ,$whatsapp)
-                                            ->where('company_id', '=', $User->company_id)
-                                            ->first();
-                                        $Contact->created_at = '1959-01-01 00:00:00';
-                                        $Contact->updated_at = '1959-01-01 00:00:00';
+                                        //5. update the contact status_id to ACTIVE and keep the criated_at and updated_at dates
                                         if($Contact->status_id == 2){
                                             $Contact->status_id = 1;
+                                            $Contact->created_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
                                             $Contact->save();
                                         }
                                         $cntMessage1++;
@@ -205,6 +214,7 @@ class ExtendedContactController extends ContactController
                     //throw $th;
                 }
                 $i++;
+                $oldestUpdatedContactTime--;
             }
         
             $response["message1"] = array(

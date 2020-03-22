@@ -1,7 +1,7 @@
 <template>
     <div id="left" :class="{ open: this.$store.state.left_open }">
         <div id="left-slim">
-            <attendantCRUDContact v-if="left_layout=='toggle-add-contact'" :action='"insert"' :item='item' @reloadContacts='reloadContacts'></attendantCRUDContact>
+            <attendantCRUDContact v-if="left_layout=='toggle-add-contact'" :action='"insert"' :item='item' @insertContactAsFirtInList="insertContactAsFirtInList" @reloadContacts='reloadContacts'></attendantCRUDContact>
         </div>
     </div>
 </template>
@@ -37,6 +37,10 @@
 
             reloadContacts(){
                 this.$emit('reloadContacts');
+            },
+
+            insertContactAsFirtInList(value){
+                this.$emit('insertContactAsFirtInList',value);
             },
         },        
     }

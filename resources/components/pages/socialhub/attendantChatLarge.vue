@@ -1,6 +1,6 @@
 <template>
     <div class="row chat p-0" style="background-color:#fefefe !important">
-        <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @reloadContacts='reloadContacts'></left-side-bar>
+        <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @insertContactAsFirtInList="insertContactAsFirtInList" @reloadContacts='reloadContacts'></left-side-bar>
         <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
@@ -30,7 +30,7 @@
                                         </a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
-                                        <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotifications">
+                                        <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotificationsOfAttendant">
                                             <span v-if="userLogged.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
                                             <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
                                         </a>
@@ -90,9 +90,9 @@
                         </ul>
                     </div>
                 </div>
-                <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px" ref="contact_scroller" :seeSrolling="'true'" @onbottom="onBottomContacts" @oncontentresize="1">
+                <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px" ref="contact_scroller" :seeSrolling="'true'" @onbottom="onBottomContacts">
                     <ul>
-                        <li v-for="(contact,index) in allContacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
+                        <li v-for="(contact,index) in contacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
                             <div class="">
                                 <div class="row pt-3 pb-3">
                                     <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact,index)">
@@ -151,38 +151,38 @@
                                             <div :id="'contact_'+contact.id" class="contact-hout m-0">
                                                 <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="m1argin-top:13px"  right="">
                                                     <template v-slot:button-content>
-                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="getContactToEditActions(contact)"></i>
+                                                        <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="copyContact(contact)"></i>
                                                     </template>
                                                     <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="copyContact(contact), modalTransferContact=!modalTransferContact">
                                                             <i class="fa fa-exchange"></i> Transferir contato
                                                         </a>
                                                     </b-dropdown-item>
                                                     <b-dropdown-item exact class="dropdown_content" >
-                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                        <a v-if="contact.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="copyContact(contact), modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
                                                             <i class="mdi mdi-volume-off"></i> Silenciar notificações
                                                         </a>
-                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
+                                                        <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="copyContact(contact), modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
                                                             <i class="mdi mdi-volume-high"></i> Reativar notificações
                                                         </a>
                                                     </b-dropdown-item>
                                                     <!-- <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
                                                             <i class="mdi mdi-pin mdi-rotate-45"></i> Fixar conversa
                                                         </a>
                                                     </b-dropdown-item>
                                                     <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
                                                             <i class="mdi mdi-broom"></i> Limpar conversa
                                                         </a>
                                                     </b-dropdown-item>
                                                     <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
                                                             <i class="mdi mdi-circle"></i> Marcar como não lida
                                                         </a>
                                                     </b-dropdown-item> -->
                                                     <b-dropdown-item exact class="dropdown_content">
-                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="copyContact(contact), modalDeleteContact=!modalDeleteContact">
                                                             <i class="fa fa-trash-o"></i> Eliminar contato
                                                         </a>
                                                     </b-dropdown-item>
@@ -210,8 +210,8 @@
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
                                 <span @click.prevent="displayChatRightSide()" class="pointer-hover">
-                                    <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" width="50px" class="profile-picture " >
-                                    <b style="font-size:1.1rem; margin-left:2rem">{{ selectedContact.first_name }}</b>
+                                    <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'" width="50px" class="profile-picture " >
+                                    <b style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
                                 </span>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
@@ -327,7 +327,7 @@
                                     </div>
 
                                     <div class="col-1 text-right">
-                                        <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg">
+                                        <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg">
                                     </div>
                                     <div class="col-11">
                                         <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>
@@ -502,14 +502,13 @@
                         <li class="col-1 col-md-1 col-lg-1 col-xl-1">
                             <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none"  right="" >
                                 <template v-slot:button-content>
-                                    <i class="mdi mdi-dots-vertical icons-action" title="Ações sobre contato" @click.prevent="getContactToEditActions(selectedContactToEdit)"></i>
+                                    <i class="mdi mdi-dots-vertical icons-action" title="Ações sobre contato" @click.prevent="copyContact(contacts[selectedContactIndex])"></i>
                                 </template>
                                 <b-dropdown-item exact class="dropdown_content">
                                     <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalTransferContact=!modalTransferContact">
                                         <i class="fa fa-exchange"></i> Transferir contato
                                     </a>
                                 </b-dropdown-item>
-                                <!-- ECR -->
                                 <b-dropdown-item exact class="dropdown_content">
                                     <a v-if="selectedContactToEdit.status_id != 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
                                         <i class="mdi mdi-volume-off"></i> Silenciar notificações
@@ -519,7 +518,7 @@
                                     </a>
                                 </b-dropdown-item>
                                 <b-dropdown-item exact class="dropdown_content">
-                                    <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="displayDeleteContact()">
+                                    <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent=" modalDeleteContact=!modalDeleteContact">
                                         <i class="fa fa-trash-o"></i> Eliminar contato
                                     </a>
                                 </b-dropdown-item>
@@ -533,9 +532,9 @@
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
                         <a href="javascript:void()" @click.prevent="modalShowContactPicture=!modalShowContactPicture">
-                            <img :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
+                            <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
                         </a>
-                        <h4 class="profile-decription-name">{{selectedContact.first_name}}</h4>
+                        <h4 class="profile-decription-name">{{contacts[selectedContactIndex].first_name}}</h4>
                         
                         <!-- Informação -->
                         <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
@@ -548,7 +547,7 @@
                                         <span class="text-muted" style="font-size:1.1rem">Informação</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
-                                        <i v-show="showContactInformation" @click.prevent="copyContact; isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
+                                        <i v-show="showContactInformation" @click.prevent="copyContact(contacts[selectedContactIndex]); isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left" >
                                         <i v-show="!showContactInformation" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactInformation=!showContactInformation"></i>
@@ -561,28 +560,28 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact">{{selectedContact.first_name}}</span>
+                                    <span v-show="!isEditingContact">{{contacts[selectedContactIndex].first_name}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" placeholder="Nome completo (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span  v-show="!isEditingContact">{{selectedContact.email}}</span>
+                                    <span  v-show="!isEditingContact">{{contacts[selectedContactIndex].email}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" placeholder="Email" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>                            
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" style="word-break: break-word;">{{selectedContact.whatsapp_id}}</span>
+                                    <span v-show="!isEditingContact" style="word-break: break-word;">{{contacts[selectedContactIndex].whatsapp_id}}</span>
                                     <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 5511988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-phone fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.phone}}</span>
+                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].phone}}</span>
                                     <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 551188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
@@ -590,28 +589,28 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Cidade"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.cidade}}</span>
+                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].cidade}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Estado"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.estado}}</span>
+                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].estado}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Categoria 1"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria1}}</span>
+                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].categoria1}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 1" v-model="selectedContactToEdit.categoria1" placeholder="Categoria 1" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item border-0" title="Categoria 2"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
-                                    <span v-show="!isEditingContact" class="mt-1">{{selectedContact.categoria2}}</span>
+                                    <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].categoria2}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 2" v-model="selectedContactToEdit.categoria2" placeholder="Categoria 2" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
@@ -634,7 +633,7 @@
                                         <span class="text-muted" style="font-size:1.1em">Nota resumo</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
-                                        <i v-show="showContactSummary" style="" @click.prevent="copyContact; isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
+                                        <i v-show="showContactSummary" style="" @click.prevent="copyContact(contacts[selectedContactIndex]); isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-1 pt-2 pb-2 text-left">
                                         <i v-show="!showContactSummary" class="fa fa-plus text-muted action-icons-fade" aria-hidden="true" @click.prevent="showContactSummary=!showContactSummary"></i>
@@ -645,7 +644,7 @@
                         </div>
                         <div v-if="showContactSummary" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-2" style="min-height:40px">
-                                <p v-show="!isEditingContactSummary" style="word-break: break-word; color:black" class="text-center">{{selectedContact.summary}}</p>
+                                <p v-show="!isEditingContactSummary" style="word-break: break-word; color:black" class="text-center">{{contacts[selectedContactIndex].summary}}</p>
                                 <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic text-center" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
                             </div>
                             <div v-show="isEditingContactSummary">
@@ -774,31 +773,13 @@
             </v-scroll>
         </div>
 
-        <!-- Modal to transfer contact-->
-        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
-            <!-- <attendantCRUDContact :action='"transfer"' :item='selectedContact' @onclosemodal='closemodal' @reloadAfterTransferContact='reloadAfterTransferContact'></attendantCRUDContact> -->
-            <!-- ECR -->
-            <attendantCRUDContact :action='"transfer"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadAfterTransferContact='reloadAfterTransferContact'></attendantCRUDContact>
-        </b-modal>
-        
-        <!-- Modal to delete contact-->
-        <b-modal v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
-            <!-- <attendantCRUDContact :action='"delete"' :item='selectedContact' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact> -->
-            <!-- ECR -->
-            <attendantCRUDContact :action='"delete"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
-        </b-modal>
 
-        <!-- Modal to delete the conversation with a contact-->
-        <!-- <b-modal v-model="modalDeleteConversation" :hide-footer="true" title="Verificação de exclusão">
-            <attendantCRUDContact :action='"deleteConversation"' :item='selectedContactToEditActions' @onclosemodal='closemodal' @reloadContacts='reloadContactsAfterDelete'></attendantCRUDContact>
-        </b-modal> -->
-
-        <!-- Modal to show image-->
+        <!-- Modal to show image in message-->
         <b-modal v-model="modalShowImage" :hide-footer="true" centered class="" :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent">
-                <b-img  fluid :src="modalShowImageSrc" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
+            <b-img  fluid :src="modalShowImageSrc" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
         </b-modal>
 
-        <!-- Modal to show video-->
+        <!-- Modal to show video in message-->
         <b-modal v-model="modalShowVideo" :hide-footer="true" centered :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent"  class="m-0 modal-body-bg">
             <div class="">
                 <video width="100%" height="100%" style="max-height:540px; max-width:700px; padding:0px; text-align:center" controls class="midia-files embed-responsive-item modal-body-bg">
@@ -810,21 +791,21 @@
 
         <!-- Modal to show contact image picture-->
         <b-modal v-model="modalShowContactPicture" :hide-footer="true" centered class="" :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent">
-                <b-img  fluid :src="(selectedContact.json_data)?JSON.parse(selectedContact.json_data).picurl:'images/contacts/default.png'" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
+                <b-img  fluid :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
         </b-modal>
 
-        <!-- Modal to show user datas-->
+        <!-- Modal to show loggued user info-->
         <b-modal v-model="modalUserCRUDDatas" centered :hide-footer="true" body-class="p-0" :hide-header="false" >
             <userCRUDDatas :contacts='contacts'></userCRUDDatas>
         </b-modal>
 
-        <!-- Modal to remove the selected file-->
+        <!-- Modal to remove the file attached to the composite message-->
         <b-modal v-model="modalRemoveSelectedFile" :hide-footer="true" title="Verificação">
             Tem certeza que deseja remover o arquivo selecionado?
-                <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="file=null; modalRemoveSelectedFile=!modalRemoveSelectedFile">Remover</button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalRemoveSelectedFile=!modalRemoveSelectedFile">Cancelar</button>
-                </div>
+            <div class="col-lg-12 mt-5 text-center">
+                <button type="submit" class="btn btn-primary btn_width" @click.prevent="file=null; modalRemoveSelectedFile=!modalRemoveSelectedFile">Remover</button>
+                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalRemoveSelectedFile=!modalRemoveSelectedFile">Cancelar</button>
+            </div>
         </b-modal>
 
         <!-- Modal to send message files-->
@@ -835,33 +816,45 @@
         <!-- Modal to get new contact from bag-->
         <b-modal v-model="modalNewContactFromBag" :hide-footer="true" title="Informação">
             Você adicionará um novo contato automático na sua lista de contatos.
-                <div class="col-lg-12 mt-5 text-center">
-                    <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">
-                        <i v-if="isAddingContactFromBag==true" class="fa fa-spinner fa-spin"></i>
-                        Adicionar
-                    </button>
-                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
-                </div>
+            <div class="col-lg-12 mt-5 text-center">
+                <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">
+                    <i v-if="isAddingContactFromBag==true" class="fa fa-spinner fa-spin"></i>
+                    Adicionar
+                </button>
+                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
+            </div>
+        </b-modal>
+
+        <!-- Modal to transfer contact-->
+        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
+            <attendantCRUDContact :action='"transfer"' :item='selectedContactToEdit' @onclosemodal='closemodal' @removeContactFromList='removeContactFromList'></attendantCRUDContact>
+        </b-modal>
+        
+        <!-- Modal to delete contact-->
+        <b-modal v-model="modalDeleteContact" :hide-footer="true" title="Verificação de exclusão">
+            <attendantCRUDContact :action='"delete"' :item='selectedContactToEdit' @onclosemodal='closemodal' @removeContactFromList='removeContactFromList'></attendantCRUDContact>
         </b-modal>
 
         <!-- Modal to Mute/Ativate Notifications of Contacts-->
-        <b-modal v-model="modalMuteNotificationsContacts" :hide-footer="true" title="Verificação">
-            <span v-if="!isMuteNotifications"> Tem certeza que deseja silenciar as notificações para este contato? </span>
-            <span v-if="isMuteNotifications"> Tem certeza que deseja reativar as notificações para este contato? </span>
-
-            <div v-if="!isMuteNotifications" class="col-lg-12 mt-5 text-center">
-                <button type="button" class="btn btn-primary btn_width" :disabled="isSendingNotificationsContacts==true" @click.prevent="editNotificationsContacts"> 
-                    <i v-show="isSendingNotificationsContacts==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Silenciar notificações
-                </button>
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
-            </div> 
-            <div v-if="isMuteNotifications" class="col-lg-12 mt-5 text-center">
-                <button type="button" class="btn btn-primary btn_width" :disabled="isSendingNotificationsContacts==true" @click.prevent="editNotificationsContacts"> 
-                    <i v-show="isSendingNotificationsContacts==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Reativar notificações
-                </button>
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
-            </div> 
-
+        <b-modal v-model="modalMuteNotificationsContacts" :hide-footer="true" title="Verificação">            
+            <div v-if="selectedContactToEditActions.status_id == 6"> <!-- Notification is mutted for this contact -->
+                <span> Tem certeza que deseja reativar as notificações para este contato? </span>
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="button" class="btn btn-primary btn_width" :disabled="isSendingNotificationsContacts==true" @click.prevent="muteNotificationsOfContact"> 
+                        <i v-show="isSendingNotificationsContacts==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Reativar notificações
+                    </button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
+                </div>
+            </div>
+            <div v-else>
+                <span> Tem certeza que deseja silenciar as notificações para este contato? </span>
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="button" class="btn btn-primary btn_width" :disabled="isSendingNotificationsContacts==true" @click.prevent="muteNotificationsOfContact"> 
+                        <i v-show="isSendingNotificationsContacts==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Silenciar notificações
+                    </button>
+                    <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="closemodal">Cancelar</button>
+                </div>
+            </div>
         </b-modal>
     </div>
 </template>
@@ -914,9 +907,10 @@
                 chat_url: 'chats',
 
                 contacts:[],
-                selectedContact:{},
+
                 selectedContactToEdit:{},
                 selectedContactToEditActions:{},
+
                 amountContactsInBag:0,
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
@@ -946,7 +940,7 @@
                 pageNumber:-1,
                 hasMorePageMessage:true,
                 requestingNewPage:false,
-                messageInTop:null,
+                // messageInTop:null,
 
                 percent:0,
 
@@ -1051,18 +1045,17 @@
                             this.file = null;
                             
                             //---------------set the target contact as the first----------------------
-                            var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                            var A = this.contacts.slice(0, this.selectedContactIndex);
-                            var B = this.contacts.slice(this.selectedContactIndex+1, this.contacts.length);
-                            this.contacts = A.concat(B); 
-                            this.contacts.unshift(targetContact);
-                            var i = 0;
-                            this.contacts.forEach(function(item, i){
-                                item.index = i++;
-                            });
-                            this.selectedContactIndex = 0;
-                            this.selectedContact = this.contacts[this.selectedContactIndex];
-                            this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                            // var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
+                            // var A = this.contacts.slice(0, this.selectedContactIndex);
+                            // var B = this.contacts.slice(this.selectedContactIndex+1, this.contacts.length);
+                            // this.contacts = A.concat(B); 
+                            // this.contacts.unshift(targetContact);
+                            // var i = 0;
+                            // this.contacts.forEach(function(item, i){
+                            //     item.index = i++;
+                            // });
+                            // this.selectedContactIndex = 0;
+                            this.shiftContactAsFirtInList(this.contacts[this.selectedContactIndex].id);
 
                             // //----------update the message list and the last message of the contact-----
                             message.status_id = 4;
@@ -1132,20 +1125,16 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
-
-                var xxx = (this.contacts.length>0)? this.contacts[this.contacts.length-1].id : 0;
-                console.log("request new contact page with last_contact_id = "+ xxx);
-
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
+                    'last_contact_idx': this.contacts.length,
                 })
                 .then(response => {
                     if(response.data.length){
                         var This = this, i = this.contacts.length;
                         response.data.forEach((item, index)=>{
                             item.index = i++;
-                            console.log(item.id);
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
                                     item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
@@ -1155,23 +1144,15 @@
                             }
                             item.isPictUrlBroken = false;                            
                         });
-                        this.contacts = this.contacts.concat(response.data);
-                        // this.contacts.some((item,i)=>{
-                        //     console.log(item.id);
-                        // });
-                        
+                        this.contacts = this.contacts.concat(response.data);                        
                         if(this.selectedContactIndex>=0){
                             this.contacts.some((item, i)=>{
-                                if(!flag && this.selectedContact.id == item.id){
-                                    console.log(55555555555);
+                                if(!flag && this.contacts[this.selectedContactIndex].id == item.id){
                                     this.selectedContactIndex = i;
-                                    this.selectedContact = this.contacts[this.selectedContactIndex];
-                                    this.selectedContactToEdit = Object.assign({}, this.contacts[this.selectedContactIndex]);
                                     return;
                                 }
                             });
                         }
-                        console.log(this.contacts);
                     }else{
                         this.hasMorePageContacts = false;
                     }
@@ -1220,8 +1201,91 @@
                 .finally(()=>{this.isAddingContactFromBag = false;});
             },
 
+            copyContact: function(contact){
+                this.item= Object.assign({}, contact);
+                // if(this.selectedContactIndex>-1 && contact.id==this.contacts[this.selectedContactIndex].id)
+                    this.selectedContactToEdit= Object.assign({}, contact);
+                this.selectedContactToEditActions= Object.assign({}, contact);
+            },
+
+            deleteAditionalInformationOfContact: function(contact){
+                delete contact.status;                
+                delete contact.created_at;
+                delete contact.updated_at;
+                delete contact.index;
+                delete contact.isPictUrlBroken;
+                delete contact.count_unread_messagess;
+                delete contact.last_message;
+                delete contact.latest_attendant;
+                delete contact.latest_attendant_contact;
+                delete contact.deleted_at;
+                return contact;
+            },
+
+            insertContactAsFirtInList:function(targetContact){
+                var selectedContactId = (this.selectedContactIndex>-1) ? this.contacts[this.selectedContactIndex].id : -1;                
+                //1. push targetContact as first
+                this.contacts.unshift(targetContact);
+                //2. update all contact index and selectecContactIndex
+                this.contacts.some((item,i)=>{
+                    item.index == i;                    
+                });
+                if(selectedContactId>-1) this.selectedContactIndex++;
+            },
+
+            shiftContactAsFirtInList:function(contact_id){
+                //1. set targetContact as first
+                var cnt = new Array();
+                var selectedContactId = (this.selectedContactIndex>-1)? this.contacts[this.selectedContactIndex].id : -1;
+                this.contacts.some((item,i)=>{
+                    if(item.id == contact_id){
+                        this.target = Object.assign({}, item);
+                    }else{
+                        cnt.push(item);
+                    }
+                });
+                cnt.unshift(this.target);
+                this.contacts = cnt;
+                //2. update all contact index and selectecContactIndex
+                this.contacts.some((item,i)=>{
+                    item.index = i;
+                    if(selectedContactId>-1 && item.id==selectedContactId){
+                        this.selectedContactIndex = i;
+                    }
+                });
+            },
+            
+            removeContactFromList: function(contact_id){
+                //1. set targetContact as first
+                var cnt = new Array();
+                var selectedContactId = (this.selectedContactIndex>-1)? this.contacts[this.selectedContactIndex].id : -1;
+
+                this.contacts.some((item,i)=>{
+                    if(item.id != contact_id){
+                        cnt.push(item);
+                    }
+                });
+                this.contacts = cnt;
+                //2. update all contact index and selectecContactIndex
+                this.contacts.some((item,i)=>{
+                    item.index = i;
+                    if(selectedContactId>-1 && item.id==selectedContactId){
+                        this.selectedContactIndex = i;
+                    }
+                });                
+                if(contact_id == selectedContactId){
+                    this.displayChatRightSide();   
+                    this.selectedContactIndex = -1;
+                }
+            },
+
+            reloadContacts: function(){
+                alert("reloadContacts é realmente necessário no left-side?");
+                this.getContacts();
+            },
+
             //------------------Get chats----------------------------
-            getContactChat: function(contact,index) {
+            getContactChat: function(contact,index) {                
                 this.reloadContactPicUrl(contact);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
@@ -1233,8 +1297,6 @@
                     this.requestingNewPage=false;                
 
                     this.selectedContactIndex = contact.index;
-                    this.selectedContact = this.contacts[this.selectedContactIndex];
-                    this.selectedContactToEdit = this.getContactInfoToEdit(this.selectedContact);
                     if(this.showChatRightSide) this.displayChatRightSide();
                     if(this.showChatFindMessages) this.displayChatFindMessage();
                     document.getElementById("chat-center-side").classList.add("chat-center-side-open");
@@ -1253,7 +1315,7 @@
                 this.pageNumber = this.pageNumber+1;
 
                 ApiService.get(this.chat_url,{
-                    'contact_id':this.selectedContact.id,
+                    'contact_id':this.contacts[this.selectedContactIndex].id,
                     'message_id': this.findAroundMessageId,
                     'page':this.pageNumber,
                     'set_as_readed':1,
@@ -1282,11 +1344,8 @@
                                 }
                                 messages_copy.push(item);
                             } catch (error) {
-                                console.log(error);
                             }
                         });
-                        if(this.messages.length)
-                            this.messageInTop = this.messages[0];
                         this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
@@ -1319,7 +1378,7 @@
             gettingChatQuebraGalhoDeAlberto: function(){
                 if(this.selectedContactIndex<0) return;
                 ApiService.get(this.chat_url,{
-                    'contact_id':this.selectedContact.id,
+                    'contact_id':this.contacts[this.selectedContactIndex].id,
                     'message_id': null,
                     'page':0,
                     'set_as_readed':0,
@@ -1350,18 +1409,14 @@
                                 }
                                 messages_copy.push(item);
                             } catch (error) {
-                                console.log(error);
                             }
                         });
-                        console.log('quebra galho '+this.messages.length+ ' -- '+ messages_copy.length);
                         if(this.messages.length != messages_copy.length){
-                            console.log('lista de mensagem atualizada');
                             this.messages = messages_copy.slice();
                         }   
                     }else{
                         this.hasMorePageMessage =false;
                     }
-                    console.log('selectedContactIndex in gettingChatQuebraGalhoDeAlberto: '+ this.selectedContactIndex + " --- name: "+ this.contacts[this.selectedContactIndex].first_name);
                 })
                 .catch(function(error) {
                 }).finally(()=>{                    
@@ -1372,7 +1427,7 @@
                 this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
                 if (this.searchMessageByStringInput.length > 1){
                     ApiService.get(this.chat_url,{
-                        'contact_id': this.selectedContact.id,
+                        'contact_id': this.contacts[this.selectedContactIndex].id,
                         'searchMessageByStringInput': this.searchMessageByStringInput,
                         'page': 1
                     })
@@ -1402,20 +1457,62 @@
             },
 
             //----------------Edit contact------------------------------
+            updateContact: function() {
+                this.isUpdatingContact = true;
+                
+                // Validando dados
+                this.trimDataSelectedContactToEdit();
+                this.validateDataSelectedContactToEdit();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isUpdatingContact = false;
+                    this.flagReference = true;
+                    return;
+                }
+
+                if(this.compareContactsForUpdate(this.contacts[this.selectedContactIndex], this.selectedContactToEdit)){
+                    this.selectedContactToEdit = Object.assign({}, this.deleteAditionalInformationOfContact(this.selectedContactToEdit));
+                    var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');
+                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');
+                    if(selectedContactToEdit_cpy.phone){
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');
+                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');
+                    }
+                    ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
+                        .then(response => {
+                            if(this.isEditingContact)
+                                this.isEditingContact = false;
+                            if(this.isEditingContactSummary)
+                                this.isEditingContactSummary = false;
+                            miniToastr.success("Contato atualizado com sucesso.","Sucesso");
+
+                            this.updateContatDatasInList(this.selectedContactToEdit.id, response.data);
+                            this.shiftContactAsFirtInList(response.data.id); 
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.contacts_url, "update");
+                        })
+                        .finally(() => this.isUpdatingContact = false);
+                }
+                this.isUpdatingContact = false;
+                this.isEditingContact = false;
+            },
+            
             markAsBrokenUrl: function(contact,index){
                 this.contacts[index].isPictUrlBroken = true;
-                this.allContacts[index].isPictUrlBroken = true;
             },
 
             reloadContactPicUrl: function(contact){
                 if(contact.isPictUrlBroken){
                     ApiService.get('updateContactPicture/'+contact.id)
                     .then(response => {
-                        this.contacts.forEach((item, i)=>{
+                        this.contacts.some((item, i)=>{
                             if(item.id == contact.id){
                                 item.json_data = response.data.json_data;
                                 this.$refs['contactPicurl'+contact.id].src = JSON.parse(response.data.json_data).picurl;
                                 item.isPictUrlBroken = false;
+                                return;
                             }
                         });
                     })
@@ -1425,50 +1522,47 @@
                 }
             },
 
-            getContactInfoToEdit: function(cont){
-                var tmp = Object.assign({}, cont);
-                delete tmp.count_unread_messagess;
-                delete tmp.index;
-                delete tmp.last_message;
-                delete tmp.latest_attendant;
-                delete tmp.latest_attendant_contact;
-                delete tmp.created_at;
-                delete tmp.updated_at;
-                delete tmp.deleted_at;
-                return tmp;
-            },
-
-            editNotificationsContacts: function() {
+            muteNotificationsOfContact: function() {
                 this.isSendingNotificationsContacts = true;
-                delete this.selectedContactToEditActions.status;                
-                delete this.selectedContactToEditActions.created_at;
-                delete this.selectedContactToEditActions.updated_at;
-                
+                var last_message = this.selectedContactToEditActions.last_message;
+                var index = this.selectedContactToEditActions.index;                
                 this.selectedContactToEditActions.status_id = (this.selectedContactToEditActions.status_id !=6)? 6:1;
-                ApiService.put(this.contacts_url+'/'+this.selectedContactToEditActions.id, this.selectedContactToEditActions)
-                    .then(response => {
-                        if(response.data.status_id != 6) miniToastr.success("As notificações foram ativadas com sucesso.","Sucesso");
-                        if(response.data.status_id == 6) miniToastr.success("As notificações foram silenciadas com sucesso.","Sucesso");
-                        this.selectedContactToEdit == this.getContactInfoToEdit(response.data);
-                        
-                        if(this.selectedContactIndex == this.selectedContactToEditActions.index){
-                            this.selectedContactIndex = 0;
-                        }else
-                        if(this.selectedContactIndex < this.selectedContactToEditActions.index){
-                            this.selectedContactIndex ++;
-                        }
-                        this.getContacts();
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.contacts_url, "update");
-                    })
+                ApiService.put(this.contacts_url+'/'+this.selectedContactToEditActions.id, 
+                    this.deleteAditionalInformationOfContact(this.selectedContactToEditActions)
+                )
+                .then(response => {
+                    if(response.data.status_id != 6) 
+                        miniToastr.success("Notificações ativadas com sucesso.","Sucesso");
+                    if(response.data.status_id == 6) 
+                        miniToastr.success("Notificações silenciadas com sucesso.","Sucesso");
+
+                    this.updateContatStatusInList(this.selectedContactToEditActions.id, response.data.status_id);
+                    this.shiftContactAsFirtInList(this.selectedContactToEditActions.id);
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.contacts_url, "update");
+                })
                 this.isSendingNotificationsContacts = false;
                 this.closemodal();
             },
 
-            getContactToEditActions: function(contact) {    
-                this.selectedContactToEditActions = Object.assign({}, contact);
-                this.isMuteNotifications = (contact.status_id == 6)? true: false;
+            muteNotificationsOfAttendant: function(){
+                var val = (this.userLogged.mute_notifications)?0:1;
+                ApiService.put(this.users_url+'/'+this.userLogged.id, {
+                    "id": this.userLogged.id,
+                    "mute_notifications": val
+                })
+                .then(response => {     
+                    if(val)
+                        miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
+                    else
+                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
+                    this.userLogged.mute_notifications = val;
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.users_url, "mute_notifications");
+                })
+                .finally(() => this.isUpdatingContact = false);
             },
             
             trimDataSelectedContactToEdit: function(){
@@ -1550,93 +1644,39 @@
                         this.flagReference = false;
                     }
                 }
-            },       
-
-            updateContact: function() {                
-                this.isUpdatingContact = true;
-                // Validando dados
-                this.trimDataSelectedContactToEdit();
-                this.validateDataSelectedContactToEdit();
-                if (this.flagReference == false){
-                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
-                    this.isUpdatingContact = false;
-                    this.flagReference = true;
-                    return;
-                }
-                var modifiedData = false;
-                if(this.selectedContact.first_name != this.selectedContactToEdit.first_name) modifiedData = true;
-                if(this.selectedContact.email != this.selectedContactToEdit.email) modifiedData = true;
-                if(this.selectedContact.whatsapp_id != this.selectedContactToEdit.whatsapp_id) modifiedData = true;
-                if(this.selectedContact.phone != this.selectedContactToEdit.phone) modifiedData = true;
-                if(this.selectedContact.cidade != this.selectedContactToEdit.cidade) modifiedData = true;
-                if(this.selectedContact.estado != this.selectedContactToEdit.estado) modifiedData = true;
-                if(this.selectedContact.categoria1 != this.selectedContactToEdit.categoria1) modifiedData = true;
-                if(this.selectedContact.categoria2 != this.selectedContactToEdit.categoria2) modifiedData = true;
-                if(this.selectedContact.summary != this.selectedContactToEdit.summary) modifiedData = true;
-
-                if(modifiedData){
-                    delete this.selectedContactToEdit.status;                
-                    delete this.selectedContactToEdit.created_at;
-                    delete this.selectedContactToEdit.updated_at;
-                    var selectedContactToEdit_cpy = Object.assign({}, this.selectedContactToEdit);                      //ECR: Para eliminar espaços e traços
-                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                    selectedContactToEdit_cpy.whatsapp_id = selectedContactToEdit_cpy.whatsapp_id.replace(/-/i, '');    //ECR
-                    if(selectedContactToEdit_cpy.phone){
-                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/ /g, '');                //ECR
-                        selectedContactToEdit_cpy.phone = selectedContactToEdit_cpy.phone.replace(/-/i, '');                //ECR
-                    }
-                    ApiService.put(this.contacts_url+'/'+this.selectedContactToEdit.id, selectedContactToEdit_cpy)
-                        .then(response => {
-                            if(this.isEditingContact)
-                                this.isEditingContact = false;
-                            if(this.isEditingContactSummary)
-                                this.isEditingContactSummary = false;
-                            miniToastr.success("Contato atualizado com sucesso.","Sucesso");
-                            this.selectedContactIndex = 0;
-                            
-                            this.contacts.some((item,i)=>{
-                                if(item.id == response.data.id){
-                                    item = Object.assign({}, response.data);
-                                    if(this.selectedContact.id == item.id){
-                                        this.selectedContact = Object.assign({}, item);
-                                        this.selectedContactToEdit = Object.assign({}, item);
-                                    }
-                                    return;
-                                }
-
-                            });
-                            // this.getContacts();
-                        })
-                        .catch(error => {
-                            console.log(error);
-                            this.processMessageError(error, this.contacts_url, "update");
-                        })
-                        .finally(() => this.isUpdatingContact = false);
-                }
-                this.isUpdatingContact = false;
-                this.isEditingContact = false;
             },
+            
+            updateContatStatusInList: function(contact_id, status_id){
+                this.contacts.some((item,i)=>{
+                    if(item.id == contact_id){
+                        item.status_id = status_id;
+                        return;
+                    }
+                });
+            },
+
+            updateContatDatasInList: function(contact_id, datas){
+                this.contacts.some((item,i)=>{
+                    if(item.id == contact_id){
+                        item.status_id = datas.status_id;                        
+                        item.first_name = datas.first_name;
+                        item.last_name = datas.last_name;
+                        item.email = datas.email;
+                        item.phone = datas.phone;
+                        item.whatsapp_id = datas.whatsapp_id;
+                        item.facebook_id = datas.facebook_id;
+                        item.instagram_id = datas.instagram_id;
+                        item.linkedin_id = datas.linkedin_id;
+                        item.remember = datas.remember;
+                        item.summary = datas.summary;
+                        item.description = datas.description;
+                        return;
+                    }
+                });
+            },
+            
 
             //-------------------Secundary functions----------------------
-            muteNotifications: function(){
-                var val = (this.userLogged.mute_notifications)?0:1;
-                ApiService.put(this.users_url+'/'+this.userLogged.id, {
-                    "id": this.userLogged.id,
-                    "mute_notifications": val
-                })
-                .then(response => {     
-                    if(val)
-                        miniToastr.success("Notificações de som desativadas com sucesso.","Sucesso");
-                    else
-                        miniToastr.success("Notificações de som ativadas com sucesso.","Sucesso");
-                    this.userLogged.mute_notifications = val;
-                })
-                .catch(error => {
-                    this.processMessageError(error, this.users_url, "mute_notifications");
-                })
-                .finally(() => this.isUpdatingContact = false);
-            },
-
             textTruncate: function(str, length, ending) {
                 if (length == null) {
                     length = 100;
@@ -1751,11 +1791,6 @@
                 }
             },
 
-            displayDeleteContact: function(){
-                this.item = this.selectedContact; 
-                this.modalDeleteContact=!this.modalDeleteContact;
-            },            
-
             Height: function(val){
                 return (this.window.height-val)+'px';
             },
@@ -1768,26 +1803,7 @@
             handleResize: function() {
                 this.window.width = window.innerWidth;
                 this.window.height = window.innerHeight;
-            },
-
-            reloadContacts: function(){
-                this.getContacts();
-            },
-
-            reloadContactsAfterDelete: function(){
-                this.displayChatRightSide();
-                this.getContacts();
-                this.selectedContact={};
-                this.selectedContactIndex = -1;
-            },
-
-            reloadAfterTransferContact: function(){
-                this.selectedContactIndex = -1;
-                // this.selectedContact = null;
-                this.displayChatRightSide();
-                this.contacts = [];
-                this.getContacts();
-            },
+            },            
 
             closemodal: function(){
                 this.modalDeleteContact = false;
@@ -1811,8 +1827,18 @@
                 });
             },
 
-            copyContact: function(){
-                this.item= Object.assign({}, this.selectedContact);
+            compareContactsForUpdate:function(original, edited){
+                var modifiedData = false;                
+                if(original.first_name != edited.first_name) modifiedData = true;
+                if(original.email != edited.email) modifiedData = true;
+                if(original.whatsapp_id != edited.whatsapp_id) modifiedData = true;
+                if(original.phone != edited.phone) modifiedData = true;
+                if(original.cidade != edited.cidade) modifiedData = true;
+                if(original.estado != edited.estado) modifiedData = true;
+                if(original.categoria1 != edited.categoria1) modifiedData = true;
+                if(original.categoria2 != edited.categoria2) modifiedData = true;
+                if(original.summary != this.selectedContactToEdit.summary) modifiedData = true;
+                return modifiedData;
             },
 
             //------------------Audio messages--------------------------
@@ -1848,14 +1874,11 @@
                 }
                 this.recorderMP3.start()
                     .then(() => {
-                        console.log('starting record audio');
                         this.timeRecordingAudio = "00:00";
                         this.recordingTime = 0;
                         this.isRecordingAudio = true;
                         this.handleTimerCounter = setInterval(this.timer, 1000);
                     }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
                     }).finally(()=>{this.isRecordingAudio = true;});
             },
 
@@ -1878,8 +1901,6 @@
                             this.isRecordingAudio = false;
                         }                     
                     }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
                     });
             },
 
@@ -1896,29 +1917,17 @@
 
                 window.MediaRecorder = OpusMediaRecorder;
                 this.rec = new MediaRecorder(stream, options, workerOptions);
-                console.log("created recorderOGG object");
-                console.log(this.rec);
 
                 var that = this;
                 this.rec.start = () => {
-                    console.log("started audio recorder");                    
                 };
 
-                // this.rec.dataavailable = (e) => {
-                //     console.log('dataChunk available');
-                //     this.dataChunks.push(e.data);                            
-                // };
-
                 this.rec.stop = () => {
-                    console.log('stopped audio recorder');
                     let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
                     this.rec.stream.getTracks().forEach(i => i.stop());
-                    console.log(blob);
                 };
 
                 this.rec.error = (e) => {
-                    console.log('an error in worker ocurr');                    
-                    console.log(e);                    
                     this.rec.stream.getTracks().forEach(i => i.stop());
                 };
 
@@ -1932,7 +1941,6 @@
                     return;
                 }
                 var This = this;
-                console.log("requesting permission to browser");
                 navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
                     .then(stream => {
                         This.createOGGRecorder(stream);
@@ -1940,20 +1948,12 @@
                         This.recordingTime = 0;
                         This.isRecordingAudio = true;
                         This.handleTimerCounter = setInterval(This.timer, 1000);
-                        // This.recorderOGG.addEventListener('dataavailable', (e) => {
-                        //     console.log(e.data);
-                        //     // audioElement.src = URL.createObjectURL(e.data);
-                        // });
                     }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
 
             stopOGGRecordVoice: function() {                                
                 this.rec.stop();
-                return;
-
                 clearInterval(This.handleTimerCounter);
                 This.recorderOGG.stop().getMp3()
                     .then(([buffer, blob]) => {
@@ -1972,45 +1972,23 @@
                             This.isRecordingAudio = false;
                         }                     
                     }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
                     });
 
             },
 
             createNativeRecorder: function(stream) {
                 this.rec = new MediaRecorder(stream);
-                console.log("created recorderOGG object");
 
                 var that = this;
                 this.rec.start = () => {
-                    console.log("started audio recorder");                    
                 };
-
-                // var This = this;
-                // this.rec.addEventListener('dataavailable', function(e) { 
-                //     console.log(e.data);
-                //     This.dataChunks.push(e.data);
-                // });
-
-                // this.rec.dataavailable = (e) => {
-                //     console.log('dataChunk available');
-                //     this.dataChunks.push(e.data);                            
-                // };
-
                 this.rec.ondataavailable = (e) => {
-                    console.log('dataChunk on available');
                     this.dataChunks.push(e.data);                            
                 };
-
                 this.rec.stop = (e) => {
-                    console.log('stopped audio recorder');
                     let blob = new Blob(this.dataChunks, {'type': 'audio/ogg; codecs=opus' });
                     this.rec.stream.getTracks().forEach(i => i.stop());
-                    console.log(this.dataChunks);
-                    console.log(blob);
                 };
-
                 this.dataChunks = [];
                 this.rec.start();
             },
@@ -2021,7 +1999,6 @@
                     return;
                 }
                 var This = this;
-                console.log("requesting permission to browser");
                 navigator.mediaDevices.getUserMedia({audio:true, video: false}) //getting 
                     .then(stream => {
                         This.createNativeRecorder(stream);
@@ -2030,8 +2007,6 @@
                         This.isRecordingAudio = true;
                         This.handleTimerCounter = setInterval(This.timer, 1000);
                     }).catch((e) => {
-                        console.log('an exception occurr when starting record audio');
-                        console.error(e);
                     }).finally(()=>{This.isRecordingAudio = true;});
             },
 
@@ -2057,8 +2032,6 @@
                             This.isRecordingAudio = false;
                         }                     
                     }).catch((e) => {
-                        console.log('We could not retrieve your message');
-                        console.log(e);
                     });
 
             },            
@@ -2097,7 +2070,7 @@
                     var message = JSON.parse(e.message);                    
 
                     if(message.source == 0){ //message to update the message status to 2 or 7
-                        if(this.selectedContactIndex>-1 && message.contact_id == this.selectedContact.id){
+                        if(this.selectedContactIndex>-1 && message.contact_id == this.contacts[this.selectedContactIndex].id){
                             this.messages.some((item,i)=>{
                                 if(message.id == item.id){
                                     item.status_id = message.status_id;
@@ -2123,19 +2096,18 @@
                                     message.path = message.data.FullPath;
                             }
                         } catch (error) {
-                            console.log(error);
                         }
                         
                         let targetIndex = -1; 
                         var isSelectedContact = false;
                         //------show the recived message if the target contact is selected----------
-                        if(this.selectedContactIndex > -1 && this.selectedContact.id == message.contact_id){
+                        if(this.selectedContactIndex > -1 && this.contacts[this.selectedContactIndex].id == message.contact_id){
                             this.messages.push(Object.assign({}, message));
                             this.contacts[this.selectedContactIndex].last_message = message;
-                            this.selectedContact.last_message = message;
+                            this.contacts[this.selectedContactIndex].last_message = message;
                             if(this.$refs.message_scroller)
                                 this.$refs.message_scroller.scrolltobottom();
-                            targetIndex = this.selectedContact.index;
+                            targetIndex = this.contacts[this.selectedContactIndex].index;
                             isSelectedContact = true;
                         }else{
                             //-------find contact and update count_unread_messagess and last_message-------
@@ -2150,7 +2122,6 @@
                         }
     
                         if(targetIndex > -1){ // set the target contact as firt if is in contacts list
-                            console.log(targetIndex);
                             var targetContact = Object.assign({}, this.contacts[targetIndex]);
                             var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
                             var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
@@ -2165,7 +2136,7 @@
                                     this.selectedContactIndex = 0;
                                 else
                                     this.selectedContactIndex ++;
-                                this.selectedContact = this.contacts[this.selectedContactIndex];
+                                this.contacts[this.selectedContactIndex] = this.contacts[this.selectedContactIndex];
                             }
                         }else{ //insert the target contact in contacts list if isnt
                             subjacentContact.count_unread_messagess = 1;
@@ -2177,7 +2148,6 @@
                             });
                             if(isSelectedContact){
                                 this.selectedContactIndex ++;
-                                this.selectedContact = this.contacts[this.selectedContactIndex];
                             }
                         }
     
@@ -2215,7 +2185,6 @@
                     });
                     if(this.selectedContactIndex >=0){
                         this.selectedContactIndex ++;
-                        this.selectedContact = this.contacts[this.selectedContactIndex];
                     }
                     miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
                 });
@@ -2240,7 +2209,7 @@
         updated(){
             if(this.selectedContactIndex >= 0 && this.$refs.message_scroller && this.pageNumber == 0) {
                 this.$refs.message_scroller.scrolltobottom();
-            }            
+            }
         },
 
         beforeMount() {
@@ -2249,19 +2218,6 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
-            
-            // if(this.handleTimeToReloadContacts){
-            //     clearInterval(this.handleTimeToReloadContacts);
-            // }
-            // if(process.env.MIX_TIME_TO_RELOAD_CONTACS){
-            //     this.handleTimeToReloadContacts = setInterval(()=>{
-            //         this.getContacts();
-            //         this.getAmountContactsInBag();
-            //         // this.gettingChatQuebraGalhoDeAlberto();
-            //     }, process.env.MIX_TIME_TO_RELOAD_CONTACS*1000);
-            // }
-            
-
         },
 
         mounted(){
@@ -2276,7 +2232,6 @@
             this.wsMessageToAttendant();
             this.wsContactToBag();
             this.wsTransferredContact();
-            
         },
 
         created() {
@@ -2294,23 +2249,23 @@
         },
 
         computed: {
-            allContacts: function() {    
-                var self = this;
-                return this.contacts.filter(
-                    function(contact) {
-                        var str = contact.name +
-                            ' '+contact.first_name +
-                            ' '+contact.email +
-                            ' '+contact.phone +
-                            ' '+contact.whatsapp_id +
-                            ' '+contact.facebook_id +
-                            ' '+contact.linkedin_id +
-                            ' '+contact.instagram_id;
-                        return (
-                            str.toLowerCase().indexOf(self.searchContactByStringInput.toLowerCase()) >=0
-                        );
-                });
-            },            
+            // allContacts: function() {    
+            //     var self = this;
+            //     return this.contacts.filter(
+            //         function(contact) {
+            //             var str = contact.name +
+            //                 ' '+contact.first_name +
+            //                 ' '+contact.email +
+            //                 ' '+contact.phone +
+            //                 ' '+contact.whatsapp_id +
+            //                 ' '+contact.facebook_id +
+            //                 ' '+contact.linkedin_id +
+            //                 ' '+contact.instagram_id;
+            //             return (
+            //                 str.toLowerCase().indexOf(self.searchContactByStringInput.toLowerCase()) >=0
+            //             );
+            //     });
+            // },            
         },
 
         watch:{
@@ -2320,10 +2275,8 @@
 
             isSendingNewMessage: function(value){
                 if(value){
-                    // console.log('sending message');
                     //disable new message, and upload and send buttons
                 }else{
-                    // console.log('sended message');
                     //enable new message, and upload and send buttons
                 }
             },             
