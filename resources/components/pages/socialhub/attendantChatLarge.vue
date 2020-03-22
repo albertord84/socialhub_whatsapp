@@ -382,7 +382,8 @@
                                             <span class="pt-2" style="float:right; font-size:1.3rem">
                                                 <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
                                                 <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
-                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
+                                                <!-- <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span> -->
+                                                <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span>
                                             </span>
                                         </p>                                        
                                     </div>
@@ -2079,8 +2080,7 @@
                             });
                         }
                     }else 
-                    if(message.source == 1){ //message from contact
-                        
+                    if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
                         var subjacentContact = null;
                         if(typeof(message.Contact)!='undefined'){
@@ -2111,33 +2111,33 @@
                             isSelectedContact = true;
                         }else{
                             //-------find contact and update count_unread_messagess and last_message-------
-                            this.contacts.some((item, index) => {
+                            this.contacts.some((item, i) => {
                                 if(item.id == message.contact_id){
                                     item.count_unread_messagess = item.count_unread_messagess + 1;
                                     item.last_message = message;
-                                    targetIndex = index;
+                                    targetIndex = i;
                                     return;
                                 }
                             });
                         }
     
                         if(targetIndex > -1){ // set the target contact as firt if is in contacts list
-                            var targetContact = Object.assign({}, this.contacts[targetIndex]);
-                            var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
-                            var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
-                            this.contacts = A.concat(B);
-                            this.contacts.unshift(targetContact);
+                            // var targetContact = Object.assign({}, this.contacts[targetIndex]);
+                            // var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
+                            // var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
+                            // this.contacts = A.concat(B);
+                            // this.contacts.unshift(targetContact);
     
-                            for(i=0; i<=targetIndex;i++)
-                                this.contacts[i].index = i;
+                            // for(i=0; i<=targetIndex;i++)
+                            //     this.contacts[i].index = i;
     
-                            if(this.selectedContactIndex>=0){
-                                if(targetIndex == this.selectedContactIndex)
-                                    this.selectedContactIndex = 0;
-                                else
-                                    this.selectedContactIndex ++;
-                                this.contacts[this.selectedContactIndex] = this.contacts[this.selectedContactIndex];
-                            }
+                            // if(this.selectedContactIndex>=0){
+                            //     if(targetIndex == this.selectedContactIndex)
+                            //         this.selectedContactIndex = 0;
+                            //     else
+                            //         this.selectedContactIndex ++;
+                            // }
+                            this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
                         }else{ //insert the target contact in contacts list if isnt
                             subjacentContact.count_unread_messagess = 1;
                             subjacentContact.last_message = message;
@@ -2177,7 +2177,6 @@
                 window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
                 .listen('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
-                    // newContact.index = this.contacts.length;
                     this.contacts.unshift(newContact);
                     var i = 0;
                     this.contacts.forEach(function(item, i){
@@ -2186,7 +2185,7 @@
                     if(this.selectedContactIndex >=0){
                         this.selectedContactIndex ++;
                     }
-                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
+                    miniToastr.success("Sucesso", "Contato transferido com sucesso");   
                 });
             },
 
