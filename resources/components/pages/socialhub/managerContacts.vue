@@ -14,12 +14,12 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                        <i class="mdi mdi-file-export fa-lg"  ></i>
+                        <i class="fa fa-upload" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
-                        <i class="mdi mdi-file-import fa-lg"  ></i>
+                        <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
@@ -136,6 +136,7 @@
                             {{ item.cnt }} {{ item.message }}
                         </li>
                     </ul>
+                    
                 </div>
 
                 <div class="col-lg-12 mt-5 text-center">
