@@ -1,7 +1,7 @@
 <template>
     <div ref="vscroll" :style="{ 'height': height,'min-height':minHeight,'max-height':maxHeight }" class="ss-container">
         <div class="ss-wrapper" ref="wrapper">
-            <div class="ss-content" :id="vid" ref="content" @scroll="moveBar" @mouseenter="moveBar">
+            <div class="ss-content" :id="vid" ref="content" @scroll="moveBar" @mouseenter="moveBar" style="width:1000px">
                 <slot></slot>
             </div>
         </div>
