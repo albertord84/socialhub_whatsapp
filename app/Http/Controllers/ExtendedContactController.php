@@ -109,11 +109,16 @@ class ExtendedContactController extends ContactController
             }
             $response = array();
             $lineError = array();
+            $lineWarn1 = array();
+            $lineWarn2 = array();
+            $lineWarn3 = array();
             
             //insert contacts in database
             $cntMessage1 = 0;
             $cntMessage2 = 0;
             $cntMessage3 = 0;
+            $cntMessage4 = 0;
+            $cntMessage5 = 0;
             $i=2;
             foreach($Contacts as $contact){
                 try{
@@ -198,16 +203,32 @@ class ExtendedContactController extends ContactController
                                         $cntMessage1++;
                                     }
                                 }else{
+                                    // $lineWarn1[$cntMessage2] = array(
+                                    //     "line" => "$i"
+                                    // );
                                     $cntMessage2++;
                                 }
                             }else{
+                                // $lineWarn2[$cntMessage3] = array(
+                                //     "line" => "$i"
+                                // );
+                                // $cntMessage3++;
                                 $cntMessage2++;
+
                             }
                         }else{
+                            // $lineWarn3[$cntMessage4] = array(
+                            //     "line" => "$i"
+                            // );
+                            // $cntMessage4++;
                             $cntMessage2++;
+
                         }
                     }else{
-                        $cntMessage3++;
+                        $lineError[$cntMessage5] = array(
+                            "line" => "$i"
+                        );
+                        $cntMessage5++;
                     }
 
                 } catch (\Throwable $th) {
@@ -226,13 +247,36 @@ class ExtendedContactController extends ContactController
             $response["message2"] = array(
                 "message" => "contatos foram adicionados mas não foram atribuídos a um atendente. Confira o email que foi inserido para o atendente, ele pode ser inválido ou o atendente pode não estar criado.",
                 "code" => "warning",
-                "cnt" => "$cntMessage2"
+                "cnt" => "$cntMessage2",
             );
 
-            $response["message3"] = array(
-                "message" => "contatos não foram adicionados porque o número de whatsapp parece errado ou inexistente.",
+            // $response["message2"] = array(
+            //     "message" => "contatos foram adicionados mas não foram atribuídos a um atendente porque o atendente indicado não pertence a esta empresa.",
+            //     "code" => "warning",
+            //     "cnt" => "$cntMessage2",
+            //     "lineWarn"  => $lineWarn1
+
+            // );
+
+            // $response["message3"] = array(
+            //     "message" => "contatos foram adicionados mas não foram atribuídos a um atendente porque o email do atendente é inválido.",
+            //     "code" => "warning",
+            //     "cnt" => "$cntMessage3",
+            //     "lineWarn"  => $lineWarn2
+            // );
+            
+            // $response["message4"] = array(
+            //     "message" => "contatos foram adicionados mas não foram atribuídos a um atendente porque o atendente não foi indicado.",
+            //     "code" => "warning",
+            //     "cnt" => "$cntMessage4",
+            //     "lineWarn"  => $lineWarn3
+            // );
+
+            $response["message5"] = array(
+                "message" => "contatos não foram adicionado porque o número de whatsapp parece errado ou inexistente.",
                 "code" => "error",
-                "cnt" => "$cntMessage3"
+                "cnt" => "$cntMessage5",
+                "lineError"  => $lineError
             );
 
         } else {
@@ -242,7 +286,6 @@ class ExtendedContactController extends ContactController
         return json_encode($response);
         // return $response->toJson();
     }
-
 
     /**
      * Update the specified Contact in storage.
