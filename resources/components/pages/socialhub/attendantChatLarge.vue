@@ -96,7 +96,10 @@
                             <div class="">
                                 <div class="row pt-3 pb-3">
                                     <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact,index)">
-                                        <img :src="(contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
+                                        <img v-if="contact.json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
+                                        <img v-else-if="contact.json_data.includes('images/contacts/')" :src="'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" class="contact-picture">
+                                        <img v-else :src="'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" class="contact-picture">
+                                        <!-- <img :src="(contact.json_data && contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture"> -->
                                     </div>
 
                                     <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact,index)">
@@ -325,9 +328,12 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-1 text-right">
-                                        <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg">
+                                        <!-- <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg"> -->
+                                        
+                                        <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
+                                        <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/')" :src="'images/contacts/default.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
+                                        <img v-else :src="'images/contacts/default.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
                                     </div>
                                     <div class="col-11">
                                         <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>

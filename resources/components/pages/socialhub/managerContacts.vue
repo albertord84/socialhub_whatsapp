@@ -131,7 +131,7 @@
             <div v-if="steepUploadFile==4">
                 <h5 class="text-center">Resultado da importação de contatos.</h5>
                 <div style="max-height: 200px; overflow-y: auto;">
-                   <ul id="Report">
+                    <ul id="Report">
                         <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
                             {{ item.cnt }} {{ item.message }}
                         </li>
@@ -266,6 +266,7 @@
                 ApiService.get(this.url, {
                     'filterContactToken': "",
                     'last_contact_id': 0,
+                    'last_contact_idx': this.rows.length,
                 })
                     .then(response => {  
                         response.data.forEach((item, i)=>{                            
