@@ -218,19 +218,19 @@ class ExtendedContactController extends ContactController
             }
         
             $response["message1"] = array(
-                "message" => "contatos adicionados corretamente. Contatos atribuídos ao atendente.",
+                "message" => "contatos foram adicionados e atribuídos aos atendentes corretamente.",
                 "code" => "success",
                 "cnt" => "$cntMessage1"
             );
 
             $response["message2"] = array(
-                "message" => "contatos adicionados corretamente. Contatos não atribuídos a um atendente. Confira se o atendente foi indicado, se o email do atendente é válido ou o atendente pertence a esta empresa.",
+                "message" => "contatos foram adicionados mas não foram atribuídos a um atendente. Confira o email que foi inserido para o atendente, ele pode ser inválido ou o atendente pode não estar criado.",
                 "code" => "warning",
                 "cnt" => "$cntMessage2"
             );
 
             $response["message3"] = array(
-                "message" => "contatos não foram adicionados porque contêm números de whatsapp inválido.",
+                "message" => "contatos não foram adicionados porque o número de whatsapp parece errado ou inexistente.",
                 "code" => "error",
                 "cnt" => "$cntMessage3"
             );

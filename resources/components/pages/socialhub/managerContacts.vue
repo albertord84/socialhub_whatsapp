@@ -14,12 +14,12 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                        <i class="mdi mdi-file-export fa-lg"  ></i>
+                        <i class="fa fa-upload" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
-                        <i class="mdi mdi-file-import fa-lg"  ></i>
+                        <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
@@ -131,11 +131,12 @@
             <div v-if="steepUploadFile==4">
                 <h5 class="text-center">Resultado da importação de contatos.</h5>
                 <div style="max-height: 200px; overflow-y: auto;">
-                   <ul id="Report">
+                    <ul id="Report">
                         <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
                             {{ item.cnt }} {{ item.message }}
                         </li>
                     </ul>
+                    
                 </div>
 
                 <div class="col-lg-12 mt-5 text-center">
@@ -266,6 +267,7 @@
                 ApiService.get(this.url, {
                     'filterContactToken': "",
                     'last_contact_id': 0,
+                    'last_contact_idx': this.rows.length,
                 })
                     .then(response => {  
                         response.data.forEach((item, i)=>{                            
