@@ -14,6 +14,7 @@ use App\Repositories\ExtendedUsersAttendantRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Response;
 
 class ExtendedContactController extends ContactController
@@ -112,12 +113,14 @@ class ExtendedContactController extends ContactController
                 try{
                     $whatsapp = $contact['Whatsapp'];
                     $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
-                    $Contact = Contact::with('latestAttendant')
-                            ->where('whatsapp_id' ,$whatsapp)
+                    $Contact = Contact::where('whatsapp_id' ,$whatsapp)
                             ->where('company_id', '=', $User->company_id)
                             ->first();
 
-                    $last_attendant_id = $Contact->latestAttendant->attendant_id ?? null; //TODO:Alberto
+                    $Contact = $Contact ?? new Contact;
+                    $latestAttendantContact = $Contact->latestAttendantContact()->first();
+
+                    $last_attendant_id = $latestAttendantContact->attendant_id ?? null; //TODO:Alberto
                     $Contact->company_id = $User->company_id;
                     $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
@@ -153,8 +156,10 @@ class ExtendedContactController extends ContactController
                     if(!empty($Contact->whatsapp_id)){
                         if(!isset($Contact->status_id))
                             $Contact->status_id = 2;
-                        $Contact->created_at = '1959-01-01 00:00:00';
-                        $Contact->updated_at = '1959-01-01 00:00:00';
+                        $Contact->created_at = Carbon::minValue();
+                        $Contact->updated_at = Carbon::minValue();
+                        // $Contact->created_at = '1959-01-01 00:00:00';
+                        // $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
                         
                         //processar atendentes

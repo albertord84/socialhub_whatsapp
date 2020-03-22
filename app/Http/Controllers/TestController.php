@@ -2,33 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Business\BlingBusiness;
-use App\Business\ChatsBusiness;
-use App\Business\SalesBusiness;
-use App\Events\MessageToAttendant;
-use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
 use App\Jobs\SendWhatsAppMsg;
-use App\Mail\EmailSigninCompany;
-use App\Mail\EmailSigninAttendant;
 use App\Models\Company;
 use App\Models\Contact;
-use App\Models\ExtendedChat;
-use App\Models\Sales;
-use App\Repositories\ExtendedChatRepository;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
-use App\Repositories\ExtendedRpiRepository;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-
-
-
-use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class TestController extends AppBaseController
 {
@@ -48,15 +31,22 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $last_contact_id = 16;
+        $last_contact_idx = 101;
         $company_id = 1;
         $attendant_id = 4;
-        $lastContact = Contact::find($last_contact_id);
-        
+
+        $extContRepo = new ExtendedContactRepository(app());
+        $Contacts = $extContRepo->fullContacts(1, null, null, $last_contact_idx);
+
+        // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
+        dd($Contacts);
+
+        // $lastContact = Contact::find($last_contact_idx);
+
         // $ExtendedChat = new ExtendedChat();
         // $ExtendedChat->table = '4';
         // $ExtendedChat = $ExtendedChat->find(1);
-        
+
         // $ExtendedChat->Contact = $lastContact;
         // dd($ExtendedChat->toJson());
         // $Contacts = $this->repository
@@ -69,9 +59,8 @@ class TestController extends AppBaseController
         //         'company_id' => $company_id,
         //         // ['updated_at', '>', $lastContact->updated_at]
         //     ]);
-        // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));        
+        // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
 
-        
         // $Contacts->orderBy('updated_at', 'asc');
         // dd($Contacts);
 
@@ -95,7 +84,6 @@ class TestController extends AppBaseController
 
         // dd($message);
 
-
         // Check contact info by company
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);
         // $checkContact = $ExternalRPIController->getContactInfo("5521986615841");
@@ -110,28 +98,26 @@ class TestController extends AppBaseController
         // var_dump(env('APP_ENV'));
 
         //testing emails from laravel -Jose R
-        // $Company = Company::find(1); 
-        // $Seller = User::find(2); 
-        // $UserManager = User::find(5); 
+        // $Company = Company::find(1);
+        // $Seller = User::find(2);
+        // $UserManager = User::find(5);
         // $UserManager->password = rand(100000,999999);
         // Mail::to($UserManager->email)
-            // ->bcc($Seller->email)
-            // ->send(new EmailSigninCompany($Seller, $UserManager, $Company));
-        
-        // $Manager = User::find(3); 
+        // ->bcc($Seller->email)
+        // ->send(new EmailSigninCompany($Seller, $UserManager, $Company));
+
+        // $Manager = User::find(3);
         // $User = User::find(5);
-        // $User->password = rand(100000,999999); 
+        // $User->password = rand(100000,999999);
         // Mail::to($User->email)
         //     ->send(new EmailSigninAttendant($Manager, $User));
-
-
 
         // TEST WITH REPOSITORY
         // $extContRepo = new ExtendedContactRepository(app());
         // $Contacts = $extContRepo->fullContacts(1, 4);
         // $Attendants = $extContRepo->getAttendants(1);
         // dd($Attendants);
-        
+
         // $extRepo = new ExtendedRpiRepository(app());
         // $ContactChats = $extRepo->rpiOfCompany(3);
         // dd($ContactChats);
@@ -145,14 +131,11 @@ class TestController extends AppBaseController
         // $ChatsBussines = new ChatsBusiness();
         // return $ChatsBussines->getBagContactsCount(1);
 
-
         // FIND CONTACT BY NUMBER
         // $contact_Jid = "5521965536174@s.whatsapp.net";
         // $Contacts = Contact::where(['whatsapp_id' => $contact_Jid])->first();
         // echo $Contacts->toJson();
         // dd($Contacts->toJson());
-
-
 
         // LOGIN TEST
         // $User = Auth::user();
@@ -161,8 +144,6 @@ class TestController extends AppBaseController
         //     Auth::login($User, true);
         // }
         // var_dump($User);
-
-
 
         // NOTIFICATIONS TEST
         // $data = (object) array(
@@ -173,8 +154,6 @@ class TestController extends AppBaseController
         // die;
         // $UsersAttendant = User::find(4);
         // Notification::send($User, new NewContactMessage("Test New Contact Message"));
-
-
 
         // BROAD CAST TESTS
         // try {
@@ -196,15 +175,11 @@ class TestController extends AppBaseController
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));
         // Bugsnag::notifyException(new RuntimeException("Test error"));
-        
 
         // $Contact = Contact::find($request->contact_id);
         // $Contact->updated_at = time();
         // $Contact->save();
         // broadcast(new NewTransferredContact((int) $User->id, $Contact));
-
-
-
 
         // TEST CONTROLLERS
         // $Controller = new ExtendedUsersSellerController($this->repository);
@@ -214,7 +189,8 @@ class TestController extends AppBaseController
         $this->testJobsQueue();
     }
 
-    public function testJobsQueue() {
+    public function testJobsQueue()
+    {
         $company_id = 35;
         $Company = Company::with('rpi')->find($company_id);
         $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -233,7 +209,7 @@ class TestController extends AppBaseController
         // $pending =  SendWhatsAppMsg::withChain([$sendWAMsg])->dispatch();
         // $pending =  $sendWAMsg->dispatch();
 
-        $pending =  SendWhatsAppMsg::dispatch($ExternalRPIController, $Contact, $message);
+        $pending = SendWhatsAppMsg::dispatch($ExternalRPIController, $Contact, $message);
 
         dd($pending);
     }
