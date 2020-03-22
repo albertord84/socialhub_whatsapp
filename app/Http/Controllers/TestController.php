@@ -38,10 +38,13 @@ class TestController extends AppBaseController
         $attendant_id = 4;
 
         $extContRepo = new ExtendedContactRepository(app());
-        $Contacts = $extContRepo->fullContacts(1, null, null, $last_contact_idx);
+
+
+
+        // $Contacts = $extContRepo->fullContacts(1, null, null, $last_contact_idx);
 
         // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
-        dd($Contacts);
+        // dd($Contacts);
 
         // $lastContact = Contact::find($last_contact_idx);
 
@@ -188,7 +191,7 @@ class TestController extends AppBaseController
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
 
-        $this->testJobsQueue();
+        // $this->testJobsQueue();
     }
 
     public function testJobsQueue()
