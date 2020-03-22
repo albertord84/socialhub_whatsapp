@@ -14,6 +14,7 @@ use App\Repositories\ExtendedUsersAttendantRepository;
 use Auth;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Response;
 
 class ExtendedContactController extends ContactController
@@ -36,15 +37,15 @@ class ExtendedContactController extends ContactController
     public function index(Request $request)
     {
         try {
-            $request->last_contact_id = $request->last_contact_id ?? null;
+            $request->last_contact_idx = $request->last_contact_idx ?? null;
             $User = Auth::check() ? Auth::user() : session('logged_user');
             if($User){
                 $Contacts = $this->contactRepository->all();
                 if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, null, $request->last_contact_id);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, null, $request->last_contact_idx);
                 } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
                     $filter = $request->filter_contact;
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter, $request->last_contact_id);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter, $request->last_contact_idx);
                 }    
                 return $Contacts->toJson();
             }else{
@@ -118,13 +119,16 @@ class ExtendedContactController extends ContactController
                 try{
                     $whatsapp = $contact['Whatsapp'];
                     $whatsapp = trim(str_replace('/', '', str_replace(' ', '', str_replace('-', '', str_replace(')', '', str_replace('(', '', $whatsapp))))));
-                    
-                    //find contact and it latestAttendant if exist or crate new object
-                    $Contact = Contact::with('latestAttendant')->where('whatsapp_id', $whatsapp)->where('company_id', '=', $User->company_id)->first();
-                    $Contact = $Contact ?? new Contact();
-                    $last_attendant_id = $Contact->latestAttendant->attendant_id ?? null;
+                    $Contact = Contact::where('whatsapp_id' ,$whatsapp)
+                            ->where('company_id', '=', $User->company_id)
+                            ->first();
 
-                    //set or update the Contact datas                    
+                    $Contact = $Contact ?? new Contact;
+                    $latestAttendantContact = $Contact->latestAttendantContact()->first();
+
+                    $last_attendant_id = $latestAttendantContact->attendant_id ?? null; //TODO:Alberto
+                    $Contact->company_id = $User->company_id;
+                    $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
                         $Contact->first_name = trim($contact['Nome']);
                     }
@@ -163,8 +167,10 @@ class ExtendedContactController extends ContactController
                     if(!empty($Contact->whatsapp_id)){
                         if(!isset($Contact->status_id))
                             $Contact->status_id = 2;
-                        $Contact->created_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
-                        $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                        $Contact->created_at = Carbon::minValue();
+                        $Contact->updated_at = Carbon::minValue();
+                        // $Contact->created_at = '1959-01-01 00:00:00';
+                        // $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
                         
                         //process the respective atendent email in the actual csv row
