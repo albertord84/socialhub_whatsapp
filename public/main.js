@@ -290,13 +290,6 @@ var ApiService = {
             }).join('&');
         }
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.axios.get("" + resource + params);
-<<<<<<< HEAD
-=======
-        //ECR
-        // return Vue.axios.get(`${resource}${params}`).catch(error => {
-        //     throw new Error(`[RWV] ApiService ${error}`);
-        // });
->>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
     },
     post: function post(resource, params) {
         if (__WEBPACK_IMPORTED_MODULE_3__jwt_service__["a" /* default */].getToken() !== null) {
@@ -353,11 +346,7 @@ var ApiService = {
                 object.typeException = "duplicateEntry";
                 object.typeMessage = "warn";
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
-<<<<<<< HEAD
                 if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado nessa empresa.";
-=======
-                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
->>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
             } else if (error.response.data.message && error.response.data.message.includes("Could not resolve host")) {
 
                 object.typeException = "WithoutConnection";
@@ -367,27 +356,21 @@ var ApiService = {
                 // Quando tenta verificar número de whatsapp e o hardware está desconectado
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
-<<<<<<< HEAD
             } else if (error.response.data.message && error.response.data.message.includes("Trying to get property 'company_id' of non-object")) {
                 // Secção expirada.
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
                 object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
-=======
->>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
             } else if (error.response.status == 419 && error.response.data.message.includes("")) {
                 // Secção expirada.
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
                 object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
-<<<<<<< HEAD
             } else if (error.response.data && error.response.data.includes("count_unread_messagess")) {
                 // Secção expirada.
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";
                 object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
-=======
->>>>>>> 084e14b80d6985f38db9d6edf02a233e2506a4ac
             } else if (error.response.data.message && error.response.data.message.includes("Erro enviando mensagem")) {
                 // Quando não se pode enviar mensagem
                 object.typeMessage = "warn";
