@@ -285,7 +285,7 @@
                     }
                 ],
                 currentPage: 1,
-                currentPerPage: this.perPage,
+                currentPerPage: -1,//this.perPage,
                 sortColumn: -1,
                 sortType: 'asc',
                 searchInput: '',     
@@ -296,7 +296,6 @@
 
         methods: {
             getContacts: function() { //R
-                console.log(this.rows.length);
                 if(this.isLoadMoreContacts) return;
                 this.isLoadMoreContacts = true;
                 ApiService.get(this.url, {
