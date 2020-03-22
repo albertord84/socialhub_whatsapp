@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageToAttendant;
+use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
 use App\Jobs\SendWhatsAppMsg;
 use App\Models\Company;

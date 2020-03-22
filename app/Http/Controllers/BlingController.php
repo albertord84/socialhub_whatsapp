@@ -13,6 +13,8 @@ use Laracasts\Flash\Flash as Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
+use Illuminate\Support\Facades\Log;
+
 class BlingController extends AppBaseController
 {
     /** @var  BlingRepository */
@@ -30,7 +32,7 @@ class BlingController extends AppBaseController
             
             $Sales = $BlingBussines->getBlingSales();
             
-            // Log::debug('Bling Sales', [$Sales]);
+            Log::debug('Bling Sales', [$Sales]);
 
 
         } catch (\Throwable $tr) {
