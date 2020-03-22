@@ -1128,6 +1128,7 @@
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
+                    'last_contact_idx': this.contacts.length,
                 })
                 .then(response => {
                     if(response.data.length){
@@ -1224,9 +1225,7 @@
             insertContactAsFirtInList:function(targetContact){
                 var selectedContactId = (this.selectedContactIndex>-1) ? this.contacts[this.selectedContactIndex].id : -1;                
                 //1. push targetContact as first
-                console.log(this.contacts);
                 this.contacts.unshift(targetContact);
-                console.log(this.contacts);
                 //2. update all contact index and selectecContactIndex
                 this.contacts.some((item,i)=>{
                     item.index == i;                    
