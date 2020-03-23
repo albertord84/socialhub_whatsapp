@@ -75,7 +75,7 @@ class ExtendedContactRepository extends ContactRepository
         } else {
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where('company_id', $company_id)
-                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get()
+                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MAGAGER', 30))->get()
                 ->each(function ($Contact, $key) {
                     if ($Contact->latestAttendant) {
                         $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
