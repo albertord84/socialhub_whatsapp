@@ -32,19 +32,20 @@ class TestController extends AppBaseController
     }
 
     public function index(Request $request)
+    
     {
-        $last_contact_idx = 101;
+        $last_contact_idx = 0; //101;
         $company_id = 1;
-        $attendant_id = 4;
+        $attendant_id = 5;
 
         $extContRepo = new ExtendedContactRepository(app());
 
 
 
-        // $Contacts = $extContRepo->fullContacts(1, null, null, $last_contact_idx);
+        $Contacts = $extContRepo->fullContacts(1, $attendant_id, null, $last_contact_idx);
 
         // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
-        // dd($Contacts);
+        dd($Contacts);
 
         // $lastContact = Contact::find($last_contact_idx);
 

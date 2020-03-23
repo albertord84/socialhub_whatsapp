@@ -52,21 +52,23 @@ class ExtendedContactRepository extends ContactRepository
                 ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
 
             foreach ($Contacts as $key => $Contact) {
-                // Get Contact Status
-                $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
+                if ($Contact->latestAttendantContact->attendant_id == $attendant_id) {
+                    // Get Contact Status
+                    $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 
-                // Last Chat Message
-                $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
-                $Contacts[$key]['last_message'] = $lastMesssage;
+                    // Last Chat Message
+                    $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+                    $Contacts[$key]['last_message'] = $lastMesssage;
 
-                // Unreaded Messages Count
-                $countUnreadMessages = $chatModel
-                    ->where('contact_id', $Contact->id)
-                    ->where('status_id', MessagesStatusController::UNREADED) //UNREADED message for me
-                    ->count();
-                $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
+                    // Unreaded Messages Count
+                    $countUnreadMessages = $chatModel
+                        ->where('contact_id', $Contact->id)
+                        ->where('status_id', MessagesStatusController::UNREADED) //UNREADED message for me
+                        ->count();
+                    $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
-                $Collection->add($Contacts[$key]);
+                    $Collection->add($Contacts[$key]);
+                }
             }
 
             return $Collection;
