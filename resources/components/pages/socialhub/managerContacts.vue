@@ -133,8 +133,9 @@
                 <div style="max-height: 200px; overflow-y: auto;">
                     <ul id="Report">
                         <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
-                            {{ item.cnt }} {{ item.message }}
+                            <!-- {{ item.cnt }} {{ item.message }} -->
                             <!-- {{ item.message }} -->
+                            Linha {{ item.line }}: {{ item.message }}
                         </li>
                     </ul>
 
