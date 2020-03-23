@@ -1164,7 +1164,10 @@
                         this.hasMorePageContacts = false;
                     }
                 })
-                .catch(error => {this.processMessageError(error, this.contacts_url,"get");})
+                .catch(error => {
+                    console.log('------------------>');
+                    console.log(error);
+                    this.processMessageError(error, this.contacts_url,"get");})
                 .finally(()=>{this.requestingNewPageContacts = false;});
             },
 
