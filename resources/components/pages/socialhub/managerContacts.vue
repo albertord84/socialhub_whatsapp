@@ -14,12 +14,12 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                        <i class="fa fa-upload" aria-hidden="true"></i>
+                        <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
-                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <i class="fa fa-upload" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
@@ -35,24 +35,67 @@
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
-                        <template v-for="(column,index) in columns">
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row,column.field) }}
-                            </td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
-                            </td>
-                        </template>
-                        <slot name="tbody-tr" :row="row"></slot>
-                    </tr>
+                    <!-- <v-scroll :height="Height(150)" :vid="'contact-content'" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @ontop="onTopContacts" @onbottom="onBottomContacts" @oncontentresize="1"  > -->
+                        <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                            <template v-for="(column,index) in columns">
+                                <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
+                                    {{ collect(row,column.field) }}
+                                </td>
+                                <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
+                                    <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
+                                    <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                </td>
+                            </template>
+                            <slot name="tbody-tr" :row="row"></slot>
+                        </tr>
+                    <!-- </v-scroll> -->
                 </tbody>
             </table>
         </div>
         <div class="table-footer" v-if="paginate">
-            <div class="datatable-length float-left pl-3">
+            <div class="row">
+                <div class="col-4">
+                    <div class="datatable-length pl-3">
+                        <span>Linhas por página:</span>
+                        <select class="custom-select" v-model="currentPerPage">
+                            <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
+                            <option value="-1">Todos</option>
+                        </select>
+                        <div class="datatable-info  pb-2 mt-3">
+                            <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
+                            currentPerPage * currentPage)}} of {{processedRows.length}}
+                            <span>linhas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 pl-5">
+                    <div class="pt-3 pl-5">
+                        <button class="btn btn-primary color-white" @click.prevent="getContacts">
+                            <i v-if="isLoadMoreContacts" class="fa fa-spinner fa-spin color-white"></i>
+                            Carregar mais
+                        </button>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="float-right">
+                        <ul class="pagination">
+                            <li>
+                                <a href="javascript:undefined" class="btn link" @click.prevent="previousPage" tabindex="0">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:undefined" class="btn link" @click.prevent="nextPage" tabindex="0">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="datatable-length float-left pl-3">
                 <span>Linhas por página:</span>
                 <select class="custom-select" v-model="currentPerPage">
                     <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
@@ -77,7 +120,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
 
         <!-- Add Contact Modal -->
@@ -217,18 +260,16 @@
         },
 
         components:{
-            managerCRUDContact
+            managerCRUDContact,
+            vScroll
         },
 
         data() {
             return {
-                //---------General properties-----------------------------
                 userLogged:{},
                 url:'contacts',  //route to controller
                 secondUrl:'attendantsContacts',
                 url_attendants:'usersAttendants',  //route to controller
-                
-                //---------Specific properties-----------------------------
                 contact_id: "",
                 contact_atendant_id: 0,
                 model:{},
@@ -251,11 +292,9 @@
                 modalDeleteContact: false,
                 showModalFileUploadCSV: false,
                 showModalTemplateToImportContact: false,
-
-                //---------Externals properties-----------------------------
                 attendants:null,
-
-                //---------DataTable properties-----------------------------
+                window: {width: 0,height: 0},
+                isLoadMoreContacts:false,
                 rows:[],
                 columns: [
                     {
@@ -292,7 +331,7 @@
                     }
                 ],
                 currentPage: 1,
-                currentPerPage: this.perPage,
+                currentPerPage: -1,//this.perPage,
                 sortColumn: -1,
                 sortType: 'asc',
                 searchInput: '',     
@@ -303,13 +342,15 @@
 
         methods: {
             getContacts: function() { //R
+                if(this.isLoadMoreContacts) return;
+                this.isLoadMoreContacts = true;
                 ApiService.get(this.url, {
                     'filterContactToken': "",
                     'last_contact_id': 0,
                     'last_contact_idx': this.rows.length,
                 })
                     .then(response => {  
-                        response.data.forEach((item, i)=>{                            
+                        response.data.forEach((item, i)=>{                           
                             if(item.status)
                                 item.status_name = item.status.name;
                             var name = "";
@@ -319,10 +360,17 @@
                                 item.contact_atendant_id = item.latestAttendant.id;
                             }
                         });
-                        this.rows = response.data;
+                        if(this.rows.length >0 && response.data.length!=0)
+                            miniToastr.success("Página de contatos carregada corretamente", "Sucesso");
+                        if(response.data.length==0)
+                            miniToastr.warn("Todos os contatos já foram carregados", "Sucesso");
+                        this.rows = this.rows.concat(response.data);
                     })
                     .catch(error => {
                         this.processMessageError(error, this.url, "get");
+                    })
+                    .finally(()=>{
+                        this.isLoadMoreContacts = false;
                     });
             }, 
 
@@ -394,6 +442,23 @@
                 } else{
                     miniToastr.error("O arquivo deve ter tamanho inferior a 5MB", "Erro"); 
                 }
+            },
+
+            onTopContacts:function(){
+                console.log('ontop');
+            },
+
+            onBottomContacts:function(){
+                console.log('onbottom');
+            },
+
+            Height: function(val){
+                return (this.window.height-val)+'px';
+            },
+
+            handleResize: function() {
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
             },
 
             //------ externals methods--------------------
@@ -545,6 +610,9 @@
         },        
 
         created() {
+            window.addEventListener('resize', this.handleResize)
+            this.handleResize();
+
             miniToastr.setIcon("error", "i", {class: "fa fa-times"});
             miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
             miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
