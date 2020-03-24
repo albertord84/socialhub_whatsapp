@@ -182,8 +182,8 @@ class ExtendedContactController extends ContactController
                             $Contact->status_id = 2;
                         $Contact->created_at = Carbon::minValue();
                         $Contact->updated_at = Carbon::minValue();
-                        // $Contact->created_at = '1959-01-01 00:00:00';
-                        // $Contact->updated_at = '1959-01-01 00:00:00';
+                        $Contact->created_at = '1959-01-01 00:00:00';
+                        $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
                         $cntMessage1++;
 
@@ -205,8 +205,10 @@ class ExtendedContactController extends ContactController
                                         //5. update the contact status_id to ACTIVE and keep the criated_at and updated_at dates
                                         if($Contact->status_id == 2){
                                             $Contact->status_id = 1;
-                                            $Contact->created_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
-                                            $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            // $Contact->created_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            // $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            $Contact->created_at = '1959-01-01 00:00:00';
+                                            $Contact->updated_at = '1959-01-01 00:00:00';
                                             $Contact->save();
                                         }
                                     }
