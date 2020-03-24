@@ -3,12 +3,12 @@
         <div class="card tweet-profile" style="box-shadow:none">
             <div class="card-header text-center">
                 <i class="fa fa-pencil icons-action" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i>
-                <h4>{{user.name}}</h4>
-                <p>{{user.email}}</p>
+                <h4>{{userLogged.name}}</h4>
+                <p>{{userLogged.email}}</p>
             </div>
             <span class="profile-img text-center">
                 <input id="fileUserPhoto" ref="fileUserPhoto" style="display:none"   type="file" @change.prevent="handleFileUserPhoto" accept="image/*"/>
-                <img :src="user.image_path" alt="profile image" class="img-fluid">
+                <img :src="userLogged.image_path" alt="profile image" class="img-fluid">
                 <i class="fa fa-camera icons-action" @click.prevent="trigger()" title="Trocar imagem" style="position:relative; top:-40px; left:-30px"></i>
             </span>
             <div class="card-block mt-1">
@@ -128,13 +128,13 @@
                     formData.append("file",This.file);
 
                     ApiService.post(
-                        This.url+'/'+This.user.id+'/update_image',
+                        This.url+'/'+This.userLogged.id+'/update_image',
                         formData,
                         {headers: { "Content-Type": "multipart/form-data" }}
                     )
                     .then(response => {
-                        This.user.image_path = response.data;
-                        window.localStorage.setItem('user', JSON.stringify(This.user));
+                        This.userLogged.image_path = response.data;
+                        window.localStorage.setItem('user', JSON.stringify(This.userLogged));
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
                         window.location.reload(false);
                     })
@@ -161,7 +161,7 @@
         },
 
         beforeMount(){
-            this.user = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         created() {

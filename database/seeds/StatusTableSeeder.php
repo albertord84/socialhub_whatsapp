@@ -42,7 +42,7 @@ class StatusTableSeeder extends Seeder
         $this->command->info('Messages Status SENDED');
         MessagesStatus::create([
             'id' => '3',
-            'name' => 'RECEVEIVED',
+            'name' => 'RECEIVED',
             'description' => 'Message was received by contact',
         ]);
         $this->command->info('Messages Status RECEVEIVED');
@@ -65,6 +65,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'Message not readed by me, i.e., new incomming messages',
         ]);
         $this->command->info('MessagesStatus UNREADED');
+
+        MessagesStatus::create([
+            'id' => '7',
+            'name' => 'FAIL',
+            'description' => 'Message fail sending through rpi',
+        ]);
+        $this->command->info('MessagesStatus FAIL');
     }
 
     function CreateContactsStatus() {

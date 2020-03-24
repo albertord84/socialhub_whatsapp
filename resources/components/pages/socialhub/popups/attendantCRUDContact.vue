@@ -152,14 +152,14 @@
             <h6> Tranferir contato para: <b>{{(selectedAttendantToTransfer)? selectedAttendantToTransfer.user.name : ""}}</b></h6> 
             <v-scroll :height="100"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
                 <ul v-for="(attendant,index) in attendants" :key="index" class="list-group list-group-horizontal" @click.prevent="selectedAttendantToTransfer = attendant">
-                    <li v-if="attendant.user_id != loggedAttendant.id" class="list-group-item border-0">
+                    <li v-if="attendant.user_id != userLogged.id" class="list-group-item border-0">
                         <img :src="attendant.user.image_path" width="50px" height="50px" class="my-rounded-circle mt-1 " alt="Foto">
                     </li>
-                    <li v-if="attendant.user_id != loggedAttendant.id" class="list-group-item border-0">
+                    <li v-if="attendant.user_id != userLogged.id" class="list-group-item border-0">
                         <span style="font-size:1em">{{attendant.user.name}}</span>
                         <br><span class="text-muted" style="font-size:0.8em">{{attendant.user.email}}</span>
                     </li>
-                    <li v-if="attendant.user_id != loggedAttendant.id" class="ml-5">
+                    <li v-if="attendant.user_id != userLogged.id" class="ml-5">
                         <i v-show="selectedAttendantToTransfer && selectedAttendantToTransfer.user_id == attendant.user_id" class="fa fa-check fa-2x mt-3" style="color:green"></i>
                     </li>
                 </ul>
@@ -178,9 +178,9 @@
 <script>
     import Vue from 'vue';
     import VueForm from "vue-form";
-    import vScroll from "../../../plugins/scroll/vScroll.vue";
     import options from "src/validations/validations.js";
     import ApiService from "resources/common/api.service";    
+    import vScroll from "../../../plugins/scroll/vScroll.vue";
     import miniToastr from "mini-toastr";
     miniToastr.init();
 
@@ -202,6 +202,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                userLogged:{},
                 url:'contacts',  //route to controller
                 secondUrl:'attendantsContacts',  //route to controller
                 
@@ -244,7 +245,6 @@
                 attendants:null,
                 selectedAttendantToTransfer:null,
                 isTransferingContact:false,
-                loggedAttendant:{},
 
                 summary_length:0,
                 remember_length:0,
@@ -275,15 +275,15 @@
                 this.trimDataModel();
                 this.validateData();
                 if (this.flagReference == false){
-                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    // miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
                     this.isSendingInsert = false;
                     this.flagReference = true;
                     return;
                 }
                 this.model.origin = 2;
-                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
-                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
-                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                var model_cpy = Object.assign({}, this.model);
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');
 
                 ApiService.post(this.url,model_cpy)
                     .then(response => {
@@ -293,20 +293,17 @@
                                 'contact_id':response.data.id,
                                 'attendant_id':this.contact_atendant_id,
                             })
-                            .then(response => {
+                            .then(response2 => {
                                 this.whatssapChecked = false;
                                 miniToastr.success("Contato adicionado com sucesso.","Sucesso");
                                 this.formReset();
                                 this.toggle_left('close');
-                                this.reload();
+                                this.$emit('insertContactAsFirtInList', response.data);
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.secondUrl, "add");
                             })
                             .finally(() => this.isSendingInsert = false);
-                        }else{
-                            this.reload();
-                            this.formCancel();
                         }
                     })
                     .catch(error=> {
@@ -320,54 +317,18 @@
                 this.contact_id =  this.item.id;
             },
 
-            updateContact: function() {
-                // if(!this.model.whatsapp_id || this.model.whatsapp_id.trim() =='' || this.model.first_name.trim() ==''){
-                //     miniToastr.error(error, "Confira os dados fornecidos");  
-                //     return;
-                // }
-                // this.isSendingUpdate = true;
-                // delete this.model.updated_at;                
-                // delete this.model.status_id;                
-                
-                // // Validando dados
-                // this.trimDataModel();
-                // this.validateData();
-                // if (this.flagReference == false){
-                //     miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
-                //     this.isSendingUpdate = false;
-                //     this.flagReference = true;
-                //     return;
-                // }
-
-                // ApiService.put(this.url+'/'+this.item.id, this.model)
-                // .then(response => {
-                //     miniToastr.success("Contato atualizado com sucesso.","Sucesso");
-                //     this.formReset();
-                //     this.editclose();
-                //     this.reload();
-                // })
-                // .catch(error => {
-                //     this.processMessageError(error, this.url, "update");
-                // })
-                // .finally(() => this.isSendingUpdate = false);
-            },
-
             deleteContact(){
                 this.isSendingDelete = true;
-                
-                console.log("dentro del delete");
-                console.log(this.item);
-
                 ApiService.delete(this.url+'/'+this.item.id)
-                    .then(response => {                        
-                        miniToastr.success("Contato eliminado com sucesso","Sucesso");
-                        this.reload();
-                        this.formCancel();
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.url, "delete");
-                    })
-                    .finally(() => this.isSendingDelete = false);  
+                .then(response => {                        
+                    miniToastr.success("Contato eliminado com sucesso","Sucesso");
+                    this.$emit('removeContactFromList',this.item.id);
+                    this.formCancel();
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.url, "delete");
+                })
+                .finally(() => this.isSendingDelete = false);  
             },
 
             transferContact: function(){
@@ -385,7 +346,7 @@
                     })
                     .then(response => {
                         miniToastr.success("Contato tranferido com sucesso","Sucesso");
-                        this.reloadAfterTransferContact();
+                        this.$emit('removeContactFromList',this.item.id);
                         this.formCancel();
                     })
                     .catch(error => {
@@ -477,20 +438,8 @@
 
             formCancel(){
                 this.$emit('onclosemodal');
-            }, 
-
-            reload(){
-                this.$emit('reloadContacts');
             },
-
-            reloadAfterTransferContact(){
-                this.$emit('reloadAfterTransferContact');
-            },
-
-            editclose() {                
-                this.$emit('onclose');
-            },
-
+            
             trimDataModel: function(){
                 if(this.model.first_name) this.model.first_name = this.model.first_name.trim();
                 if(this.model.last_name) this.model.last_name = this.model.last_name.trim();
@@ -593,7 +542,13 @@
                 this.editContact();
                 this.getAttendants();
             }
-            this.loggedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
+
+        mounted(){
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
         },
 
         created() {

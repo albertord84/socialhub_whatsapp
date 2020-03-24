@@ -8,6 +8,7 @@ use App\Events\NewContactMessage;
 use App\Exceptions\MyHandler;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
+use App\Jobs\SendWhatsAppMsg;
 use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
@@ -167,12 +168,15 @@ class ExtendedChatController extends ChatController
             $input = $request->all();
             $input['company_id'] = $User->company_id;
             $input['attendant_id'] = $User->id;
+            $input['status_id'] = MessagesStatusController::UNREADED;
 
             $Contact = Contact::findOrFail($input['contact_id']);
-            $externalRPiController = new ExternalRPIController(null);
 
             $chat = $this->chatRepository->createMessage($input);
 
+            $input['chat_id'] = $chat->id;
+
+            $externalRPiController = new ExternalRPIController(null);
             if (isset($input['file'])) {
                 $fileName = $chat->id; // Laravel Auto gerated file name
                 // $envFilePath = env('APP_FILE_PATH');
@@ -189,40 +193,42 @@ class ExtendedChatController extends ChatController
                         $code = exec("ffmpeg -y -i $BaseDir/$FileName -acodec libvorbis $BaseDir/$FileNameOgg");
                         $FileName = $FileNameOgg;
                     }
-                    $fileContent = Storage::disk('chats_files')->get($FileName); // Retrive file like file_get_content(...)
-                    $response = $externalRPiController->sendFileMessage(
-                        $fileContent, $json_data->SavedFileName, $input['type_id'],
-                        $input['message'], $Contact
-                    );
+                    // $fileContent = Storage::disk('chats_files')->get($FileName); // Retrive file like file_get_content(...)
 
                     $chat->data = json_encode($json_data); 
-
                     $chat->save();
+
+                    unset($input['file']); // Because not serializable with Jobs
+                    SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input, $FileName, $input['type_id']);
+
+                    Log::debug('\n\r SendingFileMessage Job to Contact contact_Jid: ', [$Contact->whatsapp_id]);
+    
+                    // $response = $this->externalRPiController->sendFileMessage(
+                    //     $fileContent, $json_data->SavedFileName, $input['type_id'],
+                    //     $input['message'], $Contact
+                    // );
                     // $chat = $this->chatRepository->updateMessage($input, $chat->id);
                 }
             } else {
+                // SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $chat);
+                SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input);
+
+                Log::debug('\n\r SendingTextMessage Job to Contact contact_Jid: ', [$Contact->whatsapp_id]);
                 // $response = $externalRPiController->sendTextMessage($input['message'], $Contact);
-                $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
+                // $response = $this->externalRPiController->sendTextMessage($input['message'], $Contact);
             }
 
-            $responseJson = json_decode($response);
-            if (isset($responseJson->MsgID)) {
-                Flash::success('Chat saved successfully.');
+            Flash::success('Chat queued successfully.');
+            return $chat->toJson();
 
-                
-
-                return $chat->toJson();
-            } else {
-                
-                throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
-            }
         } catch (\Throwable $th) {
+            Log::debug('\n\r ExtendedChatController error handler', [$th]);
             if (isset($chat->id)) {
                 $ExtendedChat = new ExtendedChat();
                 $ExtendedChat->table = $chat->attendant_id;
                 $ExtendedChat = $ExtendedChat->find($chat->id);
                 $ExtendedChat->delete($chat->id);
-                Log::debug('\n\rDelete message', [$ExtendedChat]);
+                Log::debug('\n\rDeleted message', [$ExtendedChat]);
             }
             // return MyHandler::toJson($th, 500);
             return $th;

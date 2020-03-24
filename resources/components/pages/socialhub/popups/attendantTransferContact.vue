@@ -39,6 +39,7 @@
 
         data() {
             return {
+                userLogged:{},
                 attendantsContactsUrl:'attendantsContacts',  //route to controller
                 newAtendantContactId: null,
                 isSendingNwwAtendantContact: false,
@@ -90,7 +91,14 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
+        },
+
+        mounted(){
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
         },
 
         created() {

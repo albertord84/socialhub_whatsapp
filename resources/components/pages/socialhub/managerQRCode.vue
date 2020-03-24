@@ -87,7 +87,7 @@
 
         data() {
             return {
-                logguedManager:{},
+                userLogged:{},
                 url:'rpis',
                 rpi:{},
 
@@ -126,7 +126,6 @@
                         // }
 
                         This.rpi = response.data;
-                        console.log(This.rpi);
                         if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
                             This.isLoggued = true;
                         }else
@@ -161,12 +160,19 @@
             logoutWhatsapp(){
                 ApiService.post('RPI/logout')
                     .then(response => {
-                        this.beforeRequest=true;
-                        this.duringRequest=false;
-                        this.qrcodebase64=false;
-                        this.isLoggued=false;
-                        this.isError=false;
-                        this.erroMessage='';
+                        if(typeof(response.data !="undefined") 
+                            && typeof(response.data.message) != 'undefined'
+                            && (response.data.message == "Logout feito") || response.data.message=="Sessao deletada"){
+                                miniToastr.success("Sucesso", "Operação realizada com sucesso");   
+                                this.beforeRequest=true;
+                                this.duringRequest=false;
+                                this.qrcodebase64=false;
+                                this.isLoggued=false;
+                                this.isError=false;
+                                this.erroMessage='';
+                        } else{
+                            miniToastr.error("Error", response.data);   
+                        }
                     })
                     .catch(error => {
                         this.processMessageError(error, "RPI","logout");
@@ -190,7 +196,7 @@
         },
 
         beforeMount: function() {
-            this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         created: function() {
@@ -205,6 +211,10 @@
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+
             this.beforeRequest = true;
 
             window.Echo = new Echo({
@@ -222,7 +232,7 @@
                 disableStats: false
             });
 
-            window.Echo.channel('sh.whatsapp-logged.' + this.logguedManager.id)
+            window.Echo.channel('sh.whatsapp-logged.' + this.userLogged.id)
                 .listen('WhatsappLoggedIn', (e) => {                    
                     this.isLoggued=true;
             });

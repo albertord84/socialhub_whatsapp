@@ -88,6 +88,7 @@
 
         data(){
             return{
+                userLogged:{},
                 attendant_id: "",
                 model:{
                     name: "",
@@ -210,7 +211,14 @@
 
         },
 
+        beforeMount: function() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+        },
+
         mounted(){
+            if(this.userLogged.role_id > 1){
+                this.$router.push({name: "login"});
+            }
             this.editAttendant();
         },
 

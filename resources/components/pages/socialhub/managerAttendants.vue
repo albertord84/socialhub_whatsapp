@@ -14,8 +14,8 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
-                        <i class="mdi mdi-file-export fa-lg"  ></i>
-                        <!-- <i class="fa fa-download"></i> -->
+                        <!-- <i class="mdi mdi-file-export fa-lg"  ></i> -->
+                        <i class="fa fa-download"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
@@ -134,7 +134,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
-                // logguedManager:{},
+                userLogged:{},
                 attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
                 first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
@@ -383,12 +383,16 @@
         },
 
         beforeMount(){
-            // this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
             this.getCompanyOFManager();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 

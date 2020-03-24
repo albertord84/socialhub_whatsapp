@@ -38,10 +38,6 @@ const ApiService = {
                 .map(key => key + '=' + slug[key]).join('&');
         }
         return Vue.axios.get(`${resource}${params}`);
-        //ECR
-        // return Vue.axios.get(`${resource}${params}`).catch(error => {
-        //     throw new Error(`[RWV] ApiService ${error}`);
-        // });
     },
 
     post(resource, params) {
@@ -104,7 +100,7 @@ const ApiService = {
                 object.typeException = "duplicateEntry";
                 object.typeMessage = "warn";
                 if (url == "users") object.message = "O e-mail do usuário informado já está cadastrado.";
-                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado.";
+                if (url == "contacts") object.message = "O número de Whatsapp informado já está cadastrado nessa empresa.";
 
             }else if(error.response.data.message && error.response.data.message.includes("Could not resolve host")){
                 
@@ -117,7 +113,19 @@ const ApiService = {
                 object.typeMessage = "warn";
                 object.message = "Verifique a conexão do seu computador e do hardware à Internet.";
                 
+            }else if (error.response.data.message && error.response.data.message.includes("Trying to get property 'company_id' of non-object")){
+                // Secção expirada.
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+
             }else if (error.response.status == 419 && error.response.data.message.includes("")){
+                // Secção expirada.
+                object.typeException = "expiredSection";
+                object.typeMessage = "warn";
+                object.message = "A conexão aberta expirou. É necessário realizar o login novamente.";
+
+            }else if (error.response.data && error.response.data.includes("count_unread_messagess")){
                 // Secção expirada.
                 object.typeException = "expiredSection";
                 object.typeMessage = "warn";

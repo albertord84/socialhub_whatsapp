@@ -20,6 +20,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use stdClass;
 
 class ExternalRPIController extends Controller
@@ -295,6 +296,7 @@ class ExternalRPIController extends Controller
             return MyResponse::makeExceptionJson($th);
         }
 
+        $Chat->Contact = $Contact;
         return $Chat->toJson();
     }
 
@@ -363,6 +365,7 @@ class ExternalRPIController extends Controller
             return MyResponse::makeExceptionJson($th);
         }
 
+        $Chat->Contact = $Contact;
         return $Chat->toJson();
     }
 
@@ -482,9 +485,13 @@ class ExternalRPIController extends Controller
     }
 
     // public function sendFileMessage(File $File, string $file_type, string $message, string $contact_Jid)
-    public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, Contact $Contact)
+    // public function sendFileMessage(string $File, string $file_name, string $file_type, ?string $message, Contact $Contact)
+    public function sendFileMessage(string $file_name, string $file_type, ?string $message, Contact $Contact)
     {
         try {
+
+            $File = Storage::disk('chats_files')->get($file_name); // Retrive file like file_get_content(...)
+
             $client = new \GuzzleHttp\Client();
             $EndPoint = 'SendDocumentMessage';
             $FileName = 'Document';

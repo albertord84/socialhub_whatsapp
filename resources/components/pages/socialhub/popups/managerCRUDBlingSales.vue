@@ -74,6 +74,7 @@
                 </div>
             </div>
 
+            
             <div class="col-lg-12 m-t-25 text-center">
                 <button v-show='action=="edit"' type="submit" class="btn btn-primary btn_width" :disabled="isSendingUpdate==true" @click.prevent="updateSale">
                     <i v-show="isSendingUpdate==true" class="fa fa-spinner fa-spin" style="color:white" ></i>Atualizar
@@ -119,9 +120,9 @@
 
         data(){
             return{
+                userLogged:{},
                 sales_id: "",
                 model:{},
-                user_loggued:{},
                 isSendingUpdate: false,
                 isSendingDelete: false,
             }
@@ -130,11 +131,20 @@
         methods:{
                         
             editSale: function() { //U
+                
                 this.model = Object.assign({}, this.item);
+
                 delete this.model.created_at;
                 delete this.model.updated_at;
                 delete this.model.deleted_at;
-                // this.modalEditContact = !this.modalEditContact;
+
+                ApiService.get(this.url_contact+'/'+this.model.contact_id) 
+                    .then(response => {
+                        this.modelContact = response.data;
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.url_contact, "get");
+                    });
             },
 
             updateSale: function() { //U
@@ -152,18 +162,33 @@
                 // }
                 
                 delete this.model.json_data.itensInHTML;
+                delete this.model.messageSended;
+                delete this.model.created_at;
+                delete this.model.updated_at;
+                delete this.model.deleted_at;
                 this.model.json_data = JSON.stringify(this.model.json_data);
 
-                ApiService.put(this.url+'/'+this.user_loggued.company_id, this.model) 
+                ApiService.put(this.url+'/'+this.userLogged.company_id, this.model) 
                     .then(response => {
                         miniToastr.success("Venda atualizada com sucesso","Sucesso");
-                            this.reload();
-                            this.closeModals();
+
+                        ApiService.put(this.url_contact+'/'+this.model.contact_id, this.modelContact) 
+                            .then(response => {
+                                miniToastr.success("Contato atualizado com sucesso","Sucesso");
+                                this.reload();
+                                this.closeModals();
+                            })
+                            .catch(error => {
+                                this.processMessageError(error, this.url_contact, "update");
+                                this.isSendingUpdate = false;
+                            });
+
                     })
                     .catch(error => {
                         this.processMessageError(error, this.url, "update");
-                    })
-                    .finally(() => this.isSendingUpdate = false); 
+                        this.isSendingUpdate = false;
+                    });
+
             },
 
             deleteSales: function() { //D
@@ -286,11 +311,14 @@
         },
 
         beforeMount(){
-            this.user_loggued = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.editSale();
         },
 
-        mounted(){            
+        mounted(){        
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }    
         },
 
         created() {

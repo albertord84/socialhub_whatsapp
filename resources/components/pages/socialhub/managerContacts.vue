@@ -14,12 +14,12 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                        <i class="mdi mdi-file-export fa-lg"  ></i>
+                        <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
-                        <i class="mdi mdi-file-import fa-lg"  ></i>
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
+                        <i class="fa fa-upload" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
@@ -35,24 +35,67 @@
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
-                        <template v-for="(column,index) in columns">
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row,column.field) }}
-                            </td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
-                            </td>
-                        </template>
-                        <slot name="tbody-tr" :row="row"></slot>
-                    </tr>
+                    <!-- <v-scroll :height="Height(150)" :vid="'contact-content'" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @ontop="onTopContacts" @onbottom="onBottomContacts" @oncontentresize="1"  > -->
+                        <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                            <template v-for="(column,index) in columns">
+                                <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
+                                    {{ collect(row,column.field) }}
+                                </td>
+                                <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
+                                    <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
+                                    <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                </td>
+                            </template>
+                            <slot name="tbody-tr" :row="row"></slot>
+                        </tr>
+                    <!-- </v-scroll> -->
                 </tbody>
             </table>
         </div>
         <div class="table-footer" v-if="paginate">
-            <div class="datatable-length float-left pl-3">
+            <div class="row">
+                <div class="col-4">
+                    <div class="datatable-length pl-3">
+                        <span>Linhas por página:</span>
+                        <select class="custom-select" v-model="currentPerPage">
+                            <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
+                            <option value="-1">Todos</option>
+                        </select>
+                        <div class="datatable-info  pb-2 mt-3">
+                            <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
+                            currentPerPage * currentPage)}} of {{processedRows.length}}
+                            <span>linhas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 pl-5">
+                    <div class="pt-3 pl-5">
+                        <button class="btn btn-primary color-white" @click.prevent="getContacts">
+                            <i v-if="isLoadMoreContacts" class="fa fa-spinner fa-spin color-white"></i>
+                            Carregar mais
+                        </button>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="float-right">
+                        <ul class="pagination">
+                            <li>
+                                <a href="javascript:undefined" class="btn link" @click.prevent="previousPage" tabindex="0">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:undefined" class="btn link" @click.prevent="nextPage" tabindex="0">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="datatable-length float-left pl-3">
                 <span>Linhas por página:</span>
                 <select class="custom-select" v-model="currentPerPage">
                     <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
@@ -77,7 +120,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
 
         <!-- Add Contact Modal -->
@@ -95,34 +138,95 @@
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
         </b-modal>
 
-        <!-- Confirm import cantacts Modal -->
-        <b-modal ref="modal-import-contact" v-model="showModalFileUploadCSV" id="showModalFileUploadCSV" :hide-footer="true" title="Confirmação de importação de contatos">
-
-            <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
-            <h6>Clique no botão enviar para adicionar os contatos!</h6>
-
-            <div class="col-lg-12 mt-5 text-center">
-                <button type="submit" class="btn btn-primary btn_width" :disabled="isSendingContactFromCSV==true" @click.prevent="addContactsFromCSV">
-                    <i v-if="isSendingContactFromCSV==true" class="fa fa-spinner fa-spin"></i>
-                    Enviar
-                </button>
-                <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, showModalTemplateToImportContact=!showModalTemplateToImportContact, file=null">Cancelar</button>
-            </div>
-        </b-modal>
-
         <!-- Upload template to import cantacts Modal -->
-        <b-modal ref="modal-template-contact" v-model="showModalTemplateToImportContact" id="showModalTemplateToImportContact" :hide-footer="true" title="Informação para importação de contatos">
-            <h5>Atenção:</h5>
-            <h6>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template!</h6>
-            <hr>
-            <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
-            <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
-            <div class="col-lg-12 mt-5 text-center" >
-                <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
-
-                <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
-                <a class="btn btn-primary  pl-5 pr-5 text-white" href="javascript:undefined" @click="triggerEvent()">Subir planilha</a>
+        <b-modal ref="modal-template-contact" size="lg" v-model="showModalTemplateToImportContact" id="showModalTemplateToImportContact" :hide-footer="true" title="Informação para importação de contatos">
+            <div v-if="steepUploadFile==1">
+                <div class="ml-5">
+                    <h5 class="mb-3" >Atenção</h5>
+                    <p>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template.</p>
+                    <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
+                    <p>  A planilha de importação deve ter no máximo 500 contatos.</p>
+                    <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
+                </div>
+                <div class="col-lg-12 mt-5 text-center" >
+                    <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
+                    <a class="btn btn-primary  pl-5 pr-5 text-white" href="javascript:undefined" @click="triggerEvent()">Subir planilha</a>
+                </div>
             </div>
+            <div v-if="steepUploadFile==2" class="col-lg-12 mt-5 text-center">
+                <h6>Você está adicionando novos contatos a partir do arquivo selecionado.</h6>
+                <div class="col-lg-12 mt-5 text-center">
+                    <h6 class=" pb-5"> Clique no botão enviar para adicionar os contatos!</h6>
+                    <button type="submit" class="btn btn-primary btn_width"  @click.prevent="addContactsFromCSV">Enviar</button>
+                    <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalFileUploadCSV=!showModalFileUploadCSV, showModalTemplateToImportContact=!showModalTemplateToImportContact, file=null">Cancelar</button>
+                </div>
+            </div>
+            <div v-if="steepUploadFile==3">
+                <div class="col-lg-12 mt-5 text-center">
+                    <div class="spinner-border text-primary"></div>
+                    <h5 class=" pt-5"> Esta acção pode demorar alguns minutos!</h5>
+                </div>
+            </div>
+
+            <div v-if="steepUploadFile==4">
+                <!-- <h5 class="text-center">Resultado da importação de contatos.</h5>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <ul id="Report">
+                        <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
+                            {{ item.cnt }} {{ item.message }}
+                        </li>
+                    </ul>
+                </div> -->
+
+                <div >
+                    <h5 class="text-center">Resumo da importação de contatos.</h5>
+                    <ul id="Report">
+                        <li v-show="importContactsReportStatistics.addingCnt!=0" class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
+                            Foram adicionados {{importContactsReportStatistics.addingCnt}} contatos com sucesso.
+                        </li>
+                        <li v-show="importContactsReportStatistics.updateCnt!=0" class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
+                            Foram atualizados {{importContactsReportStatistics.updateCnt}} contatos com sucesso.
+                        </li>
+                        <li v-show="importContactsReportStatistics.warningCnt!=0" class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
+                            Não foram atribuídos a um atendente {{importContactsReportStatistics.warningCnt}} contatos.
+                        </li>
+                        <li v-show="importContactsReportStatistics.errorNameCnt!=0" class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
+                            O nome de {{importContactsReportStatistics.errorNameCnt}} contatos contêm cracteres inválidos.
+                        </li>
+                        <li v-show="importContactsReportStatistics.errorCnt!=0" class=" my-bg-danger"> <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                            Não foi possível adicionar {{importContactsReportStatistics.errorCnt}} contatos porque o número de whatsapp é errado ou inexistente.
+                        </li>
+                    </ul>
+                </div>
+                
+                <div v-show="importContactsReportStatistics.errorCnt!=0 || importContactsReportStatistics.warningCnt!=0 || importContactsReportStatistics.errorNameCnt!=0">
+                    <h5 class="text-center">Informação detalhada da importação de contatos.</h5>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <ul id="Report">
+                            <li v-for="(item,index) in importContactsReportError" :key="index" class=" my-bg-danger" >
+                                Linha {{ item.line }}: contato não foi adicionado porque o número de whatsapp parece errado ou inexistente.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn1" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O atendente indicado não pertence a esta empresa.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn2" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O email do atendente indicado é inválido.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn4" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O nome do contato contem cracteres inválidos.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn3" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: Não foi indicado um atendente.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-12 mt-5 text-center">
+                    <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact">Fechar</button>
+                </div>
+            </div>
+
         </b-modal>
 
     </div>
@@ -134,6 +238,7 @@
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDContact from "./popups/managerCRUDContact";
+    import vScroll from "components/plugins/scroll/vScroll.vue"
 
     export default {
         props: {
@@ -161,23 +266,29 @@
         },
 
         components:{
-            managerCRUDContact
+            managerCRUDContact,
+            vScroll
         },
 
         data() {
             return {
-                //---------General properties-----------------------------
+                userLogged:{},
                 url:'contacts',  //route to controller
                 secondUrl:'attendantsContacts',
                 url_attendants:'usersAttendants',  //route to controller
-                
-                //---------Specific properties-----------------------------
                 contact_id: "",
                 contact_atendant_id: 0,
                 model:{},
                 
-                isSendingContactFromCSV:false,
                 file:null,
+                // importContactsReport: "",
+                importContactsReportError: "",
+                importContactsReportWarn1: "",
+                importContactsReportWarn2: "",
+                importContactsReportWarn3: "",
+                importContactsReportWarn4: "",
+                importContactsReportStatistics: "",
+                
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -188,11 +299,9 @@
                 modalDeleteContact: false,
                 showModalFileUploadCSV: false,
                 showModalTemplateToImportContact: false,
-
-                //---------Externals properties-----------------------------
                 attendants:null,
-
-                //---------DataTable properties-----------------------------
+                window: {width: 0,height: 0},
+                isLoadMoreContacts:false,
                 rows:[],
                 columns: [
                     {
@@ -229,20 +338,26 @@
                     }
                 ],
                 currentPage: 1,
-                currentPerPage: this.perPage,
+                currentPerPage: -1,//this.perPage,
                 sortColumn: -1,
                 sortType: 'asc',
-                searchInput: '',                
+                searchInput: '',     
+                steepUploadFile: 1,  
+                fileInputCSV: null,  
             }
         },
 
         methods: {
             getContacts: function() { //R
-                ApiService.get(this.url)
-                    .then(response => {
-                        this.rows = response.data;
-                        var This=this;
-                        response.data.forEach(function(item, i){                            
+                if(this.isLoadMoreContacts) return;
+                this.isLoadMoreContacts = true;
+                ApiService.get(this.url, {
+                    'filterContactToken': "",
+                    'last_contact_id': 0,
+                    'last_contact_idx': this.rows.length,
+                })
+                    .then(response => {  
+                        response.data.forEach((item, i)=>{                           
                             if(item.status)
                                 item.status_name = item.status.name;
                             var name = "";
@@ -252,19 +367,25 @@
                                 item.contact_atendant_id = item.latestAttendant.id;
                             }
                         });
+                        if(this.rows.length>0 && response.data.length!=0)
+                            miniToastr.success("Página de contatos carregada corretamente", "Sucesso");
+                        if(response.data.length==0)
+                            miniToastr.warn("Todos os contatos já foram carregados", "Sucesso");
+                        this.rows = this.rows.concat(response.data);
                     })
                     .catch(error => {
                         this.processMessageError(error, this.url, "get");
+                    })
+                    .finally(()=>{
+                        this.isLoadMoreContacts = false;
                     });
             }, 
 
             reloadDatas(){
-
                 this.getContacts();
             },
             
             closeModals(){
-
                 this.modalAddContact = false;
                 this.modalEditContact = false;
                 this.modalDeleteContact = false;
@@ -287,36 +408,66 @@
                 this.modalDeleteContact = !this.modalDeleteContact;
             },
 
+            getFileSelected: function(e){
+                this.fileInputCSV=e.target;
+                this.steepUploadFile=2;
+            },
+
             addContactsFromCSV:function(){
-                this.file = null;
-                if(!this.$refs.fileInputCSV.files[0].name.includes('.csv')){
+                if(this.steepUploadFile==3) return;
+                if(!this.fileInputCSV.files[0].name.includes('.csv')){
                     miniToastr.error("O arquivo selecionado deve estar em formato .CSV", "Erro"); 
                     return;
                 }
-                if(this.$refs.fileInputCSV.files[0].size < 5*1024*1024) {
-                    this.file = this.$refs.fileInputCSV.files[0];
+                if(this.fileInputCSV.files[0].size < 5*1024*1024) {
+                    this.file = this.fileInputCSV.files[0];
                     if(this.file){
                         let formData = new FormData();
                         formData.append("id",'0');
                         formData.append("file",this.file);
-                        this.isSendingContactFromCSV = true;
+                        this.steepUploadFile = 3;
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
+                                // this.importContactsReport =  response.data;
+                                this.importContactsReportWarn1 = response.data.message2.lineWarn;
+                                this.importContactsReportWarn2 = response.data.message3.lineWarn;
+                                this.importContactsReportWarn3 = response.data.message4.lineWarn;
+                                this.importContactsReportWarn4 = response.data.message6.lineWarn;
+                                this.importContactsReportError = response.data.message5.lineError;
+                                this.importContactsReportStatistics = response.data.statistics;
+                                console.log(this.importContactsReportWarn4);
+                                // return;
+
+                                this.steepUploadFile=4;
+                                miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
                                 this.getContacts();
-                                miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso"); 
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.url, "get");
                             })
-                            .finally(()=>{this.isSendingContactFromCSV=false;
-                                          this.showModalFileUploadCSV=!this.showModalFileUploadCSV; 
-                                          this.showModalTemplateToImportContact=!this.showModalTemplateToImportContact});
-                                        //   this.showModalFileUploadCSV=false;});
+                            .finally(()=>{
+                            });
                     }
                 } else{
                     miniToastr.error("O arquivo deve ter tamanho inferior a 5MB", "Erro"); 
                 }
+            },
 
+            onTopContacts:function(){
+                console.log('ontop');
+            },
+
+            onBottomContacts:function(){
+                console.log('onbottom');
+            },
+
+            Height: function(val){
+                return (this.window.height-val)+'px';
+            },
+
+            handleResize: function() {
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
             },
 
             //------ externals methods--------------------
@@ -369,9 +520,7 @@
             exportExcel() {
                 const mimeType = 'data:application/vnd.ms-excel';
                 const html = this.renderTable().replace(/ /g, '%20');
-
                 const d = new Date();
-
                 var dummy = document.createElement('a');
                 dummy.href = mimeType + ', ' + html;
                 dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
@@ -436,6 +585,7 @@
             },
 
             triggerEvent () {
+                this.file = null;
                 this.$refs.fileInputCSV.click();
             },
             
@@ -455,15 +605,23 @@
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendantList();
             this.getContacts();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 
         created() {
+            window.addEventListener('resize', this.handleResize)
+            this.handleResize();
+
             miniToastr.setIcon("error", "i", {class: "fa fa-times"});
             miniToastr.setIcon("warn", "i", {class: "fa fa-exclamation-triangle"});
             miniToastr.setIcon("info", "i", {class: "fa fa-info-circle"});
@@ -562,5 +720,20 @@
     }
     .no-shadows{
         box-shadow: none !important;
+    }
+    .my-bg-success{
+        border: 1px solid #ececf6;
+        padding: 10px;
+        background-color: #c3e6cb;
+    }
+    .my-bg-warning{
+        border: 1px solid #ececf6;
+        padding: 10px;
+        background-color: #eed487;
+    }
+    .my-bg-danger{
+        border: 1px solid #ececf6;
+        padding: 10px;
+        background-color: #f1b0b7;
     }
 </style>

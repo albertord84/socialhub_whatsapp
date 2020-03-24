@@ -2,28 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Business\SalesBusiness;
-use App\Business\BlingBusiness;
+use App\Events\MessageToAttendant;
+use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
-use App\Models\Contact;
+use App\Jobs\SendWhatsAppMsg;
 use App\Models\Company;
-use App\Models\Sales;
+use App\Models\Contact;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
-use App\Repositories\ExtendedUsersAttendantRepository;
-use App\Repositories\ExtendedUserRepository;
 use App\User;
 use Illuminate\Http\Request;
-use PhpSigep\Model\AccessData;
-
 use Illuminate\Support\Facades\Log;
 
 class TestController extends AppBaseController
 {
     private $repository;
-
-    private $config;
 
     /**
      * Create a new controller instance.
@@ -37,44 +31,54 @@ class TestController extends AppBaseController
         $this->repository = $repository;
     }
 
-    public function testJR(){        
-        $extendedUserRepository = new ExtendedUserRepository(app());
-        $ExtendedUsersAttendantRepository = new ExtendedUsersAttendantRepository(app());
-        $attendantsUser = $ExtendedUsersAttendantRepository->Attendants_User_By_Attendant(1,4);
-        
-        $attendants = array();
-        foreach ($attendantsUser as $key => $attendant) {
-            $user = $extendedUserRepository->findWithoutFail($attendant->user_id);
-            $attendants[$user->email] = $attendant->user_id;
-        }
-
-        dd($attendants);
-    }
-
     public function index(Request $request)
+    
     {
-        // $this->testJR();
+        $last_contact_idx = 0; //101;
+        $company_id = 1;
+        $attendant_id = 5;
 
-        // $contact_id = 7276;
-        // $contact_Jid = "5521976550734";
-        // // $contact_Jid = "5521965536174";
-        // // $Contact = Contact::find($contact_id);
+        $extContRepo = new ExtendedContactRepository(app());
 
-        // $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-        //         ->where(['whatsapp_id' => $contact_Jid, 'company_id' => 3])
-        //         ->first();
 
-        // dd($Contact);
+
+        $Contacts = $extContRepo->fullContacts(1, $attendant_id, null, $last_contact_idx);
+
+        // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
+        dd($Contacts);
+
+        // $lastContact = Contact::find($last_contact_idx);
+
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = '4';
+        // $ExtendedChat = $ExtendedChat->find(1);
+
+        // $ExtendedChat->Contact = $lastContact;
+        // dd($ExtendedChat->toJson());
+        // $Contacts = $this->repository
+        //     ->with(['Status', 'latestAttendantContact', 'latestAttendant'])
+        //     ->whereHas('latestAttendantContact', function($query) use ($attendant_id) {
+        //         $query->where('attendant_id', $attendant_id);
+        //     })
+        //     ->orderBy('updated_at', 'asc')
+        //     ->findWhere([
+        //         'company_id' => $company_id,
+        //         // ['updated_at', '>', $lastContact->updated_at]
+        //     ]);
+        // ->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
+
+        // $Contacts->orderBy('updated_at', 'asc');
+        // dd($Contacts);
 
         // Build Bling message by Sales object
-        $company_id = 35;
-        $Company = Company::with('rpi')->find($company_id);
-        $BlingController = app()->make(BlingController::class);
+        // $company_id = 35;
+        // $Company = Company::with('rpi')->find($company_id);
+        // $BlingController = app()->make(BlingController::class);
 
-        $BlingBussinesC = new BlingBusiness();
-        $Sales = $BlingBussinesC->getBlingCompanySales($Company);
+        // $BlingBussinesC = new BlingBusiness();
+        // $Sales = $BlingBussinesC->getBlingCompanySales($Company);
 
-        dd($Sales);
+        // dd($Sales[51]);
 
         // $BlingController->
 
@@ -187,87 +191,38 @@ class TestController extends AppBaseController
         // $Controller = new ExtendedUsersSellerController($this->repository);
         // dd($Controller->index($request));
         // dd($this->repository->Sellers_User());
+
+        // $this->testJobsQueue();
     }
 
-    function initCorreios(\PhpSigep\Model\AccessData $accessData)
-    {   
-        // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
-
-        $this->config = new \PhpSigep\Config();
-        $this->config->setAccessData($accessData);
-        $this->config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
-        // $this->config->setEnv(\PhpSigep\Config::ENV_DEVELOPMENT);
-        $this->config->setCacheOptions(
-            array(
-                'storageOptions' => array(
-                    // Qualquer valor setado neste atributo será mesclado ao atributos das classes 
-                    // "\PhpSigep\Cache\Storage\Adapter\AdapterOptions" e "\PhpSigep\Cache\Storage\Adapter\FileSystemOptions".
-                    // Por tanto as chaves devem ser o nome de um dos atributos dessas classes.
-                    'enabled' => false,
-                    'ttl' => 20,// "time to live" de 10 segundos
-                    'cacheDir' => sys_get_temp_dir(), // Opcional. Quando não inforado é usado o valor retornado de "sys_get_temp_dir()"
-                ),
-            )
-        );
-        
-        \PhpSigep\Bootstrap::start($this->config);
-    }
-
-    public function testCorreios(Request $request)
+    public function testJobsQueue()
     {
+        $company_id = 35;
+        $Company = Company::with('rpi')->find($company_id);
+        $ExternalRPIController = new ExternalRPIController($Company->rpi);
 
-        
-        $usuario = '2689761400';
-        $senha = 'H10R;3@Y@M';
-        $cnpjEmpresa = '26897614000101';
-        $numcontrato = '9912467470';
-        $codigoadm = '19185251';
-        $cartaopostagem = '0074969366';
-        
-        
-        $accessData = new \PhpSigep\Model\AccessDataHomologacao();
-        $accessData->setUsuario($usuario);
-        $accessData->setSenha($senha);
-        $accessData->setCnpjEmpresa($cnpjEmpresa);
-        $accessData->setCodAdministrativo($codigoadm);
-        $accessData->setNumeroContrato($numcontrato);
-        $accessData->setCartaoPostagem($cartaopostagem);
-        $accessData->setAnoContrato(null);
-        // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
-        
-        $this->initCorreios($accessData);
-        
-        // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+        $contact_id = 1;
+        $Contact = Contact::find($contact_id);
 
-        // $accessData->setUsuario($usuario);// Usuário e senha para teste passado no manual
-        // $accessData->setSenha($senha);
+        $message = 'Teste queue job message 1';
 
-        // Solicita as etiquetas
-        // $dados_etiquetas = new \PhpSigep\Model\SolicitaEtiquetas();
-        // $dados_etiquetas->setAccessData($this->config->getAccessData());
-        // $dados_etiquetas->setQtdEtiquetas(1);
-        
-        // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
-        $etiqueta = new \PhpSigep\Model\Etiqueta();
-        $etiqueta->setEtiquetaSemDv('PM499951504BR');
-        // $etiqueta->setEtiquetaComDv('PM499951504BR');
-        
-        $params = new \PhpSigep\Model\RastrearObjeto();
-        $params->setAccessData($this->config->getAccessData());
-        $params->setEtiquetas([$etiqueta]);
-            
-        $phpSigep = new \PhpSigep\Services\SoapClient\Real();
-        $result = $phpSigep->rastrearObjeto($params);
-        
-        var_dump((array)$result);
+        $sendWAMsg = new SendWhatsAppMsg($ExternalRPIController, $Contact, $message);
+
+        // dd($sendWAMsg);
+
+        // $sendWAMsg->connection = 'database';
+
+        // $pending =  SendWhatsAppMsg::withChain([$sendWAMsg])->dispatch();
+        // $pending =  $sendWAMsg->dispatch();
+
+        $pending = SendWhatsAppMsg::dispatch($ExternalRPIController, $Contact, $message);
+
+        dd($pending);
     }
 
     public function testsalesbling(Request $request)
     {
-        // Log::debug('\n\rBling Test Sales: ', [$request->all()]);
-
-        // var_dump($p1);
-        // var_dump($request->p1);
+        Log::debug('\n\rBling Test Sales: ', [$request->all()]);
     }
 
     public function getGuzzleRequest()
@@ -332,51 +287,3 @@ class TestController extends AppBaseController
     }
 
 }
-
-
-/**
- * 
- * 
-CNPJ : 26.897.614/0001-01
-AN8 (ERP) : 43963279
-Razão Social : COMERCIAL HORUS EIRELI
-
-        $cnpjEmpresa = '26897614000101';
-        $numcontrato = '9912467470';
-        $codigoadm = '19185251';
-        $cartaopostagem = '0074969366';
-        
-Omologation:
-    User: 2689761400
-    Root: H10R;3@Y@M
-
-
-https://apps.correios.com.br/cas/login
-Usuario: horusgi18
-senha: manu1202
-
-
-Contrato Comercial Loja Horus:
-
-Contrato: 9912467470
-
-Cartão de postagem: 0074969366
-
-Acesso sigep web: Usuario: 26897614
-
-Senha: 46zili
-
- 
-
-Contrato Megaju Comercio de eletronicos
-
- 
-
-Contrato: 9912475537
-
-Cartão de postagem: 0075186390
-
-Acesso sigep web: Usuario: 34900061000127
-
-senha: 1w5r38
- */
