@@ -8,9 +8,11 @@ use App\Http\Controllers\AppBaseController;
 use App\Jobs\SendWhatsAppMsg;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\ExtendedChat;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
+use App\Repositories\ExtendedChatRepository;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +37,7 @@ class TestController extends AppBaseController
     public function index(Request $request)
     
     {
-        $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
+        // $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
         $company_id = 4;
         // $company_id = 1;
         // $attendant_id = 30;
@@ -47,17 +49,17 @@ class TestController extends AppBaseController
 
         // dd($Contact);
 
-        $extContRepo = new ExtendedContactRepository(app());
+        // $extContRepo = new ExtendedContactRepository(app());
 
-        $Contacts = Contact::with(['Status', 'latestAttendantContact'])
-            ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
-                $query->where('attendant_id', $attendant_id);
-            })
-            ->orderBy('updated_at', 'desc')
-            ->where('company_id', $company_id)
-            // ->get();
-            ->get()
-            ->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
+        // $Contacts = Contact::with(['Status', 'latestAttendantContact'])
+        //     ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+        //         $query->where('attendant_id', $attendant_id);
+        //     })
+        //     ->orderBy('updated_at', 'desc')
+        //     ->where('company_id', $company_id)
+        //     // ->get();
+        //     ->get()
+        //     ->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
             // ->slice($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             // ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
 
@@ -68,26 +70,30 @@ class TestController extends AppBaseController
         // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
         // dd($Contacts);
 
-        $Collection = new Collection();
+        // $Collect
+        
 
-        foreach ($Contacts as $key => $Contact) {
-            if ($Contact->latestAttendantContact->attendant_id == $attendant_id) {
-                // Get Contact Status
-                $Contacts[$key]['latest_attendant'] = $Contact->latestAttendantContact->attendant()->first()->user()->first();
-
-                $Collection->add($Contact);
-            }
-        }
-
-        dd($Collection);
+        // dd($Collection);
         // dd($Collection->toJson());
         // dd($Contacts->toJson());
 
         // $lastContact = Contact::find($last_contact_idx);
 
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = '4';
-        // $ExtendedChat = $ExtendedChat->find(1);
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = "$attendant_id";
+        $ExtendedChat = $ExtendedChat->find(1);
+
+        $chatRepository = new ExtendedChatRepository(app());
+
+        $contact_id = 18806;
+        $page = 0;
+        $searchMessageByStringInput = null;
+        $set_as_readed = false;
+        // $ContactChats = $chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput, $set_as_readed);
+
+        // dd($ContactChats);
+
+        $this->contactChatAllAttendants();
 
         // $ExtendedChat->Contact = $lastContact;
         // dd($ExtendedChat->toJson());
@@ -229,6 +235,42 @@ class TestController extends AppBaseController
         // dd($this->repository->Sellers_User());
 
         // $this->testJobsQueue();
+    }
+
+    function contactChatAllAttendants()
+    {
+        $contact_id = 18806;
+        $page = 0;
+        $searchMessageByStringInput = null;
+        $set_as_readed = false;
+
+        $chatRepository = new ExtendedChatRepository(app());
+
+        $ContactChats = new Collection();
+        try {
+            $extAttContRepo = new ExtendedContactRepository(app()); 
+
+            $Attendants = $extAttContRepo->getAttendants($contact_id);
+
+            foreach ($Attendants as $key => $Attendant) {
+                $contactAttChats = $chatRepository->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput, $set_as_readed);
+
+                $ContactChats = $ContactChats->concat($contactAttChats);
+            }
+
+            dd($ContactChats->unique('id')->sortBy('created_at'));
+
+            // $ContactChats
+
+            $Collection = new Collection();
+            
+            
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        // return $ContactChats;
+        // return $Collection;
     }
 
     public function testJobsQueue()

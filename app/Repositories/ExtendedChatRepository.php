@@ -29,6 +29,8 @@ class ExtendedChatRepository extends ChatRepository
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
 
+            $ContactChats = $ContactChats->unique('id')->sortBy('updated_at');
+
             $Collection = new Collection();
             $page_length = env('APP_PAGE_LENGTH', 10);
 
