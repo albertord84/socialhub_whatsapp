@@ -14,12 +14,12 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                        <i class="fa fa-upload" aria-hidden="true"></i>
+                        <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
-                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <i class="fa fa-upload" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
@@ -145,12 +145,9 @@
                     <h5 class="mb-3" >Atenção</h5>
                     <p>Para adicionar seus contatos no sistema, você deve usar a nossa planilha template.</p>
                     <p>  Se você ainda não descarregou a planilha template, descarregue e adicione seus dados.</p>
-                    <p>  A planilha de importação deve ter no máximo 1000 contatos.</p>
+                    <p>  A planilha de importação deve ter no máximo 500 contatos.</p>
                     <p>  Se já seus contatos estão na planilha template, então pode subir a planilha preenchida.</p>
                 </div>
-                <!-- <div class="pl-5 pr-5"> <hr ></div> -->
-                <!-- <div class="ml-5">
-                </div> -->
                 <div class="col-lg-12 mt-5 text-center" >
                     <a class="btn btn-primary pl-5 pr-5 text-white"  href="templates/planilha.csv" download>Descarregar planilha</a>
                     <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
@@ -171,17 +168,60 @@
                     <h5 class=" pt-5"> Esta acção pode demorar alguns minutos!</h5>
                 </div>
             </div>
+
             <div v-if="steepUploadFile==4">
-                <h5 class="text-center">Resultado da importação de contatos.</h5>
+                <!-- <h5 class="text-center">Resultado da importação de contatos.</h5>
                 <div style="max-height: 200px; overflow-y: auto;">
                     <ul id="Report">
                         <li v-for="(item,index) in importContactsReport" :key="index" :class="[ { 'my-bg-success': item.code=='success' }, { 'my-bg-warning' : item.code=='warning' }, { 'my-bg-danger' : item.code=='error' }]" >
                             {{ item.cnt }} {{ item.message }}
                         </li>
                     </ul>
-                    
-                </div>
+                </div> -->
 
+                <div >
+                    <h5 class="text-center">Resumo da importação de contatos.</h5>
+                    <ul id="Report">
+                        <li v-show="importContactsReportStatistics.addingCnt!=0" class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
+                            Foram adicionados {{importContactsReportStatistics.addingCnt}} contatos com sucesso.
+                        </li>
+                        <li v-show="importContactsReportStatistics.updateCnt!=0" class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
+                            Foram atualizados {{importContactsReportStatistics.updateCnt}} contatos com sucesso.
+                        </li>
+                        <li v-show="importContactsReportStatistics.warningCnt!=0" class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
+                            Não foram atribuídos a um atendente {{importContactsReportStatistics.warningCnt}} contatos.
+                        </li>
+                        <li v-show="importContactsReportStatistics.errorNameCnt!=0" class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
+                            O nome de {{importContactsReportStatistics.errorNameCnt}} contatos contêm cracteres inválidos.
+                        </li>
+                        <li v-show="importContactsReportStatistics.errorCnt!=0" class=" my-bg-danger"> <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                            Não foi possível adicionar {{importContactsReportStatistics.errorCnt}} contatos porque o número de whatsapp é errado ou inexistente.
+                        </li>
+                    </ul>
+                </div>
+                
+                <div v-show="importContactsReportStatistics.errorCnt!=0 || importContactsReportStatistics.warningCnt!=0 || importContactsReportStatistics.errorNameCnt!=0">
+                    <h5 class="text-center">Informação detalhada da importação de contatos.</h5>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <ul id="Report">
+                            <li v-for="(item,index) in importContactsReportError" :key="index" class=" my-bg-danger" >
+                                Linha {{ item.line }}: contato não foi adicionado porque o número de whatsapp parece errado ou inexistente.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn1" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O atendente indicado não pertence a esta empresa.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn2" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O email do atendente indicado é inválido.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn4" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O nome do contato contem cracteres inválidos.
+                            </li>
+                            <li v-for="(item,index) in importContactsReportWarn3" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: Não foi indicado um atendente.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="col-lg-12 mt-5 text-center">
                     <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact">Fechar</button>
                 </div>
@@ -241,7 +281,19 @@
                 model:{},
                 
                 file:null,
-                importContactsReport: "",
+                // importContactsReport: "",
+                importContactsReportError: "",
+                importContactsReportWarn1: "",
+                importContactsReportWarn2: "",
+                importContactsReportWarn3: "",
+                importContactsReportWarn4: "",
+                importContactsReportStatistics: "",
+                
+                //---------New record properties-----------------------------
+                
+                //---------Edit record properties-----------------------------
+                
+                //---------Show Modals properties-----------------------------
                 modalAddContact: false,
                 modalEditContact: false,
                 modalDeleteContact: false,
@@ -376,7 +428,16 @@
                         this.steepUploadFile = 3;
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
-                                this.importContactsReport =  response.data;
+                                // this.importContactsReport =  response.data;
+                                this.importContactsReportWarn1 = response.data.message2.lineWarn;
+                                this.importContactsReportWarn2 = response.data.message3.lineWarn;
+                                this.importContactsReportWarn3 = response.data.message4.lineWarn;
+                                this.importContactsReportWarn4 = response.data.message6.lineWarn;
+                                this.importContactsReportError = response.data.message5.lineError;
+                                this.importContactsReportStatistics = response.data.statistics;
+                                console.log(this.importContactsReportWarn4);
+                                // return;
+
                                 this.steepUploadFile=4;
                                 miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
                                 this.getContacts();

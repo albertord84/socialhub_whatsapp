@@ -78,7 +78,6 @@ class ExtendedContactController extends ContactController
         //return redirect(route('contacts.index'));
     }
 
-
     public function contactsFromCSV(CreateContactRequest $request)
     {
         $input = $request->all();
@@ -109,11 +108,19 @@ class ExtendedContactController extends ContactController
             }
             $response = array();
             $lineError = array();
+            $lineWarn1 = array();
+            $lineWarn2 = array();
+            $lineWarn3 = array();
+            $lineWarn4 = array();
             
             //insert contacts in database
             $cntMessage1 = 0;
             $cntMessage2 = 0;
             $cntMessage3 = 0;
+            $cntMessage4 = 0;
+            $cntMessage5 = 0;
+            $cntMessage6 = 0;
+            $cntMessage7 = 0;
             $i=2;
             foreach($Contacts as $contact){
                 try{
@@ -122,6 +129,8 @@ class ExtendedContactController extends ContactController
                     $Contact = Contact::where('whatsapp_id' ,$whatsapp)
                             ->where('company_id', '=', $User->company_id)
                             ->first();
+                    
+                    if($Contact)$cntMessage7++;    
 
                     $Contact = $Contact ?? new Contact;
                     $latestAttendantContact = $Contact->latestAttendantContact()->first();
@@ -131,7 +140,11 @@ class ExtendedContactController extends ContactController
                     $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
                         $Contact->first_name = trim($contact['Nome']);
+                    }else{
+                        $lineWarn4[$cntMessage6] = array("line" => "$i");
+                        $cntMessage6++;
                     }
+
                     if (isset($contact['Email']) && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
                         $Contact->email = trim($contact['Email']);
                     }
@@ -172,7 +185,8 @@ class ExtendedContactController extends ContactController
                         // $Contact->created_at = '1959-01-01 00:00:00';
                         // $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
-                        
+                        $cntMessage1++;
+
                         //process the respective atendent email in the actual csv row
                         if (trim($contact['Email-Atendente']) != ""){
                             if(filter_var(trim($contact['Email-Atendente']), FILTER_VALIDATE_EMAIL)){
@@ -195,19 +209,22 @@ class ExtendedContactController extends ContactController
                                             $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
                                             $Contact->save();
                                         }
-                                        $cntMessage1++;
                                     }
                                 }else{
+                                    $lineWarn1[$cntMessage2] = array("line" => "$i");
                                     $cntMessage2++;
                                 }
                             }else{
-                                $cntMessage2++;
+                                $lineWarn2[$cntMessage3] = array("line" => "$i");
+                                $cntMessage3++;
                             }
                         }else{
-                            $cntMessage2++;
+                            $lineWarn3[$cntMessage4] = array("line" => "$i");
+                            $cntMessage4++;
                         }
                     }else{
-                        $cntMessage3++;
+                        $lineError[$cntMessage5] = array("line" => "$i");
+                        $cntMessage5++;
                     }
 
                 } catch (\Throwable $th) {
@@ -216,24 +233,52 @@ class ExtendedContactController extends ContactController
                 $i++;
                 $oldestUpdatedContactTime--;
             }
-        
+            $warningCnt = $cntMessage2 + $cntMessage3 + $cntMessage4;
+            
             $response["message1"] = array(
-                "message" => "contatos foram adicionados e atribuídos aos atendentes corretamente.",
+                // "message" => "contatos foram adicionados e atribuídos aos atendentes corretamente.",
                 "code" => "success",
                 "cnt" => "$cntMessage1"
             );
 
             $response["message2"] = array(
-                "message" => "contatos foram adicionados mas não foram atribuídos a um atendente. Confira o email que foi inserido para o atendente, ele pode ser inválido ou o atendente pode não estar criado.",
+                // "message" => "contatos foram adicionados mas não foram atribuídos a um atendente porque o atendente indicado não pertence a esta empresa.",
                 "code" => "warning",
-                "cnt" => "$cntMessage2"
+                "lineWarn"  => $lineWarn1
             );
 
             $response["message3"] = array(
-                "message" => "contatos não foram adicionados porque o número de whatsapp parece errado ou inexistente.",
-                "code" => "error",
-                "cnt" => "$cntMessage3"
+                // "message" => "contatos foram adicionados mas não foram atribuídos a um atendente porque o email do atendente é inválido.",
+                "code" => "warning",
+                "lineWarn"  => $lineWarn2
             );
+            
+            $response["message4"] = array(
+                // "message" => "contatos foram adicionados mas não foram atribuídos a um atendente porque o atendente não foi indicado.",
+                "code" => "warning",
+                "lineWarn"  => $lineWarn3
+            );
+
+            $response["message5"] = array(
+                // "message" => "contatos não foram adicionado porque o número de whatsapp parece errado ou inexistente.",
+                "code" => "error",
+                "lineError"  => $lineError
+            );
+
+            $response["message6"] = array(
+                // "message" => " contato foi adicionado mas o nome do contato contem cracteres inválidos.",
+                "code" => "warning",
+                "lineWarn"  => $lineWarn4
+            );
+            $addingCnt = $cntMessage1-$cntMessage7;
+            $response["statistics"] = array(
+                "addingCnt" => "$addingCnt",
+                "updateCnt" => "$cntMessage7",
+                "warningCnt" => "$warningCnt",
+                "errorNameCnt" => "$cntMessage6",
+                "errorCnt" => "$cntMessage5",
+            );
+
 
         } else {
             abort(302, "Error uploading file!");
@@ -242,7 +287,6 @@ class ExtendedContactController extends ContactController
         return json_encode($response);
         // return $response->toJson();
     }
-
 
     /**
      * Update the specified Contact in storage.
