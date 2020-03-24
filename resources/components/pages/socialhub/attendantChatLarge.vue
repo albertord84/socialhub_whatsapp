@@ -1136,7 +1136,7 @@
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
-                    'last_contact_idx': this.contacts.length,
+                    'last_contact_idx': this.contacts.length-1,
                 })
                 .then(response => {
                     if(response.data.length){
