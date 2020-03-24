@@ -2075,8 +2075,7 @@
 
             wsMessageToAttendant: function(){
                 window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
-                .listen('MessageToAttendant', (e) => {
-                    //------------prepare message datas to be displayed------------------------
+                .listen('MessageToAttendant', (e) => {                    
                     var message = JSON.parse(e.message);                    
 
                     if(message.source == 0){ //message to update the message status to 2 or 7
@@ -2088,8 +2087,8 @@
                                 }
                             });
                         }
-                    }else
-                    if(message.source == 1){ //message from contact                        
+                    }
+                    else if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
                         var subjacentContact = null;
                         console.log(message);
@@ -2098,6 +2097,7 @@
                             delete message.Contact;
                         }
 
+                        //------------prepare message datas to be displayed------------------------
                         message.time = this.getMessageTime(message.created_at);
                         try {
                             if(message.data != "" && message.data != null && message.data.length>0) {
@@ -2132,21 +2132,6 @@
                         }
     
                         if(targetIndex > -1){ // set the target contact as firt if is in contacts list
-                            // var targetContact = Object.assign({}, this.contacts[targetIndex]);
-                            // var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
-                            // var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
-                            // this.contacts = A.concat(B);
-                            // this.contacts.unshift(targetContact);
-    
-                            // for(i=0; i<=targetIndex;i++)
-                            //     this.contacts[i].index = i;
-    
-                            // if(this.selectedContactIndex>=0){
-                            //     if(targetIndex == this.selectedContactIndex)
-                            //         this.selectedContactIndex = 0;
-                            //     else
-                            //         this.selectedContactIndex ++;
-                            // }
                             this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
                         }else{ //insert the target contact in contacts list if isnt
                             subjacentContact.count_unread_messagess = 1;
@@ -2166,11 +2151,7 @@
                                 && !this.contacts[this.selectedContactIndex].status_id==6)
                             this.$refs.newMessageSound.play();
 
-                    }
-
-
-
-                    
+                    }                    
                 });
             },
 
@@ -2187,10 +2168,23 @@
                 window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
                 .listen('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
+                    console.log(newContact);
+                    //------------prepare message datas to be displayed------------------------
+                    // var message = newContact.message;
+                    // newContact.message.time = this.getMessageTime(newContact.message.created_at);
+                    // try {
+                    //     if(newContact.message.data != "" && newContact.message.data != null && newContact.message.data.length>0) {
+                    //         newContact.message.data = JSON.parse(newContact.message.data);
+                    //         if(newContact.message.type_id > 1)
+                    //             newContact.message.path = newContact.message.data.FullPath;
+                    //     }
+                    // } catch (error) {
+                    // }
+
                     this.contacts.unshift(newContact);
-                    var i = 0;
-                    this.contacts.forEach(function(item, i){
-                        item.index = i++;
+                    var a = 0;
+                    this.contacts.some((item, i)=>{
+                        this.contacts[i].index = a++;
                     });
                     if(this.selectedContactIndex >=0){
                         this.selectedContactIndex ++;
