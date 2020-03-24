@@ -48,8 +48,8 @@ class ExtendedAttendantsContactController extends AttendantsContactController
             //TODO-Alberto: enviar el last_message al igual que la funcion que me da los contactos
             $chatModel = new ExtendedChat();
             $chatModel->table = (string) $request->attendant_id;
-            $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
-            $Contact->last_message = $lastMesssage;
+            $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+            $Contact->last_message = $lastMessage;
             broadcast(new NewTransferredContact((int) $request->attendant_id, $Contact));
         }
 
