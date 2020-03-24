@@ -48,9 +48,15 @@ class TestController extends AppBaseController
         $extContRepo = new ExtendedContactRepository(app());
 
         $Contacts = Contact::with(['Status', 'latestAttendantContact'])
+<<<<<<< HEAD
             // ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
             //     $query->where('attendant_id', $attendant_id);
             // })
+=======
+            ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+                $query->where('attendant_id', $attendant_id);
+            })
+>>>>>>> 739567f77558b662c7a138c13ebddbbd9ab19cf8
             ->orderBy('updated_at', 'desc')
             ->where('company_id', $company_id)
             ->get();
@@ -63,8 +69,8 @@ class TestController extends AppBaseController
         // $Contacts = $extContRepo->fullContacts(1, $attendant_id, null, $last_contact_idx);
 
         // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
-        dd($Contacts);
-        // dd($Contacts->getItems());
+        // dd($Contacts);
+        dd($Contacts->toJson());
 
         // $lastContact = Contact::find($last_contact_idx);
 
