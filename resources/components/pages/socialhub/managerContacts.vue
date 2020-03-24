@@ -315,7 +315,7 @@
                                 item.contact_atendant_id = item.latestAttendant.id;
                             }
                         });
-                        if(this.rows.length >0 && response.data.length!=0)
+                        if(this.rows.length>0 && response.data.length!=0)
                             miniToastr.success("Página de contatos carregada corretamente", "Sucesso");
                         if(response.data.length==0)
                             miniToastr.warn("Todos os contatos já foram carregados", "Sucesso");
