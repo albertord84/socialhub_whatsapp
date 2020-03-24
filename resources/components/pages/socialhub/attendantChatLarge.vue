@@ -1132,7 +1132,7 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
-                // console.log("contacts length: "+ this.contacts.length);
+                console.log("contacts_length-1 before request: "+ (this.contacts.length-1));
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
@@ -1151,9 +1151,17 @@
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
                             item.isPictUrlBroken = false;
-                            // console.log(item.id);
+                            console.log(item.id);
                         });
-                        this.contacts = this.contacts.concat(response.data);                        
+
+                        var arr = Array();
+                        response.data.forEach((item, index)=>{
+                            if(!this.findContactInList(item)){
+                                arr.push(item);
+                            }
+                        });
+                        this.contacts = this.contacts.concat(arr);
+                        
                         if(this.selectedContactIndex>=0){
                             this.contacts.some((item, i)=>{
                                 if(this.contacts[this.selectedContactIndex].id == item.id){
@@ -1288,6 +1296,17 @@
                     this.displayChatRightSide();   
                     this.selectedContactIndex = -1;
                 }
+            },
+
+            findContactInList: function(contact){
+                var isIn = false;
+                this.contacts.some((item,i)=>{                    
+                    if(item.id == contact.id){
+                        isIn = true;
+                        return;
+                    }
+                });
+                return isIn;
             },
 
             reloadContacts: function(){
