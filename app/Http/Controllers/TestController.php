@@ -50,15 +50,9 @@ class TestController extends AppBaseController
         $extContRepo = new ExtendedContactRepository(app());
 
         $Contacts = Contact::with(['Status', 'latestAttendantContact'])
-<<<<<<< HEAD
-            // ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
-            //     $query->where('attendant_id', $attendant_id);
-            // })
-=======
             ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
                 $query->where('attendant_id', $attendant_id);
             })
->>>>>>> 739567f77558b662c7a138c13ebddbbd9ab19cf8
             ->orderBy('updated_at', 'desc')
             ->where('company_id', $company_id)
             // ->get();
