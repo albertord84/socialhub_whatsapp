@@ -55,7 +55,7 @@ class ExtendedContactRepository extends ContactRepository
                 // ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
 
             foreach ($Contacts as $key => $Contact) {
-                // if ($Contact->latestAttendantContact->attendant_id == $attendant_id) {
+                if ($Contact->latestAttendantContact->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 
@@ -71,7 +71,7 @@ class ExtendedContactRepository extends ContactRepository
                     $Contacts[$key]['count_unread_messagess'] = $countUnreadMessages;
 
                     $Collection->add($Contacts[$key]);
-                // }
+                }
             }
 
             return $Collection;
