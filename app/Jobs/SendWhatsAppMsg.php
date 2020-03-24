@@ -101,6 +101,8 @@ class SendWhatsAppMsg implements ShouldQueue
         }
         
         $ExtendedChat->save();
+
+        $ExtendedChat->Contact = $this->Contact;
         
         broadcast(new MessageToAttendant($ExtendedChat));
     }

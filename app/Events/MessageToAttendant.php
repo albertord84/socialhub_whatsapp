@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -25,7 +24,6 @@ class MessageToAttendant implements ShouldBroadcast
      */
     public function __construct(ExtendedChat $Chat)
     {
-        $Chat->Contact = Contact::find($Chat->contact_id);
         $this->message = $Chat->toJson();
         $this->channel = "sh.message-to-attendant.$Chat->attendant_id";
     }
