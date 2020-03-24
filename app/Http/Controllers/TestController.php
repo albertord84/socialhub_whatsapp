@@ -37,19 +37,23 @@ class TestController extends AppBaseController
         $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
         $company_id = 4;
         // $company_id = 1;
-        // $attendant_id = 30;
-        $attendant_id = 15;
+        $attendant_id = 30;
+        // $attendant_id = 15;
         // $attendant_id = 5;
+
+        // $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->find(18772);
+
+        // dd($Contact);
 
         $extContRepo = new ExtendedContactRepository(app());
 
-        $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-            ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
-                $query->where('attendant_id', $attendant_id);
-            })
+        $Contacts = Contact::with(['Status', 'latestAttendantContact'])
+            // ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+            //     $query->where('attendant_id', $attendant_id);
+            // })
             ->orderBy('updated_at', 'desc')
-            ->where('company_id', $company_id)->get()
-            ;
+            ->where('company_id', $company_id)
+            ->get();
             // ->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
             // ->slice($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
             // ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
@@ -60,6 +64,7 @@ class TestController extends AppBaseController
 
         // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
         dd($Contacts);
+        // dd($Contacts->getItems());
 
         // $lastContact = Contact::find($last_contact_idx);
 

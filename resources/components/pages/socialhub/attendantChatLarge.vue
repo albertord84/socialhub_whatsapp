@@ -1142,7 +1142,7 @@
                     if(response.data.length){
                         var This = this, i = this.contacts.length;
                         response.data.forEach((item, index)=>{
-                            item.index = i++;
+                            // item.index = i++;
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
                                     item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
@@ -1161,11 +1161,18 @@
                             }
                         });
                         this.contacts = this.contacts.concat(arr);
+
+                        var a=0;
+                        this.contacts.some((item, i)=>{
+                            this.contacts[i].index = a;
+                            a++;
+                        });
                         
-                        if(this.selectedContactIndex>=0){
+                        if(this.selectedContactIndex>=0 ){
+                            var This = this;
                             this.contacts.some((item, i)=>{
-                                if(this.contacts[this.selectedContactIndex].id == item.id){
-                                    this.selectedContactIndex = i;
+                                if(This.contacts[This.selectedContactIndex].id == item.id){
+                                    This.selectedContactIndex = i;
                                     return;
                                 }
                             });
