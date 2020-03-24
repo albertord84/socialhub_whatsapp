@@ -388,8 +388,8 @@
                                             <span class="pt-2" style="float:right; font-size:1.3rem">
                                                 <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
                                                 <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
-                                                <!-- <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span> -->
-                                                <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span>
+                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
+                                                <!-- <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span> -->
                                             </span>
                                         </p>                                        
                                     </div>
@@ -1132,6 +1132,7 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
+                // console.log("contacts length: "+ this.contacts.length);
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
@@ -1149,12 +1150,13 @@
                             } catch (error) {
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
-                            item.isPictUrlBroken = false;                            
+                            item.isPictUrlBroken = false;
+                            // console.log(item.id);
                         });
                         this.contacts = this.contacts.concat(response.data);                        
                         if(this.selectedContactIndex>=0){
                             this.contacts.some((item, i)=>{
-                                if(!flag && this.contacts[this.selectedContactIndex].id == item.id){
+                                if(this.contacts[this.selectedContactIndex].id == item.id){
                                     this.selectedContactIndex = i;
                                     return;
                                 }
@@ -1165,8 +1167,6 @@
                     }
                 })
                 .catch(error => {
-                    console.log('------------------>');
-                    console.log(error);
                     this.processMessageError(error, this.contacts_url,"get");})
                 .finally(()=>{this.requestingNewPageContacts = false;});
             },
@@ -1232,13 +1232,14 @@
                 return contact;
             },
 
-            insertContactAsFirtInList:function(targetContact){
+            insertContactAsFirtInList:function(targetContact){                
                 var selectedContactId = (this.selectedContactIndex>-1) ? this.contacts[this.selectedContactIndex].id : -1;                
                 //1. push targetContact as first
                 this.contacts.unshift(targetContact);
                 //2. update all contact index and selectecContactIndex
+                var a = 0;
                 this.contacts.some((item,i)=>{
-                    item.index == i;                    
+                    this.contacts[a].index = a++;
                 });
                 if(selectedContactId>-1) this.selectedContactIndex++;
             },
@@ -1295,7 +1296,7 @@
             },
 
             //------------------Get chats----------------------------
-            getContactChat: function(contact,index) {                
+            getContactChat: function(contact,index) {   
                 this.reloadContactPicUrl(contact);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
@@ -1310,7 +1311,6 @@
                     if(this.showChatRightSide) this.displayChatRightSide();
                     if(this.showChatFindMessages) this.displayChatFindMessage();
                     document.getElementById("chat-center-side").classList.add("chat-center-side-open");
-
                     this.getChat();
                 },1000)
                 
@@ -2088,10 +2088,11 @@
                                 }
                             });
                         }
-                    }else 
+                    }else
                     if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
                         var subjacentContact = null;
+                        console.log(message);
                         if(typeof(message.Contact)!='undefined'){
                             subjacentContact = message.Contact;
                             delete message.Contact;
