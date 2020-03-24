@@ -1132,7 +1132,7 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
-                // console.log("contacts length: "+ this.contacts.length);
+                console.log("contacts_length-1 before request: "+ (this.contacts.length-1));
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
@@ -1142,7 +1142,7 @@
                     if(response.data.length){
                         var This = this, i = this.contacts.length;
                         response.data.forEach((item, index)=>{
-                            item.index = i++;
+                            // item.index = i++;
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
                                     item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
@@ -1151,13 +1151,28 @@
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
                             item.isPictUrlBroken = false;
-                            // console.log(item.id);
+                            console.log(item.id);
                         });
-                        this.contacts = this.contacts.concat(response.data);                        
-                        if(this.selectedContactIndex>=0){
+
+                        var arr = Array();
+                        response.data.forEach((item, index)=>{
+                            if(!this.findContactInList(item)){
+                                arr.push(item);
+                            }
+                        });
+                        this.contacts = this.contacts.concat(arr);
+
+                        var a=0;
+                        this.contacts.some((item, i)=>{
+                            this.contacts[i].index = a;
+                            a++;
+                        });
+                        
+                        if(this.selectedContactIndex>=0 ){
+                            var This = this;
                             this.contacts.some((item, i)=>{
-                                if(this.contacts[this.selectedContactIndex].id == item.id){
-                                    this.selectedContactIndex = i;
+                                if(This.contacts[This.selectedContactIndex].id == item.id){
+                                    This.selectedContactIndex = i;
                                     return;
                                 }
                             });
@@ -1288,6 +1303,17 @@
                     this.displayChatRightSide();   
                     this.selectedContactIndex = -1;
                 }
+            },
+
+            findContactInList: function(contact){
+                var isIn = false;
+                this.contacts.some((item,i)=>{                    
+                    if(item.id == contact.id){
+                        isIn = true;
+                        return;
+                    }
+                });
+                return isIn;
             },
 
             reloadContacts: function(){
