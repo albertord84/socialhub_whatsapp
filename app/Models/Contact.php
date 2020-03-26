@@ -62,6 +62,8 @@ class Contact extends Model
         'categoria1',
         'categoria2',
 
+        // 'last_message',
+
     ];
 
     /**

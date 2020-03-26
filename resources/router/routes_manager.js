@@ -67,6 +67,12 @@ const layout = [
         meta: {
             title: "Estatísticas",
         }
+    },{
+        path: '/manager/emoji',    
+        component: resolve => require(['pages/socialhub/emoji'], resolve),
+        meta: {
+            title: "Estatísticas",
+        }
     }
     
 

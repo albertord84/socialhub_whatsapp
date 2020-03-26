@@ -111,6 +111,7 @@ class ExtendedContactController extends ContactController
             $lineWarn1 = array();
             $lineWarn2 = array();
             $lineWarn3 = array();
+            $lineWarn4 = array();
             
             //insert contacts in database
             $cntMessage1 = 0;
@@ -118,6 +119,8 @@ class ExtendedContactController extends ContactController
             $cntMessage3 = 0;
             $cntMessage4 = 0;
             $cntMessage5 = 0;
+            $cntMessage6 = 0;
+            $cntMessage7 = 0;
             $i=2;
             foreach($Contacts as $contact){
                 try{
@@ -126,6 +129,8 @@ class ExtendedContactController extends ContactController
                     $Contact = Contact::where('whatsapp_id' ,$whatsapp)
                             ->where('company_id', '=', $User->company_id)
                             ->first();
+                    
+                    if($Contact)$cntMessage7++;    
 
                     $Contact = $Contact ?? new Contact;
                     $latestAttendantContact = $Contact->latestAttendantContact()->first();
@@ -135,7 +140,11 @@ class ExtendedContactController extends ContactController
                     $Contact->origin = 3;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
                         $Contact->first_name = trim($contact['Nome']);
+                    }else{
+                        $lineWarn4[$cntMessage6] = array("line" => "$i");
+                        $cntMessage6++;
                     }
+
                     if (isset($contact['Email']) && filter_var(trim($contact['Email']), FILTER_VALIDATE_EMAIL)) {
                         $Contact->email = trim($contact['Email']);
                     }
@@ -173,8 +182,8 @@ class ExtendedContactController extends ContactController
                             $Contact->status_id = 2;
                         $Contact->created_at = Carbon::minValue();
                         $Contact->updated_at = Carbon::minValue();
-                        // $Contact->created_at = '1959-01-01 00:00:00';
-                        // $Contact->updated_at = '1959-01-01 00:00:00';
+                        $Contact->created_at = '1959-01-01 00:00:00';
+                        $Contact->updated_at = '1959-01-01 00:00:00';
                         $Contact->save();
                         $cntMessage1++;
 
@@ -196,8 +205,10 @@ class ExtendedContactController extends ContactController
                                         //5. update the contact status_id to ACTIVE and keep the criated_at and updated_at dates
                                         if($Contact->status_id == 2){
                                             $Contact->status_id = 1;
-                                            $Contact->created_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
-                                            $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            // $Contact->created_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            // $Contact->updated_at = date('Y-m-d H:i:s',$oldestUpdatedContactTime);
+                                            $Contact->created_at = '1959-01-01 00:00:00';
+                                            $Contact->updated_at = '1959-01-01 00:00:00';
                                             $Contact->save();
                                         }
                                     }
@@ -256,9 +267,17 @@ class ExtendedContactController extends ContactController
                 "lineError"  => $lineError
             );
 
+            $response["message6"] = array(
+                // "message" => " contato foi adicionado mas o nome do contato contem cracteres inválidos.",
+                "code" => "warning",
+                "lineWarn"  => $lineWarn4
+            );
+            $addingCnt = $cntMessage1-$cntMessage7;
             $response["statistics"] = array(
-                "successCnt" => "$cntMessage1",
+                "addingCnt" => "$addingCnt",
+                "updateCnt" => "$cntMessage7",
                 "warningCnt" => "$warningCnt",
+                "errorNameCnt" => "$cntMessage6",
                 "errorCnt" => "$cntMessage5",
             );
 

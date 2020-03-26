@@ -182,19 +182,25 @@
                 <div >
                     <h5 class="text-center">Resumo da importação de contatos.</h5>
                     <ul id="Report">
-                        <li class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
-                            Foram adicionados {{importContactsReportStatistics.successCnt}} contatos com sucesso .
+                        <li v-show="importContactsReportStatistics.addingCnt!=0" class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
+                            Foram adicionados {{importContactsReportStatistics.addingCnt}} contatos com sucesso.
                         </li>
-                        <li class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
-                            Dos contatos adicionados {{importContactsReportStatistics.warningCnt}} não foram atribuídos a um atendente.
+                        <li v-show="importContactsReportStatistics.updateCnt!=0" class=" my-bg-success"> <i class="mdi mdi-check-circle-outline fa-lg" aria-hidden="true"></i>
+                            Foram atualizados {{importContactsReportStatistics.updateCnt}} contatos com sucesso.
                         </li>
-                        <li class=" my-bg-danger"> <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                        <li v-show="importContactsReportStatistics.warningCnt!=0" class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
+                            Não foram atribuídos a um atendente {{importContactsReportStatistics.warningCnt}} contatos.
+                        </li>
+                        <li v-show="importContactsReportStatistics.errorNameCnt!=0" class=" my-bg-warning"><i class="mdi mdi-alert-circle-outline fa-lg" aria-hidden="true"></i>
+                            O nome de {{importContactsReportStatistics.errorNameCnt}} contatos contêm cracteres inválidos.
+                        </li>
+                        <li v-show="importContactsReportStatistics.errorCnt!=0" class=" my-bg-danger"> <i class="fa fa-times fa-lg" aria-hidden="true"></i>
                             Não foi possível adicionar {{importContactsReportStatistics.errorCnt}} contatos porque o número de whatsapp é errado ou inexistente.
                         </li>
                     </ul>
                 </div>
                 
-                <div v-show="importContactsReportStatistics.errorCnt!=0 || importContactsReportStatistics.warningCnt!=0">
+                <div v-show="importContactsReportStatistics.errorCnt!=0 || importContactsReportStatistics.warningCnt!=0 || importContactsReportStatistics.errorNameCnt!=0">
                     <h5 class="text-center">Informação detalhada da importação de contatos.</h5>
                     <div style="max-height: 200px; overflow-y: auto;">
                         <ul id="Report">
@@ -207,15 +213,15 @@
                             <li v-for="(item,index) in importContactsReportWarn2" :key="index" class=" my-bg-warning" >
                                 Linha {{ item.line }}: O email do atendente indicado é inválido.
                             </li>
+                            <li v-for="(item,index) in importContactsReportWarn4" :key="index" class=" my-bg-warning" >
+                                Linha {{ item.line }}: O nome do contato contem cracteres inválidos.
+                            </li>
                             <li v-for="(item,index) in importContactsReportWarn3" :key="index" class=" my-bg-warning" >
                                 Linha {{ item.line }}: Não foi indicado um atendente.
                             </li>
                         </ul>
                     </div>
                 </div>
-
-
-
                 <div class="col-lg-12 mt-5 text-center">
                     <button type="reset" class="btn btn-secondary btn_width" @click.prevent="showModalTemplateToImportContact=!showModalTemplateToImportContact">Fechar</button>
                 </div>
@@ -280,6 +286,7 @@
                 importContactsReportWarn1: "",
                 importContactsReportWarn2: "",
                 importContactsReportWarn3: "",
+                importContactsReportWarn4: "",
                 importContactsReportStatistics: "",
                 
                 //---------New record properties-----------------------------
@@ -360,7 +367,7 @@
                                 item.contact_atendant_id = item.latestAttendant.id;
                             }
                         });
-                        if(this.rows.length >0 && response.data.length!=0)
+                        if(this.rows.length>0 && response.data.length!=0)
                             miniToastr.success("Página de contatos carregada corretamente", "Sucesso");
                         if(response.data.length==0)
                             miniToastr.warn("Todos os contatos já foram carregados", "Sucesso");
@@ -425,10 +432,12 @@
                                 this.importContactsReportWarn1 = response.data.message2.lineWarn;
                                 this.importContactsReportWarn2 = response.data.message3.lineWarn;
                                 this.importContactsReportWarn3 = response.data.message4.lineWarn;
+                                this.importContactsReportWarn4 = response.data.message6.lineWarn;
                                 this.importContactsReportError = response.data.message5.lineError;
                                 this.importContactsReportStatistics = response.data.statistics;
-                                // console.log(this.importContactsReportStatistics);
+                                console.log(this.importContactsReportWarn4);
                                 // return;
+
                                 this.steepUploadFile=4;
                                 miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
                                 this.getContacts();

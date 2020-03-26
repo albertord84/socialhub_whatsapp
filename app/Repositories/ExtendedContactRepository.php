@@ -43,13 +43,16 @@ class ExtendedContactRepository extends ContactRepository
             $chatModel = new ExtendedChat();
             $chatModel->table = (string) $attendant_id;
 
+            $last_contact_idx = $last_contact_idx >= 0 ? $last_contact_idx : 0;  
+
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
                     $query->where('attendant_id', $attendant_id);
                 })
                 ->orderBy('updated_at', 'desc')
-                ->where('company_id', $company_id)
-                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+                ->where('company_id', $company_id)->get()
+                ->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
+                // ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
 
             foreach ($Contacts as $key => $Contact) {
                 if ($Contact->latestAttendantContact->attendant_id == $attendant_id) {
@@ -57,8 +60,8 @@ class ExtendedContactRepository extends ContactRepository
                     $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 
                     // Last Chat Message
-                    $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
-                    $Contacts[$key]['last_message'] = $lastMesssage;
+                    $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+                    $Contacts[$key]['last_message'] = $lastMessage;
 
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
@@ -75,7 +78,7 @@ class ExtendedContactRepository extends ContactRepository
         } else {
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where('company_id', $company_id)
-                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MAGAGER', 30))->get()
+                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MANAGER', 30))->get()
                 ->each(function ($Contact, $key) {
                     if ($Contact->latestAttendant) {
                         $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();

@@ -388,8 +388,8 @@
                                             <span class="pt-2" style="float:right; font-size:1.3rem">
                                                 <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
                                                 <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
-                                                <!-- <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span> -->
-                                                <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span>
+                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
+                                                <!-- <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span> -->
                                             </span>
                                         </p>                                        
                                     </div>
@@ -1132,16 +1132,17 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
+                console.log("contacts_length-1 before request: "+ (this.contacts.length-1));
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': this.filterContactToken,
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
-                    'last_contact_idx': this.contacts.length,
+                    'last_contact_idx': this.contacts.length-1,
                 })
                 .then(response => {
                     if(response.data.length){
                         var This = this, i = this.contacts.length;
                         response.data.forEach((item, index)=>{
-                            item.index = i++;
+                            // item.index = i++;
                             try {
                                 if(!(item.json_data && typeof(JSON.parse(item.json_data)) != 'undefined')){
                                     item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
@@ -1149,13 +1150,29 @@
                             } catch (error) {
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
-                            item.isPictUrlBroken = false;                            
+                            item.isPictUrlBroken = false;
+                            console.log(item.id);
                         });
-                        this.contacts = this.contacts.concat(response.data);                        
-                        if(this.selectedContactIndex>=0){
+
+                        var arr = Array();
+                        response.data.forEach((item, index)=>{
+                            if(!this.findContactInList(item)){
+                                arr.push(item);
+                            }
+                        });
+                        this.contacts = this.contacts.concat(arr);
+
+                        var a=0;
+                        this.contacts.some((item, i)=>{
+                            this.contacts[i].index = a;
+                            a++;
+                        });
+                        
+                        if(this.selectedContactIndex>=0 ){
+                            var This = this;
                             this.contacts.some((item, i)=>{
-                                if(!flag && this.contacts[this.selectedContactIndex].id == item.id){
-                                    this.selectedContactIndex = i;
+                                if(This.contacts[This.selectedContactIndex].id == item.id){
+                                    This.selectedContactIndex = i;
                                     return;
                                 }
                             });
@@ -1165,8 +1182,6 @@
                     }
                 })
                 .catch(error => {
-                    console.log('------------------>');
-                    console.log(error);
                     this.processMessageError(error, this.contacts_url,"get");})
                 .finally(()=>{this.requestingNewPageContacts = false;});
             },
@@ -1232,13 +1247,14 @@
                 return contact;
             },
 
-            insertContactAsFirtInList:function(targetContact){
+            insertContactAsFirtInList:function(targetContact){                
                 var selectedContactId = (this.selectedContactIndex>-1) ? this.contacts[this.selectedContactIndex].id : -1;                
                 //1. push targetContact as first
                 this.contacts.unshift(targetContact);
                 //2. update all contact index and selectecContactIndex
+                var a = 0;
                 this.contacts.some((item,i)=>{
-                    item.index == i;                    
+                    this.contacts[a].index = a++;
                 });
                 if(selectedContactId>-1) this.selectedContactIndex++;
             },
@@ -1289,13 +1305,24 @@
                 }
             },
 
+            findContactInList: function(contact){
+                var isIn = false;
+                this.contacts.some((item,i)=>{                    
+                    if(item.id == contact.id){
+                        isIn = true;
+                        return;
+                    }
+                });
+                return isIn;
+            },
+
             reloadContacts: function(){
                 alert("reloadContacts é realmente necessário no left-side?");
                 this.getContacts();
             },
 
             //------------------Get chats----------------------------
-            getContactChat: function(contact,index) {                
+            getContactChat: function(contact,index) {   
                 this.reloadContactPicUrl(contact);
                 this.selectedContactIndex = -2;
                 setTimeout(()=>{
@@ -1310,7 +1337,6 @@
                     if(this.showChatRightSide) this.displayChatRightSide();
                     if(this.showChatFindMessages) this.displayChatFindMessage();
                     document.getElementById("chat-center-side").classList.add("chat-center-side-open");
-
                     this.getChat();
                 },1000)
                 
@@ -2075,8 +2101,7 @@
 
             wsMessageToAttendant: function(){
                 window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
-                .listen('MessageToAttendant', (e) => {
-                    //------------prepare message datas to be displayed------------------------
+                .listen('MessageToAttendant', (e) => {                    
                     var message = JSON.parse(e.message);                    
 
                     if(message.source == 0){ //message to update the message status to 2 or 7
@@ -2088,15 +2113,17 @@
                                 }
                             });
                         }
-                    }else 
-                    if(message.source == 1){ //message from contact                        
+                    }
+                    else if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
                         var subjacentContact = null;
+                        console.log(message);
                         if(typeof(message.Contact)!='undefined'){
                             subjacentContact = message.Contact;
                             delete message.Contact;
                         }
 
+                        //------------prepare message datas to be displayed------------------------
                         message.time = this.getMessageTime(message.created_at);
                         try {
                             if(message.data != "" && message.data != null && message.data.length>0) {
@@ -2131,21 +2158,6 @@
                         }
     
                         if(targetIndex > -1){ // set the target contact as firt if is in contacts list
-                            // var targetContact = Object.assign({}, this.contacts[targetIndex]);
-                            // var A = (0<=targetIndex-1) ? this.contacts.slice(0,targetIndex):[];
-                            // var B = (targetIndex+1 <= this.contacts.length) ? this.contacts.slice(targetIndex+1, this.contacts.length):[];   
-                            // this.contacts = A.concat(B);
-                            // this.contacts.unshift(targetContact);
-    
-                            // for(i=0; i<=targetIndex;i++)
-                            //     this.contacts[i].index = i;
-    
-                            // if(this.selectedContactIndex>=0){
-                            //     if(targetIndex == this.selectedContactIndex)
-                            //         this.selectedContactIndex = 0;
-                            //     else
-                            //         this.selectedContactIndex ++;
-                            // }
                             this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
                         }else{ //insert the target contact in contacts list if isnt
                             subjacentContact.count_unread_messagess = 1;
@@ -2165,11 +2177,7 @@
                                 && !this.contacts[this.selectedContactIndex].status_id==6)
                             this.$refs.newMessageSound.play();
 
-                    }
-
-
-
-                    
+                    }                    
                 });
             },
 
@@ -2186,10 +2194,23 @@
                 window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
                 .listen('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
+                    console.log(newContact);
+                    //------------prepare message datas to be displayed------------------------
+                    // var message = newContact.message;
+                    // newContact.message.time = this.getMessageTime(newContact.message.created_at);
+                    // try {
+                    //     if(newContact.message.data != "" && newContact.message.data != null && newContact.message.data.length>0) {
+                    //         newContact.message.data = JSON.parse(newContact.message.data);
+                    //         if(newContact.message.type_id > 1)
+                    //             newContact.message.path = newContact.message.data.FullPath;
+                    //     }
+                    // } catch (error) {
+                    // }
+
                     this.contacts.unshift(newContact);
-                    var i = 0;
-                    this.contacts.forEach(function(item, i){
-                        item.index = i++;
+                    var a = 0;
+                    this.contacts.some((item, i)=>{
+                        this.contacts[i].index = a++;
                     });
                     if(this.selectedContactIndex >=0){
                         this.selectedContactIndex ++;
