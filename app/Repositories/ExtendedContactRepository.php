@@ -89,4 +89,47 @@ class ExtendedContactRepository extends ContactRepository
         }
     }
 
+    public function filterContacts(int $company_id, ?int $attendant_id=null, ?array $filters, int $last_contact_idx = 0): Collection 
+    {
+        $Collection = new Collection();
+        if ($attendant_id) {
+            $chatModel = new ExtendedChat();
+            $chatModel->table = (string) $attendant_id;
+        }
+
+        if($attendant_id){
+            $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+                    $query->where('attendant_id', $attendant_id);
+                })
+                ->orderBy('updated_at', 'desc')
+                ->where('company_id', $company_id)->get()
+                ->where('contacts.first_name', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.email', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.phone', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.estado', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.cidade', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filters->filterString.'%')
+                ->get();
+        }else{
+            $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+                    $query->where('attendant_id', $attendant_id);
+                })
+                ->orderBy('updated_at', 'desc')
+                ->where('company_id', $company_id)->get()
+                ->where('contacts.first_name', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.email', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.phone', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.estado', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.cidade', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filters->filterString.'%')
+                ->get();
+        }
+    }
+
 }
