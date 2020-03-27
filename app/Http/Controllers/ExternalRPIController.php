@@ -284,6 +284,7 @@ class ExternalRPIController extends Controller
             if ($Contact) {
                 // Send event to attendants with new chat message
                 if (!isset($input['Testing'])) {
+                    $Chat->Contact = $Contact;
                     broadcast(new MessageToAttendant($Chat));
                 }
             } else {
@@ -296,7 +297,6 @@ class ExternalRPIController extends Controller
             return MyResponse::makeExceptionJson($th);
         }
 
-        $Chat->Contact = $Contact;
         return $Chat->toJson();
     }
 
