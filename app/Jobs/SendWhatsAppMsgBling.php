@@ -73,8 +73,8 @@ class SendWhatsAppMsgBling implements ShouldQueue
     {
         // Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->Contact, $this->Chat]);
 
-        // $response = $this->rpiController->sendTextMessage($this->Chat->message, $this->Contact);
-        $response=null;
+        $response = $this->rpiController->sendTextMessage($this->Chat->message, $this->Contact);
+        // $response=null;
         Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
 
         
