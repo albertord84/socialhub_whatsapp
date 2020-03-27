@@ -59,7 +59,7 @@ class Sales extends Model
      * @var array
      */
     public static $rules = [
-        
+        'contact_id' => 'required',
     ];
 
     /**
@@ -87,6 +87,6 @@ class Sales extends Model
      **/
     public function contact()
     {
-        return $this->belongsTo(\App\Models\ExtendedContact::class, 'contact_id');
+        return $this->belongsTo(\App\Models\Contact::class, 'contact_id');
     }    
 }
