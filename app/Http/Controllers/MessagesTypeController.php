@@ -13,6 +13,14 @@ use Response;
 
 class MessagesTypeController extends AppBaseController
 {
+    const Text = 1; 
+    const Image = 2; 
+    const Audio = 3; 
+    const Video = 4; 
+    const Documents = 5; 
+    const Reminder = 6; 
+    const Summary = 7;
+
     /** @var  MessagesTypeRepository */
     private $messagesTypeRepository;
 
