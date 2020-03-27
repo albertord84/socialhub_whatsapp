@@ -2118,6 +2118,7 @@
                     else if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
                         var subjacentContact = null;
+                        console.log('11111111111111111111111111111');
                         console.log(message);
                         if(typeof(message.Contact)!='undefined'){
                             subjacentContact = message.Contact;
