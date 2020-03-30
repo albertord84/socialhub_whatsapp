@@ -17,9 +17,10 @@
 // });
 
 // https://app.socialhub.pro/testsalesbling
-Route::post('testsalesbling', 'TestController@testsalesbling');
+// Route::post('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'TestController@testsalesbling');
-Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
+Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
+
 
 Route::get('testCorreios', 'TestController@testCorreios');
 
