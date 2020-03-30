@@ -199,3 +199,14 @@ grep -iRl "laravel-websockets" ./
 
 # Procurar arquivo em pasta
 find "xxx" .
+
+
+arp -p
+nmap -sn 192.168.0.0/24
+sudo ssh pi@192.168.0.107
+
+
+# Copy server log to local disk
+scp albertord@app.socialhub.pro:/var/www/html/app.socialhub.pro/storage/logs/laravel.log /var/www/html/app.socialhub.local/storage/logs/laravel-server.log
+
+scp /var/www/html/app.socialhub.local/storage/logs/laravel-server.log albertord@app.socialhub.pro:/var/www/html/app.socialhub.pro/storage/logs/laravel.log

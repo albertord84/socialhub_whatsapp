@@ -59,7 +59,7 @@ class Sales extends Model
      * @var array
      */
     public static $rules = [
-        
+        'contact_id' => 'required',
     ];
 
     /**
@@ -69,8 +69,8 @@ class Sales extends Model
     {
         $Sale = new Sales;
         $Sale->table = "$company_id";
-        if (isset($saleBling->pedido->numeroPedidoLoja)) {
-            $Sale->id =  $saleBling->pedido->numeroPedidoLoja;
+        if (isset($saleBling->pedido->numero)) {
+            $Sale->id =  $saleBling->pedido->numero;
         }
         else {
             throw new MyException("Invalid Bling Sale Id", 1);
@@ -87,6 +87,6 @@ class Sales extends Model
      **/
     public function contact()
     {
-        return $this->belongsTo(\App\Models\ExtendedContact::class, 'contact_id');
+        return $this->belongsTo(\App\Models\Contact::class, 'contact_id');
     }    
 }

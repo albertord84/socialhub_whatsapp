@@ -199,7 +199,7 @@ class ExtendedChatController extends ChatController
                     $chat->save();
 
                     unset($input['file']); // Because not serializable with Jobs
-                    SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input, $FileName, $input['type_id']);
+                    SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input, 'whatsapp', $FileName, $input['type_id']);
 
                     Log::debug('\n\r SendingFileMessage Job to Contact contact_Jid: ', [$Contact->whatsapp_id]);
     
@@ -211,7 +211,7 @@ class ExtendedChatController extends ChatController
                 }
             } else {
                 // SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $chat);
-                SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input);
+                SendWhatsAppMsg::dispatch($externalRPiController, $Contact, $input, 'whatsapp');
 
                 Log::debug('\n\r SendingTextMessage Job to Contact contact_Jid: ', [$Contact->whatsapp_id]);
                 // $response = $externalRPiController->sendTextMessage($input['message'], $Contact);

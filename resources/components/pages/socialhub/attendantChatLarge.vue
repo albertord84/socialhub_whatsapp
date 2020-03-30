@@ -1134,7 +1134,8 @@
                 this.requestingNewPageContacts = true;
                 console.log("contacts_length-1 before request: "+ (this.contacts.length-1));
                 ApiService.get(this.contacts_url,{
-                    'filterContactToken': this.filterContactToken,
+                    // 'filterContactToken': this.filterContactToken,
+                    'filterContactToken': {"filterString":this.searchContactByStringInput},
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                     'last_contact_idx': this.contacts.length-1,
                 })
@@ -2117,6 +2118,7 @@
                     else if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
                         var subjacentContact = null;
+                        console.log('11111111111111111111111111111');
                         console.log(message);
                         if(typeof(message.Contact)!='undefined'){
                             subjacentContact = message.Contact;

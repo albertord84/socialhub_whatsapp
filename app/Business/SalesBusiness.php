@@ -3,8 +3,12 @@
 namespace App\Business;
 
 use App\Http\Controllers\ExternalRPIController;
+use App\Http\Controllers\MessagesStatusController;
+use App\Http\Controllers\MessagesTypeController;
+use App\Jobs\SendWhatsAppMsgBling;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\ExtendedChat;
 use App\Models\Sales;
 use App\Repositories\SalesRepository;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +32,7 @@ class SalesBusiness extends Business {
             if (isset($Sale->pedido->cliente)) {
                 $hasClient = true;
                 $phone = ($Sale->pedido->cliente->celular != "")? $Sale->pedido->cliente->celular : $Sale->pedido->cliente->fone;
-                $phone = trim($phone);
+                $phone = preg_replace("/[^0-9]/", "", $phone);
                 if (!(strpos('55', $phone) === 0) && ($phone != "")) {
                     $phone = "55$phone";
                 }
@@ -54,10 +58,10 @@ class SalesBusiness extends Business {
 
             // 2. Crea la venta
             // Check if the Sale already exist for this company
-            if (isset($Sale->pedido->numeroPedidoLoja)) {
+            if (isset($Sale->pedido->numero)) {
                 $SaleModel = new Sales;
                 $SaleModel->table = "$Company->id";
-                $SaleModel = $SaleModel->find($Sale->pedido->numeroPedidoLoja);
+                $SaleModel = $SaleModel->find($Sale->pedido->numero);
                 if (!$SaleModel) { // if not exist insert the Sale
                     $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
 
@@ -66,18 +70,28 @@ class SalesBusiness extends Business {
                     // 3. Envia un mensage
                     $ExternalRPIController = new ExternalRPIController($Company->rpi);
                     if ($hasClient && $phone) {
-                        $checkContact = $ExternalRPIController->getContactInfo($Contact->whatsapp_id);
-                        $checkContact = json_encode($checkContact);
-                        // if (is_object($checkContact) && ($checkContact->name !== "" || $checkContact->picurl !== "" )) {
-                            $ExternalRPIController->sendTextMessage($SaleModel->message, $Contact);
+                        // $checkContact = $ExternalRPIController->getContactInfo($Contact->whatsapp_id);
+                        // $checkContact = json_decode($checkContact);
+                        // if (is_object($checkContact) && isset($checkContact->name) && isset($checkContact->picurl)) {
+                            // $response = $ExternalRPIController->sendTextMessage($SaleModel->message, $Contact);
+                            $Chat = new ExtendedChat();
+                            $Chat->contact_id = $Contact->id;
+                            $Chat->company_id = $Company->id;
+                            $Chat->type_id = MessagesTypeController::Text;
+                            $Chat->status_id = MessagesStatusController::ROUTED;
+                            $Chat->message = $SaleModel->message;
+                            $Chat->save();
+
+                            SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $Chat, 'blingsales');
                             $SaleModel->sended = true;
+
                         // }
                         // else {
-                            Log::error('Sales Bussines createSale', [$Contact->whatsapp_id, $checkContact]);
                         // }
                     }
-
+                        
                     $SaleModel->save();
+                    Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
                 }
             }
 
@@ -120,17 +134,17 @@ class SalesBusiness extends Business {
 
             $Sale->pedido->itens[0]->item->codigo ?? '@item_codigo', 
             $Sale->pedido->itens[0]->item->descricao ?? '@item_descricao', 
-            $Sale->pedido->itens[0]->item->item_quantidade ?? '@item_quantidade', 
-            $Sale->pedido->itens[0]->item->item_valorunidade ?? '@item_valorunidade', 
-            $Sale->pedido->itens[0]->item->item_precocusto ?? '@item_precocusto', 
-            $Sale->pedido->itens[0]->item->item_descontoItem ?? '@item_descontoItem', 
-            $Sale->pedido->itens[0]->item->item_un ?? '@item_un', 
-            $Sale->pedido->itens[0]->item->item_pesoBruto ?? '@item_pesoBruto', 
-            $Sale->pedido->itens[0]->item->item_largura ?? '@item_largura', 
-            $Sale->pedido->itens[0]->item->item_altura ?? '@item_altura', 
-            $Sale->pedido->itens[0]->item->item_profundidade ?? '@item_profundidade', 
-            $Sale->pedido->itens[0]->item->item_unidadeMedida ?? '@item_unidadeMedida', 
-            $Sale->pedido->itens[0]->item->item_descricaoDetalhada ?? '@item_descricaoDetalhada', 
+            $Sale->pedido->itens[0]->item->quantidade ?? '@item_quantidade', 
+            $Sale->pedido->itens[0]->item->valorunidade ?? '@item_valorunidade', 
+            $Sale->pedido->itens[0]->item->precocusto ?? '@item_precocusto', 
+            $Sale->pedido->itens[0]->item->descontoItem ?? '@item_descontoItem', 
+            $Sale->pedido->itens[0]->item->un ?? '@item_un', 
+            $Sale->pedido->itens[0]->item->pesoBruto ?? '@item_pesoBruto', 
+            $Sale->pedido->itens[0]->item->largura ?? '@item_largura', 
+            $Sale->pedido->itens[0]->item->altura ?? '@item_altura', 
+            $Sale->pedido->itens[0]->item->profundidade ?? '@item_profundidade', 
+            $Sale->pedido->itens[0]->item->unidadeMedida ?? '@item_unidadeMedida', 
+            $Sale->pedido->itens[0]->item->descricaoDetalhada ?? '@item_descricaoDetalhada', 
 
             $Sale->pedido->transporte->enderecoEntrega->nome ?? '@entrega_nome', 
             $Sale->pedido->transporte->enderecoEntrega->endereco ?? '@entrega_endereco', 

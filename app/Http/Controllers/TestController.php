@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\BlingBusiness;
+use App\Business\SalesBusiness;
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
@@ -9,6 +11,7 @@ use App\Jobs\SendWhatsAppMsg;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Models\Sales;
 // use App\Repositories\ExtendedUsersSellerRepository;
 // use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use App\Repositories\ExtendedContactRepository;
@@ -79,21 +82,21 @@ class TestController extends AppBaseController
 
         // $lastContact = Contact::find($last_contact_idx);
 
-        $ExtendedChat = new ExtendedChat();
-        $ExtendedChat->table = "$attendant_id";
-        $ExtendedChat = $ExtendedChat->find(1);
+        // $ExtendedChat = new ExtendedChat();
+        // $ExtendedChat->table = "$attendant_id";
+        // $ExtendedChat = $ExtendedChat->find(1);
 
-        $chatRepository = new ExtendedChatRepository(app());
+        // $chatRepository = new ExtendedChatRepository(app());
 
-        $contact_id = 18806;
-        $page = 0;
-        $searchMessageByStringInput = null;
-        $set_as_readed = false;
+        // $contact_id = 18806;
+        // $page = 0;
+        // $searchMessageByStringInput = null;
+        // $set_as_readed = false;
         // $ContactChats = $chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput, $set_as_readed);
 
         // dd($ContactChats);
 
-        $this->contactChatAllAttendants();
+        // $this->contactChatAllAttendants();
 
         // $ExtendedChat->Contact = $lastContact;
         // dd($ExtendedChat->toJson());
@@ -112,25 +115,6 @@ class TestController extends AppBaseController
         // $Contacts->orderBy('updated_at', 'asc');
         // dd($Contacts);
 
-        // Build Bling message by Sales object
-        // $company_id = 35;
-        // $Company = Company::with('rpi')->find($company_id);
-        // $BlingController = app()->make(BlingController::class);
-
-        // $BlingBussinesC = new BlingBusiness();
-        // $Sales = $BlingBussinesC->getBlingCompanySales($Company);
-
-        // dd($Sales[51]);
-
-        // $BlingController->
-
-        // $SaleModel = new Sales;
-        // $SaleModel->table = "$Company->id";
-        // $firstSale = $SaleModel->first();
-        // $SalesBussines = new SalesBusiness;
-        // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
-
-        // dd($message);
 
         // Check contact info by company
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -235,6 +219,7 @@ class TestController extends AppBaseController
         // dd($this->repository->Sellers_User());
 
         // $this->testJobsQueue();
+        // $this->testJobsQueue();
     }
 
     function contactChatAllAttendants()
@@ -282,9 +267,9 @@ class TestController extends AppBaseController
         $contact_id = 1;
         $Contact = Contact::find($contact_id);
 
-        $message = 'Teste queue job message 1';
+        $message = ['Teste queue job message 1'];
 
-        $sendWAMsg = new SendWhatsAppMsg($ExternalRPIController, $Contact, $message);
+        $sendWAMsg = new SendWhatsAppMsg($ExternalRPIController, $Contact, $message, null);
 
         // dd($sendWAMsg);
 
@@ -301,6 +286,29 @@ class TestController extends AppBaseController
     public function testsalesbling(Request $request)
     {
         Log::debug('\n\rBling Test Sales: ', [$request->all()]);
+
+        // Build Bling message by Sales object
+        $company_id = 30;
+        $Company = Company::with('rpi')->find($company_id);
+
+        
+        $BlingController = app()->make(BlingController::class);
+        // dd($Company);
+
+        $BlingBussinesC = new BlingBusiness();
+        $Sales = $BlingBussinesC->getBlingCompanySales($Company);
+
+        dd($Sales);
+
+        // $BlingController->
+
+        // $SaleModel = new Sales();
+        // $SaleModel->table = "$Company->id";
+        // $firstSale = $SaleModel->first();
+        // $SalesBussines = new SalesBusiness;
+        // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+
+        // dd($message);
     }
 
     public function getGuzzleRequest()
