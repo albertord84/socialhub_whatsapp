@@ -298,17 +298,17 @@ class TestController extends AppBaseController
         $BlingBussinesC = new BlingBusiness();
         $Sales = $BlingBussinesC->getBlingCompanySales($Company);
 
-        // dd($Sales);
+        dd($Sales);
 
         // $BlingController->
 
-        $SaleModel = new Sales();
-        $SaleModel->table = "$Company->id";
-        $firstSale = $SaleModel->first();
-        $SalesBussines = new SalesBusiness;
-        $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+        // $SaleModel = new Sales();
+        // $SaleModel->table = "$Company->id";
+        // $firstSale = $SaleModel->first();
+        // $SalesBussines = new SalesBusiness;
+        // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
 
-        dd($message);
+        // dd($message);
     }
 
     public function getGuzzleRequest()
