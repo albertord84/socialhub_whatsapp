@@ -90,8 +90,8 @@ class SendWhatsAppMsgBling implements ShouldQueue
 
         $this->Chat->Contact = $this->Contact;
         
-        if ($this->Chat->attendant_id) {
-            broadcast(new MessageToAttendant($this->Chat));
-        }
+        // if ($this->Chat->attendant_id) {
+            // broadcast(new MessageToAttendant($this->Chat));
+        // }   
     }
 }
