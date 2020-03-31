@@ -208,6 +208,8 @@ class SalesBusiness extends Business {
 
         $message = str_replace($search, $replace, $Company->bling_message);
 
+        $message = str_replace($search, "não recebido", $Company->bling_message);
+
         return $message;
     }
 
