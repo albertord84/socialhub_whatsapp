@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3fbc43f9b022066aeddc991e486e850",
+    "content-hash": "75597d8b67b3386baf373a08e972141d",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -5882,6 +5882,60 @@
                 "laravel"
             ],
             "time": "2018-09-04T19:48:02+00:00"
+        },
+        {
+            "name": "vindi/vindi-php",
+            "version": "1.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vindi/vindi-php.git",
+                "reference": "ea08f73390a787252258c0d35473b2423226d59b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vindi/vindi-php/zipball/ea08f73390a787252258c0d35473b2423226d59b",
+                "reference": "ea08f73390a787252258c0d35473b2423226d59b",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vindi\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Vindi",
+                    "email": "comunidade@vindi.com.br",
+                    "homepage": "https://www.vindi.com.br/"
+                }
+            ],
+            "description": "SDK Vindi para PHP.",
+            "homepage": "https://github.com/vindi/vindi-php",
+            "keywords": [
+                "vindi",
+                "vindi-php",
+                "vindi-php-sdk"
+            ],
+            "time": "2019-09-03T19:12:58+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
