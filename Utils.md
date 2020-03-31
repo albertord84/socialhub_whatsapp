@@ -199,3 +199,8 @@ grep -iRl "laravel-websockets" ./
 
 # Procurar arquivo em pasta
 find "xxx" .
+
+
+arp -p
+nmap -sn 192.168.0.0/24
+sudo ssh pi@192.168.0.107
