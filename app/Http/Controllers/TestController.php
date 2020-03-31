@@ -283,32 +283,16 @@ class TestController extends AppBaseController
         dd($pending);
     }
 
-    public function testsalesbling(Request $request)
-    {
-        Log::debug('\n\rBling Test Sales: ', [$request->all()]);
-
-        // Build Bling message by Sales object
-        $company_id = 30;
-        $Company = Company::with('rpi')->find($company_id);
-
-        
-        $BlingController = app()->make(BlingController::class);
-        // dd($Company);
-
-        $BlingBussinesC = new BlingBusiness();
-        $Sales = $BlingBussinesC->getBlingCompanySales($Company);
-
-        // dd($Sales);
 
         // $BlingController->
 
-        $SaleModel = new Sales();
-        $SaleModel->table = "$Company->id";
-        $firstSale = $SaleModel->first();
-        $SalesBussines = new SalesBusiness;
-        $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
+        // $SaleModel = new Sales();
+        // $SaleModel->table = "$Company->id";
+        // $firstSale = $SaleModel->first();
+        // $SalesBussines = new SalesBusiness;
+        // $message = $SalesBussines->builSaleMessage(json_decode($firstSale->json_data), $Company);
 
-        dd($message);
+        // dd($message);
     }
 
     public function getGuzzleRequest()
