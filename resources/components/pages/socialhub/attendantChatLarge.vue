@@ -35,6 +35,12 @@
                                             <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
                                         </a>
                                     </b-dropdown-item>
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                        <a href='javascript:void(0)' title="Gerenciar etiquetas" class="drpodowtext text-muted" @click.prevent="showModalCRUDTags = true">
+                                            <i class="fa fa-tags" aria-hidden="true"></i>
+                                            Gerenciar etiquetas
+                                        </a>
+                                    </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
                                         <router-link to="/" class="drpodowtext text-muted">
                                             <div v-on:click="logout">
@@ -863,6 +869,11 @@
                 </div>
             </div>
         </b-modal>
+
+        <!-- Modal to transfer contact-->
+        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
+            <attendantCRUDTags @onclosemodal='closemodal'></attendantCRUDTags>
+        </b-modal>
     </div>
 </template>
 
@@ -877,6 +888,7 @@
     import Echo from 'laravel-echo'; window.Pusher = require('pusher-js');
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
+    import attendantCRUDTags from "src/components/pages/socialhub/popups/attendantCRUDTags.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
 
     // import MicRecorder from "mic-recorder-to-mp3"; 
@@ -958,6 +970,7 @@
                 showChatRightSide:false,
                 showChatFindMessages:false,                
                 modalShowContactPicture:false,                
+                showModalCRUDTags:false,                
 
                 isSearchContact:false,
                 isEditingContact:false,
@@ -1846,6 +1859,7 @@
                 this.modalDeleteContact = false;
                 this.modalTransferContact = false;
                 this.modalMuteNotificationsContacts = false;
+                this.showModalCRUDTags = false;
             },
             
             logout: function() {
