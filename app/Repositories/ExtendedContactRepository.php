@@ -60,8 +60,8 @@ class ExtendedContactRepository extends ContactRepository
                     $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 
                     // Last Chat Message
-                    $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
-                    $Contacts[$key]['last_message'] = $lastMesssage;
+                    $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+                    $Contacts[$key]['last_message'] = $lastMessage;
 
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
@@ -78,7 +78,7 @@ class ExtendedContactRepository extends ContactRepository
         } else {
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where('company_id', $company_id)
-                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MAGAGER', 30))->get()
+                ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MANAGER', 30))->get()
                 ->each(function ($Contact, $key) {
                     if ($Contact->latestAttendant) {
                         $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
@@ -86,6 +86,49 @@ class ExtendedContactRepository extends ContactRepository
                 });
 
             return $Contacts;
+        }
+    }
+
+    public function filterContacts(int $company_id, ?int $attendant_id=null, ?array $filters, int $last_contact_idx = 0): Collection 
+    {
+        $Collection = new Collection();
+        if ($attendant_id) {
+            $chatModel = new ExtendedChat();
+            $chatModel->table = (string) $attendant_id;
+        }
+
+        if($attendant_id){
+            $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+                    $query->where('attendant_id', $attendant_id);
+                })
+                ->orderBy('updated_at', 'desc')
+                ->where('company_id', $company_id)->get()
+                ->where('contacts.first_name', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.email', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.phone', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.estado', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.cidade', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filters->filterString.'%')
+                ->get();
+        }else{
+            $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
+                    $query->where('attendant_id', $attendant_id);
+                })
+                ->orderBy('updated_at', 'desc')
+                ->where('company_id', $company_id)->get()
+                ->where('contacts.first_name', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.email', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.phone', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.estado', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.cidade', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filters->filterString.'%')
+                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filters->filterString.'%')
+                ->get();
         }
     }
 

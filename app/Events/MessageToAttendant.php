@@ -8,6 +8,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class MessageToAttendant implements ShouldBroadcast
 {
@@ -24,7 +25,12 @@ class MessageToAttendant implements ShouldBroadcast
      */
     public function __construct(ExtendedChat $Chat)
     {
+        Log::debug('MessageToAttendant ExtendedChat $Chat: ', [$Chat]);
+        
         $this->message = $Chat->toJson();
+
+        Log::debug('MessageToAttendant $this->message: ', [$this->message]);
+
         $this->channel = "sh.message-to-attendant.$Chat->attendant_id";
     }
 

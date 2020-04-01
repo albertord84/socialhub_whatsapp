@@ -69,8 +69,8 @@ class Sales extends Model
     {
         $Sale = new Sales;
         $Sale->table = "$company_id";
-        if (isset($saleBling->pedido->numeroPedidoLoja)) {
-            $Sale->id =  $saleBling->pedido->numeroPedidoLoja;
+        if (isset($saleBling->pedido->numero)) {
+            $Sale->id =  $saleBling->pedido->numero;
         }
         else {
             throw new MyException("Invalid Bling Sale Id", 1);
