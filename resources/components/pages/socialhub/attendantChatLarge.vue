@@ -1145,7 +1145,6 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
-                console.log("contacts_length-1 before request: "+ (this.contacts.length-1));
                 ApiService.get(this.contacts_url,{
                     // 'filterContactToken': this.filterContactToken,
                     'filterContactToken': {"filterString":this.searchContactByStringInput},
@@ -1165,7 +1164,6 @@
                                 item.json_data = JSON.stringify({'picurl': 'images/contacts/default.png'});
                             }
                             item.isPictUrlBroken = false;
-                            console.log(item.id);
                         });
 
                         var arr = Array();
@@ -2116,9 +2114,10 @@
 
             wsMessageToAttendant: function(){
                 window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
-                .listen('MessageToAttendant', (e) => {                    
-                    var message = JSON.parse(e.message);                    
-
+                .listen('MessageToAttendant', (e) => {  
+                    var message = JSON.parse(e.message);
+                    var subjacentContact = null;       
+    
                     if(message.source == 0){ //message to update the message status to 2 or 7
                         if(this.selectedContactIndex>-1 && message.contact_id == this.contacts[this.selectedContactIndex].id){
                             this.messages.some((item,i)=>{
@@ -2131,13 +2130,11 @@
                     }
                     else if(message.source == 1){ //message from contact                        
                         //analyse if the contact is in this.contacts list or not
-                        var subjacentContact = null;
-                        console.log(message);
                         if(typeof(message.Contact)!='undefined'){
-                            subjacentContact = message.Contact;
+                            subjacentContact = Object.assign({},message.Contact);
                             delete message.Contact;
                         }
-
+                        
                         //------------prepare message datas to be displayed------------------------
                         message.time = this.getMessageTime(message.created_at);
                         try {
@@ -2171,18 +2168,19 @@
                                 }
                             });
                         }
-    
+
                         if(targetIndex > -1){ // set the target contact as firt if is in contacts list
                             this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
                         }else{ //insert the target contact in contacts list if isnt
                             subjacentContact.count_unread_messagess = 1;
                             subjacentContact.last_message = message;
                             this.contacts.unshift(subjacentContact);
-                            var i = 0;
-                            this.contacts.forEach((item2, i)=>{
-                                item2.index = i++;
+                            
+                            this.contacts.some((item, i)=>{
+                                this.contacts[i].index = i;
                             });
-                            if(isSelectedContact){
+                            
+                            if(this.selectedContactIndex > -1){
                                 this.selectedContactIndex ++;
                             }
                         }
@@ -2209,7 +2207,6 @@
                 window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
                 .listen('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
-                    console.log(newContact);
                     //------------prepare message datas to be displayed------------------------
                     // var message = newContact.message;
                     // newContact.message.time = this.getMessageTime(newContact.message.created_at);

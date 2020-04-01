@@ -33,7 +33,12 @@ class SalesRepository extends BaseRepository
         $Sales = new Sales();
         $Sales->table = "$company_id";
 
-        return $Sales->with('contact')->get();
+        // $this->table = "$company_id";
+        // return $this->get();
+        // return $this->with(['contact'])->get();
+
+        return $Sales->get();
+        // return $Sales->with(['contact'])->get();
         // return $Sales->with('contact')->where('id', '!=', null)->get();
     }
 
