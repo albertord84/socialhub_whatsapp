@@ -38,7 +38,7 @@
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
                                         <a href='javascript:void(0)' title="Gerenciar etiquetas" class="drpodowtext text-muted" @click.prevent="showModalCRUDTags = true">
                                             <i class="fa fa-tags" aria-hidden="true"></i>
-                                            Gerenciar etiquetas
+                                            Ver etiquetas
                                         </a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
@@ -871,8 +871,8 @@
         </b-modal>
 
         <!-- Modal to transfer contact-->
-        <b-modal v-model="modalTransferContact" :hide-footer="true" title="Transferir contato">
-            <attendantCRUDTags @onclosemodal='closemodal'></attendantCRUDTags>
+        <b-modal v-model="showModalCRUDTags" :hide-footer="true" size="sm" title="Gerenciar etiquetas">
+            <attendantCRUDTags :userLogged="userLogged" @onclosemodal='closemodal'></attendantCRUDTags>
         </b-modal>
     </div>
 </template>
@@ -912,6 +912,7 @@
             userCRUDDatas,
             attendantCRUDContact,
             sendMessageFiles,
+            attendantCRUDTags
         },
 
         data() {
