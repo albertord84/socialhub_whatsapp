@@ -5,7 +5,7 @@
  * @name API Integration with Vindi
  * @version 1
  * @date 27/03/2020 4:00AM
- * @depends SH DB
+ * @depends DB
  */
 
 namespace App\Business;
@@ -74,7 +74,7 @@ class VindiBusiness extends Business
         }
 
         $return->success = true;
-        $return->customer_id = $customer->id;
+        $return->gateway_client_id = $customer->id;
         return $return;
     }
 
@@ -117,6 +117,10 @@ class VindiBusiness extends Business
      */
     public function create_recurrency_payment(User $Client, $date = null, $plane_id = null) : stdClass
     {
+        $plane_id = $plane_id ?? $this::gateway_plane_english_course_id;
+
+        // $plane_id = $plane_id ?? $this::gateway_plane_1real_id;
+
         // Cria nova assignatura:
         if (!$date) {
             $date = time();
@@ -131,7 +135,7 @@ class VindiBusiness extends Business
             $subscriptionService = new \Vindi\Subscription($this->api_arguments);
             $subscription = $subscriptionService->create([
                 "start_at" => $date,
-                "plan_id" => $this::gateway_plane_english_course_id,
+                "plan_id" => $plane_id,
                 "customer_id" => $Client->gateway_client_id,
                 "payment_method_code" => "credit_card",
             ]);
@@ -220,9 +224,9 @@ class VindiBusiness extends Business
      * @param type $amount Amount of Products to by payed
      * @return \Exception recurrency payment or exception
      */
-    public function create_payment(User $Client, $prod_id = null, $amount = 0) : stdClass
+    public function create_payment(User $Client, $prod_id = null, $amount = 1) : stdClass
     {
-        $prod_id = $prod_id ?? $this::gateway_prod_1real_id;
+        $prod_id = $prod_id ?? $this::gateway_prod_english_course_id;
 
         // Cria pagamento abulso:
         $return = new \stdClass();
@@ -247,7 +251,9 @@ class VindiBusiness extends Business
         }
 
         $return->success = true;
-        $return->status = $bill->status;
+        $return->status = $bill->status ?? null;
+        $return->payment_key = $bill->id ?? null;
+        // $return->payment_key = isset($bill) && isset($bill->id) ? $bill->id : null;  // PHP 5.4
         return $return;
     }
 

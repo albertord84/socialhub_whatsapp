@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use Illuminate\Support\Carbon;
+use App\User;
 
 class PaymentController extends AppBaseController {
 
@@ -16,11 +15,10 @@ class PaymentController extends AppBaseController {
     }
 
     public function vindi_notification_post() {
-        dd('payment');
         try {
             //1. Get and Save Raw Content Input String
             $post_str = file_get_contents('php://input');
-            $path = __DIR__ . '/../../../logs/vindi/';
+            $path = base_path('/logs/vindi/');
             $file = $path . "vindi_notif_post-" . date("d-m-Y") . ".log";
             $result = file_put_contents($file, "\n\n", FILE_APPEND);
             $result = file_put_contents($file, serialize($post_str), FILE_APPEND);
@@ -31,34 +29,26 @@ class PaymentController extends AppBaseController {
 
             //3. Process input object
             if (isset($post->event) && isset($post->event->type)) {
-                //$Client = new Client();
-                //$Client->M
                 // Recurrence created succefully
                 if ($post->event->type == "charge_created") {
                     $gateway_client_id = $post->event->data->charge->customer->id;
-                    // Activate User
+                    // 1. activar cliente user
                 }
                 // Bill paid succefully
                 if (isset($post->event) && isset($post->event->type) && $post->event->type == "bill_paid") {
                     if (isset($post->event->data) && isset($post->event->data->bill) && $post->event->data->bill->status = "paid") {
                         $result = file_put_contents($file, "\n bill_paid DETECTED!!:\n", FILE_APPEND);
-                        // Activate User
-                        //$gateway_client_id = $post->event->data->bill->customer->id;
+
+                        //1. activar cliente user
                         $gateway_payment_key = $post->event->data->bill->subscription->id;
-                        //1. activar cliente
-                        $this->load->model('class/user_model');
-                        $this->load->model('class/user_status');
-                        $this->load->model('class/client_model');
-                        //$client_id = $this->client_model->get_client_id_by_gateway_client_id($gateway_client_id);
-                        $client_id = $this->client_model->get_client_id_by_gateway_payment_key($gateway_payment_key);
-                        if ($client_id) {
-                            $this->user_model->update_user($client_id, array(
-                                'status_id' => user_status::ACTIVE));
-                            $result = file_put_contents($file, "$client_id: ACTIVED" . "\n\n", FILE_APPEND);
-                            //2. pay_day un mes para el frente
-                            $this->client_model->update_client(
-                                    $client_id, array('pay_day' => strtotime("+1 month", time())));
-                            $result = file_put_contents($file, "$client_id: +1 month from now" . "\n\n\n", FILE_APPEND);
+                        $Client = User::get_client_id_by_gateway_payment_key($gateway_payment_key);
+                        if ($Client) {
+                            // 1.1 Update $Client->status_id
+                            $result = file_put_contents($file, "$Client->id: ACTIVED" . "\n\n", FILE_APPEND);
+
+                            //2. $Client->pay_day un mes para el frente   =>  strtotime("+1 month", time())
+                            $result = file_put_contents($file, "$Client->id: +1 month from now" . "\n\n\n", FILE_APPEND);
+
                         } else {
                             $result = file_put_contents($file, "Subscription($gateway_payment_key): NOT FOUND HERE!!!" . "\n\n\n", FILE_APPEND);
                         }
@@ -74,7 +64,7 @@ class PaymentController extends AppBaseController {
             }
         } catch (\Exception $exc) {
             echo $exc->getTraceAsString();
-            $result = file_put_contents($file, "$client_id: " . $exc->getTraceAsString() . "\n\r\n\r", FILE_APPEND);
+            $result = file_put_contents($file, "$Client->id: " . $exc->getTraceAsString() . "\n\r\n\r", FILE_APPEND);
             return;
         }
 

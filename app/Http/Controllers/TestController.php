@@ -17,6 +17,7 @@ use App\Models\Sales;
 use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
+use App\Business\VindiBusiness;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
@@ -38,8 +39,9 @@ class TestController extends AppBaseController
     }
 
     public function index(Request $request)
-    
     {
+        $this->testVindi();
+
         // $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
         $company_id = 4;
         // $company_id = 1;
@@ -52,11 +54,11 @@ class TestController extends AppBaseController
 
         // dd($Contact);
 
-        $extContRepo = new ExtendedContactRepository(app());
+        // $extContRepo = new ExtendedContactRepository(app());
 
-        $Contacts = $extContRepo->fullContacts(1, $attendant_id, 'alb');
+        // $Contacts = $extContRepo->fullContacts(1, $attendant_id, 'alb');
 
-        dd($Contacts);
+        // dd($Contacts);
 
         // $ExtendedChat = new ExtendedChat();
         // $ExtendedChat->table = "$attendant_id";
@@ -196,6 +198,38 @@ class TestController extends AppBaseController
 
         // $this->testJobsQueue();
         // $this->testJobsQueue();
+    }
+
+    function testVindi()
+    {
+        $Vindi = new VindiBusiness();
+
+        $Client = User::find(1);
+
+        // Adicionar Cliente
+        // $result = $Vindi->addClient("Alberto Test", "alberto@test.test");
+        // $gateway_client_id  = $result->gateway_client_id;
+        $gateway_client_id  = "13729518";
+        $Client->gateway_client_id = $gateway_client_id;
+
+        // Adicionar meio de pagamento
+        $payment_data = [
+            "credit_card_name"      => "Alberto Reyes Diaz",
+            "credit_card_exp_month" => "08",
+            "credit_card_exp_year"  => "2027",
+            "credit_card_number"    => "5429740425386672",
+            "credit_card_cvc"       => "293"
+        ];
+        $result = $Vindi->addClientPayment($Client, $payment_data);
+
+        // Criar cobrança na hora
+        // $result = $Vindi->create_payment($Client, VindiBusiness::gateway_prod_1real_id, $amount = 2);
+
+        // Criar recorrencia
+        $result = $Vindi->create_recurrency_payment($Client);
+
+
+        dd($result);
     }
 
     function contactChatAllAttendants()
