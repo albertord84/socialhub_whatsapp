@@ -38,7 +38,6 @@ class TestController extends AppBaseController
     }
 
     public function index(Request $request)
-    
     {
         // $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
         $company_id = 4;
