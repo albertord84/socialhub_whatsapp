@@ -117,6 +117,9 @@ Route::resource('blings', 'BlingController');
 Route::resource('sales', 'SalesController');
 Route::get('get_sales_bling', 'BlingController@get_sales_bling');
 
+Route::get('vindi_notification_post', 'PaymentController@vindi_notification_post');
+Route::post('vindi_notification_post', 'PaymentController@vindi_notification_post');
+
 Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
