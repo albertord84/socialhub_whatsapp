@@ -38,7 +38,6 @@ class TestController extends AppBaseController
     }
 
     public function index(Request $request)
-    
     {
         // $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
         $company_id = 4;
@@ -222,6 +221,81 @@ class TestController extends AppBaseController
         // $this->testJobsQueue();
     }
 
+    function initCorreios(\PhpSigep\Model\AccessData $accessData)
+    {   
+        // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+
+        $this->config = new \PhpSigep\Config();
+        $this->config->setAccessData($accessData);
+        $this->config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+        // $this->config->setEnv(\PhpSigep\Config::ENV_DEVELOPMENT);
+        $this->config->setCacheOptions(
+            array(
+                'storageOptions' => array(
+                    // Qualquer valor setado neste atributo será mesclado ao atributos das classes 
+                    // "\PhpSigep\Cache\Storage\Adapter\AdapterOptions" e "\PhpSigep\Cache\Storage\Adapter\FileSystemOptions".
+                    // Por tanto as chaves devem ser o nome de um dos atributos dessas classes.
+                    'enabled' => false,
+                    'ttl' => 20,// "time to live" de 10 segundos
+                    'cacheDir' => sys_get_temp_dir(), // Opcional. Quando não inforado é usado o valor retornado de "sys_get_temp_dir()"
+                ),
+            )
+        );
+        
+        \PhpSigep\Bootstrap::start($this->config);
+    }
+
+    public function testCorreios(Request $request)
+    {
+
+        
+        $usuario = '2689761400';
+        $senha = 'H1OR;3@Y@M';
+        $cnpjEmpresa = '26897614000101';
+        $numcontrato = '9912467470';
+        $codigoadm = '19185251';
+        $cartaopostagem = '0074969366';
+        
+        
+        $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+        $accessData->setUsuario($usuario);
+        $accessData->setSenha($senha);
+        // $accessData->setCnpjEmpresa($cnpjEmpresa);
+        // $accessData->setCodAdministrativo($codigoadm);
+        // $accessData->setNumeroContrato($numcontrato);
+        // $accessData->setCartaoPostagem($cartaopostagem);
+        // $accessData->setAnoContrato(null);
+        // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
+        
+        $this->initCorreios($accessData);
+        
+        // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+
+        // $accessData->setUsuario($usuario);// Usuário e senha para teste passado no manual
+        // $accessData->setSenha($senha);
+
+        // Solicita as etiquetas
+        // $dados_etiquetas = new \PhpSigep\Model\SolicitaEtiquetas();
+        // $dados_etiquetas->setAccessData($this->config->getAccessData());
+        // $dados_etiquetas->setQtdEtiquetas(1);
+        
+        // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
+        $etiqueta = new \PhpSigep\Model\Etiqueta();
+        // $etiqueta->setEtiquetaSemDv('PM499951504BR');
+        $etiqueta->setEtiquetaComDv('SI192420171BR');
+        // $etiqueta->setEtiquetaComDv('PM499951504BR');
+        
+        $params = new \PhpSigep\Model\RastrearObjeto();
+        $params->setAccessData($this->config->getAccessData());
+        $params->setEtiquetas([$etiqueta]);
+            
+        $phpSigep = new \PhpSigep\Services\SoapClient\Real();
+        $result = $phpSigep->rastrearObjeto($params);
+        
+        dd($result);
+        // var_dump((array)$result);
+    }
+
     function contactChatAllAttendants()
     {
         $contact_id = 18806;
@@ -357,3 +431,50 @@ class TestController extends AppBaseController
     }
 
 }
+
+/**
+ * 
+ * 
+CNPJ : 26.897.614/0001-01
+AN8 (ERP) : 43963279
+Razão Social : COMERCIAL HORUS EIRELI
+
+        $cnpjEmpresa = '26897614000101';
+        $numcontrato = '9912467470';
+        $codigoadm = '19185251';
+        $cartaopostagem = '0074969366';
+        
+Omologation:
+    User: 2689761400
+    Root: H1OR;3@Y@M
+
+
+https://apps.correios.com.br/cas/login
+Usuario: horusgi18
+senha: manu1202
+
+
+Contrato Comercial Loja Horus:
+
+Contrato: 9912467470
+
+Cartão de postagem: 0074969366
+
+Acesso sigep web: Usuario: 26897614
+
+Senha: 46zili
+
+ 
+
+Contrato Megaju Comercio de eletronicos
+
+ 
+
+Contrato: 9912475537
+
+Cartão de postagem: 0075186390
+
+Acesso sigep web: Usuario: 34900061000127
+
+senha: 1w5r38
+ */
