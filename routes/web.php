@@ -121,3 +121,5 @@ Route::resource('chatsBlings', 'ChatsBlingController');
 Route::resource('queues', 'QueueController');
 
 Route::resource('attendantsTags', 'AttendantsTagsController');
+
+Route::resource('contactsTags', 'ContactsTagsController');

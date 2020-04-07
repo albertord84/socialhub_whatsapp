@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttendantsTagsTable extends Migration
+class CreateContactsTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAttendantsTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendants_tags', function (Blueprint $table) {
+        Schema::create('contacts_tags', function (Blueprint $table) {
             $table->integer('id', true);
+            $table->integer('contact_id');
             $table->integer('attendant_id');
-            $table->string('name', 50);
-            $table->string('color', 7);
+            $table->integer('attendant_tag_id');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateAttendantsTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendants_tags');
+        Schema::dropIfExists('contacts_tags');
     }
 }

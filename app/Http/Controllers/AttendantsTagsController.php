@@ -155,6 +155,6 @@ class AttendantsTagsController extends AppBaseController
 
         Flash::success('Attendants Tags deleted successfully.');
 
-        return redirect(route('attendantsTags.index'));
+        // return redirect(route('attendantsTags.index'));
     }
 }

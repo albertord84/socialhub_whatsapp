@@ -105,7 +105,6 @@
                                         <img v-if="contact.json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
                                         <img v-else-if="contact.json_data.includes('images/contacts/')" :src="'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" class="contact-picture">
                                         <img v-else :src="'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" class="contact-picture">
-                                        <!-- <img :src="(contact.json_data && contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture"> -->
                                     </div>
 
                                     <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact,index)">
@@ -173,6 +172,11 @@
                                                         </a>
                                                         <a v-if="contact.status_id == 6" href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="copyContact(contact), modalMuteNotificationsContacts=!modalMuteNotificationsContacts">
                                                             <i class="mdi mdi-volume-high"></i> Reativar notificações
+                                                        </a>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
+                                                            <i class="fa fa-tag"></i> Etiquetas do contato
                                                         </a>
                                                     </b-dropdown-item>
                                                     <!-- <b-dropdown-item exact class="dropdown_content">

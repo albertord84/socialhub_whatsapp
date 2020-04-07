@@ -30,7 +30,7 @@
             <div class="col-10 py-2" >
                 <span style="color:white">{{tag.name}}</span>
             </div>
-            <div class="col-2 d-inline-flex py-2 pointer-hover text-center" @click.prevent="deleteTag(tag)">
+            <div class="col-2 d-inline-flex py-2 pointer-hover text-center" @click.prevent="deleteTag(tag, index)">
                 <i class="fa fa-times mt-1" style="color:red; font-size:1rem; " aria-hidden="true"></i>
             </div>
         </div>
@@ -102,7 +102,7 @@
                     miniToastr.warn("Atenção", "A etiqueta deve ter um nome");
                     return false;
                 }
-                if(this.selectedColor.color == '' || this.selectedColor.used){
+                if(!this.selectedColor || this.selectedColor.color == '' || this.selectedColor.used){
                     miniToastr.warn("Atenção", "A etiqueta deve ter uma cor");
                     return false;
                 }
@@ -135,10 +135,32 @@
                     this.isAddingTag = false;
                 });
             },
+
+            deleteTag(tag, index) {
+                ApiService.delete('attendantsTags/'+tag.id)
+                .then(response => {
+                    this.enableTagButton(tag.color)
+                    this.attendantTags.splice(index,1);
+                })
+                .catch(error => {
+                    // this.processMessageError(error, "getAttendantTags","get");
+                })
+                .finally(() => {
+                });
+            },
             
             selectColor(color) {
                 this.selectedColor = color;
             },
+
+            enableTagButton(color) {
+                this.colors.some((item,i)=>{
+                    if(item.color === color){
+                        item.used = false;
+                        return;
+                    }
+                });
+            }, 
 
             disableTagButton(color) {
                 this.colors.some((item,i)=>{
