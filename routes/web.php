@@ -78,8 +78,8 @@ Route::get('cep/{cep}', 'ExtendedUsersSellerController@cep');
 Route::resource('passwordResets', 'PasswordResetController');
 
 // Route::resource('contacts', 'ContactController');
+Route::get('contactsToCSV', 'ExtendedContactController@contactsToCSV');
 Route::post('contactsFromCSV', 'ExtendedContactController@contactsFromCSV');
-Route::post('contactsToCSV', 'ExtendedContactController@contactsToCSV');
 Route::resource('contacts', 'ExtendedContactController');
 Route::get('updateContactPicture/{contact_id}', 'ExtendedContactController@updatePicture');
 

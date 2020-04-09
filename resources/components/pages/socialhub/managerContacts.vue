@@ -503,7 +503,7 @@
                     
             exportAllContacts() {
                 this.steepDownloadContacts = 2;
-                ApiService.post('contactsToCSV')
+                ApiService.get('contactsToCSV')
                 .then(response => {
                     var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'text/csv'}));
                     var fileLink = document.createElement('a');
