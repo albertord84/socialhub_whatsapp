@@ -290,6 +290,54 @@ class ExtendedContactController extends ContactController
         // return $response->toJson();
     }
 
+    public function contactsToCSV(CreateContactRequest $request)
+    {
+        $input = $request->all();
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $company_id = $User->company_id;
+        dd($company_id);
+
+        
+        //1. find all contacts and it last_attendant by company_id
+        $Contacts = []; //TODO-get contacts here
+
+        //2. write contacts to CSV file
+        $pathToFile = "companies/$company_id/";
+        $fileName = "contacts_csv_.$company_id";
+        $columns = array('Nome', 'Whatsapp', 'Email', 'Facebook', 'Instagram', 'LinkedIn', 'Estado', 'Cidade', 'Categoria1', 'Categoria2');
+        
+        $file = fopen($pathToFile.$fileName, 'w');
+        fputcsv($file, $columns);
+        
+        foreach($Contacts as $contact){
+            fputcsv($file, array(
+                $contact->first_name,
+                $contact->whatsapp_id,
+                $contact->email,
+                $contact->facebook_id,
+                $contact->instagram_id,
+                $contact->linkedin_id,
+                $contact->estado,
+                $contact->cidade,
+                $contact->categoria1,
+                $contact->categoria2,
+                $contact->lastest_attendant->email
+            ));
+        }
+        
+        //4. config response
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=file.csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        //5. return file to be download using laravel-response
+        return response()->download($pathToFile, $fileName, $headers);
+    }
+
     /**
      * Update the specified Contact in storage.
      *
