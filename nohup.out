@@ -853,3 +853,29 @@ In Pusher.php line 235:
 Laravel development server started: <http://127.0.0.1:8000>
 =======
 >>>>>>> develop
+2020-03-23T22:30:42.034453Z mysqld_safe Logging to syslog.
+2020-03-23T22:30:42.090200Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:30:42.098477Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+2020-03-23T22:31:17.401754Z mysqld_safe Logging to syslog.
+2020-03-23T22:31:17.410378Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:31:17.415873Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+2020-03-23T22:31:28.874216Z mysqld_safe Logging to syslog.
+2020-03-23T22:31:28.884856Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:31:28.894040Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+2020-03-23T22:36:53.700259Z mysqld_safe Logging to syslog.
+2020-03-23T22:36:53.757842Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:36:54.138450Z mysqld_safe A mysqld process already exists
+2020-03-23T22:47:53.789869Z mysqld_safe Logging to syslog.
+2020-03-23T22:47:53.797803Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:47:53.852765Z mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql
+2020-03-23T22:47:54.091273Z mysqld_safe mysqld from pid file /var/run/mysqld/mysqld.pid ended
+2020-03-23T22:49:27.259078Z mysqld_safe Logging to syslog.
+2020-03-23T22:49:27.305513Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:49:27.327725Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: vspprintf
+    
+In DuskServiceProvider.php line 44:
+                                           
+  It is unsafe to run Dusk in production.  
+                                           
+
