@@ -3,18 +3,17 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Status
+            Tracking
         </h1>
     </section>
     <div class="content">
         @include('adminlte-templates::common.errors')
         <div class="box box-primary">
-
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => 'statuses.store']) !!}
+                    {!! Form::open(['route' => 'trackings.store']) !!}
 
-                        @include('statuses.fields')
+                        @include('trackings.fields')
 
                     {!! Form::close() !!}
                 </div>

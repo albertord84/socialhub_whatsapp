@@ -19,9 +19,11 @@
 // https://app.socialhub.pro/testsalesbling
 Route::post('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'TestController@testsalesbling');
-Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
+// Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
 
-Route::get('testCorreios', 'TestController@testCorreios');
+Route::get('testCorreios', 'TestController@testCorreiosTrackingObject');
+// Route::get('testCorreios', 'TestController@testCorreiosTrackingObjectList');
+Route::get('testExcel', 'TestController@testExcel');
 
 Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
@@ -123,3 +125,7 @@ Route::post('vindi_notification_post', 'PaymentController@vindi_notification_pos
 Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
+
+Route::resource('trackings', 'TrackingController');
+
+Route::resource('status', 'StatusController');

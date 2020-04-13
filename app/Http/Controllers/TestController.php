@@ -21,6 +21,7 @@ use App\Business\VindiBusiness;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class TestController extends AppBaseController
 {
@@ -232,7 +233,22 @@ class TestController extends AppBaseController
         dd($result);
 
     }
-    
+
+    function testExcel(Request $request)
+    {
+        $input = $request->all();
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+
+        $file = file_get_contents('');
+        // Storage::disk('public')->
+        // if ($file = $request->file('file')) {
+            // Load .xls
+
+
+            // unlink($file->getRealPath());
+        // }
+    }
+
     function initCorreios(\PhpSigep\Model\AccessData $accessData)
     {   
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
@@ -257,7 +273,7 @@ class TestController extends AppBaseController
         \PhpSigep\Bootstrap::start($this->config);
     }
 
-    public function testCorreios(Request $request)
+    public function testCorreiosTrackingObject(Request $request)
     {
 
         
@@ -305,6 +321,35 @@ class TestController extends AppBaseController
         $result = $phpSigep->rastrearObjeto($params);
         
         dd($result);
+        // var_dump((array)$result);
+    }
+
+    public function testCorreiosTrackingObjectList(Request $request)
+    {
+        $usuario = '2689761400';
+        $senha = 'H1OR;3@Y@M';
+        $cnpjEmpresa = '26897614000101';
+        $numcontrato = '9912467470';
+        $codigoadm = '19185251';
+        $cartaopostagem = '0074969366';
+        
+        $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+        $accessData->setUsuario($usuario);
+        $accessData->setSenha($senha);
+        // $accessData->setCnpjEmpresa($cnpjEmpresa);
+        // $accessData->setCodAdministrativo($codigoadm);
+        // $accessData->setNumeroContrato($numcontrato);
+        // $accessData->setCartaoPostagem($cartaopostagem);
+        // $accessData->setAnoContrato(null);
+        // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
+        
+        $this->initCorreios($accessData);
+
+        $plp  = new \PhpSigep\Model\SolicitaXmlPlpResult();
+        // $_file_plp = 'plp.pdf';
+        // $pdf->render('F', $_file_plp);
+        
+        dd($plp);
         // var_dump((array)$result);
     }
 
@@ -505,4 +550,17 @@ Cartão de postagem: 0075186390
 Acesso sigep web: Usuario: 34900061000127
 
 senha: 1w5r38
+
+
+
+Sigep:
+
+acesso - 19185251
+
+senha: k0L82
+
+
+Sigep Master
+
+
  */

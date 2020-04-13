@@ -91,7 +91,7 @@ class BlingBusiness extends Business
             $Content = json_decode($Content);
 
             if ($Content && isset($Content->retorno->pedidos)) {
-              return true;
+                return true;
             }
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);

@@ -12,6 +12,10 @@ class MessagesTypesTableSeeder extends Seeder
      */
     public function run(){
         $this->command->info('Creating MessagesTypes:');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('messages_types')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');        
+
         $this->createMessagesTypes();
     }
 

@@ -31,6 +31,9 @@ cd /var/www/html/socialhub
 	http://localhost:8000/
 
 
+    #############################
+    php artisan migrate:generate tracking --connection=socialhub_mvp.tracking
+
 	#############################
 	php artisan infyom:scaffold MessageType --fromTable --tableName=message_types --connection=connectionName
 	php artisan infyom:scaffold User

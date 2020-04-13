@@ -1,22 +1,24 @@
 <div class="table-responsive">
-    <table class="table" id="statuses-table">
+    <table class="table" id="status-table">
         <thead>
             <tr>
                 <th>Name</th>
+        <th>Model</th>
         <th>Description</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
-        @foreach($statuses as $status)
+        @foreach($status as $statu)
             <tr>
-                <td>{!! $status->name !!}</td>
-            <td>{!! $status->description !!}</td>
+                <td>{{ $statu->name }}</td>
+            <td>{{ $statu->model }}</td>
+            <td>{{ $statu->description }}</td>
                 <td>
-                    {!! Form::open(['route' => ['statuses.destroy', $status->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['status.destroy', $statu->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{!! route('statuses.show', [$status->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-eye-open"></i></a>
-                        <a href="{!! route('statuses.edit', [$status->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="{{ route('status.show', [$statu->id]) }}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-eye-open"></i></a>
+                        <a href="{{ route('status.edit', [$statu->id]) }}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
                         {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
                     </div>
                     {!! Form::close() !!}
