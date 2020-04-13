@@ -27,7 +27,7 @@ Route::get('testCorreios', 'TestController@testCorreios');
 Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
     Route::post('reciveTextMessage', 'ExternalRPIController@reciveTextMessage');
-    Route::post('sendTextMessage', 'ExternalRPIController@sendMessage');
+    Route::post('sendTextMessage', 'ExternalRPIController@sendTextMessage');
     Route::get('getContactInfo/{whatsapp_id}', 'ExternalRPIController@getContactInfo');
     Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
     Route::get('getQRCode', 'ExternalRPIController@getQRCode');

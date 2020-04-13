@@ -18,7 +18,7 @@ class AddCityStateCategoriesColumnsToContactsTable extends Migration
             $table->string('cidade', 100)->nullable();
             $table->string('categoria1', 100)->nullable();
             $table->string('categoria2', 100)->nullable();
-         });
+        });
     }
 
     // /**
