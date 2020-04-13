@@ -13,7 +13,7 @@
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="steepDownloadContacts=1, modalExportAllContacts = !modalExportAllContacts" title="Exportar contatos">
                         <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -35,21 +35,19 @@
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <!-- <v-scroll :height="Height(150)" :vid="'contact-content'" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @ontop="onTopContacts" @onbottom="onBottomContacts" @oncontentresize="1"  > -->
-                        <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
-                            <template v-for="(column,index) in columns">
-                                <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                    {{ collect(row,column.field) }}
-                                </td>
-                                <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                    <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
-                                    <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                    <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
-                                </td>
-                            </template>
-                            <slot name="tbody-tr" :row="row"></slot>
-                        </tr>
-                    <!-- </v-scroll> -->
+                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                        <template v-for="(column,index) in columns">
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
+                                {{ collect(row,column.field) }}
+                            </td>
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
+                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
+                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                            </td>
+                        </template>
+                        <slot name="tbody-tr" :row="row"></slot>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -136,6 +134,26 @@
         <!-- Delete Contact Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
+        </b-modal>
+
+        <!-- Download contacts -->
+        <b-modal size="md" v-model="modalExportAllContacts" :hide-footer="true" title="Exportar contatos para arquivo CSV">
+            <div v-if="steepDownloadContacts==1">
+                <div class="form-group p-2">
+                    <b-form-group label="Selecione os contatos a exportar" class="pt-3">
+                        <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="1">
+                            Apenas os contatos listados na tabela
+                        </b-form-radio>
+                        <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="2" class="mt-2">
+                            Todos os contatos no Banco de Dados
+                        </b-form-radio>
+                    </b-form-group>
+                </div>
+                <div class="col-lg-12 mt-2 text-center" >
+                    <button class="btn btn-primary pl-5 pr-5 text-white"  @click.prevent="exportarContatos">Exportar</button>
+                    <button class="btn btn-primary  pl-5 pr-5 text-white" @click.prevent="modalExportAllContacts = false" >Cancelar</button>
+                </div>
+            </div>
         </b-modal>
 
         <!-- Upload template to import cantacts Modal -->
@@ -299,6 +317,9 @@
                 modalDeleteContact: false,
                 showModalFileUploadCSV: false,
                 showModalTemplateToImportContact: false,
+                modalExportAllContacts: false,
+                steepDownloadContacts:1,
+                selectedDownloadOption: 1,
                 attendants:null,
                 window: {width: 0,height: 0},
                 isLoadMoreContacts:false,
@@ -468,6 +489,36 @@
             handleResize: function() {
                 this.window.width = window.innerWidth;
                 this.window.height = window.innerHeight;
+            },
+
+            exportarContatos(){
+                if(this.selectedDownloadOption == 1){
+                    this.modalExportAllContacts = false;
+                    this.exportExcel();
+                }else
+                if(this.selectedDownloadOption == 2){                    
+                    this.exportAllContacts();
+                }
+            },
+                    
+            exportAllContacts() {
+                this.steepDownloadContacts = 2;
+                ApiService.get('contactsToCSV')
+                .then(response => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'text/csv'}));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download', 'contatos.csv');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.url, "get");
+                })
+                .finally(()=>{
+                });
             },
 
             //------ externals methods--------------------
@@ -678,6 +729,12 @@
             searchInput() {
                 this.currentPage = 1;
                 this.paginated;
+            },
+
+            downloadAllContact (value){
+                if(this.downloadAllContact){
+
+                }
             }
         },
         

@@ -80,7 +80,7 @@ class SalesBusiness extends Business {
                             $Chat->type_id = MessagesTypeController::Text;
                             $Chat->status_id = MessagesStatusController::ROUTED;
                             $Chat->message = $SaleModel->message;
-                            $Chat->save();
+                            //$Chat->save();
 
                             SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $Chat, 'blingsales');
                             $SaleModel->sended = true;

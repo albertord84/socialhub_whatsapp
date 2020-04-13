@@ -97,6 +97,19 @@ class ExtendedContactRepository extends ContactRepository
             return $Contacts;
         }
     }
+    
+    public function fullContactsOfCompany(int $company_id): Collection
+    {
+        $Collection = new Collection();
+        $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+        ->where('company_id', $company_id)
+        ->each(function ($Contact, $key) {
+            if ($Contact->latestAttendant) {
+                $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
+            }
+        });
+        return $Contacts;
+    }
 
     public function filterContacts(Builder $Contacts, string $filter) : Builder
     {

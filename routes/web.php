@@ -17,9 +17,14 @@
 // });
 
 // https://app.socialhub.pro/testsalesbling
-Route::post('testsalesbling', 'TestController@testsalesbling');
+// Route::post('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'TestController@testsalesbling');
+<<<<<<< HEAD
 // Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
+=======
+Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
+
+>>>>>>> 0e4f5efaf20346d097e0c5c7bd8e8c860a270b18
 
 Route::get('testCorreios', 'TestController@testCorreiosTrackingObject');
 // Route::get('testCorreios', 'TestController@testCorreiosTrackingObjectList');
@@ -79,6 +84,7 @@ Route::get('cep/{cep}', 'ExtendedUsersSellerController@cep');
 Route::resource('passwordResets', 'PasswordResetController');
 
 // Route::resource('contacts', 'ContactController');
+Route::get('contactsToCSV', 'ExtendedContactController@contactsToCSV');
 Route::post('contactsFromCSV', 'ExtendedContactController@contactsFromCSV');
 Route::resource('contacts', 'ExtendedContactController');
 Route::get('updateContactPicture/{contact_id}', 'ExtendedContactController@updatePicture');
