@@ -300,8 +300,9 @@ class ExtendedContactController extends ContactController
         $Contacts = $this->contactRepository->fullContactsOfCompany((int)$company_id);
 
         //2. write contacts to CSV file 
-        $pathToFile = "companies/$company_id/"; //TODO-Alberto ************ pegar o $pathToFile corretamente
-        $fileName = "contacts_csv_.$company_id";
+        $FullPath = "companies/$company_id/"; 
+        $pathToFile = env('APP_FILE_PATH', 'external_files') . "/$FullPath";
+        $fileName = "contacts_csv_$company_id";
         $columns = array('Nome', 'Whatsapp', 'Email', 'Facebook', 'Instagram', 'LinkedIn', 'Estado', 'Cidade', 'Categoria1', 'Categoria2', 'Email-Atendente');
         
         $file = fopen($pathToFile.$fileName, 'w');
