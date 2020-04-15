@@ -19,12 +19,9 @@
 // https://app.socialhub.pro/testsalesbling
 // Route::post('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'TestController@testsalesbling');
-<<<<<<< HEAD
 // Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
-=======
 Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
 
->>>>>>> 0e4f5efaf20346d097e0c5c7bd8e8c860a270b18
 
 Route::get('testCorreios', 'TestController@testCorreiosTrackingObject');
 // Route::get('testCorreios', 'TestController@testCorreiosTrackingObjectList');
@@ -33,7 +30,7 @@ Route::get('testExcel', 'TestController@testExcel');
 Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
     Route::post('reciveTextMessage', 'ExternalRPIController@reciveTextMessage');
-    Route::post('sendTextMessage', 'ExternalRPIController@sendMessage');
+    Route::post('sendTextMessage', 'ExternalRPIController@sendTextMessage');
     Route::get('getContactInfo/{whatsapp_id}', 'ExternalRPIController@getContactInfo');
     Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
     Route::get('getQRCode', 'ExternalRPIController@getQRCode');
@@ -132,6 +129,10 @@ Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
 
+<<<<<<< HEAD
 Route::resource('trackings', 'TrackingController');
 
 Route::resource('status', 'StatusController');
+=======
+Route::resource('apis', 'ApiController');
+>>>>>>> develop

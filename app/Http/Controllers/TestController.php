@@ -21,6 +21,7 @@ use App\Business\VindiBusiness;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 
 class TestController extends AppBaseController
@@ -41,14 +42,22 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-        $this->testVindi();
+
+        // Teste Vindi
+        // $this->testVindi();
+
+        // Teste API v1
+        // $url = 'http://app.socialhub.local/api/v1/messages';
+        // $this->postGuzzleRequest($url);
 
         // $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
-        $company_id = 4;
-        // $company_id = 1;
+        // $company_id = 4;
+        $company_id = 1;
         // $attendant_id = 30;
         // $attendant_id = 15;
         $attendant_id = 4;
+
+
 
         // $Contact = Contact::with(['Status', 'latestAttendantContact'])->find(18781);
         // $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->find(18772);
@@ -412,8 +421,6 @@ class TestController extends AppBaseController
         $pending = SendWhatsAppMsg::dispatch($ExternalRPIController, $Contact, $message);
 
         dd($pending);
-    }
-
 
         // $BlingController->
 
@@ -435,27 +442,56 @@ class TestController extends AppBaseController
         dd($response);
     }
 
-    public function postGuzzleRequest()
+    public function postGuzzleRequest(string $url)
     {
         $client = new \GuzzleHttp\Client();
-        $url = "http://myexample.com/api/posts";
+        $url = $url ?? "http://myexample.com/api/posts";
 
-        $myBody['name'] = "Demo";
-        $request = $client->post($url, [
+        // $myBody['name'] = "Demo";
+        // $request = $client->post($url, [
+        //     'multipart' => [
+        //         [
+        //             'name' => 'file_name',
+        //             'contents' => fopen('/path/to/file', 'r'),
+        //         ],
+        //         [
+        //             'name' => 'csv_header',
+        //             'contents' => 'First Name, Last Name, Username',
+        //             'filename' => 'csv_header.csv',
+        //         ],
+        //     ]]);
+        // $response = $request->send();
+
+        $file_name = 'robots.txt';
+        $FileName = 'Document';
+        $File = Storage::disk('chats_files_1')->get($file_name); // Retrive file like file_get_content(...)
+        $phone = '5521965536174';
+        $message = 'Test API';
+        $api_token = 'Rc5MP7yhENpjzk8jhW3L25YYX5Wj9sHQ1ibd8nFoa8u1QIkSQlI3f24ldVnm';
+
+        // $Controller = App::make('App\Http\Controllers\ApiController');
+        // $Request = new Request();
+        // $Request->phone = $phone;
+        // $Request->message = $message;
+        // $Request->api_token = $api_token;
+        // $Controller->store($Request);
+        // $Controller = new ApiController($this->repository);
+
+        $response = $client->request('POST', $url, [
             'multipart' => [
-                [
-                    'name' => 'file_name',
-                    'contents' => fopen('/path/to/file', 'r'),
-                ],
-                [
-                    'name' => 'csv_header',
-                    'contents' => 'First Name, Last Name, Username',
-                    'filename' => 'csv_header.csv',
-                ],
-            ]]);
-        $response = $request->send();
+                // [
+                //     'name' => "$FileName",
+                //     'contents' => $File,
+                //     'filename' => "$file_name",
+                // ],
+                ['name' => "phone", 'contents' => $phone],
+                ['name' => "message", 'contents' => $message],
+                ['name' => "api_token", 'contents' => $api_token],
+            ],
+        ]);            
 
-        dd($response);
+        dd($response->getBody()->getContents());
+        // dd(json_decode($response->getBody()->getContents()));
     }
 
     public function putGuzzleRequest()
