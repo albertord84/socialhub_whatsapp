@@ -31,7 +31,7 @@
 
                         <div class="col-3 col-md-3">
                             <div class="col-12 text-left">
-                                <a href="javascript:void()" @click.prevent="logoutWhatsapp" class="mb-2" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar</a>
+                                <a href="javascript:void()" @click.prevent="logoutWhatsapp" class="mb-2" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar do WhatsApp</a>
                                 <!-- State 1 - beforeRequest -->
                                 <div v-if="beforeRequest" @click.prevent="getNewQRCode" class="no-img">
                                     <i class="mdi mdi-reload fa-2x" ></i>    

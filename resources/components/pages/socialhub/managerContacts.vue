@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-4 pl-5">
                     <div class="pt-3 pl-5">
-                        <button class="btn btn-primary color-white" @click.prevent="getContacts">
+                        <button class="btn btn-primary color-white pl-4 pr-4" @click.prevent="getContacts">
                             <i v-if="isLoadMoreContacts" class="fa fa-spinner fa-spin color-white"></i>
                             Carregar mais
                         </button>
@@ -256,7 +256,7 @@
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDContact from "./popups/managerCRUDContact";
-    import vScroll from "components/plugins/scroll/vScroll.vue"
+    import vScroll from "components/plugins/scroll/vScroll.vue";
 
     export default {
         props: {
@@ -521,6 +521,19 @@
                 });
             },
 
+            exportExcel() {
+                const mimeType = 'data:application/vnd.ms-excel';
+                const html = this.renderTable2().replace(/ /g, '%20');
+                // const html = this.renderTable().replace(/ /g, '%20');
+                const d = new Date();
+                var dummy = document.createElement('a');
+                dummy.href = mimeType + ', ' + html;
+                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
+                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
+                    '.xls';
+                dummy.click();
+            },
+
             //------ externals methods--------------------
             getAttendantList: function() { //R
                 ApiService.get(this.url_attendants)
@@ -568,18 +581,6 @@
                 this.$emit("rowClick", row, index);
             },
 
-            exportExcel() {
-                const mimeType = 'data:application/vnd.ms-excel';
-                const html = this.renderTable().replace(/ /g, '%20');
-                const d = new Date();
-                var dummy = document.createElement('a');
-                dummy.href = mimeType + ', ' + html;
-                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
-                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
-                    '.xls';
-                dummy.click();
-            },
-
             renderTable() {
                 var table = '<table><thead>';
 
@@ -603,6 +604,62 @@
                         table += this.collect(row, column.field);
                         table += '</td>';
                     }
+                    table += '</tr>';
+                }
+
+                table += '</tbody></table>';
+
+                return table;
+            },
+
+            renderTable2() {
+                var table = '<table><thead>';
+                var mycolumns = ['Nome','Whatsapp','Email','Facebook','Instagram','LinkedIn','Estado','Cidade','Categoria1','Categoria2','Email-Atendente'];
+                table += '<tr>';
+                for (var i = 0; i < mycolumns.length; i++) {
+                    table += '<th>';
+                    table += mycolumns[i];
+                    table += '</th>';
+                }
+                table += '</tr>';
+                table += '</thead><tbody>';
+                
+                for (var i = 0; i < this.rows.length; i++) {
+                    const row = this.rows[i];
+                    table += '<tr>';
+                        table += '<td>'; 
+                            table += (row.first_name && row.first_name.trim()!='' && row.first_name.trim()!='undefined')? row.first_name : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.whatsapp_id && row.whatsapp_id.trim()!='' && row.whatsapp_id.trim()!='undefined')? row.whatsapp_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.email && row.email.trim()!='' && row.email.trim()!='undefined')? row.email : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.facebook_id && row.facebook_id.trim()!='' && row.facebook_id.trim()!='undefined')? row.facebook_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.instagram_id && row.instagram_id.trim()!='' && row.instagram_id.trim()!='undefined')? row.instagram_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.linkedin_id && row.linkedin_id.trim()!='' && row.linkedin_id.trim()!='undefined')? row.linkedin_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.estado && row.estado.trim()!='' && row.estado.trim()!='undefined')? row.estado : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.cidade && row.cidade.trim()!='' && row.cidade.trim()!='undefined')? row.cidade : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.categoria1 && row.categoria1.trim()!='' && row.categoria1.trim()!='undefined')? row.categoria1 : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.categoria2 && row.categoria2.trim()!='' && row.categoria2.trim()!='undefined')? row.categoria2 : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.latestAttendant && row.latestAttendant.email.trim()!='' && row.latestAttendant.email.trim()!='undefined')? row.latestAttendant.email : ''; 
+                        table += '</td>';
                     table += '</tr>';
                 }
 
