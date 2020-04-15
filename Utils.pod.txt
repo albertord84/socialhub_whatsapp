@@ -68,6 +68,8 @@ https://www.youtube.com/watch?v=qaCMdqLLdV8
 composer require --dev "xethron/migrations-generator"
 #composer require doctrine/dbal
 
+php artisan infyom:scaffold Tracking --fromTable --tableName=tracking --connection=socialhub_mvp.tracking
+
 php artisan migrate:install
 php artisan migrate --seed
 php artisan migrate:generate

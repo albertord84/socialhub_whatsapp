@@ -456,40 +456,6 @@ class ExternalRPIController extends Controller
      *
      * @tested
      * @param string $message
-     * @param string $phone
-     * @param string [$first_name]
-     * @param string [$email]
-     * @return void
-     */
-    public function sendTextMessageByNumber(string $message, string $phone, Request $request)
-    {
-        // Check if the Contact already exist for this company
-        $User = User::where('api_token', $request->api_token)->first();
-
-        $Contact = Contact::where([
-            'company_id' => $User->company_id,
-            'whatsapp_id' => $phone,
-        ])->first();
-
-        if (!$Contact) { // if not exist insert the contact
-            $Contact = new Contact();
-            $Contact->company_id = $User->company_id;
-            $Contact->first_name = $request->first_name ?? $phone;
-            $Contact->whatsapp_id = $phone;
-            $Contact->email = $request->email ?? null;
-            $Contact->save();
-        }
-
-        $response = $this->sendTextMessage($message, $Contact);
-
-        return $response;
-    }
-
-    /**
-     * Send Text Message
-     *
-     * @tested
-     * @param string $message
      * @param Contact $Contact
      * @return void
      */

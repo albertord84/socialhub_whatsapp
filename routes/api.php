@@ -33,6 +33,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('delete_user/{user_id}', 'AuthController@deleteUser');
 });
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'auth:api'], function ($router) {
-    Route::post('sendTextMessageByNumber', 'ExternalRPIController@sendTextMessageByNumber');
+// Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function ($router) {
+Route::group(['prefix' => 'v1'], function ($router) {
+    // Route::resource('messages', 'ApiController');
+    Route::post('messages', 'ApiController@store');
 });
