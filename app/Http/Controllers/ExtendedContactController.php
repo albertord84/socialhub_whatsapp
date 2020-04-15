@@ -290,6 +290,53 @@ class ExtendedContactController extends ContactController
         // return $response->toJson();
     }
 
+    public function contactsToCSV(Request $request)
+    {
+        $input = $request->all();
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        $company_id = $User->company_id;
+        
+        //1. find all contacts and it last_attendant by company_id
+        $Contacts = $this->contactRepository->fullContactsOfCompany((int)$company_id);
+
+        //2. write contacts to CSV file 
+        $FullPath = "companies/$company_id/"; 
+        $pathToFile = env('APP_FILE_PATH', 'external_files') . "/$FullPath";
+        $fileName = "contacts_csv_$company_id";
+        $columns = array('Nome', 'Whatsapp', 'Email', 'Facebook', 'Instagram', 'LinkedIn', 'Estado', 'Cidade', 'Categoria1', 'Categoria2', 'Email-Atendente');
+        
+        $file = fopen($pathToFile.$fileName, 'w');
+        fputcsv($file, $columns);
+        
+        foreach($Contacts as $contact){
+            fputcsv($file, array(
+                $contact->first_name,
+                $contact->whatsapp_id,
+                $contact->email,
+                $contact->facebook_id,
+                $contact->instagram_id,
+                $contact->linkedin_id,
+                $contact->estado,
+                $contact->cidade,
+                $contact->categoria1,
+                $contact->categoria2,
+                ($contact->lastest_attendant)? $contact->lastest_attendant->email : ''
+            ));
+        }
+        
+        //3. config response
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=file.csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        //4. return file to be download using laravel-response
+        return response()->download($pathToFile, $fileName, $headers);
+    }
+
     /**
      * Update the specified Contact in storage.
      *

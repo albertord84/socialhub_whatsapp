@@ -39,7 +39,18 @@ mix.webpackConfig({
     output: {
     publicPath:'./',
         chunkFilename: mix.inProduction() ? 'js/[name].[chunkhash].js' : 'js/[name].js'
-    }
+    },
+    
+    //Added by JR
+    // module: {
+    //     rules: [
+    //         {
+    //             test: /\.s[a|c]ss$/,
+    //             loader: 'sass-loader'
+    //         }
+    //     ]
+    // }
+
 });
 
 // Setup Autoprefixer
