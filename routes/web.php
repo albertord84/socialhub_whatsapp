@@ -122,3 +122,5 @@ Route::get('get_sales_bling', 'BlingController@get_sales_bling');
 Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
+
+Route::resource('apis', 'ApiController');
