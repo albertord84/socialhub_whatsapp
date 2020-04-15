@@ -624,56 +624,42 @@
                 table += '</tr>';
                 table += '</thead><tbody>';
                 
-                console.log(this.rows);
                 for (var i = 0; i < this.rows.length; i++) {
                     const row = this.rows[i];
                     table += '<tr>';
                         table += '<td>'; 
                             table += (row.first_name && row.first_name.trim()!='' && row.first_name.trim()!='undefined')? row.first_name : ''; 
                         table += '</td>';
-                        
                         table += '<td>'; 
                             table += (row.whatsapp_id && row.whatsapp_id.trim()!='' && row.whatsapp_id.trim()!='undefined')? row.whatsapp_id : ''; 
                         table += '</td>';
-                        
                         table += '<td>'; 
                             table += (row.email && row.email.trim()!='' && row.email.trim()!='undefined')? row.email : ''; 
                         table += '</td>';
-                        
                         table += '<td>'; 
                             table += (row.facebook_id && row.facebook_id.trim()!='' && row.facebook_id.trim()!='undefined')? row.facebook_id : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.instagram_id && row.instagram_id.trim()!='' && row.instagram_id.trim()!='undefined')? row.instagram_id : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.linkedin_id && row.linkedin_id.trim()!='' && row.linkedin_id.trim()!='undefined')? row.linkedin_id : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.estado && row.estado.trim()!='' && row.estado.trim()!='undefined')? row.estado : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.cidade && row.cidade.trim()!='' && row.cidade.trim()!='undefined')? row.cidade : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.categoria1 && row.categoria1.trim()!='' && row.categoria1.trim()!='undefined')? row.categoria1 : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.categoria2 && row.categoria2.trim()!='' && row.categoria2.trim()!='undefined')? row.categoria2 : ''; 
                         table += '</td>';
-
                         table += '<td>'; 
                             table += (row.latestAttendant && row.latestAttendant.email.trim()!='' && row.latestAttendant.email.trim()!='undefined')? row.latestAttendant.email : ''; 
                         table += '</td>';
-
-                        
-
                     table += '</tr>';
                 }
 

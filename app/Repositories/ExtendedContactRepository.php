@@ -89,11 +89,11 @@ class ExtendedContactRepository extends ContactRepository
         }
     }
     
-    public function fullContactsOfCompany(int $company_id): Collection
+    public function fullContactsOfCompany(int $company_id)
     {
-        $Collection = new Collection();
         $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
         ->where('company_id', $company_id)
+        ->get()
         ->each(function ($Contact, $key) {
             if ($Contact->latestAttendant) {
                 $Contact->latestAttendant = $Contact->latestAttendant->attendant()->first()->user()->first();
