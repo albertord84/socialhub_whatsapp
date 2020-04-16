@@ -97,6 +97,15 @@
 </head>
 
 <body>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128166624-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-128166624-4');
+    </script>
+
     <div id="preloader">
         <div class="spinner">
             <div class="dot1"></div>
@@ -109,14 +118,7 @@
     <script type="text/javascript" src="{{ url(mix('vendor.js')).'?'.env('APP_VERSION') }}"></script>
     <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP_VERSION') }}"></script>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128166624-4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-128166624-4');
-    </script>
+    
 
 </body>
 

@@ -15,6 +15,7 @@ use Auth;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Response;
 
 class ExtendedContactController extends ContactController
@@ -299,10 +300,11 @@ class ExtendedContactController extends ContactController
         //1. find all contacts and it last_attendant by company_id
         $Contacts = $this->contactRepository->fullContactsOfCompany((int)$company_id);
 
-        //2. write contacts to CSV file 
+        //2. write contacts to CSV file
         $FullPath = "companies/$company_id/"; 
-        $pathToFile = env('APP_FILE_PATH', 'external_files') . "/$FullPath";
-        $fileName = "contacts_csv_$company_id";
+        // $pathToFile = env('APP_FILE_PATH', 'external_files') . "/$FullPath";
+        $pathToFile = Storage::disk('chats_files')->getAdapter()->getPathPrefix(). "$FullPath";
+        $fileName = "contacts_csv_$company_id.csv";
         $columns = array('Nome', 'Whatsapp', 'Email', 'Facebook', 'Instagram', 'LinkedIn', 'Estado', 'Cidade', 'Categoria1', 'Categoria2', 'Email-Atendente');
         
         $file = fopen($pathToFile.$fileName, 'w');
