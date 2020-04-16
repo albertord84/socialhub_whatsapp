@@ -17,6 +17,7 @@ use App\Models\Sales;
 use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
+use App\Business\VindiBusiness;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
@@ -41,6 +42,7 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
+        // $this->testVindi();
         $url = 'http://app.socialhub.local/api/v1/messages';
         $this->postGuzzleRequest($url);
 
@@ -49,7 +51,7 @@ class TestController extends AppBaseController
         $company_id = 1;
         // $attendant_id = 30;
         // $attendant_id = 15;
-        // $attendant_id = 5;
+        $attendant_id = 4;
 
 
 
@@ -60,33 +62,9 @@ class TestController extends AppBaseController
 
         // $extContRepo = new ExtendedContactRepository(app());
 
-        // $Contacts = Contact::with(['Status', 'latestAttendantContact'])
-        //     ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
-        //         $query->where('attendant_id', $attendant_id);
-        //     })
-        //     ->orderBy('updated_at', 'desc')
-        //     ->where('company_id', $company_id)
-        //     // ->get();
-        //     ->get()
-        //     ->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
-            // ->slice($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30));
-            // ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+        // $Contacts = $extContRepo->fullContacts(1, $attendant_id, 'alb');
 
-        // $Contacts = $Contacts->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
-
-        // $Contacts = $extContRepo->fullContacts(1, $attendant_id, null, $last_contact_idx);
-
-        // $Contacts = Contact::skip($last_contact_idx)->take(30)->get();
         // dd($Contacts);
-
-        // $Collect
-        
-
-        // dd($Collection);
-        // dd($Collection->toJson());
-        // dd($Contacts->toJson());
-
-        // $lastContact = Contact::find($last_contact_idx);
 
         // $ExtendedChat = new ExtendedChat();
         // $ExtendedChat->table = "$attendant_id";
@@ -228,6 +206,54 @@ class TestController extends AppBaseController
         // $this->testJobsQueue();
     }
 
+    function testVindi()
+    {
+        $Vindi = new VindiBusiness();
+
+        $Client = User::find(1);
+
+        // Adicionar Cliente
+        // $result = $Vindi->addClient("Alberto Test", "alberto@test.test");
+        // $gateway_client_id  = $result->gateway_client_id;
+        $gateway_client_id  = "13729518";
+        $Client->gateway_client_id = $gateway_client_id;
+
+        // Adicionar meio de pagamento
+        $payment_data = [
+            "credit_card_name"      => "Alberto Reyes Diaz",
+            "credit_card_exp_month" => "08",
+            "credit_card_exp_year"  => "2027",
+            "credit_card_number"    => "5429740425386672",
+            "credit_card_cvc"       => "293"
+        ];
+        $result = $Vindi->addClientPayment($Client, $payment_data);
+
+        // Criar cobrança na hora
+        // $result = $Vindi->create_payment($Client, VindiBusiness::gateway_prod_1real_id, $amount = 2);
+
+        // Criar recorrencia
+        $result = $Vindi->create_recurrency_payment($Client);
+
+
+        dd($result);
+
+    }
+
+    function testExcel(Request $request)
+    {
+        $input = $request->all();
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+
+        $file = file_get_contents('');
+        // Storage::disk('public')->
+        // if ($file = $request->file('file')) {
+            // Load .xls
+
+
+            // unlink($file->getRealPath());
+        // }
+    }
+
     function initCorreios(\PhpSigep\Model\AccessData $accessData)
     {   
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
@@ -252,7 +278,7 @@ class TestController extends AppBaseController
         \PhpSigep\Bootstrap::start($this->config);
     }
 
-    public function testCorreios(Request $request)
+    public function testCorreiosTrackingObject(Request $request)
     {
 
         
@@ -300,6 +326,35 @@ class TestController extends AppBaseController
         $result = $phpSigep->rastrearObjeto($params);
         
         dd($result);
+        // var_dump((array)$result);
+    }
+
+    public function testCorreiosTrackingObjectList(Request $request)
+    {
+        $usuario = '2689761400';
+        $senha = 'H1OR;3@Y@M';
+        $cnpjEmpresa = '26897614000101';
+        $numcontrato = '9912467470';
+        $codigoadm = '19185251';
+        $cartaopostagem = '0074969366';
+        
+        $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+        $accessData->setUsuario($usuario);
+        $accessData->setSenha($senha);
+        // $accessData->setCnpjEmpresa($cnpjEmpresa);
+        // $accessData->setCodAdministrativo($codigoadm);
+        // $accessData->setNumeroContrato($numcontrato);
+        // $accessData->setCartaoPostagem($cartaopostagem);
+        // $accessData->setAnoContrato(null);
+        // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
+        
+        $this->initCorreios($accessData);
+
+        $plp  = new \PhpSigep\Model\SolicitaXmlPlpResult();
+        // $_file_plp = 'plp.pdf';
+        // $pdf->render('F', $_file_plp);
+        
+        dd($plp);
         // var_dump((array)$result);
     }
 
@@ -511,4 +566,17 @@ Cartão de postagem: 0075186390
 Acesso sigep web: Usuario: 34900061000127
 
 senha: 1w5r38
+
+
+
+Sigep:
+
+acesso - 19185251
+
+senha: k0L82
+
+
+Sigep Master
+
+
  */
