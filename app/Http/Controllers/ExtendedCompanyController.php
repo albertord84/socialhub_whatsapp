@@ -58,13 +58,8 @@ class ExtendedCompanyController extends CompanyController
         
         Flash::success('Company saved successfully.');
 
-<<<<<<< HEAD
-        //já no precisa mais
-        // $this->companyRepository->createCompanyQueueTable((int)$company->id);
-=======
         //JR: creating Queue table
         //$this->companyRepository->createCompanyQueueTable($company->id);
->>>>>>> 06dbb34a5ca74e9c5b3bfac1a0ed0f1b023f66fa
 
         return $company->toJson();
         // return redirect(route('companies.index'));
