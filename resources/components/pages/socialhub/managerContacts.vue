@@ -250,6 +250,7 @@
     </div>
 
 </template>
+
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
