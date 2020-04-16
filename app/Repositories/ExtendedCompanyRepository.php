@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Company;
-use CreateQueueTable;
 
 /**
  * Class CompanyRepository
@@ -30,7 +29,7 @@ class ExtendedCompanyRepository extends CompanyRepository
         return $Company;
     }
 
-    public function createCompanyQueueTable(int $company_id)
+    /*public function createCompanyQueueTable(int $company_id)
     {
         try {
             $chatsMigrationsDir = __DIR__.'/../../database/migrations/2020_03_17_172912_create_queue_table.php';
@@ -42,7 +41,7 @@ class ExtendedCompanyRepository extends CompanyRepository
             print("Erro creating Company Queue Table...! " + $th);
             throw $th;
         }
-    }
+    }*/
 
     /**
      * Configure the Model
