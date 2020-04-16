@@ -97,9 +97,24 @@
                                 <div class="row pt-3 pb-3">
                                     <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact,index)">
                                         <img v-if="contact.json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
-                                        <img v-else-if="contact.json_data.includes('images/contacts/')" :src="'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" class="contact-picture">
-                                        <img v-else :src="'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" class="contact-picture">
-                                        <!-- <img :src="(contact.json_data && contact.json_data)?JSON.parse(contact.json_data).picurl:'images/contacts/default.png'" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture"> -->
+                                        <img v-else-if="contact.json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contact.id" class="contact-picture"  @error="markAsBrokenUrl(contact,index)">
+                                        <div v-else class="contact-non-picture" 
+                                            :class="[
+                                                { bg0: contact.whatsapp_id.slice(-1)=='0' },
+                                                { bg1: contact.whatsapp_id.slice(-1)=='1' },
+                                                { bg2: contact.whatsapp_id.slice(-1)=='2' },
+                                                { bg3: contact.whatsapp_id.slice(-1)=='3' },
+                                                { bg4: contact.whatsapp_id.slice(-1)=='4' },
+                                                { bg5: contact.whatsapp_id.slice(-1)=='5' },
+                                                { bg6: contact.whatsapp_id.slice(-1)=='6' },
+                                                { bg7: contact.whatsapp_id.slice(-1)=='7' },
+                                                { bg8: contact.whatsapp_id.slice(-1)=='8' },
+                                                { bg9: contact.whatsapp_id.slice(-1)=='9' },
+                                            ]">
+                                            <b style="color:white; font-size: 1.1rem; text-transform: uppercase;">
+                                                {{ (contact.first_name)? contact.first_name.slice(0,1) : contact.whatsapp_id.slice(-1)}}
+                                            </b>
+                                        </div>
                                     </div>
 
                                     <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact,index)">
@@ -209,16 +224,35 @@
                     <div class="container-fluid mt-2">
                         <ul class='row flex-baseline'>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 d-block d-lg-none'>
-                                <span id="btn-back" class="mdi mdi-arrow-left btn-back icons-action" @click.prevent="chatCenterSideBack"></span>
+                                <span id="btn-back" class="mdi mdi-arrow-left btn-back icons-action" @click.prevent="chatCenterSideBack" style="position:relative; top:-18px"></span>
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
-                                <span @click.prevent="displayChatRightSide()" class="pointer-hover">
-                                    <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'" width="50px" class="profile-picture " >
+                                <div @click.prevent="displayChatRightSide()" class="pointer-hover" style="display: flex; align-items: center">
+                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" width="50px" class="profile-picture">
+                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" width="50px" class="profile-picture">
+                                    <div v-else style=";width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
+                                        :class="[
+                                            { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
+                                            { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
+                                            { bg2: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='2' },
+                                            { bg3: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='3' },
+                                            { bg4: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='4' },
+                                            { bg5: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='5' },
+                                            { bg6: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='6' },
+                                            { bg7: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='7' },
+                                            { bg8: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='8' },
+                                            { bg9: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='9' },
+                                        ]">
+                                        <b style="color:white; font-size: 1.1rem; text-transform: uppercase;">
+                                            {{ (contacts[selectedContactIndex].first_name)? contacts[selectedContactIndex].first_name.slice(0,1) : contacts[selectedContactIndex].whatsapp_id.slice(-1)}}
+                                        </b>
+                                    </div>
+
                                     <b style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
-                                </span>
+                                </div>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action"></i>
+                                <i title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:-18px"></i>
                             </li>
                             <!-- <li> -->
                                 <!-- <form action="">
@@ -329,11 +363,26 @@
                                         </div>
                                     </div>
                                     <div class="col-1 text-right">
-                                        <!-- <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'"  alt="" class="conversation-picture receivedMessageImg"> -->
-                                        
                                         <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
-                                        <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/')" :src="'images/contacts/default.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
-                                        <img v-else :src="'images/contacts/default.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
+                                        <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
+                                        <div v-else class="conversation-picture receivedMessageImg" style="display: flex; align-items: center; justify-content:center;" 
+                                            :class="[
+                                                { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
+                                                { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
+                                                { bg2: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='2' },
+                                                { bg3: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='3' },
+                                                { bg4: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='4' },
+                                                { bg5: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='5' },
+                                                { bg6: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='6' },
+                                                { bg7: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='7' },
+                                                { bg8: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='8' },
+                                                { bg9: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='9' },
+                                            ]">
+                                            <b style="color:white; font-size: 1.1rem; text-transform: uppercase;">
+                                                {{ (contacts[selectedContactIndex].first_name)? contacts[selectedContactIndex].first_name.slice(0,1) : contacts[selectedContactIndex].whatsapp_id.slice(-1)}}
+                                            </b>    
+                                        </div>
+                                        <!-- <img v-else :src="'images/contacts/default.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg"> -->
                                     </div>
                                     <div class="col-11">
                                         <div style="float:left; padding-left:1rem" class="thetime">{{message.time.hour}}</div>
@@ -538,9 +587,27 @@
             <div v-if="selectedContactIndex>=0" class="profile sec_decription bg-white" >
                 <v-scroll :height="Height(100)"  color="#ccc" bar-width="8px">
                     <div class="text-center">
-                        <a href="javascript:void()" @click.prevent="modalShowContactPicture=!modalShowContactPicture">
-                            <img :src="(selectedContactIndex>-1 && contacts[selectedContactIndex].json_data)?JSON.parse(contacts[selectedContactIndex].json_data).picurl:'images/contacts/default.png'" class="rounded-circle desc-img2 mb-3 mt-3" alt="Foto de perfil">
-                        </a>
+                            <img @click.prevent="modalShowContactPicture=!modalShowContactPicture" v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="rounded-circle desc-img2 mb-3 mt-3 pointer-hover">
+                            <img @click.prevent="modalShowContactPicture=!modalShowContactPicture" v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="rounded-circle desc-img2 mb-3 mt-3 pointer-hover">
+                        <div v-else class="text-center" style="display: flex; align-items: center; justify-content:center">
+                            <div class="rounded-circle desc-img2 mb-3 mt-3" style="display: flex; align-items: center; justify-content:center;"
+                                :class="[
+                                    { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
+                                    { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
+                                    { bg2: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='2' },
+                                    { bg3: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='3' },
+                                    { bg4: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='4' },
+                                    { bg5: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='5' },
+                                    { bg6: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='6' },
+                                    { bg7: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='7' },
+                                    { bg8: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='8' },
+                                    { bg9: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='9' },
+                                ]">
+                                <b style="color:white; font-size: 1.1rem; text-transform: uppercase;">
+                                    {{ (contacts[selectedContactIndex].first_name)? contacts[selectedContactIndex].first_name.slice(0,1) : contacts[selectedContactIndex].whatsapp_id.slice(-1)}}
+                                </b>
+                            </div>
+                        </div>
                         <h4 class="profile-decription-name">{{contacts[selectedContactIndex].first_name}}</h4>
                         
                         <!-- Informação -->
@@ -662,7 +729,7 @@
                         </div>
 
                         <!-- Imagens e mídias -->
-                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                        <!-- <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="container-fluid">
                                 <div class="row flex-baseline" >
                                     <div class="col-1 pt-2 pb-2">
@@ -682,7 +749,7 @@
                         </div>
                         <div v-if="showContactMedia" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-4">
-                                <!-- <div class="row">
+                                <div class="row">
                                     <div class="col-4 mt-2">
                                         <img src="~img/pages/14.jpg" alt="" class="img-fluid">
                                     </div>
@@ -701,12 +768,12 @@
                                     <div class="col-4 mt-2">
                                         <img src="~img/pages/20.jpg" alt="" class="img-fluid">
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Arquivos e documentos -->
-                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                        <!-- <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
                             <div class="container-fluid">
                                 <div class="row flex-baseline" >
                                     <div class="col-1 pt-2 pb-2">
@@ -724,10 +791,9 @@
                                 </div>
                             </div>
                         </div>
-
                         <div v-if="showContacDocuments" class="border border-top-0 p-1 mr-2 fadeIn">
                             <div class="attachments  p-4">
-                                <!-- <div class="row">
+                                <div class="row">
                                     <div class="col-4 mt-2">
                                         <img src="~img/pages/14.jpg" alt="" class="img-fluid">
                                     </div>
@@ -746,9 +812,9 @@
                                     <div class="col-4 mt-2">
                                         <img src="~img/pages/20.jpg" alt="" class="img-fluid">
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                 </v-scroll>
@@ -1078,6 +1144,10 @@
                         This.isSendingNewMessage = false;
                     }
                 }
+            },
+
+            myclass(){
+                return 'xxx';
             },
 
             getMessageTime: function(time){
@@ -2445,6 +2515,23 @@
         padding: 0px !important;
         margin: 0px !important;
     }
+    .contact-non-picture{
+        display: flex; align-items: center; justify-content:center;
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+    }
+    .bg0{background-color:#ff4444}
+    .bg1{background-color:#ffbb33}
+    .bg2{background-color:#00C851}
+    .bg3{background-color:#33b5e5}
+    .bg4{background-color:#FF8800}
+    .bg5{background-color:#CC0000}
+    .bg6{background-color:#9933CC}
+    .bg7{background-color:#4B515D}
+    .bg8{background-color:#cddc39}
+    .bg9{background-color:#ff8a65}
+
     .conversation-picture{
         border-radius: 50%;
         width: 30px;
@@ -2909,6 +2996,7 @@
         .width-25{
             width: 100% !important;
         }
+        
     }
     
 </style>
