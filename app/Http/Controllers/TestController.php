@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business\BlingBusiness;
+use App\Business\PostofficeBusiness;
 use App\Business\SalesBusiness;
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
@@ -42,6 +43,15 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
+
+        // contactsToCSV que está no ExtendedContactController, ela tem que gerar um arquivo .csv e salvarlo no 1HD externo
+
+
+        
+        // Test Correios
+        $Postoffice = new PostofficeBusiness();
+
+        $Postoffice->importCSV();
 
         // Teste Vindi
         // $this->testVindi();

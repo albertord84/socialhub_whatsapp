@@ -7,10 +7,12 @@ use App\Models\Tracking;
 use App\Repositories\TrackingRepository;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Testing\File;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
-class CorreiosBusiness extends Business
+class PostofficeBusiness extends Business
 {
 
     public function __construct()
@@ -55,18 +57,23 @@ class CorreiosBusiness extends Business
         }
     }
 
-    function importCSV(File $file, DateTime $date) : bool
+    function importCSV(File $file = null, DateTime $date = null) //: bool
     {
+      // $file = $file ?? Storage::disk('chats_files_1')->get('storage/Pedidos.csv');
+      // $objCodeCol = 'envioRastreamento';
       try {
         $User = Auth::check() ? Auth::user() : session('logged_user');
 
         $Company = Company::find($User->company_id);
 
-        if (File::isFile($file)) {
+        // if (File::isFile($file)) {
           // Convert the file content to a Tracking array
-          $Tracking = $this->csv_to_array($file->getRealPath(), ';');
+          $Tracking = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
+          // $Tracking = $this->csv_to_array($file->getRealPath(), ';');
+
+          dd($Tracking);
+
           if (count($Tracking) > 1 ) {
-              $Tracking = $this->csv_to_array($file->getRealPath(), ',');
           }
 
           for ($i = 3; $i < $Tracking; $i++) {
@@ -76,8 +83,8 @@ class CorreiosBusiness extends Business
             }
           }
           
-          unlink($file->getPath());
-        }
+          // unlink($file->getPath());
+        // }
 
         return true;
       } catch (\Throwable $th) {
@@ -87,23 +94,35 @@ class CorreiosBusiness extends Business
 
     public function csv_to_array($filename='', $delimiter=',') : ?array
     {
+      try {
         if(!file_exists($filename) || !is_readable($filename))
-            return NULL;
+          return NULL;
         
-        $header = NULL;
+        $header = array();
         $data = array();
         if (($handle = fopen($filename, 'r')) !== FALSE)
         {
-            while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE)
-            {
-                if(!$header)
-                    $header = $row;
-                else
-                    $data[] = array_combine($header, $row);
+          $header = fgetcsv($handle, 0, $delimiter);
+          // while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE)
+          while (($row = fgets($handle)) !== FALSE)
+          {
+            $row = str_replace('&atilde;', '', $row);
+            $row = explode($delimiter,$row);
+            // &atilde;
+
+            if (count($row) == count($header)) {
+              // $data[] = $row;
+              $data[] = array_combine($header, $row);
+            } else {
+              var_dump($row);
             }
-            fclose($handle);
+          }
+          fclose($handle);
         }
-        return $data;
+      } catch (\Throwable $th) {
+        MyResponse::makeExceptionJson($th);
+      }
+      return $data;
     }    
 }
 
