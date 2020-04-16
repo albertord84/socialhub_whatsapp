@@ -1,7 +1,10 @@
 <template>
     <div class="login">
         <article class="login_box radius">
-            <h1 class="hl icon-unlock-alt">Recuperação</h1>
+            <div style="display: flex; align-items: center; justify-content:center" class="text-center">
+                <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt="">
+                <h1 class="hl">Recuperação</h1>
+            </div>
             <vue-form :state="formstate" @submit.prevent="onSubmit">
                 <validate tag="div">
                     <label>
@@ -14,7 +17,7 @@
                     </field-messages>
                 </validate>
 
-                <button type="submit" id="btnEnter"  class="radius gradient gradient-green gradient-hover icon-sign-in" :disabled="isSendingEmail==true" @click.prevent="onSubmit">
+                <button type="submit" id="btnEnter"  class="radius bg-socialhub icon-sign-in" :disabled="isSendingEmail==true" @click.prevent="onSubmit">
                     <i v-show="isSendingEmail==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Enviar
                 </button>
 
@@ -441,5 +444,8 @@
             -webkit-border-radius: var(--radius-normal);
             -moz-border-radius: var(--radius-normal);
             border-radius: var(--radius-normal)
+        }
+        .bg-socialhub{
+            background: #3f67af;
         }
     </style>

@@ -1,7 +1,10 @@
 <template>
     <div class="login">
         <article class="login_box radius">
-            <h1 class="hl icon-unlock-alt">Redefinição</h1>
+            <div style="display: flex; align-items: center; justify-content:center" class="text-center">
+                <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt="">
+                <h1 class="hl">Redefinição</h1>
+            </div>
             <vue-form :state="formstate" @submit.prevent="onSubmit">
                 <input type="hidden" id="token" v-model="model.token" required/>
                 <validate tag="div">
@@ -28,7 +31,7 @@
                     </field-messages>
                 </validate>
 
-                <button type="submit" id="btnEnter" class="radius gradient gradient-green gradient-hover icon-sign-in" :disabled="isSendingResetPassword==true" @click.prevent="onSubmit">
+                <button type="submit" id="btnEnter" class="radius bg-socialhub icon-sign-in" :disabled="isSendingResetPassword==true" @click.prevent="onSubmit">
                     <i v-show="isSendingResetPassword==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
                 </button>
 
@@ -445,5 +448,8 @@
             -webkit-border-radius: var(--radius-normal);
             -moz-border-radius: var(--radius-normal);
             border-radius: var(--radius-normal)
+        }
+        .bg-socialhub{
+            background: #3f67af;
         }
     </style>
