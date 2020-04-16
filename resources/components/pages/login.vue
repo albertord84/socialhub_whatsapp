@@ -1,9 +1,9 @@
 <template>
     <div class="login">
         <article class="login_box radius">
-            <h1 class="hl icon-coffee">Login</h1>
-            <div class="ajax_response">
-                <!-- <?= flash(); ?> -->
+            <div style="display: flex; align-items: center; justify-content:center" class="text-center">
+                <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt="">
+                <h1 class="hl ml-2">Login</h1>
             </div>
 
             <form name="login" action="" method="post">
@@ -30,7 +30,7 @@
                     </field-messages>
                 </validate>
 
-                <button type="submit" id="btnEnter" class="radius gradient gradient-green gradient-hover icon-sign-in" :disabled="isSending==true" @click.prevent="onSubmit">
+                <button type="submit" id="btnEnter" class="radius bg-socialhub icon-sign-in" :disabled="isSending==true" @click.prevent="onSubmit">
                     <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
                 </button>
 
@@ -460,6 +460,9 @@
             -webkit-border-radius: var(--radius-normal);
             -moz-border-radius: var(--radius-normal);
             border-radius: var(--radius-normal)
+        }
+        .bg-socialhub{
+            background: #3f67af;
         }
     </style>
 
