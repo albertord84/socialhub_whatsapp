@@ -2,37 +2,25 @@
     <div class="login">
         <article class="login_box radius">
             <div style="display: flex; align-items: center; justify-content:center" class="text-center">
-                <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt="">
-                <h1 class="hl">Redefinição</h1>
+                <a href="javascript:void()" @click.prevent="goToHome">
+                    <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt="">
+                </a>
+                <h1 class="hl ml-2">Senha</h1>
             </div>
             <vue-form :state="formstate" @submit.prevent="onSubmit">
                 <input type="hidden" id="token" v-model="model.token" required/>
-                <validate tag="div">
-                    <label>
-                        <span class="field icon-unlock-alt">Nova senha:</span>
-                        <input name="password" type="password" placeholder="Nova senha:" id="password" autofocus  v-model="model.password" required/>
-                    </label>
-                    <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                        <div slot="required">A senha é obrigatória</div>
-                        <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
-                        <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
-                    </field-messages>
-                </validate>
-
-                <validate tag="div">
-                    <label>
-                        <span class="field icon-unlock-alt">Repetir senha:</span>
-                        <input name="password" type="password" placeholder="Repetir senha:" id="password"  v-model="model.password_confirmation" required/>
-                    </label>
-                    <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                        <div slot="required">A senha é obrigatória</div>
-                        <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
-                        <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
-                    </field-messages>
-                </validate>
+                <label>
+                    <span class="field icon-unlock-alt">Nova senha:</span>
+                    <input name="password" type="password" placeholder="Nova senha:" id="password" autofocus  v-model="model.password" required/>
+                </label>
+                
+                <label>
+                    <span class="field icon-unlock-alt">Repetir senha:</span>
+                    <input name="password" type="password" placeholder="Repetir senha:" id="password"  v-model="model.password_confirmation" required/>
+                </label>
 
                 <button type="submit" id="btnEnter" class="radius bg-socialhub icon-sign-in" :disabled="isSendingResetPassword==true" @click.prevent="onSubmit">
-                    <i v-show="isSendingResetPassword==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
+                    <i v-show="isSendingResetPassword==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Enviar
                 </button>
 
                 <div class="col-12 mt-3">
@@ -127,6 +115,9 @@
                 }else{
                     miniToastr.error(info.erro, info.message); 
                 }
+            },
+            goToHome(){
+                this.$router.push({name: 'login'});
             }
         },
         beforeMount(){

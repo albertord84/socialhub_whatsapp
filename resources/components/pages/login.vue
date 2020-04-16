@@ -7,28 +7,15 @@
             </div>
 
             <form name="login" action="" method="post">
-                <validate tag="div">
-                    <label>
-                        <span class="field icon-envelope">E-mail:</span>
-                        <input name="email" type="email" placeholder="Informe seu e-mail" v-model="model.email" id="email" required autofocus/>
-                    </label>
-                    <field-messages name="email" show="$invalid && $submitted" class="text-danger">
-                        <div slot="required">Email é obrigatório</div>
-                        <div slot="email">Email inválido</div>
-                    </field-messages>
-                </validate>
+                <label>
+                    <span class="field icon-envelope">E-mail:</span>
+                    <input name="email" type="email" placeholder="Informe seu e-mail" v-model="model.email" id="email" required autofocus/>
+                </label>
 
-                <validate tag="div">
-                    <label>
-                        <span class="field icon-unlock-alt">Senha:</span>
-                        <input name="password" type="password" placeholder="Informe sua senha:" id="password"  v-model="model.password" required/>
-                    </label>
-                    <field-messages name="password" show="$invalid && $submitted" class="text-danger">
-                        <div slot="required">A senha é obrigatória</div>
-                        <div slot="minlength">A senha deve ter pelo menos 4 caracteres</div>
-                        <div slot="maxlength">A senha deve conterter máximo 10 caracteres</div>
-                    </field-messages>
-                </validate>
+                <label>
+                    <span class="field icon-unlock-alt">Senha:</span>
+                    <input name="password" type="password" placeholder="Informe sua senha:" id="password"  v-model="model.password" required/>
+                </label>
 
                 <button type="submit" id="btnEnter" class="radius bg-socialhub icon-sign-in" :disabled="isSending==true" @click.prevent="onSubmit">
                     <i v-show="isSending==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Entrar
@@ -77,8 +64,6 @@
         },
         methods: {
             onSubmit() {
-                // if (this.formstate.$invalid) {
-                //     return;
                 this.model.email = this.model.email.trim();
                 this.model.password = this.model.password.trim();
                 var check = validation.check('email', this.model.email);
