@@ -306,7 +306,7 @@ class ExtendedContactController extends ContactController
         $pathToFile = Storage::disk('chats_files')->getAdapter()->getPathPrefix(). "$FullPath";
         $fileName = "contacts_csv_$company_id.csv";
         $columns = array('Nome', 'Whatsapp', 'Email', 'Facebook', 'Instagram', 'LinkedIn', 'Estado', 'Cidade', 'Categoria1', 'Categoria2', 'Email-Atendente');
-        
+
         $file = fopen($pathToFile.$fileName, 'w');
         fputcsv($file, $columns);
         

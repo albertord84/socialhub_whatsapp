@@ -144,7 +144,7 @@
                         <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="1">
                             Apenas os contatos listados na tabela
                         </b-form-radio>
-                        <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="2" class="mt-2">
+                        <b-form-radio disabled v-model="selectedDownloadOption" name="some-radios" value="2" class="mt-2">
                             Todos os contatos no Banco de Dados
                         </b-form-radio>
                     </b-form-group>
