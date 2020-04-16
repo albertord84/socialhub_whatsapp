@@ -1948,7 +1948,7 @@
 
             //------------------Audio messages--------------------------
             preConfigAudio: function(){
-                // this.recorderMP3 = this.createMP3Recorder();
+                this.recorderMP3 = this.createMP3Recorder();
     
                 // Check if MediaRecorder available.
                 // if (!window.MediaRecorder) {
