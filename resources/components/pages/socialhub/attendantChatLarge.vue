@@ -2322,7 +2322,7 @@
                 this.$router.push({name: "login"});
             }
             
-            this.preConfigAudio();
+           // this.preConfigAudio();
             
             //wbsocket events
             this.wsCriateTunnel();
