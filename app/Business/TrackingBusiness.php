@@ -3,12 +3,14 @@
 namespace App\Business;
 
 use App\Http\Controllers\ExternalRPIController;
+use App\Http\Controllers\StatusController;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Tracking;
 use App\Models\Trackings;
 use App\Repositories\TrackingRepository;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 
@@ -24,17 +26,22 @@ class TrackingBusiness extends Business {
     public function getNewTrackingMessage(Tracking $Tracking, int $company_id) : string
     {
         try {
-            $message = null;
+            $message = "";
 
             $Company = Company::with('rpi')->find($company_id);
 
-            $trackingList = json_decode($Tracking->tracking_list);
+            $trackingList = json_decode($Tracking->tracking_list) ?? array();
 
             $newTrackingList = $this->searchTrackingObject($Tracking, $Company);
 
             if (count($newTrackingList) > count($trackingList)) {
-                $message = $this->builTrackingMessage(json_decode($Tracking->json_csv_data), $newTrackingList[count($newTrackingList)-1], $Company);
+                $message = $this->builTrackingMessage(json_decode($Tracking->json_csv_data), $newTrackingList[0], $Company);
+                $aux = json_encode($newTrackingList);
                 $Tracking->tracking_list = json_encode($newTrackingList);
+
+                if ($newTrackingList[0]->tipo == 'LDI' || $newTrackingList[0]->tipo == 'BDR') {
+                    $Tracking->status_id = StatusController::RECEIVED;
+                }
             }
 
             return $message;
@@ -135,12 +142,15 @@ class TrackingBusiness extends Business {
     {
         try {
             $ExternalRPIController = new ExternalRPIController($Company->rpi);
-            $Contact = Contact::where([
-                'company_id' => $Company->id,
-                'whatsapp_id' => $Tracking->phone,
-            ])->first();
+            $Contact = Contact::find($Tracking->contact_id);
 
-            SendWhatsAppMsgTracking::dispatch($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
+            if ($Contact) {
+                $Tracking = (object) $Tracking->toArray();
+                SendWhatsAppMsgTracking::dispatch($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
+            }
+            else {
+                throw new \Exception("createTrackingJob Contact($Tracking->contact_id) not found in Tracking ($Tracking->id)");
+            }
 
         } catch (\Throwable $tr) {
             Log::debug('TrackingsBussines createTracking Job', [$tr]);
@@ -284,7 +294,7 @@ class TrackingBusiness extends Business {
 
         $message = str_replace($search, $replace, $Company->tracking_message);
 
-        $message = str_replace($search, "não recebido", $Company->tracking_message);
+        $message = str_replace($search, "não recebido", $message);
 
         return $message;
     }

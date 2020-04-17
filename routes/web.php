@@ -127,7 +127,8 @@ Route::resource('chatsBlings', 'ChatsBlingController');
 Route::resource('queues', 'QueueController');
 
 Route::resource('trackings', 'TrackingController');
-Route::resource('trackings_import_csv', 'TrackingController');
+Route::post('trackings_import_csv', 'TrackingController@trackings_import_csv');
+Route::get('create_company_tracking_jobs', 'TrackingController@create_company_tracking_jobs');
 
 Route::resource('status', 'StatusController');
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\MyResponse;
+use App\Business\PostofficeBusiness;
 use App\Http\Requests\CreateTrackingRequest;
 use App\Http\Requests\UpdateTrackingRequest;
 use App\Repositories\TrackingRepository;
@@ -19,6 +21,37 @@ class TrackingController extends AppBaseController
     public function __construct(TrackingRepository $trackingRepo)
     {
         $this->trackingRepository = $trackingRepo;
+    }
+
+    public function create_company_tracking_jobs(Request $Request)
+    {
+        try {
+            
+            $Postoffice = new PostofficeBusiness();
+
+            $Postoffice->createCompaniesJobs();
+
+        } catch (\Throwable $th) {
+            return MyResponse::makeExceptionJson($th);
+        }
+
+        return MyResponse::makeResponseJson("ok");
+    }
+
+    public function trackings_import_csv(Request $Request)
+    {
+        try {
+            $file = $Request->file;
+            
+
+            $Postoffice = new PostofficeBusiness();
+            $Postoffice->importCSV($file);
+
+        } catch (\Throwable $th) {
+            return MyResponse::makeExceptionJson($th);
+        }
+
+        return MyResponse::makeResponseJson("ok");
     }
 
     /**

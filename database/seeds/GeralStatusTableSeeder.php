@@ -25,6 +25,7 @@ class GeralStatusTableSeeder extends Seeder
         Status::create([
             'id' => '1',
             'name' => 'POSTED',
+            'model' => 'App\Models\Status',
             'description' => 'Object POSTED',
         ]);
         $this->command->info('Tracking Status POSTED');
@@ -32,6 +33,7 @@ class GeralStatusTableSeeder extends Seeder
         Status::create([
             'id' => '2',
             'name' => 'MOVING',
+            'model' => 'App\Models\Status',
             'description' => 'Object MOVING',
         ]);
         $this->command->info('Tracking Status MOVING');
@@ -39,6 +41,7 @@ class GeralStatusTableSeeder extends Seeder
         Status::create([
             'id' => '3',
             'name' => 'STOPPED',
+            'model' => 'App\Models\Status',
             'description' => 'Object STOPPED',
         ]);
         $this->command->info('Tracking Status STOPPED');
@@ -46,6 +49,7 @@ class GeralStatusTableSeeder extends Seeder
         Status::create([
             'id' => '4',
             'name' => 'RECEIVED',
+            'model' => 'App\Models\Status',
             'description' => 'Object RECEIVED',
         ]);
         $this->command->info('Tracking Status RECEIVED');
@@ -53,6 +57,7 @@ class GeralStatusTableSeeder extends Seeder
         Status::create([
             'id' => '5',
             'name' => 'ARRIVED',
+            'model' => 'App\Models\Status',
             'description' => 'Object ARRIVED',
         ]);
         $this->command->info('Tracking Status ARRIVED');

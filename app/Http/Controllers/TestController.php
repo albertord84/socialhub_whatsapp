@@ -20,6 +20,7 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
+use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Tracking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -48,23 +49,33 @@ class TestController extends AppBaseController
     {
         
         // Test Correios
+
+
+
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
         
-        $TrackingBusiness = new TrackingBusiness();
+        // $TrackingBusiness = new TrackingBusiness();
 
         $company_id = 1;
         $TrackingModel = new Tracking();
         $TrackingModel->table = "$company_id";
 
-        $Tracking = $TrackingModel->find('27909552')->toArray();
+        $Tracking = $TrackingModel->find('27909168')->toArray();
 
-        // $Tracking = (object)$Tracking;
+        $Tracking = (object)$Tracking;
 
-        $tracking_code = $Tracking->tracking_code;
+        $Company = Company::with('rpi')->find($company_id);
+        $ExternalRPIController = new ExternalRPIController($Company->rpi);
+        $Contact = Contact::find($Tracking->contact_id);
+        $Contact->whatsapp_id = "5521965536174";
+        $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
+        $trackingJob->handle();
+
+        // $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
-        $Company = Company::find($company_id);
-        $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
+        // $Company = Company::find($company_id);
+        // $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
 
         // dd($trackingList);
         // dd((object) $trackingList[0]->toArray());

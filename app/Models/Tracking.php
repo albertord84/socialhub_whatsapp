@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Controllers\MessagesStatusController;
+use App\Http\Controllers\StatusController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Model;
 use stdClass;
@@ -86,7 +87,7 @@ class Tracking extends Model
         $Tracking->post_date =  (new Carbon($objTracking->envioData))->format('Y-m-d H:i:s');
         $Tracking->tracking_code =  $objTracking->envioRastreamento;
         $Tracking->json_csv_data = json_encode($objTracking);
-        $Tracking->status_id = MessagesStatusController::UNREADED;
+        $Tracking->status_id = StatusController::POSTED;
 
         return $Tracking;
     }

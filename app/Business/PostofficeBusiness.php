@@ -2,6 +2,7 @@
 
 namespace App\Business;
 
+use App\Http\Controllers\StatusController;
 use App\Models\Company;
 use App\Models\Objects;
 use App\Models\Tracking;
@@ -9,8 +10,8 @@ use App\Repositories\TrackingRepository;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class PostofficeBusiness extends Business
@@ -50,7 +51,7 @@ class PostofficeBusiness extends Business
                 $now = Carbon::now();
                 foreach ($Objects as $key => $Object) {
                   $updated_at = new Carbon($Object->updated_at);
-                  if ($updated_at->diffInDays() > 1) { // Verify whether not checked today
+                  if ($updated_at->diffInDays() >= 1) { // Verify whether not checked today
                     $trackingBussines->createTrackingJob($Object, $Company);
                   }
                 }
@@ -64,14 +65,11 @@ class PostofficeBusiness extends Business
 
     public function getTrackingCompanyNextObjects(Company $Company): Collection
     {
-        $Objects = new Tracking();
-        $Objects->table = "$Company->id";
-
         try {
           $TrackingModel = new Tracking();
           $TrackingModel->table = "$Company->id";
 
-          $Objects = $TrackingModel->orderBy('updated_at', 'asc')->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10))->all();
+          $Objects = $TrackingModel->where('status_id', '!=', StatusController::RECEIVED)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10));
 
           return $Objects;
         } catch (\Throwable $th) {
@@ -79,7 +77,7 @@ class PostofficeBusiness extends Business
         }
     }
 
-    function importCSV(File $file = null, DateTime $date = null) : bool
+    function importCSV(UploadedFile $file, DateTime $date = null) : bool
     {
       // $file = $file ?? Storage::disk('chats_files_1')->get('storage/Pedidos.csv');
       // $objCodeCol = 'envioRastreamento';
@@ -90,8 +88,8 @@ class PostofficeBusiness extends Business
 
         // if (File::isFile($file)) {
           // Convert the file content to a Objects array
-          $Trackings = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
-          // $Objects = $this->csv_to_array($file->getRealPath(), ';');
+          // $Trackings = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
+          $Trackings = $this->csv_to_array($file->getRealPath());
 
           foreach ($Trackings as $key => $Objects) {
             $trackingBussines = new TrackingBusiness();
@@ -106,7 +104,7 @@ class PostofficeBusiness extends Business
       return false;
     }
 
-    public function csv_to_array($filename='', $delimiter=',') : ?array
+    public function csv_to_array($filename='', $delimiter=';') : ?array
     {
       try {
         if(!file_exists($filename) || !is_readable($filename))
