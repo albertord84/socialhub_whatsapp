@@ -24,7 +24,8 @@ class RpisTableSeeder extends Seeder
         Rpi::create([
             'id' => 1,
             'mac' => 'b8:27:eb:1c:7f:d1',
-            'api_tunnel' => 'http://shrpialberto.sa.ngrok.io.ngrok.io',
+            // 'api_tunnel' => 'http://shrpialberto.sa.ngrok.io.ngrok.io',
+            'api_tunnel' => 'https://whatsapp.socialhub.pro/S4h_EPRZm-b46kyoUbUJ/5521990685109',
             'api_user' => 'socialhub',
             'api_password' => 'socialhub', // bcrypt('socialhub'),
             'ip' => '192.168.25.91',

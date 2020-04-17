@@ -35,6 +35,11 @@ class CompaniesTableSeeder extends Seeder
             'whatsapp' => '5521965536174',
             'CNPJ' => '07367014196',
             'description' => 'Companie Develop',
+            
+            'tracking_user' => '2689761400',
+            'tracking_pass' => 'H1OR;3@Y@M',
+            'tracking_message' => 'Test tracking message!',
+            'tracking_contrated' => '1',
         ]);
         $this->command->info('Created Companie-Develop');
     }    

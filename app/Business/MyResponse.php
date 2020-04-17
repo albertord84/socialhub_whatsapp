@@ -39,7 +39,7 @@ class MyResponse
      * @param boolean $success
      * @return string
      */
-    public static function makeResponseJson(string $msg, $data, int $code = 0, $success = true): string
+    public static function makeResponseJson(string $msg, $data = null, int $code = 0, $success = true): string
     {
         $json = [
             'success' => $success,

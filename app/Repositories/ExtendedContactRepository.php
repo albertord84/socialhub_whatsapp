@@ -6,6 +6,7 @@ use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class ExtendedContactRepository
@@ -36,7 +37,7 @@ class ExtendedContactRepository extends ContactRepository
         return $Collection;
     }
 
-    public function fullContacts(int $company_id, ?int $attendant_id, ?array $filters, int $last_contact_idx = 0): Collection
+    public function fullContacts(int $company_id, ?int $attendant_id, string $filter = "", int $last_contact_idx = 0): Collection
     {
         $Collection = new Collection();
         if ($attendant_id) {
@@ -50,9 +51,12 @@ class ExtendedContactRepository extends ContactRepository
                     $query->where('attendant_id', $attendant_id);
                 })
                 ->orderBy('updated_at', 'desc')
-                ->where('company_id', $company_id)->get()
-                ->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
-                // ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH', 30))->get();
+                ->where('company_id', $company_id);
+                
+            // Apply filters to contacts query
+            if ($filter) $Contacts = $this->filterContacts($Contacts, $filter);
+
+            $Contacts = $Contacts->get()->slice($last_contact_idx, env('APP_CONTACTS_PAGE_LENGTH', 30));
 
             foreach ($Contacts as $key => $Contact) {
                 if ($Contact->latestAttendantContact->attendant_id == $attendant_id) {
@@ -77,7 +81,12 @@ class ExtendedContactRepository extends ContactRepository
             return $Collection;
         } else {
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                ->where('company_id', $company_id)
+                ->where('company_id', $company_id);
+
+            // Apply filters to contacts query
+            if ($filter) $Contacts = $this->filterContacts($Contacts, $filter);                
+
+            $Contacts = $Contacts
                 ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MANAGER', 30))->get()
                 ->each(function ($Contact, $key) {
                     if ($Contact->latestAttendant) {
@@ -102,47 +111,20 @@ class ExtendedContactRepository extends ContactRepository
         return $Contacts;
     }
 
-    public function filterContacts(int $company_id, ?int $attendant_id=null, ?array $filters, int $last_contact_idx = 0): Collection 
+    public function filterContacts(Builder $Contacts, string $filter) : Builder
     {
-        $Collection = new Collection();
-        if ($attendant_id) {
-            $chatModel = new ExtendedChat();
-            $chatModel->table = (string) $attendant_id;
-        }
+        $Contacts = $Contacts->where(function($query) use ($filter) {
+            $query->where('contacts.first_name', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.email', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.phone', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.estado', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.cidade', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filter.'%')
+                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filter.'%');
+        });
 
-        if($attendant_id){
-            $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
-                    $query->where('attendant_id', $attendant_id);
-                })
-                ->orderBy('updated_at', 'desc')
-                ->where('company_id', $company_id)->get()
-                ->where('contacts.first_name', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.email', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.phone', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.estado', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.cidade', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filters->filterString.'%')
-                ->get();
-        }else{
-            $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
-                    $query->where('attendant_id', $attendant_id);
-                })
-                ->orderBy('updated_at', 'desc')
-                ->where('company_id', $company_id)->get()
-                ->where('contacts.first_name', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.whatsapp_id', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.email', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.phone', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.estado', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.cidade', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.categoria1', 'LIKE', '%'.$filters->filterString.'%')
-                ->orWhere('contacts.categoria2', 'LIKE', '%'.$filters->filterString.'%')
-                ->get();
-        }
+        return $Contacts;
     }
 
 }

@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Status
+            Api
         </h1>
    </section>
    <div class="content">
@@ -11,9 +11,9 @@
        <div class="box box-primary">
            <div class="box-body">
                <div class="row">
-                   {!! Form::model($status, ['route' => ['statuses.update', $status->id], 'method' => 'patch']) !!}
+                   {!! Form::model($api, ['route' => ['apis.update', $api->id], 'method' => 'patch']) !!}
 
-                        @include('statuses.fields')
+                        @include('apis.fields')
 
                    {!! Form::close() !!}
                </div>
