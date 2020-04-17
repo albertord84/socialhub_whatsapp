@@ -23,24 +23,24 @@
 
                 <!-- Subir lista de códigos de rastreio -->
                 <div class="actions float-right pr-4 mb-3">
-                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="showModalFileUploadCSV=!showModalFileUploadCSV" accept=".csv"/>
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
                     <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
                         <i class="mdi mdi-upload fa-lg"  ></i>
                     </a>
                 </div>
                                 
                 <!-- Flitrar envios -->
-                <div class="actions float-right pr-4 mb-3">
+                <!-- <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalFilterDispatchs" title="Flitrar envios">
                         <i class="mdi mdi-filter-plus"></i>
                     </a>
-                </div>
+                </div> -->
                 <!-- Adicionar um envio -->
-                <div class="actions float-right pr-4 mb-3">
+                <!-- <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalAddDispatch" title="Adicionar um envio">
                         <i class="mdi mdi-plus-box"></i>
                     </a>
-                </div>
+                </div> -->
             </div>
         </div>
         
@@ -135,6 +135,19 @@
                 </div>
             </form>            
         </b-modal>
+
+        <!-- Modal to upload codes -->
+        <b-modal size="md" v-model="showModalFileUploadCSV" :hide-footer="true" title="Verificação">
+            <div>
+                <div class="form-group p-2">
+                    Confirma que deseja enviar esse arquivo de código de rastreios?
+                </div>
+                <div class="col-lg-12 mt-2 text-center" >
+                    <button class="btn btn-primary pl-5 pr-5 text-white"  @click.prevent="uploadCSVFile">Enviar</button>
+                    <button class="btn btn-primary  pl-5 pr-5 text-white" @click.prevent="showModalFileUploadCSV = false" >Cancelar</button>
+                </div>
+            </div>
+        </b-modal>
     </div>
 
 </template>
@@ -186,12 +199,14 @@
                 url:'sales',
                 sales_id: "",
                 model:{},
-                message_sended: false,                
+                message_sended: false,
                 
                 modalAddDispatch: false,
                 modalEdtitDispatch: false,
                 modalDeleteDispatch: false,
                 modalFilterDispatchs: false,
+                showModalFileUploadCSV: false,
+                fileInputCSV: null,
 
                 rows:[],
                 columns: [
@@ -301,7 +316,13 @@
             },
             
             showModalUploadDispatchList() {
+                this.fileInputCSV = null;
                 this.$refs.fileInputCSV.click();
+            },
+
+            getFileSelected: function(e){
+                this.fileInputCSV=e.target;
+                this.showModalFileUploadCSV = true;
             },
             
             closeModals(){
@@ -364,6 +385,31 @@
                 this.model = value;
                 this.sales_id = value.id;
                 this.modalDeleteSales = !this.modalDeleteSales;
+            },
+
+            uploadCSVFile: function(){
+                if(!this.fileInputCSV.files[0].name.includes('.csv')){
+                    miniToastr.error("O arquivo selecionado deve estar em formato .CSV", "Erro"); 
+                    return;
+                }
+                if(this.fileInputCSV.files[0].size < 10*1024*1024) {
+                    this.file = this.fileInputCSV.files[0];
+                    if(this.file){
+                        let formData = new FormData();
+                        formData.append("file",this.file);
+                        ApiService.post('trackings_import_csv',formData, {headers: { "Content-Type": "multipart/form-data" }})
+                            .then(response => {
+                                this.showModalFileUploadCSV = false;
+                                miniToastr.success("Arquivo enviado com sucesso", "Sucesso");
+                            })
+                            .catch(error => {
+                                // this.processMessageError(error, this.url, "get");
+                            })
+                            .finally(()=>{ });
+                    }
+                } else{
+                    miniToastr.error("O arquivo deve ter tamanho inferior a 5MB", "Erro"); 
+                }
             },
 
             

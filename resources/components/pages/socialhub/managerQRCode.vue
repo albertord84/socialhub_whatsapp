@@ -226,7 +226,7 @@
                     this.qrcodebase64 = false;
                     this.isLoggued = false;
                     this.isError = false;
-                    this.statusMessage='QRCode';
+                    this.statusMessage='Solicitar QRCode';
                 }
             },
             duringRequest: function(value){
