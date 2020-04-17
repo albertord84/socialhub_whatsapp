@@ -2,6 +2,8 @@
 
 namespace App\Business;
 
+use App\Http\Controllers\ExternalRPIController;
+use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\Tracking;
@@ -19,10 +21,126 @@ class TrackingBusiness extends Business {
         $this->repo = new TrackingRepository(app());
     }    
 
+    public function getNewTrackingMessage(Tracking $Tracking, int $company_id) : string
+    {
+        try {
+            $message = null;
+
+            $Company = Company::with('rpi')->find($company_id);
+
+            $trackingList = json_decode($Tracking->tracking_list);
+
+            $newTrackingList = $this->searchTrackingObject($Tracking, $Company);
+
+            if (count($newTrackingList) > count($trackingList)) {
+                $message = $this->builTrackingMessage(json_decode($Tracking->json_csv_data), $newTrackingList[count($newTrackingList)-1], $Company);
+                $Tracking->tracking_list = json_encode($newTrackingList);
+            }
+
+            return $message;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+    function initCorreios(\PhpSigep\Model\AccessData $accessData)
+    {   
+        // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+
+        $this->config = new \PhpSigep\Config();
+        $this->config->setAccessData($accessData);
+        $this->config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+        // $this->config->setEnv(\PhpSigep\Config::ENV_DEVELOPMENT);
+        $this->config->setCacheOptions(
+            array(
+                'storageOptions' => array(
+                    // Qualquer valor setado neste atributo será mesclado ao atributos das classes 
+                    // "\PhpSigep\Cache\Storage\Adapter\AdapterOptions" e "\PhpSigep\Cache\Storage\Adapter\FileSystemOptions".
+                    // Por tanto as chaves devem ser o nome de um dos atributos dessas classes.
+                    'enabled' => false,
+                    'ttl' => 20,// "time to live" de 10 segundos
+                    'cacheDir' => sys_get_temp_dir(), // Opcional. Quando não inforado é usado o valor retornado de "sys_get_temp_dir()"
+                ),
+            )
+        );
+        
+        \PhpSigep\Bootstrap::start($this->config);
+    }
+
+    public function CorreiosTrackingObject(Company $Company, string $tracking_code)
+    {
+        $usuario = $Company->tracking_user;
+        $senha = $Company->tracking_pass;
+        // $cnpjEmpresa = '26897614000101';
+        // $numcontrato = '9912467470';
+        // $codigoadm = '19185251';
+        // $cartaopostagem = '0074969366';
+        
+        
+        $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+        $accessData->setUsuario($usuario);
+        $accessData->setSenha($senha);
+        // $accessData->setCnpjEmpresa($cnpjEmpresa);
+        // $accessData->setCodAdministrativo($codigoadm);
+        // $accessData->setNumeroContrato($numcontrato);
+        // $accessData->setCartaoPostagem($cartaopostagem);
+        // $accessData->setAnoContrato(null);
+        // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
+        
+        $this->initCorreios($accessData);
+        
+        // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+
+        // Solicita as etiquetas
+        // $dados_etiquetas = new \PhpSigep\Model\SolicitaEtiquetas();
+        // $dados_etiquetas->setAccessData($this->config->getAccessData());
+        // $dados_etiquetas->setQtdEtiquetas(1);
+        
+        // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
+        $etiqueta = new \PhpSigep\Model\Etiqueta();
+        $etiqueta->setEtiquetaComDv($tracking_code);
+        
+        $params = new \PhpSigep\Model\RastrearObjeto();
+        $params->setAccessData($this->config->getAccessData());
+        $params->setEtiquetas([$etiqueta]);
+            
+        $phpSigep = new \PhpSigep\Services\SoapClient\Real();
+        $result = $phpSigep->rastrearObjeto($params);
+        
+        return $result;
+    }
+    
+    public function searchTrackingObject(Tracking $Tracking, Company $Company)
+    {
+        try {
+            $newTrackingList = array();
+
+            $response = $this->CorreiosTrackingObject($Company, $Tracking->tracking_code);
+
+            if ($response && count($response->getResult())) {
+                $eventList = $response->getResult()[0]->getEventos();
+
+                foreach ($eventList as $key => $event) {
+                    $newTrackingList[$key] = (object) $event->toArray();
+                }
+            }
+
+            return $newTrackingList;
+        } catch (\Throwable $tr) {
+            // throw $tr;
+        }
+    }
+
     function createTrackingJob(Tracking $Tracking, Company $Company) : bool
     {
         try {
-            // 1. Create tracking Job
+            $ExternalRPIController = new ExternalRPIController($Company->rpi);
+            $Contact = Contact::where([
+                'company_id' => $Company->id,
+                'whatsapp_id' => $Tracking->phone,
+            ])->first();
+
+            SendWhatsAppMsgTracking::dispatch($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
 
         } catch (\Throwable $tr) {
             Log::debug('TrackingsBussines createTracking Job', [$tr]);
@@ -37,9 +155,9 @@ class TrackingBusiness extends Business {
         try {
             // 1. Crea el contacto si no existe
             $hasClient = false;
-            if (isset($Tracking->pedido->cliente)) {
+            if (isset($Tracking->compradorFone)) {
                 $hasClient = true;
-                $phone = ($Tracking->pedido->cliente->celular != "")? $Tracking->pedido->cliente->celular : $Tracking->pedido->cliente->fone;
+                $phone = $Tracking->compradorFone;
                 $phone = preg_replace("/[^0-9]/", "", $phone);
                 if (!(strpos('55', $phone) === 0) && ($phone != "")) {
                     $phone = "55$phone";
@@ -54,9 +172,9 @@ class TrackingBusiness extends Business {
                 if (!$Contact) { // if not exist insert the contact
                     $Contact = new Contact();
                     $Contact->company_id = $Company->id;
-                    $Contact->first_name = $Tracking->pedido->cliente->nome;
+                    $Contact->first_name = trim($Tracking->compradorNome) ?? trim($Tracking->compradorCPF);
                     $Contact->whatsapp_id = $phone;
-                    $Contact->email = $Tracking->pedido->cliente->email;
+                    $Contact->email = '';
                     $Contact->save();
                 }
             }
@@ -66,12 +184,12 @@ class TrackingBusiness extends Business {
 
             // 2. Crea la tracking
             // Check if the Tracking already exist for this company
-            if (isset($Tracking->pedido->numero)) {
-                $TrackingModel = new Trackings;
+            if (isset($Tracking->pedidoID)) {
+                $TrackingModel = new Tracking();
                 $TrackingModel->table = "$Company->id";
-                $TrackingModel = $TrackingModel->find($Tracking->pedido->numero);
+                $TrackingModel = $TrackingModel->find($Tracking->pedidoID);
                 if (!$TrackingModel) { // if not exist insert the Tracking
-                    $TrackingModel = Trackings::blingConstruct($Tracking, $Contact->id, $Company->id);
+                    $TrackingModel = Tracking::trackingConstruct($Tracking, $Contact->id, $Company->id);
 
                     $TrackingModel->save();
                     Log::error('Trackings Bussines createTracking', [$Contact->whatsapp_id]);
@@ -86,107 +204,82 @@ class TrackingBusiness extends Business {
         return true;
     }
 
-    function builTrackingMessage(stdClass $Tracking, Company $Company) : string
+    function builTrackingMessage(stdClass $Tracking, stdClass $Event, Company $Company) : string
     {
 
         $replace = [
-            $Tracking->pedido->desconto ?? '@desconto', 
-            $Tracking->pedido->observacoes ?? '@pedido_observacoes', 
-            $Tracking->pedido->data ?? '@pedido_data', 
-            $Tracking->pedido->vendedor ?? '@pedido_vendedor', 
-            $Tracking->pedido->valorfrete ?? '@pedido_valorfrete', 
-            $Tracking->pedido->totalproduto ?? '@pedido_totalprodutos', 
-            $Tracking->pedido->totalvenda ?? '@pedido_totalvenda',
-            $Tracking->pedido->situacao ?? '@pedido_situacao', 
-            $Tracking->pedido->dataPrevista ?? '@pedido_dataPrevista', 
+            $Tracking->compradorNome ?? '@compradorNome', 
+            $Tracking->compradorApelido ?? '@compradorApelido', 
+            $Tracking->compradorEmail ?? '@compradorEmail', 
+            $Tracking->compradorFone ?? '@compradorFone', 
+            $Tracking->compradorCPF ?? '@compradorCPF', 
+            $Tracking->compradorRG ?? '@compradorRG', 
+            $Tracking->enderecoRua ?? '@enderecoRua',
+            $Tracking->enderecoNumero ?? '@enderecoNumero', 
+            $Tracking->enderecoComplemento ?? '@enderecoComplemento', 
+            $Tracking->enderecoBairro ?? '@enderecoBairro', 
+            $Tracking->enderecoCidade ?? '@enderecoCidade', 
+            $Tracking->enderecoEstado ?? '@enderecoEstado', 
+            $Tracking->enderecoCep ?? '@enderecoCep', 
+            $Tracking->pagamentoStatus ?? '@pagamentoStatus', 
+            $Tracking->pagamentoForma ?? '@pagamentoForma', 
+            $Tracking->pedidoID ?? '@pedidoID', 
+            $Tracking->pedidoTotalProd ?? '@pedidoTotalProd', 
+            $Tracking->pedidoTotalFrete ?? '@pedidoTotalFrete', 
+            $Tracking->pedidoStatus ?? '@pedidoStatus', 
+            $Tracking->pedidoData ?? '@pedidoData', 
+            $Tracking->pedidoObservacoes ?? '@pedidoObservacoes', 
+            $Tracking->envioTransportadora ?? '@envioTransportadora', 
+            $Tracking->envioRastreamento ?? '@envioRastreamento', 
+            $Tracking->envioData ?? '@envioData', 
+            $Tracking->entregaData ?? '@entregaData', 
+            $Tracking->origem ?? '@origem', 
+            $Tracking->conta ?? '@conta', 
+            $Tracking->sku ?? '@sku', 
 
-            $Tracking->pedido->cliente->nome ?? '@cliente_nome', 
-            $Tracking->pedido->cliente->cnpj ?? '@cliente_cnpj',
-            $Tracking->pedido->cliente->cpf ?? '@cliente_cpf', 
-            $Tracking->pedido->cliente->ie ?? '@cliente_ie', 
-            $Tracking->pedido->cliente->rg ?? '@cliente_rg', 
-            $Tracking->pedido->cliente->endereco ?? '@cliente_endereco',
-            $Tracking->pedido->cliente->numero ?? '@cliente_numero', 
-            $Tracking->pedido->cliente->complemento ?? '@cliente_complemento', 
-            $Tracking->pedido->cliente->cidade ?? '@cliente_cidade', 
-            $Tracking->pedido->cliente->bairro ?? '@cliente_bairro', 
-            $Tracking->pedido->cliente->cep ?? '@cliente_cep', 
-            $Tracking->pedido->cliente->email ?? '@cliente_email', 
-            $Tracking->pedido->cliente->celular ?? '@cliente_celular',
-            $Tracking->pedido->cliente->fone ?? '@cliente_fone', 
-
-            $Tracking->pedido->itens[0]->item->codigo ?? '@item_codigo', 
-            $Tracking->pedido->itens[0]->item->descricao ?? '@item_descricao', 
-            $Tracking->pedido->itens[0]->item->quantidade ?? '@item_quantidade', 
-            $Tracking->pedido->itens[0]->item->valorunidade ?? '@item_valorunidade', 
-            $Tracking->pedido->itens[0]->item->precocusto ?? '@item_precocusto', 
-            $Tracking->pedido->itens[0]->item->descontoItem ?? '@item_descontoItem', 
-            $Tracking->pedido->itens[0]->item->un ?? '@item_un', 
-            $Tracking->pedido->itens[0]->item->pesoBruto ?? '@item_pesoBruto', 
-            $Tracking->pedido->itens[0]->item->largura ?? '@item_largura', 
-            $Tracking->pedido->itens[0]->item->altura ?? '@item_altura', 
-            $Tracking->pedido->itens[0]->item->profundidade ?? '@item_profundidade', 
-            $Tracking->pedido->itens[0]->item->unidadeMedida ?? '@item_unidadeMedida', 
-            $Tracking->pedido->itens[0]->item->descricaoDetalhada ?? '@item_descricaoDetalhada', 
-
-            $Tracking->pedido->transporte->enderecoEntrega->nome ?? '@entrega_nome', 
-            $Tracking->pedido->transporte->enderecoEntrega->endereco ?? '@entrega_endereco', 
-            $Tracking->pedido->transporte->enderecoEntrega->numero ?? '@entrega_numero', 
-            $Tracking->pedido->transporte->enderecoEntrega->complemento ?? '@entrega_complemento',
-            $Tracking->pedido->transporte->enderecoEntrega->cidade ?? '@entrega_cidade', 
-            $Tracking->pedido->transporte->enderecoEntrega->bairro ?? '@entrega_bairro', 
-            $Tracking->pedido->transporte->enderecoEntrega->cep ?? '@entrega_cep', 
-            $Tracking->pedido->transporte->enderecoEntrega->uf ?? '@entrega_uf'
+            $Event->tipo        ?? '@tracking_tipo',
+            $Event->local        ?? '@tracking_local',
+            $Event->dataHora    ?? '@tracking_dataHora',
+            $Event->descricao   ?? '@tracking_descricao',
+            $Event->detalhe     ?? '@tracking_detalhe',
         ];
         
+        
         $search = [
-            '@desconto', 
-            '@pedido_observacoes', 
-            '@pedido_data', 
-            '@pedido_vendedor', 
-            '@pedido_valorfrete', 
-            '@pedido_totalprodutos', 
-            '@pedido_totalvenda',
-            '@pedido_situacao', 
-            '@pedido_dataPrevista', 
+            '@compradorNome', 
+            '@compradorApelido', 
+            '@compradorEmail', 
+            '@compradorFone', 
+            '@compradorCPF', 
+            '@compradorRG', 
+            '@enderecoRua',
+            '@enderecoNumero', 
+            '@enderecoComplemento', 
+            '@enderecoBairro', 
+            '@enderecoCidade', 
+            '@enderecoEstado', 
+            '@enderecoCep', 
+            '@pagamentoStatus', 
+            '@pagamentoForma', 
+            '@pedidoID', 
+            '@pedidoTotalProd', 
+            '@pedidoTotalFrete', 
+            '@pedidoStatus', 
+            '@pedidoData', 
+            '@pedidoObservacoes', 
+            '@envioTransportadora', 
+            '@envioRastreamento', 
+            '@envioData', 
+            '@entregaData', 
+            '@origem', 
+            '@conta', 
+            '@sku', 
 
-            '@cliente_nome', 
-            '@cliente_cnpj',
-            '@cliente_cpf', 
-            '@cliente_ie', 
-            '@cliente_rg', 
-            '@cliente_endereco',
-            '@cliente_numero', 
-            '@cliente_complemento', 
-            '@cliente_cidade', 
-            '@cliente_bairro', 
-            '@cliente_cep', 
-            '@cliente_email', 
-            '@cliente_celular',
-            '@cliente_fone', 
-
-            '@item_codigo', 
-            '@item_descricao', 
-            '@item_quantidade', 
-            '@item_valorunidade', 
-            '@item_precocusto', 
-            '@item_descontoItem', 
-            '@item_un', 
-            '@item_pesoBruto', 
-            '@item_largura', 
-            '@item_altura', 
-            '@item_profundidade', 
-            '@item_unidadeMedida', 
-            '@item_descricaoDetalhada', 
-
-            '@entrega_nome', 
-            '@entrega_endereco', 
-            '@entrega_numero', 
-            '@entrega_complemento',
-            '@entrega_cidade', 
-            '@entrega_bairro', 
-            '@entrega_cep', 
-            '@entrega_uf'
+            '@tracking_tipo',
+            '@tracking_local',
+            '@tracking_dataHora',
+            '@tracking_descricao',
+            '@tracking_detalhe'
         ];
 
         $message = str_replace($search, $replace, $Company->tracking_message);

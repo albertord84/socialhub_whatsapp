@@ -3,11 +3,12 @@
 namespace App\Business;
 
 use App\Models\Company;
+use App\Models\Objects;
 use App\Models\Tracking;
 use App\Repositories\TrackingRepository;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -28,12 +29,30 @@ class PostofficeBusiness extends Business
         try {
             $Companies = Company::with('rpi')->where(['tracking_contrated' => true])->get();
 
+            return $Companies;
+        } catch (\Throwable $tr) {
+            throw $tr;
+        }
+
+        return $Objects;
+    }
+
+    public function createCompaniesJobs()
+    {
+        $Objects = new Collection();
+        try {
+            $Companies = Company::with('rpi')->where(['tracking_contrated' => true])->get();
+
             $trackingBussines = new TrackingBusiness();
             foreach ($Companies as $key => $Company) {
-                $Tracking = $this->getTrackingCompanyNextObject($Company);
+                $Objects = $this->getTrackingCompanyNextObjects($Company);
 
-                if ($Tracking->updated_at < Carbon::today()) { // Verify whether not checked today
-                  $trackingBussines->createTrackingJob($Tracking, $Company);
+                $now = Carbon::now();
+                foreach ($Objects as $key => $Object) {
+                  $updated_at = new Carbon($Object->updated_at);
+                  if ($updated_at->diffInDays() > 1) { // Verify whether not checked today
+                    $trackingBussines->createTrackingJob($Object, $Company);
+                  }
                 }
             }
         } catch (\Throwable $tr) {
@@ -43,21 +62,24 @@ class PostofficeBusiness extends Business
         return $Objects;
     }
 
-    public function getTrackingCompanyNextObject(Company $Company): Tracking
+    public function getTrackingCompanyNextObjects(Company $Company): Collection
     {
-        $Tracking = new Tracking();
-        $Tracking->table = "$Company->id";
+        $Objects = new Tracking();
+        $Objects->table = "$Company->id";
 
         try {
-          $Tracking = $Tracking->last();
+          $TrackingModel = new Tracking();
+          $TrackingModel->table = "$Company->id";
 
-          return $Tracking;
+          $Objects = $TrackingModel->orderBy('updated_at', 'asc')->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10))->all();
+
+          return $Objects;
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }
     }
 
-    function importCSV(File $file = null, DateTime $date = null) //: bool
+    function importCSV(File $file = null, DateTime $date = null) : bool
     {
       // $file = $file ?? Storage::disk('chats_files_1')->get('storage/Pedidos.csv');
       // $objCodeCol = 'envioRastreamento';
@@ -67,29 +89,21 @@ class PostofficeBusiness extends Business
         $Company = Company::find($User->company_id);
 
         // if (File::isFile($file)) {
-          // Convert the file content to a Tracking array
-          $Tracking = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
-          // $Tracking = $this->csv_to_array($file->getRealPath(), ';');
+          // Convert the file content to a Objects array
+          $Trackings = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
+          // $Objects = $this->csv_to_array($file->getRealPath(), ';');
 
-          dd($Tracking);
-
-          if (count($Tracking) > 1 ) {
+          foreach ($Trackings as $key => $Objects) {
+            $trackingBussines = new TrackingBusiness();
+            $trackingBussines->createTracking($Objects, $Company);
           }
-
-          for ($i = 3; $i < $Tracking; $i++) {
-            if ($Tracking[$i][2] == $date) {
-              $trackingBussines = new TrackingBusiness();
-              $trackingBussines->createTracking($Tracking[$i], $Company);
-            }
-          }
-          
-          // unlink($file->getPath());
-        // }
 
         return true;
       } catch (\Throwable $th) {
-        MyResponse::makeExceptionJson($th);
+        // MyResponse::makeExceptionJson($th);
       }
+
+      return false;
     }
 
     public function csv_to_array($filename='', $delimiter=',') : ?array
@@ -106,15 +120,11 @@ class PostofficeBusiness extends Business
           // while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE)
           while (($row = fgets($handle)) !== FALSE)
           {
-            $row = str_replace('&atilde;', '', $row);
+            $row = html_entity_decode($row);
             $row = explode($delimiter,$row);
-            // &atilde;
 
             if (count($row) == count($header)) {
-              // $data[] = $row;
-              $data[] = array_combine($header, $row);
-            } else {
-              var_dump($row);
+              $data[] = json_decode(json_encode(array_combine($header, $row)));
             }
           }
           fclose($handle);

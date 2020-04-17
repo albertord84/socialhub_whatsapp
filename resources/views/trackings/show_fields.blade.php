@@ -30,8 +30,8 @@
 
 <!-- Object Code Field -->
 <div class="form-group">
-    {!! Form::label('object_code', 'Object Code:') !!}
-    <p>{{ $tracking->object_code }}</p>
+    {!! Form::label('tracking_code', 'Object Code:') !!}
+    <p>{{ $tracking->tracking_code }}</p>
 </div>
 
 <!-- Json Csv Data Field -->

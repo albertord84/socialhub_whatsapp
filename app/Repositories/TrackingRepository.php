@@ -24,7 +24,7 @@ class TrackingRepository extends BaseRepository
         'post_date',
         'service_code',
         'items',
-        'object_code',
+        'tracking_code',
         'json_csv_data',
         'status_id',
         'tracking_list'

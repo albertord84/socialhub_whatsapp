@@ -20,7 +20,7 @@
             <td>{{ $tracking->post_date }}</td>
             <td>{{ $tracking->service_code }}</td>
             <td>{{ $tracking->items }}</td>
-            <td>{{ $tracking->object_code }}</td>
+            <td>{{ $tracking->tracking_code }}</td>
             <td>{{ $tracking->json_csv_data }}</td>
             <td>{{ $tracking->status_id }}</td>
             <td>{{ $tracking->tracking_list }}</td>

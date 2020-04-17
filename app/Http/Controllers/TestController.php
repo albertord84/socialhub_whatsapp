@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Business\BlingBusiness;
 use App\Business\PostofficeBusiness;
 use App\Business\SalesBusiness;
+use App\Business\TrackingBusiness;
 use App\Events\MessageToAttendant;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
@@ -19,11 +20,13 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
+use App\Models\Tracking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 
 class TestController extends AppBaseController
 {
@@ -43,15 +46,29 @@ class TestController extends AppBaseController
 
     public function index(Request $request)
     {
-
-        // contactsToCSV que está no ExtendedContactController, ela tem que gerar um arquivo .csv e salvarlo no 1HD externo
-
-
         
         // Test Correios
-        $Postoffice = new PostofficeBusiness();
+        // $Postoffice = new PostofficeBusiness();
+        // $Postoffice->importCSV();
+        
+        $TrackingBusiness = new TrackingBusiness();
 
-        $Postoffice->importCSV();
+        $company_id = 1;
+        $TrackingModel = new Tracking();
+        $TrackingModel->table = "$company_id";
+
+        $Tracking = $TrackingModel->find('27909552')->toArray();
+
+        // $Tracking = (object)$Tracking;
+
+        $tracking_code = $Tracking->tracking_code;
+        // $messageList = $Tracking->messages;
+        $Company = Company::find($company_id);
+        $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
+
+        // dd($trackingList);
+        // dd((object) $trackingList[0]->toArray());
+        // dd(json_encode($trackingList));
 
         // Teste Vindi
         // $this->testVindi();
@@ -62,7 +79,6 @@ class TestController extends AppBaseController
 
         // $last_contact_idx = $request->last_contact_idx ?? 0; //54; //101;
         // $company_id = 4;
-        $company_id = 1;
         // $attendant_id = 30;
         // $attendant_id = 15;
         $attendant_id = 4;

@@ -53,6 +53,11 @@ class Company extends Model
         'bling_token',
         'bling_message',
         'bling_contrated',
+
+        'tracking_user',
+        'tracking_pass',
+        'tracking_message',
+        'tracking_contrated'
     ];
 
     /**
@@ -85,6 +90,11 @@ class Company extends Model
         'bling_token'=> 'string',
         'bling_message'=> 'string',
         'bling_contrated'=> 'integer',
+
+        'tracking_user'=> 'string',
+        'tracking_pass'=> 'string',
+        'tracking_message'=> 'string',
+        'tracking_contrated'=> 'integer',
     ];
 
     /**

@@ -33,8 +33,8 @@
 
 <!-- Object Code Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('object_code', 'Object Code:') !!}
-    {!! Form::text('object_code', null, ['class' => 'form-control']) !!}
+    {!! Form::label('tracking_code', 'Object Code:') !!}
+    {!! Form::text('tracking_code', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Json Csv Data Field -->

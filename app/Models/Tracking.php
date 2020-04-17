@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\MessagesStatusController;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Model;
+use stdClass;
 
 /**
  * Class Tracking
@@ -13,7 +16,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string|\Carbon\Carbon post_date
  * @property string service_code
  * @property integer items
- * @property string object_code
+ * @property string tracking_code
  * @property string json_csv_data
  * @property integer status_id
  * @property string tracking_list
@@ -30,11 +33,13 @@ class Tracking extends Model
     public $connection = "socialhub_mvp.tracking";
 
     public $fillable = [
+        'id',
+        'contact_id',
         'post_card',
         'post_date',
         'service_code',
         'items',
-        'object_code',
+        'tracking_code',
         'json_csv_data',
         'status_id',
         'tracking_list'
@@ -46,12 +51,13 @@ class Tracking extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
+        'contact_id' => 'string',
         'post_card' => 'string',
         'post_date' => 'datetime',
         'service_code' => 'string',
         'items' => 'integer',
-        'object_code' => 'string',
+        'tracking_code' => 'string',
         'json_csv_data' => 'string',
         'status_id' => 'integer',
         'tracking_list' => 'string'
@@ -63,8 +69,26 @@ class Tracking extends Model
      * @var array
      */
     public static $rules = [
-        'object_code' => 'required'
+        'tracking_code' => 'required'
     ];
 
-    
+
+    /**
+     * Class constructor.
+     */
+    public static function trackingConstruct(stdClass $objTracking, int $contact_id, int $company_id) : Tracking
+    {
+        $Tracking = new Tracking();
+        $Tracking->table = "$company_id";
+        
+        $Tracking->id =  $objTracking->pedidoID;
+        $Tracking->contact_id = $contact_id;
+        $Tracking->post_date =  (new Carbon($objTracking->envioData))->format('Y-m-d H:i:s');
+        $Tracking->tracking_code =  $objTracking->envioRastreamento;
+        $Tracking->json_csv_data = json_encode($objTracking);
+        $Tracking->status_id = MessagesStatusController::UNREADED;
+
+        return $Tracking;
+    }
+
 }

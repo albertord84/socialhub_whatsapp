@@ -110,10 +110,7 @@ Route::resource('socialnetworks', 'SocialnetworkController');
 
 Route::resource('messagesTypes', 'MessagesTypeController');
 
-
 Route::resource('rpis', 'ExtendedRpiController');
-
-
 
 Route::resource('contactsOrigins', 'ContactsOriginsController');
 
@@ -129,10 +126,9 @@ Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
 
-<<<<<<< HEAD
 Route::resource('trackings', 'TrackingController');
+Route::resource('trackings_import_csv', 'TrackingController');
 
 Route::resource('status', 'StatusController');
-=======
+
 Route::resource('apis', 'ApiController');
->>>>>>> develop

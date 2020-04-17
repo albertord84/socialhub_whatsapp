@@ -55,7 +55,7 @@
         "inIndex": true
     },
     {
-        "name": "object_code",
+        "name": "tracking_code",
         "dbType": "string,45",
         "htmlType": "text",
         "validations": "required",
