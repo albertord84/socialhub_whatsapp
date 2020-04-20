@@ -19,15 +19,18 @@
 // https://app.socialhub.pro/testsalesbling
 // Route::post('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'TestController@testsalesbling');
+// Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
 Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
 
 
-Route::get('testCorreios', 'TestController@testCorreios');
+Route::get('testCorreios', 'TestController@testCorreiosTrackingObject');
+// Route::get('testCorreios', 'TestController@testCorreiosTrackingObjectList');
+Route::get('testExcel', 'TestController@testExcel');
 
 Route::group(['prefix' => 'RPI'], function ($router) {
     Route::post('reciveFileMessage', 'ExternalRPIController@reciveFileMessage');
     Route::post('reciveTextMessage', 'ExternalRPIController@reciveTextMessage');
-    Route::post('sendTextMessage', 'ExternalRPIController@sendMessage');
+    Route::post('sendTextMessage', 'ExternalRPIController@sendTextMessage');
     Route::get('getContactInfo/{whatsapp_id}', 'ExternalRPIController@getContactInfo');
     Route::post('getContactInfo', 'ExternalRPIController@getContactInfo');
     Route::get('getQRCode', 'ExternalRPIController@getQRCode');
@@ -107,10 +110,7 @@ Route::resource('socialnetworks', 'SocialnetworkController');
 
 Route::resource('messagesTypes', 'MessagesTypeController');
 
-
 Route::resource('rpis', 'ExtendedRpiController');
-
-
 
 Route::resource('contactsOrigins', 'ContactsOriginsController');
 
@@ -119,6 +119,9 @@ Route::resource('blings', 'BlingController');
 Route::resource('sales', 'SalesController');
 Route::get('get_sales_bling', 'BlingController@get_sales_bling');
 
+Route::get('vindi_notification_post', 'PaymentController@vindi_notification_post');
+Route::post('vindi_notification_post', 'PaymentController@vindi_notification_post');
+
 Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
@@ -126,3 +129,10 @@ Route::resource('queues', 'QueueController');
 Route::resource('attendantsTags', 'AttendantsTagsController');
 
 Route::resource('contactsTags', 'ContactsTagsController');
+Route::resource('trackings', 'TrackingController');
+Route::post('trackings_import_csv', 'TrackingController@trackings_import_csv');
+Route::get('create_company_tracking_jobs', 'TrackingController@create_company_tracking_jobs');
+
+Route::resource('status', 'StatusController');
+
+Route::resource('apis', 'ApiController');

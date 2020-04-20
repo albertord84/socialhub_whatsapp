@@ -32,3 +32,9 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('edit_user', 'AuthController@editUser');
     Route::get('delete_user/{user_id}', 'AuthController@deleteUser');
 });
+
+// Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function ($router) {
+Route::group(['prefix' => 'v1'], function ($router) {
+    // Route::resource('messages', 'ApiController');
+    Route::post('messages', 'ApiController@store');
+});

@@ -52,6 +52,7 @@ class UsersTableSeeder extends Seeder
     public function createSellers($role_id){
         User::create([
             'id' => 2,
+            'company_id' => 1,
             'name' => 'Seller 1',
             'email' => 'seller1@socialhub.pro',
             'login' => 'seller1',
