@@ -62,8 +62,11 @@ class TrackingController extends AppBaseController
      */
     public function index(Request $request)
     {
+        $User = Auth::check()? Auth::user():session('logged_user');
+        
         $this->trackingRepository->pushCriteria(new RequestCriteria($request));
-        $trackings = $this->trackingRepository->all();
+
+        $trackings = $this->trackingRepository->trackinByCompany($User->company_id);
 
         return $trackings->toJson();
 

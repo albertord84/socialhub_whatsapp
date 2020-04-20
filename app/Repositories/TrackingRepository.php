@@ -30,6 +30,20 @@ class TrackingRepository extends BaseRepository
         'tracking_list'
     ];
 
+    public function trackingByCompany($company_id)
+    {
+        $Tracking = new Tracking();
+        $Tracking->table = "$company_id";
+
+        // $this->table = "$company_id";
+        // return $this->get();
+        // return $this->with(['contact'])->get();
+
+        return $Tracking->get();
+        // return $Tracking->with(['contact'])->get();
+        // return $Tracking->with('contact')->where('id', '!=', null)->get();
+    }
+
     /**
      * Configure the Model
      **/
