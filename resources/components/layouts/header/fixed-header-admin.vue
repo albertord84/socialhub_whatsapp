@@ -10,7 +10,7 @@
                 <img src="~img/socialhub/Logo branca.png" alt="logo"/>
             </router-link> -->
 
-             <!-- Sidebar toggle button-->
+            <!-- Sidebar toggle button-->
             <div class="float-left">
                 <a href="javascript:void(0)" class="sidebar-toggle" @click="toggle_menu">
                     <i class="fa fa-bars text-white"></i>

@@ -86,12 +86,12 @@
                 ApiService.get('attendantsTags', {'attendant_id': this.userLogged.id})
                 .then(response => {
                     response.data.some((item,i)=>{
-                        this.disableTagButton(item.color)
+                        this.disableTagButton(item.color);
                     });
                     this.attendantTags = response.data;
+                    console.log(this.attendantTags);
                 })
                 .catch(error => {
-                    // this.processMessageError(error, "getAttendantTags","get");
                 })
                 .finally(() => {
                 });
@@ -107,6 +107,7 @@
                     return false;
                 }
                 var flag = false;
+                console.log(1);
                 this.attendantTags.some((item,i)=>{
                     if(item.name.toLowerCase() === this.model.name.toLowerCase()){
                         flag = true;
@@ -121,6 +122,7 @@
                 this.model.color = this.selectedColor.color;
                 this.selectedColor.used = true;
                 this.model.attendant_id = this.userLogged.id;
+                console.log(2);
                 ApiService.post('attendantsTags',this.model)
                 .then(response => {
                     this.attendantTags.push(Object.assign({}, this.model));
@@ -129,7 +131,6 @@
                     this.disableTagButton(this.model.color)
                 })
                 .catch(error => {
-                    // this.processMessageError(error, "getAttendantTags","get");
                 })
                 .finally(() => {
                     this.isAddingTag = false;
@@ -143,7 +144,6 @@
                     this.attendantTags.splice(index,1);
                 })
                 .catch(error => {
-                    // this.processMessageError(error, "getAttendantTags","get");
                 })
                 .finally(() => {
                 });

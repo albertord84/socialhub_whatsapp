@@ -11,11 +11,11 @@ const menu_items = [
         name: 'QRCode',
         link: '/manager/qrcode',
         icon: ' fa fa-qrcode'
-    }, {
+    }, /*{
         name: 'Hardware',
         link: '/manager/hardware',
         icon: 'mdi mdi-chip'
-    }, {
+    },*/ {
         name: 'Bling',
         icon: 'mdi mdi-exclamation-thick mdi-rotate-45',
         child: [

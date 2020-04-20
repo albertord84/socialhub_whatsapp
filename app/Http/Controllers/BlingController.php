@@ -8,6 +8,7 @@ use App\Http\Requests\CreateBlingRequest;
 use App\Http\Requests\UpdateBlingRequest;
 use App\Repositories\BlingRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Laracasts\Flash\Flash as Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -23,6 +24,19 @@ class BlingController extends AppBaseController
     public function __construct(BlingRepository $blingRepo)
     {
         $this->blingRepository = $blingRepo;
+    }
+
+    public function testBlingAPIKey(Request $request)
+    {
+        Log::debug('\n\rBling Test Sales: ', [$request->all()]);
+
+        // Build Bling message by Sales object
+        $bling_apikey = $request->bling_apikey;
+
+        $BlingBussinesC = new BlingBusiness();
+        $response = $BlingBussinesC->testBlingAPIKey($bling_apikey);
+
+        return json_encode($response);
     }
 
     public function get_sales_bling(Request $request)

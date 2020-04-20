@@ -13,7 +13,7 @@
                     </div>
                 </label>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="steepDownloadContacts=1, modalExportAllContacts = !modalExportAllContacts" title="Exportar contatos">
                         <i class="fa fa-download" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -35,21 +35,19 @@
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <!-- <v-scroll :height="Height(150)" :vid="'contact-content'" color="#ccc" bar-width="8px" ref="message_scroller" :seeSrolling="'true'" @ontop="onTopContacts" @onbottom="onBottomContacts" @oncontentresize="1"  > -->
-                        <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
-                            <template v-for="(column,index) in columns">
-                                <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                    {{ collect(row,column.field) }}
-                                </td>
-                                <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                    <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
-                                    <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                    <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
-                                </td>
-                            </template>
-                            <slot name="tbody-tr" :row="row"></slot>
-                        </tr>
-                    <!-- </v-scroll> -->
+                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
+                        <template v-for="(column,index) in columns">
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
+                                {{ collect(row,column.field) }}
+                            </td>
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
+                                <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
+                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                            </td>
+                        </template>
+                        <slot name="tbody-tr" :row="row"></slot>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -71,7 +69,7 @@
                 </div>
                 <div class="col-4 pl-5">
                     <div class="pt-3 pl-5">
-                        <button class="btn btn-primary color-white" @click.prevent="getContacts">
+                        <button class="btn btn-primary color-white pl-4 pr-4" @click.prevent="getContacts">
                             <i v-if="isLoadMoreContacts" class="fa fa-spinner fa-spin color-white"></i>
                             Carregar mais
                         </button>
@@ -136,6 +134,26 @@
         <!-- Delete Contact Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteContact" id="modalDeleteMatter" :hide-footer="true" title="Verificação de exclusão">
             <managerCRUDContact :url='url' :secondUrl='secondUrl' :action='"delete"' :attendants='attendants' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDContact>            
+        </b-modal>
+
+        <!-- Download contacts -->
+        <b-modal size="md" v-model="modalExportAllContacts" :hide-footer="true" title="Exportar contatos para arquivo CSV">
+            <div v-if="steepDownloadContacts==1">
+                <div class="form-group p-2">
+                    <b-form-group label="Selecione os contatos a exportar" class="pt-3">
+                        <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="1">
+                            Apenas os contatos listados na tabela
+                        </b-form-radio>
+                        <b-form-radio disabled v-model="selectedDownloadOption" name="some-radios" value="2" class="mt-2">
+                            Todos os contatos no Banco de Dados
+                        </b-form-radio>
+                    </b-form-group>
+                </div>
+                <div class="col-lg-12 mt-2 text-center" >
+                    <button class="btn btn-primary pl-5 pr-5 text-white"  @click.prevent="exportarContatos">Exportar</button>
+                    <button class="btn btn-primary  pl-5 pr-5 text-white" @click.prevent="modalExportAllContacts = false" >Cancelar</button>
+                </div>
+            </div>
         </b-modal>
 
         <!-- Upload template to import cantacts Modal -->
@@ -232,13 +250,14 @@
     </div>
 
 </template>
+
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDContact from "./popups/managerCRUDContact";
-    import vScroll from "components/plugins/scroll/vScroll.vue"
+    import vScroll from "components/plugins/scroll/vScroll.vue";
 
     export default {
         props: {
@@ -299,6 +318,9 @@
                 modalDeleteContact: false,
                 showModalFileUploadCSV: false,
                 showModalTemplateToImportContact: false,
+                modalExportAllContacts: false,
+                steepDownloadContacts:1,
+                selectedDownloadOption: 1,
                 attendants:null,
                 window: {width: 0,height: 0},
                 isLoadMoreContacts:false,
@@ -470,6 +492,49 @@
                 this.window.height = window.innerHeight;
             },
 
+            exportarContatos(){
+                if(this.selectedDownloadOption == 1){
+                    this.modalExportAllContacts = false;
+                    this.exportExcel();
+                }else
+                if(this.selectedDownloadOption == 2){                    
+                    this.exportAllContacts();
+                }
+            },
+                    
+            exportAllContacts() {
+                this.steepDownloadContacts = 2;
+                ApiService.get('contactsToCSV')
+                .then(response => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'text/csv'}));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download', 'contatos.csv');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.url, "get");
+                })
+                .finally(()=>{
+                });
+            },
+
+            exportExcel() {
+                const mimeType = 'data:application/vnd.ms-excel';
+                const html = this.renderTable2().replace(/ /g, '%20');
+                // const html = this.renderTable().replace(/ /g, '%20');
+                const d = new Date();
+                var dummy = document.createElement('a');
+                dummy.href = mimeType + ', ' + html;
+                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
+                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
+                    '.xls';
+                dummy.click();
+            },
+
             //------ externals methods--------------------
             getAttendantList: function() { //R
                 ApiService.get(this.url_attendants)
@@ -517,18 +582,6 @@
                 this.$emit("rowClick", row, index);
             },
 
-            exportExcel() {
-                const mimeType = 'data:application/vnd.ms-excel';
-                const html = this.renderTable().replace(/ /g, '%20');
-                const d = new Date();
-                var dummy = document.createElement('a');
-                dummy.href = mimeType + ', ' + html;
-                dummy.download = this.title.toLowerCase().replace(/ /g, '-') + '-' + d.getFullYear() + '-' + (d.getMonth() +
-                        1) + '-' + d.getDate() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() +
-                    '.xls';
-                dummy.click();
-            },
-
             renderTable() {
                 var table = '<table><thead>';
 
@@ -552,6 +605,62 @@
                         table += this.collect(row, column.field);
                         table += '</td>';
                     }
+                    table += '</tr>';
+                }
+
+                table += '</tbody></table>';
+
+                return table;
+            },
+
+            renderTable2() {
+                var table = '<table><thead>';
+                var mycolumns = ['Nome','Whatsapp','Email','Facebook','Instagram','LinkedIn','Estado','Cidade','Categoria1','Categoria2','Email-Atendente'];
+                table += '<tr>';
+                for (var i = 0; i < mycolumns.length; i++) {
+                    table += '<th>';
+                    table += mycolumns[i];
+                    table += '</th>';
+                }
+                table += '</tr>';
+                table += '</thead><tbody>';
+                
+                for (var i = 0; i < this.rows.length; i++) {
+                    const row = this.rows[i];
+                    table += '<tr>';
+                        table += '<td>'; 
+                            table += (row.first_name && row.first_name.trim()!='' && row.first_name.trim()!='undefined')? row.first_name : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.whatsapp_id && row.whatsapp_id.trim()!='' && row.whatsapp_id.trim()!='undefined')? row.whatsapp_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.email && row.email.trim()!='' && row.email.trim()!='undefined')? row.email : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.facebook_id && row.facebook_id.trim()!='' && row.facebook_id.trim()!='undefined')? row.facebook_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.instagram_id && row.instagram_id.trim()!='' && row.instagram_id.trim()!='undefined')? row.instagram_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.linkedin_id && row.linkedin_id.trim()!='' && row.linkedin_id.trim()!='undefined')? row.linkedin_id : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.estado && row.estado.trim()!='' && row.estado.trim()!='undefined')? row.estado : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.cidade && row.cidade.trim()!='' && row.cidade.trim()!='undefined')? row.cidade : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.categoria1 && row.categoria1.trim()!='' && row.categoria1.trim()!='undefined')? row.categoria1 : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.categoria2 && row.categoria2.trim()!='' && row.categoria2.trim()!='undefined')? row.categoria2 : ''; 
+                        table += '</td>';
+                        table += '<td>'; 
+                            table += (row.latestAttendant && row.latestAttendant.email.trim()!='' && row.latestAttendant.email.trim()!='undefined')? row.latestAttendant.email : ''; 
+                        table += '</td>';
                     table += '</tr>';
                 }
 
@@ -678,6 +787,12 @@
             searchInput() {
                 this.currentPage = 1;
                 this.paginated;
+            },
+
+            downloadAllContact (value){
+                if(this.downloadAllContact){
+
+                }
             }
         },
         
