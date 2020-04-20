@@ -208,6 +208,7 @@ class TrackingBusiness extends Business {
 
         } catch (\Throwable $tr) {
             Log::debug('TrackingsBussines createTracking', [$tr]);
+            throw $tr;
             return false;
         }
 

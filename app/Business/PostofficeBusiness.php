@@ -98,7 +98,8 @@ class PostofficeBusiness extends Business
 
         return true;
       } catch (\Throwable $th) {
-        // MyResponse::makeExceptionJson($th);
+        // return MyResponse::makeExceptionJson($th);
+        throw $th;
       }
 
       return false;
