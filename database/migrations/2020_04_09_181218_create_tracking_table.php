@@ -23,6 +23,7 @@ class CreateTrackingTable extends Migration {
 				$table->string('message_list', 5000)->nullable();
 				$table->string('post_card', 45)->nullable();
 				$table->dateTime('post_date')->nullable();
+				$table->dateTime('end_date')->nullable();
 				$table->string('service_code', 45)->nullable();
 				$table->integer('items')->nullable();
 				$table->string('tracking_code', 45)->unique('tracking_code_UNIQUE');
