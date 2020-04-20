@@ -45,7 +45,7 @@ class TrackingController extends AppBaseController
             
 
             $Postoffice = new PostofficeBusiness();
-            $Postoffice->importCSV($file);
+            $response = $Postoffice->importCSV($file);
 
         } catch (\Throwable $th) {
             return MyResponse::makeExceptionJson($th);
@@ -62,10 +62,15 @@ class TrackingController extends AppBaseController
      */
     public function index(Request $request)
     {
+        $User = Auth::check()? Auth::user():session('logged_user');
+        
         $this->trackingRepository->pushCriteria(new RequestCriteria($request));
-        $trackings = $this->trackingRepository->all();
 
-        return view('trackings.index')
+        $trackings = $this->trackingRepository->trackinByCompany($User->company_id);
+
+        return $trackings->toJson();
+
+        // return view('trackings.index')
             ->with('trackings', $trackings);
     }
 
