@@ -85,6 +85,7 @@ class Tracking extends Model
         $Tracking->id =  $objTracking->pedidoID;
         $Tracking->contact_id = $contact_id;
         $Tracking->post_date = Carbon::createFromFormat('d/m/Y H:i', $objTracking->pedidoData)->toDateTimeString();
+        $Tracking->post_date = $objTracking->entregaData ? Carbon::createFromFormat('d/m/Y H:i', $objTracking->entregaData)->toDateTimeString() : null;
         // $Tracking->post_date =  Carbon::createFromFormat('d/m/Y H:i', $objTracking->pedidoData)->toFormattedDateString('Y-m-d H:i:s');
         // $Tracking->post_date =  (new Carbon($objTracking->envioData))->toFormattedDateString('Y-m-d H:i:s');
         $Tracking->tracking_code =  $objTracking->envioRastreamento;
