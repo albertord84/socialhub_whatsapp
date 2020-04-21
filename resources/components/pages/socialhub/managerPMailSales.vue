@@ -42,8 +42,7 @@
                     </a>
                 </div> -->
             </div>
-        </div>
-        
+        </div>        
         <div class="table-responsive">
             <table ref="table" id="salesTable" class="table">
                 <thead>
@@ -57,7 +56,6 @@
                             <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
                             <td v-if="column.actions" :key="index">
                                 <div style="position:relative; margin-left:-80px;">
-                                    <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a>
                                     <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
                                     <a class="text-18" href="javascript:void(0)" title="Eliminar venda" @click.prevent="actionDeleteSales(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                                 </div>
@@ -196,7 +194,7 @@
         data() {
             return {
                 userLogged:{},
-                url:'sales',
+                url:'trackings',
                 sales_id: "",
                 model:{},
                 message_sended: false,
@@ -211,41 +209,51 @@
                 rows:[],
                 columns: [
                     {
-                        label: 'Envio',
+                        label: 'Id',
                         field: 'id',
-                        numeric: true, 
-                        // width: "90px",
+                        numeric: true,
                         html: false,                   
                     }, {
-                        label: 'Data',
-                        field: 'json_data.pedido.data',
+                        label: 'Status',
+                        field: 'status_id',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Cliente',
-                        field: 'json_data.pedido.cliente.nome',
+                        label: 'Contato',
+                        field: 'contact_id',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Telefone',
-                        field: 'json_data.pedido.cliente.fone',
+                        label: 'service_code',
+                        field: 'service_code',
                         numeric: false,
                         html: false,
-                    },{
-                        label: 'Situação',
-                        field: 'json_data.pedido.situacao',
-                        numeric: false,
-                        html: false,
-                    },{
-                        label: 'Produto',
-                        field: 'json_data.itensInHTML',
-                        numeric: false,
-                        html: true,
                     }, {
-                        label: 'Mensagem',
-                        field: 'messageSended',
+                        label: 'tracking_code',
+                        field: 'tracking_code',
                         numeric: false,
-                        html: true,
+                        html: false,
+                    }, {
+                        label: 'post_card',
+                        field: 'post_card',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'post_date',
+                        field: 'post_date',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'end_date',
+                        field: 'end_date',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'Ver',
+                        field: 'button',
+                        numeric: false,
+                        html: false,
+                        see: true,
                     }, {
                         label: 'Ações',
                         field: 'button',
@@ -267,27 +275,27 @@
                 currentPerPage: this.perPage,
                 sortColumn: -1,
                 sortType: 'asc',
-                searchInput: '',                
+                searchInput: '',
             }
         },
 
         methods: {
-            getSales: function() { //R
+            getTrackings: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
-                        response.data.forEach((sale, i)=>{
-                            sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
-                            sale.json_data = JSON.parse(sale.json_data);
-                            var str = "";
-                            try{
-                                sale.json_data.pedido.itens.forEach((itemData, j)=>{
-                                    str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
-                                });
-                                sale.json_data.itensInHTML =str;
-                            }catch(error){
-                                console.log(error);
-                            }
-                        });
+                        // response.data.forEach((sale, i)=>{
+                        //     sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
+                        //     sale.json_data = JSON.parse(sale.json_data);
+                        //     var str = "";
+                        //     try{
+                        //         sale.json_data.pedido.itens.forEach((itemData, j)=>{
+                        //             str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
+                        //         });
+                        //         sale.json_data.itensInHTML =str;
+                        //     }catch(error){
+                        //         console.log(error);
+                        //     }
+                        // });
                         this.rows = response.data;
                     })
                     .catch(error => {
@@ -296,7 +304,7 @@
             }, 
 
             reloadDatas(){
-                this.getSales();
+                this.getTrackings();
             },
 
             showModalAddDispatch() {
@@ -535,7 +543,7 @@
 
         beforeMount(){
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
-            this.getSales();
+            this.getTrackings();
         },
 
         mounted() {

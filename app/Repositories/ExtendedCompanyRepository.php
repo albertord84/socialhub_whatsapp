@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Company;
+use CreateTrackingTable;
 
 /**
  * Class CompanyRepository
@@ -42,6 +43,22 @@ class ExtendedCompanyRepository extends CompanyRepository
             throw $th;
         }
     }*/
+
+
+    public function createTrackingTable(int $company_id)
+    {
+        try {
+            $migrationsDir = __DIR__.'/../../database/migrations/2020_04_09_181218_create_tracking_table.php';
+            require_once($migrationsDir);
+
+            $table = new CreateTrackingTable();
+            $table->up((string)$company_id);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+
 
     /**
      * Configure the Model

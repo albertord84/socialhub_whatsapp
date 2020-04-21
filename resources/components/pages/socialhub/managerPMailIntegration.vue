@@ -1,9 +1,11 @@
 <template>
     <div class="card p-3 no-shadows">
         <form-wizard    title = '' subtitle = '' backButtonText = 'Voltar' nextButtonText = 'Seguinte'  finishButtonText = 'Finalizar' stepSize = 'xs' color = "#20a0ff">
+            
             <template v-slot:backButtonText>
                 <h2>title hola mundo.com</h2>
             </template>
+
             <tab-content title="Informação" :beforeChange='steepInformation'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5">
@@ -35,9 +37,7 @@
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Configuração das contas a serem monitoradas</h4>
-                        <p class="pl-4"> Aqui você deve informar as suas contas nos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a>  que deseja que sejam monitoradas.
-                        </p>
-
+                        <p class="pl-4"> Aqui você deve informar as suas contas nos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a>  que deseja que sejam monitoradas.</p>
                     </div>
                     <div class="row pl-5 pr-5 pb-3">
                         <div class="col-3"></div>                        
@@ -46,33 +46,19 @@
                                 <template v-slot:header>
                                     <h6 class="mb-0" style="float:left">Dados de acesso da conta</h6>                                    
                                 </template>
-                                <form @submit.prevent="addPMailAccount">
+                                <form>
                                     <div class="p-3">
                                         <label for="username">Nome de usuário nos Correios</label>
-                                        <input type="text" ref="username" v-model="username" class="w-100 p-1" placeholder="Login nos Correios" required>
+                                        <input type="text" ref="username" v-model="model.tracking_user" class="w-100 p-1" placeholder="Login nos Correios" required>
                                     </div>
                                     <div class="p-3">
                                         <label for="password">Senha nos Correios</label>
-                                        <input type="text" ref="password" v-model="password" class="w-100 p-1" placeholder="Senha nos Correios" required>
+                                        <input type="password" ref="password" v-model="model.tracking_pass" class="w-100 p-1" placeholder="Senha nos Correios" required>
                                     </div>
-                                    <!-- <div class="p-3 text-center">
-                                        <button type="submit" style="background-color: rgb(32, 160, 255); color:white; font-size: 14px;font-weight: 600;padding: 6px 12px;min-width: 140px;" class="btn pl-4 pr-4">
-                                            <i v-if="isAddingPMailAccount" class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                                            Adiconar
-                                        </button>
-                                    </div> -->
                                 </form>
                             </b-card>
                         </div>
                         <div class="col-3"></div>
-                        <!-- <div class="col-6">
-                            <b-card header="Palavras chaves" header-tag="h4" class="bg-default-card no-shadows" style="padding:0px !important; margin:0px !important">
-                                <template v-slot:header>
-                                    <h6 class="mb-0" style="float:left">Contas adicionadas</h6>
-                                </template>
-                                <managerPMailAddedAccounts :rows="pmailAccounts" @onreload="reloadPMailAccounts"></managerPMailAddedAccounts>
-                            </b-card>
-                        </div> -->
                     </div>                    
                 <hr>
             </tab-content>
@@ -81,7 +67,7 @@
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Configuração da Mensagem</h4>
-                        <p class="pl-4">Personalize a mensagem que deseja enviar aos seus cliente após cada pedido de vendas.
+                        <p class="pl-4">Personalize a mensagem que deseja enviar aos seus cliente após cada atialuzação do envio.
                             A mensagem pode conter palavras chaves precedidas do símbolo <b>@</b>, as que serão substituídas 
                             pela informação contida no pedido de venda. 
                         </p>
@@ -95,60 +81,45 @@
                                         <i class="fa fa-refresh hover text-muted" title="Reiniciar mensagem" aria-hidden="true" @click.prevent="resetDefaultMessage"></i>
                                     </h6>
                                 </template>
-                                <textarea ref="text_message" v-model="message" style="width:100%; height:300px; resize: none" class="border-0" name="" id="" rows="14" spellcheck="false"></textarea>
+                                <textarea ref="text_message" v-model="model.tracking_message" style="width:100%; height:300px; resize: none" class="border-0" name="" id="" rows="14" spellcheck="false"></textarea>
                             </b-card>
                         </div>
                         <div class="col-4">
                             <b-card header="Palavras chaves" header-tag="h4" class="bg-default-card no-shadows" style="padding:0px !important; margin:0px !important">
                                 <div style="height:300px; overflow-x:hidden; overflow-y:auto"  class="pl-4 pl-0">                                    
-                                    <div class="row header">Do pedido</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@desconto')">@desconto</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_observacoes')">@pedido_observacoes</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_data')">@pedido_data</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_vendedor')">@pedido_vendedor</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_valorfrete')">@pedido_valorfrete</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_totalprodutos')">@pedido_totalprodutos</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_totalvenda')">@pedido_totalvenda</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_situacao')">@pedido_situacao</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@pedido_dataPrevista')">@pedido_dataPrevista</div>
-                                    <div class="row header">Do cliente</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_nome')">@cliente_nome</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_cnpj')">@cliente_cnpj</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_cpf')">@cliente_cpf</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_ie')">@cliente_ie</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_rg')">@cliente_rg</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_endereco')">@cliente_endereco</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_numero')">@cliente_numero</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_complemento')">@cliente_complemento</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_cidade')">@cliente_cidade</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_bairro')">@cliente_bairro</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_cep')">@cliente_cep</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_email')">@cliente_email</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_celular')">@cliente_celular</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@cliente_fone')">@cliente_fone</div>
-                                    <div class="row header">Dos itens</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_codigo')">@item_codigo</div>
-                                        <div class="row reserved-word" @click.prevent="insdescontoertReservedWord('@item_descricao')">@item_descricao</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_quantidade')">@item_quantidade</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_valorunidade')">@item_valorunidade</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_precocusto')">@item_precocusto</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_descontoItem')">@item_descontoItem</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_un')">@item_un</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_pesoBruto')">@item_pesoBruto</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_largura')">@item_largura</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_altura')">@item_altura</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_profundidade')">@item_profundidade</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_unidadeMedida')">@item_unidadeMedida</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@item_descricaoDetalhada')">@item_descricaoDetalhada</div>
-                                    <div class="row header">Endereço-entrega</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_nome')">@entrega_nome</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_endereco')">@entrega_endereco</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_numero')">@entrega_numero</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_complemento')">@entrega_complemento</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_cidade')">@entrega_cidade</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_bairro')">@entrega_bairro</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_cep')">@entrega_cep</div>
-                                        <div class="row reserved-word" @click.prevent="insertReservedWord('@entrega_uf')">@entrega_uf</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorNome')">@compradorNome</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorApelido')">@compradorApelido</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorEmail')">@compradorEmail</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorFone')">@compradorFone</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorCPF')">@compradorCPF</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorRG')">@compradorRG</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoRua')">@enderecoRua</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoNumero')">@enderecoNumero</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoComplemento')">@enderecoComplemento</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoBairro')">@enderecoBairro</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoCidade')">@enderecoCidade</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoEstado')">@enderecoEstado</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@enderecoCep')">@enderecoCep</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pagamentoStatus')">@pagamentoStatus</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pagamentoForma')">@pagamentoForma</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pedidoID')">@pedidoID</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pedidoTotalProd')">@pedidoTotalProd</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pedidoTotalFrete')">@pedidoTotalFrete</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pedidoStatus')">@pedidoStatus</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pedidoData')">@pedidoData</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@pedidoObservacoes')">@pedidoObservacoes</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@envioTransportadora')">@envioTransportadora</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@envioRastreamento')">@envioRastreamento</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@envioData')">@envioData</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@entregaData')">@entregaData</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@origem')">@origem</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@conta')">@conta</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@sku')">@sku</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_tipo')">@tracking_tipo</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_local')">@tracking_local</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_dataHora')">@tracking_dataHora</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_descricao')">@tracking_descricao</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_detalhe')">@tracking_detalhe</div>
                                 </div>
                             </b-card>
                         </div>
@@ -190,91 +161,47 @@
         data(){
             return{
                 userLogged:{},
-                pmail_accounts_url:"contacts", // "pmail_accounts_url",
-                message:"",
+                pmail_accounts_url:"companies",
+                model:{
+                    tracking_user:'',
+                    tracking_pass:'',
+                    tracking_message:"",
+                    tracking_contrated: 1,
+                    action: 'tracking'
+                },
                 defaultMessage:"",                
-                username:'',
-                password:'',
-                pmailAccounts:[],
                 isAddingPMailAccount:false,
             }
         },
 
         methods:{
-            addPMailAccount(){
-                alert("Adicionando conta"); return; //TODO: eliminar
-
-                this.isAddingPMailAccount =true;
-                ApiService.post(this.pmail_accounts_url, {
-                    "company_id":this.userLogged.company_id,
-                    "username":this.username,
-                    "password":this.password
-                })
-                .then(response => {
-                    miniToastr.success("Mensagem enviada com sucesso","Sucesso");
-                    this.username = "";
-                    this.password = "";
-                    this.reloadPMailAccounts();
-                })
-                .catch(error => {
-                    this.processMessageError(error, this.url, "update");//TODO: EGBERTO
-                })
-                .finally(()=>{
-                    this.isAddingPMailAccount =false;
-                });
-            },
-
-            reloadPMailAccounts(){
-                ApiService.get(this.pmail_accounts_url, this.userLogged.company_id) 
-                .then(response => {
-                    this.pmailAccounts = response.data;
-                })
-                .catch(error => {
-                    this.processMessageError(error, this.url, "update");//TODO: EGBERTO
-                })
-                .finally(()=>{
-                });                
-            },
 
             steepInformation(){
                 return true;
             },
 
             steepPMailAccounts(){
-                if(this.pmailAccounts.length==0){                    
-                    miniToastr.warn("Atenção", "Deve inserir pelo menos uma conta dos Correios");  
+                if(this.model.tracking_user.trim()=='' || this.model.tracking_pass.trim()==''){
+                    miniToastr.error("Nome de usuário ou senha para integração incorretos","Erro");
                     return false;
-                }else{
+                } else{
                     return true;
                 }
             },
 
             steepLayoutMessage(){
-                return true; //TODO: elimninar
                 let textarea = this.$refs.text_message;
-                this.message = textarea.value;
-                if(this.message.trim().length==0){                    
-                    miniToastr.warn("Atenção", "Deve configurar uma mensagem template para ser enviada aos seus clientes");  
-                    reject(false);
-                    return false;
-                }else{
-                    return new Promise((resolve, reject) => {                    
-                        //update company and create the respective sales table
-                        ApiService.post(this.bling_url, {
-                            "company_id":this.userLogged.company_id,
-                            "bling_apikey":this.apikey,
-                            "bling_message":this.message,
-                            // "blingtoken":'',
-                        })
-                        .then(response => {
-                                resolve(true);
-                        })
-                        .catch(error => {
-                            this.processMessageError(error, this.bling_url, "add");
-                            reject(false);
-                        });
+                this.model.tracking_message = textarea.value;
+                return new Promise((resolve, reject) => {                    
+                    ApiService.put(this.pmail_accounts_url+'/'+this.userLogged.company_id, this.model)
+                    .then(response => {
+                        resolve(true);
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.bling_url, "add");
+                        reject(false);
                     });
-                }
+                });
             },
 
             steepEnd(){
@@ -285,9 +212,9 @@
             insertReservedWord(str){
                 let textarea = this.$refs.text_message;
                 var position = textarea.selectionStart;
-                var before = this.message.substring(0, position);
-                var after = this.message.substring(position, this.message.lenght);
-                this.message = before + ' ' + str + ' ' + after;
+                var before = this.model.tracking_message.substring(0, position);
+                var after = this.model.tracking_message.substring(position, this.model.tracking_message.lenght);
+                this.model.tracking_message = before + ' ' + str + ' ' + after;
                 textarea.selectionStart = (before + ' ' + str).length;
             },
 
@@ -308,13 +235,11 @@
                 }else{
                     miniToastr.error(info.erro, info.message); 
                 }
-            },
-
+            }
         },
 
         beforeMount(){
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
-            this.reloadPMailAccounts();
         },
 
         mounted(){
@@ -322,14 +247,13 @@
                 this.$router.push({name: "login"});
             }
             
-            this.defaultMessage = "Olá, @cliente_nome \n\n"+
-            "Obrigado pela compra do produto @item_descricao.\n"+
-            "Quantidade de ítens: @item_quantidade.\n\n"+
-            "O endereço de entrega informado é rua @entrega_endereco, número @entrega_numero.\n\n"+
+            this.defaultMessage = "Olá, @compradorNome \n\n"+
+            "Seu produto @pedidoObservacoes ja saiu para entrega.\n"+
+            "O endereço de entrega informado é rua @enderecoRua, número @enderecoNumero.\n\n"+
             "Em caso de dúvidas, problemas ou sugestões nos contate diretamente pelo nosso whatsapp ou pela Central de Atendimento, para um suporte ágil e eficaz."+
             "Horário de atendimento: De Segunda a Sexta das 07:00 as 15:30 e Sábados das 08:00 as 13:00.\n\n"+
             "Atte. Equipe Coffee Business.";
-            this.message = this.defaultMessage;
+            this.model.tracking_message = this.defaultMessage;
         },
 
         created() {
