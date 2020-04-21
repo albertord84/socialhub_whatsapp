@@ -126,6 +126,9 @@ Route::resource('chatsBlings', 'ChatsBlingController');
 
 Route::resource('queues', 'QueueController');
 
+Route::resource('attendantsTags', 'AttendantsTagsController');
+
+Route::resource('contactsTags', 'ContactsTagsController');
 Route::resource('trackings', 'TrackingController');
 Route::post('trackings_import_csv', 'TrackingController@trackings_import_csv');
 Route::get('create_company_tracking_jobs', 'TrackingController@create_company_tracking_jobs');

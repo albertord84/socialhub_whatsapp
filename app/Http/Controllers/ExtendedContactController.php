@@ -42,7 +42,7 @@ class ExtendedContactController extends ContactController
             $User = Auth::check() ? Auth::user() : session('logged_user');
             if($User){
                 $Contacts = $this->contactRepository->all();
-                $filter = $request->filter_contact;
+                $filter = '';//$request->filterContactToken;
                 if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
                     $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, $filter, $request->last_contact_idx);
                 } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {

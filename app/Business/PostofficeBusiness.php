@@ -48,7 +48,8 @@ class PostofficeBusiness extends Business
             foreach ($Companies as $key => $Company) {
                 $Objects = $this->getTrackingCompanyNextObjects($Company);
 
-                $now = Carbon::now();
+                // dd($Objects);
+
                 foreach ($Objects as $key => $Object) {
                   $updated_at = new Carbon($Object->updated_at);
                   if ($updated_at->diffInDays() >= 1) { // Verify whether not checked today
