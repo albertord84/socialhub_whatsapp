@@ -165,11 +165,11 @@ class TrackingBusiness extends Business {
         try {
             // 1. Crea el contacto si no existe
             $hasClient = false;
-            if (isset($Tracking->compradorFone)) {
+            if (isset($Tracking->compradorFone) && ($Tracking->compradorFone)) {
                 $hasClient = true;
                 $phone = $Tracking->compradorFone;
                 $phone = preg_replace("/[^0-9]/", "", $phone);
-                if (!(strpos('55', $phone) === 0) && ($phone != "")) {
+                if (!(strpos('55', $phone) === 0)) {
                     $phone = "55$phone";
                 }
 
