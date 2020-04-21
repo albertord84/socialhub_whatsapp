@@ -35,6 +35,12 @@
                                             <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
                                         </a>
                                     </b-dropdown-item>
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                        <a href='javascript:void(0)' title="Gerenciar etiquetas" class="drpodowtext text-muted" @click.prevent="showModalCRUDTags = true">
+                                            <i class="fa fa-tags" aria-hidden="true"></i>
+                                            Ver etiquetas
+                                        </a>
+                                    </b-dropdown-item>
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
                                         <router-link to="/" class="drpodowtext text-muted">
                                             <div v-on:click="logout">
@@ -184,6 +190,11 @@
                                                             <i class="mdi mdi-volume-high"></i> Reativar notificações
                                                         </a>
                                                     </b-dropdown-item>
+                                                    <!-- <b-dropdown-item exact class="dropdown_content">
+                                                        <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
+                                                            <i class="fa fa-tag"></i> Etiquetas do contato
+                                                        </a>
+                                                    </b-dropdown-item> -->
                                                     <!-- <b-dropdown-item exact class="dropdown_content">
                                                         <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
                                                             <i class="mdi mdi-pin mdi-rotate-45"></i> Fixar conversa
@@ -929,6 +940,11 @@
                 </div>
             </div>
         </b-modal>
+
+        <!-- Modal to transfer contact-->
+        <b-modal v-model="showModalCRUDTags" :hide-footer="true" size="sm" title="Gerenciar etiquetas">
+            <attendantCRUDTags :userLogged="userLogged" @onclosemodal='closemodal'></attendantCRUDTags>
+        </b-modal>
     </div>
 </template>
 
@@ -943,6 +959,7 @@
     import Echo from 'laravel-echo'; window.Pusher = require('pusher-js');
     import attendantCRUDContact from "src/components/pages/socialhub/popups/attendantCRUDContact.vue";
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
+    import attendantCRUDTags from "src/components/pages/socialhub/popups/attendantCRUDTags.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
 
     // import MicRecorder from "mic-recorder-to-mp3"; 
@@ -966,6 +983,7 @@
             userCRUDDatas,
             attendantCRUDContact,
             sendMessageFiles,
+            attendantCRUDTags
         },
 
         data() {
@@ -1024,6 +1042,7 @@
                 showChatRightSide:false,
                 showChatFindMessages:false,                
                 modalShowContactPicture:false,                
+                showModalCRUDTags:false,                
 
                 isSearchContact:false,
                 isEditingContact:false,
@@ -1914,6 +1933,7 @@
                 this.modalDeleteContact = false;
                 this.modalTransferContact = false;
                 this.modalMuteNotificationsContacts = false;
+                this.showModalCRUDTags = false;
             },
             
             logout: function() {
@@ -1948,7 +1968,7 @@
 
             //------------------Audio messages--------------------------
             preConfigAudio: function(){
-                this.recorderMP3 = this.createMP3Recorder();
+                // this.recorderMP3 = this.createMP3Recorder();
     
                 // Check if MediaRecorder available.
                 // if (!window.MediaRecorder) {

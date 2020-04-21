@@ -49,6 +49,8 @@ const layout = [
             title: "Pedidos de venda no Bling",
         }
     },
+
+    
     {
         path: '/manager/pmail',
         component: resolve => require(['pages/socialhub/managerPMailIntegration'], resolve),
@@ -67,7 +69,10 @@ const layout = [
         meta: {
             title: "Estatísticas",
         }
-    },{
+    },
+    
+    
+    {
         path: '/manager/emoji',    
         component: resolve => require(['pages/socialhub/emoji'], resolve),
         meta: {

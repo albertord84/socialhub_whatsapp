@@ -69,16 +69,16 @@ class ExtendedCompanyController extends CompanyController
     {
         $company = $this->companyRepository->findWithoutFail($id);
         
+        if(isset($request['action']) && $request['action']== 'tracking' && strlen($company->tracking_user) ==0){
+            $this->companyRepository->createTrackingTable((int) $company->id);
+            unset($request['action']);
+        }
 
         if (empty($company)) {
-            // Flash::error('Company not found');
-
             return redirect(route('companies.index'));
         }
 
         $company = $this->companyRepository->update($request->all(), $id);
-
-        // Flash::success('Company updated successfully.');
 
         return $company->toJson();
     }

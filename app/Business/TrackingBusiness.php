@@ -229,6 +229,7 @@ class TrackingBusiness extends Business {
             $Tracking->compradorFone ?? '@compradorFone', 
             $Tracking->compradorCPF ?? '@compradorCPF', 
             $Tracking->compradorRG ?? '@compradorRG', 
+
             $Tracking->enderecoRua ?? '@enderecoRua',
             $Tracking->enderecoNumero ?? '@enderecoNumero', 
             $Tracking->enderecoComplemento ?? '@enderecoComplemento', 
@@ -236,17 +237,21 @@ class TrackingBusiness extends Business {
             $Tracking->enderecoCidade ?? '@enderecoCidade', 
             $Tracking->enderecoEstado ?? '@enderecoEstado', 
             $Tracking->enderecoCep ?? '@enderecoCep', 
+
             $Tracking->pagamentoStatus ?? '@pagamentoStatus', 
-            $Tracking->pagamentoForma ?? '@pagamentoForma', 
+            $Tracking->pagamentoForma ?? '@pagamentoForma',
+
             $Tracking->pedidoID ?? '@pedidoID', 
             $Tracking->pedidoTotalProd ?? '@pedidoTotalProd', 
             $Tracking->pedidoTotalFrete ?? '@pedidoTotalFrete', 
             $Tracking->pedidoStatus ?? '@pedidoStatus', 
             $Tracking->pedidoData ?? '@pedidoData', 
             $Tracking->pedidoObservacoes ?? '@pedidoObservacoes', 
+
             $Tracking->envioTransportadora ?? '@envioTransportadora', 
             $Tracking->envioRastreamento ?? '@envioRastreamento', 
             $Tracking->envioData ?? '@envioData', 
+
             $Tracking->entregaData ?? '@entregaData', 
             $Tracking->origem ?? '@origem', 
             $Tracking->conta ?? '@conta', 

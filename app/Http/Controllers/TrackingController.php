@@ -10,6 +10,7 @@ use App\Repositories\TrackingRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
@@ -67,7 +68,7 @@ class TrackingController extends AppBaseController
         
         $this->trackingRepository->pushCriteria(new RequestCriteria($request));
 
-        $trackings = $this->trackingRepository->trackinByCompany($User->company_id);
+        $trackings = $this->trackingRepository->trackingByCompany($User->company_id);
 
         return $trackings->toJson();
 
