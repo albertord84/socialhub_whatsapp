@@ -150,54 +150,139 @@
         </b-modal>
 
         <!-- Modal to see  client -->
-        <b-modal size="md" v-model="showModalSeeClient" :hide-footer="true" title="Informação">
+        <b-modal size="lg" v-model="showModalSeeClient" :hide-footer="true" title="Informação">
             <div class="card user-profile no-shadows">
                 <article class="media">
-                    <a class="float-left desc-img">
-                        <img src="~img/socialhub/personal.png" width="70px">
+                    <a class="float-left m-2">
+                        <span class="fa fa-info-circle fa-2x text-primary" title="Geral"></span>
                     </a>
                     <div class="media-body ml-2">
-                        <h4 class="text-primary">{{modelClient.compradorNome}}</h4>
-                        <p class="mt-0 mb-0" title="Email">Email: {{modelClient.compradorEmail}}</p>
-                        <p class="mt-0 mb-0" title="Apelido">Apelido: {{modelClient.compradorApelido}}</p>
-                        <p title="Telfone">Telfone: {{modelClient.compradorFone}}</p>
-                        <p title="CPF">CPF: {{modelClient.compradorCPF}}</p>
-                        <p title="">RG: {{modelClient.compradorRG}}</p>
+                        <p class="mt-1 mb-0"><b>Dados gerais</b></p>
+                        <table class="table borderless" >
+                            <tbody>
+                                <tr >
+                                    <td><b>Origem:</b></td>
+                                    <td><b>Id origem:</b></td>
+                                    <td><b>Conta:</b></td>
+                                    <td><b>Sku:</b></td>
+                                    <td><b>Id do Marketplace:</b></td>
+                                </tr>
+                                <tr >
+                                    <td v-if="modelClient.origem!='ND'">{{modelClient.origem}}</td>
+                                    <td v-if="modelClient.origemId!='ND'">{{modelClient.origemId}}</td>
+                                    <td v-if="modelClient.conta!='ND'">{{modelClient.conta}}</td>
+                                    <td v-if="modelClient.sku!='ND'">{{modelClient.sku}}</td>
+                                    <td v-if="modelClient.idMarketplace!='ND'">{{modelClient.idMarketplace}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </article>
 
-                <table class="table user-details">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <i class="fa fa-list"></i>
-                            </td>
-                            <td>New Tasks</td>
-                            <td> 4</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fa fa-pencil"></i>
-                            </td>
-                            <td>Pending Task</td>
-                            <td> 6</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fa fa-envelope-o"></i>
-                            </td>
-                            <td>Inbox</td>
-                            <td> 28</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fa fa-bell-o"></i>
-                            </td>
-                            <td>Notification</td>
-                            <td> 5</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-user-circle-o fa-2x text-primary" title="Dados do comprador"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Dados do comprador</b></p>
+                        <p v-if="modelClient.compradorNome!='ND'" class="mt-1 mb-0">Nome: {{modelClient.compradorNome}}</p>
+                        <p v-if="modelClient.compradorEmail!='ND'" class="mt-1 mb-0" >Email: {{modelClient.compradorEmail}}</p>
+                        <p v-if="modelClient.compradorApelido!='ND'" class="mt-1 mb-0">Apelido: {{modelClient.compradorApelido}}</p>
+                        <p v-if="modelClient.compradorFone!='ND'" class="mt-1 mb-0">Telfone: {{modelClient.compradorFone}}</p>
+                        <p v-if="modelClient.compradorCPF!='ND'" class="mt-1 mb-0">CPF: {{modelClient.compradorCPF}}</p>
+                        <p v-if="modelClient.compradorRG!='ND'" class="mt-1 mb-0">RG: {{modelClient.compradorRG}}</p>
+                        <p v-if="modelClient.compradorTipo!='ND'" class="mt-1 mb-0">Tipo: {{modelClient.compradorTipo}}</p>
+                    </div>
+                </article>
+
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-map-marker fa-2x text-primary" title="Endereço de entrega"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Endereço de entrega</b></p>
+                        <p class="mt-1 mb-0">
+                            <span v-if="modelClient.enderecoRua!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoRua}}, </span>
+                            <span v-if="modelClient.enderecoNumero!='ND'" class="mt-1 mb-0"> n.<sup>o</sup> {{modelClient.enderecoNumero}}, </span>
+                            <span v-if="modelClient.enderecoComplemento!='ND'" class="mt-1 mb-0">  compl. {{modelClient.enderecoComplemento}}, </span>
+                            <span v-if="modelClient.enderecoBairro!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoBairro}}, </span>
+                            <span v-if="modelClient.enderecoCidade!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoCidade}}, </span>
+                            <span v-if="modelClient.enderecoEstado!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoEstado}}, </span>
+                            <span v-if="modelClient.enderecoCep!='ND'" class="mt-1 mb-0">CEP: {{modelClient.enderecoCep}}</span>
+                        </p>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-shopping-cart fa-2x text-primary" title="Sobre o pedido"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Sobre o pedido</b></p>
+                        <p v-if="modelClient.pedidoID!='ND'" class="mt-1 mb-0">ID do pedido: {{modelClient.pedidoID}}</p>
+                        <p v-if="modelClient.pedidoStatus!='ND'" class="mt-1 mb-0">Status: {{modelClient.pedidoStatus}} ({{modelClient.pedidoStatusId}})</p>
+                        <p v-if="modelClient.pedidoTotalProd!='ND'" class="mt-1 mb-0">TotalProd: {{modelClient.pedidoTotalProd}}</p>
+                        <p v-if="modelClient.pedidoTotalFrete!='ND'" class="mt-1 mb-0">TotalFrete: {{modelClient.pedidoTotalFrete}}</p>
+                        <p v-if="modelClient.pedidoData!='ND'" class="mt-1 mb-0">Data: {{modelClient.pedidoData}}</p>
+                        <p v-if="modelClient.pedidoObservacoes!='ND'" class="mt-1 mb-0">Observações: {{modelClient.pedidoObservacoes}}</p>
+                        
+                        <div v-if="modelClient.pedidoProduto && modelClient.pedidoProduto.produtos">
+                            <p class="mt-2 mb-0"><b>Produtos neste pedido:</b></p>
+                            <div v-for="(produto, index) in modelClient.pedidoProduto.produtos" v-bind:key="index" class="ml-4">
+                                <p class="mt-2 mb-0"> <b>Produto {{index+1}}</b></p>
+                                <p v-if="produto.id!='ND'" class="mt-1 mb-0">Id do produto: {{produto.id}}</p>
+                                <p v-if="produto.titulo!='ND'" class="mt-1 mb-0">Título: {{produto.titulo}}</p>
+                                <p v-if="produto.qtd!='ND'" class="mt-1 mb-0">Quantidade: {{produto.qtd}}</p>
+                                <p v-if="produto.preco!='ND'" class="mt-1 mb-0">Preço: {{produto.preco}}</p>
+                                <p v-if="produto.variacao!='ND'" class="mt-1 mb-0">Variação: {{produto.variacao}}</p>
+                                <p v-if="produto.variacao_id!='ND'" class="mt-1 mb-0">Id variação: {{produto.variacao_id}}</p>
+                                <p v-if="produto.sku!='ND'" class="mt-1 mb-0">Sku: {{produto.sku}}</p>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p class="mt-2 mb-0"><b>Produtos não especificados</b></p>
+                        </div>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-money fa-2x text-primary" title="Pagamento"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Sobre o pagamento</b></p>
+                        <p v-if="modelClient.pagamentoStatus!='ND'" class="mt-1 mb-0">Status: {{modelClient.pagamentoStatus}}</p>
+                        <p v-if="modelClient.pagamentoForma!='ND'" class="mt-1 mb-0">Forma: {{modelClient.pagamentoForma}}</p>
+                        <p v-if="modelClient.pagamentoIdMP!='ND'" class="mt-1 mb-0">IdMP: {{modelClient.pagamentoIdMP}}</p>
+                        <p v-if="modelClient.pagamentoStatusMP!='ND'" class="mt-1 mb-0">StatusMP: {{modelClient.pagamentoStatusMP}}</p>
+                        <p v-if="modelClient.pagamentoPagoProd!='ND'" class="mt-1 mb-0">PagoProd: {{modelClient.pagamentoPagoProd}}</p>
+                        <p v-if="modelClient.pagamentoPagoFrete!='ND'" class="mt-1 mb-0">PagoFrete: {{modelClient.pagamentoPagoFrete}}</p>
+                        <p v-if="modelClient.pagamentoDifTotal!='ND'" class="mt-1 mb-0">DifTotal: {{modelClient.pagamentoDifTotal}}</p>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-money fa-2x text-primary" title="Sobre o envio"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Sobre o envio</b></p>
+                        <p v-if="modelClient.envioStatus!='ND'" class="mt-1 mb-0">Status do envio: {{modelClient.envioStatus}}</p>
+                        <p v-if="modelClient.envioTransportadora!='ND'" class="mt-1 mb-0">Transportadora: {{modelClient.envioTransportadora}}</p>
+                        <p v-if="modelClient.envioTransportadoraCNPJ!='ND'" class="mt-1 mb-0">CNPJ da transportadora: {{modelClient.envioTransportadoraCNPJ}}</p>
+                        <p v-if="modelClient.envioFrete!='ND'" class="mt-1 mb-0">Frete: {{modelClient.envioFrete}}</p>
+                        <p v-if="modelClient.envioRastreamento!='ND'" class="mt-1 mb-0">Rastreamento: {{modelClient.envioRastreamento}}</p>
+                        <p v-if="modelClient.envioData!='ND'" class="mt-1 mb-0">Data de envio: {{modelClient.envioData}}</p>
+                        <p v-if="modelClient.entregaData!='ND'" class="mt-1 mb-0">Data de entrega: {{modelClient.entregaData}}</p>
+                        <p v-if="modelClient.origem!='ND'" class="mt-1 mb-0">Origem: {{modelClient.origem}} ({{modelClient.origemId}})</p>
+                    </div>
+                </article>
             </div>
         </b-modal>
     </div>
@@ -318,7 +403,7 @@
         methods: {
             getTrackings: function() { //R
                 ApiService.get(this.url)
-                    .then(response => {
+                    .then(response => {                        
                         this.rows = response.data;
                     })
                     .catch(error => {
@@ -327,8 +412,10 @@
             }, 
 
             actionSeeClient: function(value){
-                this.modelClient = JSON.parse(value.json_csv_data);
-                console.log(this.modelClient);
+                value.json_csv_data = JSON.parse(value.json_csv_data);
+                value.json_csv_data.pedidoProduto = JSON.parse(value.json_csv_data.pedidoProduto);
+                console.log(value.json_csv_data.pedidoProduto.produtos);
+                this.modelClient = value.json_csv_data;
                 this.showModalSeeClient = true;
             },
 
@@ -648,6 +735,28 @@
     }
     .no-shadows{
         box-shadow: none !important;
+    }
+    /* .borderless table {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+    }
+    .borderless tr {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+    } */
+    .borderless td {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        margin-top: 0px;
+        padding-bottom: 0px;
+        margin-top: 0px;
+        padding-bottom: 0px;
     }
 </style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

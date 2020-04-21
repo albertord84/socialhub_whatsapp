@@ -190,11 +190,11 @@
                                                             <i class="mdi mdi-volume-high"></i> Reativar notificações
                                                         </a>
                                                     </b-dropdown-item>
-                                                    <b-dropdown-item exact class="dropdown_content">
+                                                    <!-- <b-dropdown-item exact class="dropdown_content">
                                                         <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
                                                             <i class="fa fa-tag"></i> Etiquetas do contato
                                                         </a>
-                                                    </b-dropdown-item>
+                                                    </b-dropdown-item> -->
                                                     <!-- <b-dropdown-item exact class="dropdown_content">
                                                         <a href="javascript:void(0)" exact class="drpodowtext text-muted" @click.prevent="1">
                                                             <i class="mdi mdi-pin mdi-rotate-45"></i> Fixar conversa
