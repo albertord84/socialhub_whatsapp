@@ -23,7 +23,7 @@
 
                 <!-- Subir lista de códigos de rastreio -->
                 <div class="actions float-right pr-4 mb-3">
-                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
                     <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
                         <i class="mdi mdi-upload fa-lg"  ></i>
                     </a>
@@ -50,18 +50,20 @@
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
-                        <template v-for="(column,index) in columns">
-                            <td v-if="!column.html && !column.json" :key="index">{{ collect(row,column.field) }}</td>
-                            <td v-if="column.sended" :key="index" v-html="collect(row, column.field)"></td>
-                            <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
-                            <td v-if="column.actions" :key="index">
-                                <div style="position:relative; margin-left:-80px;">
-                                    <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
-                                    <a class="text-18" href="javascript:void(0)" title="Eliminar venda" @click.prevent="actionDeleteSales(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                        <template v-for="(column,index2) in columns">
+                            <td v-if="!column.html && !column.json" :key="index2">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="index2" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="index2" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="index2">
+                                <div style="position:relative; margin-left:-130px;">
+                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Ver comprador" @click.prevent="actionSeeClient(row)"><i class='fa fa-user-circle-o text-primary mr-1' ></i> </a>
+                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Ver tracking" @click.prevent="actionSeeTacking(row)"><i class='fa fa-clock-o text-warning mr-1'  ></i> </a>
+                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditRecord(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar registro" @click.prevent="actionDeleteRecord(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                                 </div>
                             </td>
                         </template>
-                        <slot name="tbody-tr" :row="row"></slot>
+                        <!-- <slot name="tbody-tr" :row="row"></slot> -->
                     </tr>
                 </tbody>
             </table>
@@ -146,6 +148,58 @@
                 </div>
             </div>
         </b-modal>
+
+        <!-- Modal to see  client -->
+        <b-modal size="md" v-model="showModalSeeClient" :hide-footer="true" title="Informação">
+            <div class="card user-profile no-shadows">
+                <article class="media">
+                    <a class="float-left desc-img">
+                        <img src="~img/socialhub/personal.png" width="70px">
+                    </a>
+                    <div class="media-body ml-2">
+                        <h4 class="text-primary">{{modelClient.compradorNome}}</h4>
+                        <p class="mt-0 mb-0" title="Email">Email: {{modelClient.compradorEmail}}</p>
+                        <p class="mt-0 mb-0" title="Apelido">Apelido: {{modelClient.compradorApelido}}</p>
+                        <p title="Telfone">Telfone: {{modelClient.compradorFone}}</p>
+                        <p title="CPF">CPF: {{modelClient.compradorCPF}}</p>
+                        <p title="">RG: {{modelClient.compradorRG}}</p>
+                    </div>
+                </article>
+
+                <table class="table user-details">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <i class="fa fa-list"></i>
+                            </td>
+                            <td>New Tasks</td>
+                            <td> 4</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fa fa-pencil"></i>
+                            </td>
+                            <td>Pending Task</td>
+                            <td> 6</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fa fa-envelope-o"></i>
+                            </td>
+                            <td>Inbox</td>
+                            <td> 28</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fa fa-bell-o"></i>
+                            </td>
+                            <td>Notification</td>
+                            <td> 5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </b-modal>
     </div>
 
 </template>
@@ -197,13 +251,16 @@
                 url:'trackings',
                 sales_id: "",
                 model:{},
+                modelClient:{},
                 message_sended: false,
                 
+                showModalFileUploadCSV: false,
+                showModalSeeClient: false,
+
                 modalAddDispatch: false,
                 modalEdtitDispatch: false,
                 modalDeleteDispatch: false,
                 modalFilterDispatchs: false,
-                showModalFileUploadCSV: false,
                 fileInputCSV: null,
 
                 rows:[],
@@ -219,23 +276,8 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Contato',
-                        field: 'contact_id',
-                        numeric: false,
-                        html: false,
-                    }, {
-                        label: 'service_code',
-                        field: 'service_code',
-                        numeric: false,
-                        html: false,
-                    }, {
                         label: 'tracking_code',
                         field: 'tracking_code',
-                        numeric: false,
-                        html: false,
-                    }, {
-                        label: 'post_card',
-                        field: 'post_card',
                         numeric: false,
                         html: false,
                     }, {
@@ -248,13 +290,7 @@
                         field: 'end_date',
                         numeric: false,
                         html: false,
-                    }, {
-                        label: 'Ver',
-                        field: 'button',
-                        numeric: false,
-                        html: false,
-                        see: true,
-                    }, {
+                    },  {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -283,113 +319,30 @@
             getTrackings: function() { //R
                 ApiService.get(this.url)
                     .then(response => {
-                        // response.data.forEach((sale, i)=>{
-                        //     sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
-                        //     sale.json_data = JSON.parse(sale.json_data);
-                        //     var str = "";
-                        //     try{
-                        //         sale.json_data.pedido.itens.forEach((itemData, j)=>{
-                        //             str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
-                        //         });
-                        //         sale.json_data.itensInHTML =str;
-                        //     }catch(error){
-                        //         console.log(error);
-                        //     }
-                        // });
                         this.rows = response.data;
                     })
                     .catch(error => {
-                        this.processMessageError(error, this.url, "get");
+                        // this.processMessageError(error, this.url, "get");
                     });
             }, 
 
-            reloadDatas(){
-                this.getTrackings();
+            actionSeeClient: function(value){
+                this.modelClient = JSON.parse(value.json_csv_data);
+                console.log(this.modelClient);
+                this.showModalSeeClient = true;
             },
 
-            showModalAddDispatch() {
-                this.modalAddDispatch =true;
-            },            
+            actionSeeTacking: function(value){
 
-            showModalEdtitDispatch() {
-                this.modalEdtitDispatch =true;
-            },
-            
-            showModalDeleteDispatch() {
-                this.modalDeleteDispatch =true;
-            },            
-
-            showModalFilterDispatchs() {
-                this.modalFilterDispatchs =true;
-            },
-            
-            showModalUploadDispatchList() {
-                this.fileInputCSV = null;
-                this.$refs.fileInputCSV.click();
             },
 
-            getFileSelected: function(e){
-                this.fileInputCSV=e.target;
-                this.showModalFileUploadCSV = true;
-            },
-            
-            closeModals(){
-                this.modalAddDispatch = false;
-                this.modalEdtitDispatch =  false;
-                this.modalDeleteDispatch =  false;
-                this.modalFilterDispatchs =  false;
-            },
-
-            actionResendMessageSales: function(value){
-                alert(value.contact_id);
-                alert(value.json_data);
-
-                // tryResendMessageSales(); // TODO: ainda por implementar
-                this.message_sended = true; // So para teste
-
-                if(this.message_sended){
-                    //  console.log("1");
-                    //  console.log(this.model);
-                    //  console.log(value);
-                    //  console.log(value.json_data);
-                    //  console.log(value.id);
-
-                    delete value.json_data.itensInHTML;
-                    delete value.created_at;
-                    delete value.updated_at;
-                    delete value.deleted_at;
-
-                    value.sended = 1;
-
-                    value.json_data = JSON.stringify(value.json_data);
-                    
-                    ApiService.put(this.url+'/'+value.id, value) 
-                        .then(response => {
-
-                            miniToastr.success("Mensagem enviada com sucesso","Sucesso");
-                                this.reloadDatas();
-                        })
-                        .catch(error => {
-                            this.processMessageError(error, this.url, "update");
-                        })
-
-                }else{
-                    miniToastr.warn("Não foi possivél enviar a mensagem. Tente mais tarde!","Atenção");
-                }   
-            },
-
-            tryResendMessageSales: function(){
-                // se mensagem enviado
-                this.message_sended = true;
-            },
-
-            actionEditSales: function(value){
+            actionEditRecord: function(value){
                 this.model = value;
                 this.sales_id = value.id;
                 this.modalEditSales = !this.modalEditSales;
             },
 
-            actionDeleteSales: function(value){
+            actionDeleteRecord: function(value){
                 this.model = value;
                 this.sales_id = value.id;
                 this.modalDeleteSales = !this.modalDeleteSales;
@@ -420,7 +373,43 @@
                 }
             },
 
+            reloadDatas(){
+                this.getTrackings();
+            },
+
+            showModalAddDispatch() {
+                this.modalAddDispatch =true;
+            },            
+
+            showModalEdtitDispatch() {
+                this.modalEdtitDispatch =true;
+            },
             
+            showModalDeleteDispatch() {
+                this.modalDeleteDispatch =true;
+            },            
+
+            showModalFilterDispatchs() {
+                this.modalFilterDispatchs =true;
+            },
+            
+            showModalUploadDispatchList() {
+                this.fileInputCSV = null;
+                this.$refs.fileInputCSV.click();
+            },
+
+            getSelectedFile: function(e){
+                this.fileInputCSV=e.target;
+                this.showModalFileUploadCSV = true;
+            },
+            
+            closeModals(){
+                this.modalAddDispatch = false;
+                this.modalEdtitDispatch =  false;
+                this.modalDeleteDispatch =  false;
+                this.modalFilterDispatchs =  false;
+            },
+
             //------ Specific DataTable methods------------
             nextPage() {
                 if (this.processedRows.length > this.currentPerPage * this.currentPage && this.currentPerPage != -1)
