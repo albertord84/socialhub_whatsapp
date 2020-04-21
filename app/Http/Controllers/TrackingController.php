@@ -26,6 +26,7 @@ class TrackingController extends AppBaseController
     public function create_company_tracking_jobs(Request $Request)
     {
         try {
+            // dd("ok  ");
             
             $Postoffice = new PostofficeBusiness();
 
@@ -71,7 +72,7 @@ class TrackingController extends AppBaseController
         return $trackings->toJson();
 
         // return view('trackings.index')
-            ->with('trackings', $trackings);
+            // ->with('trackings', $trackings);
     }
 
     /**

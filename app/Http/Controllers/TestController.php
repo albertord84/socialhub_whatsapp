@@ -57,11 +57,11 @@ class TestController extends AppBaseController
         
         // $TrackingBusiness = new TrackingBusiness();
 
-        $company_id = 1;
+        $company_id = '49';
         $TrackingModel = new Tracking();
         $TrackingModel->table = "$company_id";
 
-        $Tracking = $TrackingModel->find('27909168')->toArray();
+        $Tracking = $TrackingModel->find('701')->toArray();
 
         $Tracking = (object)$Tracking;
 
