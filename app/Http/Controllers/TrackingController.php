@@ -68,7 +68,10 @@ class TrackingController extends AppBaseController
         
         $this->trackingRepository->pushCriteria(new RequestCriteria($request));
 
-        $trackings = $this->trackingRepository->trackingByCompany($User->company_id);
+        $page = (int) ($request->page ?? '0');
+        $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page);
+
+        // dd($trackings);
 
         return $trackings->toJson();
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\MessagesStatusController;
 use App\Http\Controllers\StatusController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Model;
@@ -26,10 +25,9 @@ class Tracking extends Model
 {
 
     public $table = 'tracking';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-
 
     public $connection = "socialhub_mvp.tracking";
 
@@ -43,7 +41,7 @@ class Tracking extends Model
         'tracking_code',
         'json_csv_data',
         'status_id',
-        'tracking_list'
+        'tracking_list',
     ];
 
     /**
@@ -61,7 +59,7 @@ class Tracking extends Model
         'tracking_code' => 'string',
         'json_csv_data' => 'string',
         'status_id' => 'integer',
-        'tracking_list' => 'string'
+        'tracking_list' => 'string',
     ];
 
     /**
@@ -70,29 +68,62 @@ class Tracking extends Model
      * @var array
      */
     public static $rules = [
-        'tracking_code' => 'required'
+        'tracking_code' => 'required',
     ];
-
 
     /**
      * Class constructor.
      */
-    public static function trackingConstruct(stdClass $objTracking, int $contact_id, int $company_id) : Tracking
+    public static function trackingConstruct(stdClass $objTracking, int $contact_id, int $company_id): Tracking
     {
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
-        
-        $Tracking->id =  $objTracking->pedidoID;
+
+        $Tracking->id = $objTracking->pedidoID;
         $Tracking->contact_id = $contact_id;
         $Tracking->post_date = Carbon::createFromFormat('d/m/Y H:i', $objTracking->pedidoData)->toDateTimeString();
         $Tracking->post_date = $objTracking->entregaData ? Carbon::createFromFormat('d/m/Y H:i', $objTracking->entregaData)->toDateTimeString() : null;
         // $Tracking->post_date =  Carbon::createFromFormat('d/m/Y H:i', $objTracking->pedidoData)->toFormattedDateString('Y-m-d H:i:s');
         // $Tracking->post_date =  (new Carbon($objTracking->envioData))->toFormattedDateString('Y-m-d H:i:s');
-        $Tracking->tracking_code =  $objTracking->envioRastreamento;
+        $Tracking->tracking_code = $objTracking->envioRastreamento;
         $Tracking->json_csv_data = json_encode($objTracking);
         $Tracking->status_id = StatusController::POSTED;
 
         return $Tracking;
+    }
+
+    /**
+     * Return last tracking event or null
+     **/
+    public function last_tracking()
+    {
+        $tracking_list = $this->tracking_list ? json_decode($this->tracking_list) : null;
+
+        return is_array($tracking_list) ? $tracking_list[0] : null;
+    }
+
+    /**
+     * 
+     **/
+    public function status_correios()
+    {
+        return $this->last_tracking();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function status()
+    {
+        return $this->belongsTo(\App\Models\Status::class, 'status_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function contact()
+    {
+        return $this->belongsTo(\App\Models\Contact::class, 'contact_id');
     }
 
 }

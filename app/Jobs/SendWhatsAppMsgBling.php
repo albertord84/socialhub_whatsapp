@@ -3,10 +3,14 @@
 namespace App\Jobs;
 
 use App\Events\MessageToAttendant;
+use App\Http\Controllers\ExtendedChatController;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
+use App\Models\Sales;
 use App\Models\ExtendedChat;
+use App\Models\MessagesStatus;
+use App\Repositories\ExtendedChatRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,7 +44,8 @@ class SendWhatsAppMsgBling implements ShouldQueue
 
     private $Contact;
 
-    private $Chat;
+    private $objSale;
+    private $objChat;
 
 
     /**
@@ -48,13 +53,13 @@ class SendWhatsAppMsgBling implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ExternalRPIController $rpiController, Contact $Contact, ExtendedChat $Chat, string $queue = null)
+    public function __construct(ExternalRPIController $rpiController, Contact $Contact, $Chat, $Sale, string $queue = null)
     {
         $this->rpiController = $rpiController;
 
         $this->Contact = $Contact;
-        $this->Chat = $Chat;
-        // $this->Chat = new ExtendedChat;
+        $this->objSale = $Sale;
+        $this->objChat = $Chat;
 
         $this->connection = 'database';
 
@@ -71,27 +76,36 @@ class SendWhatsAppMsgBling implements ShouldQueue
      */
     public function handle()
     {
-        // Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->Contact, $this->Chat]);
+        Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->objSale, $this->objChat]);
+        $Sale = new Sales();
+        $Sale->table = $this->Contact->company_id;
+        $Sale = $Sale->find($this->objSale->id);
 
-        $response = $this->rpiController->sendTextMessage($this->Chat->message, $this->Contact);
+        if ($this->objChat) {
+            $Chat = new ExtendedChat();
+            $Chat->table = $this->objChat->attendant_id;
+            $Chat = $Chat->find($this->objChat->id);
+        }
+        
+        $response = $this->rpiController->sendTextMessage($Sale->message, $this->Contact);
         // $response=null;
         Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
-
         
         $responseJson = json_decode($response);
         if (isset($responseJson->MsgID)) {
-            $this->Chat->status_id = MessagesStatusController::SENDED;
+            $Sale->sended = true;
+            if ($Chat) {
+                $Chat->status_id = MessagesStatusController::SENDED;
+                $Chat->save();
+            }
         } else {
-            $this->Chat->status_id = MessagesStatusController::FAIL;
-            // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
+            $Sale->sended = false;
+            if ($Chat) {
+                $Chat->status_id = MessagesStatusController::FAIL;
+                $Chat->save();
+            }
         }
         
-        $this->Chat->save();
-
-        $this->Chat->Contact = $this->Contact;
-        
-        // if ($this->Chat->attendant_id) {
-            // broadcast(new MessageToAttendant($this->Chat));
-        // }   
+        $Sale->save();
     }
 }
