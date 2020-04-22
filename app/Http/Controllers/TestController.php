@@ -20,8 +20,11 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
+use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
+use App\Models\Chat;
 use App\Models\Tracking;
+use App\Models\UsersAttendant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
@@ -45,32 +48,24 @@ class TestController extends AppBaseController
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, stdClass $Sale, Company $Company) 
     {
         
+     
+
+        
+
+
         // Test Correios
 
-
-
+        
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
         
         // $TrackingBusiness = new TrackingBusiness();
 
-        $company_id = 1;
-        $TrackingModel = new Tracking();
-        $TrackingModel->table = "$company_id";
-
-        $Tracking = $TrackingModel->find('27909168')->toArray();
-
-        $Tracking = (object)$Tracking;
-
-        $Company = Company::with('rpi')->find($company_id);
-        $ExternalRPIController = new ExternalRPIController($Company->rpi);
-        $Contact = Contact::find($Tracking->contact_id);
-        $Contact->whatsapp_id = "5521965536174";
-        $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
-        $trackingJob->handle();
+        
+        
 
         // $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
@@ -92,7 +87,7 @@ class TestController extends AppBaseController
         // $company_id = 4;
         // $attendant_id = 30;
         // $attendant_id = 15;
-        $attendant_id = 4;
+        //$attendant_id = 4;
 
 
 
@@ -227,7 +222,7 @@ class TestController extends AppBaseController
         // $Chat = $ExtendedChat->find(1);
         // $pendingBC = broadcast(new MessageToAttendant($Chat));
         // dd($pendingBC);
-        // var_dump($pendingBC);
+        //var_dump($pendingBC);
 
         // broadcast(new NewContactMessage(1));
         // broadcast(new NewContactMessage($User->company_id));
@@ -245,6 +240,46 @@ class TestController extends AppBaseController
 
         // $this->testJobsQueue();
         // $this->testJobsQueue();
+
+        $this->testBlingJob($request);
+    }
+
+    public function testBlingJob(Request $request){
+
+        $company_id = 1;
+        $contact_id = 1;
+        $attendant_id = 4;
+        
+        $SaleModel = new Sales();
+        
+        $SaleModel->table = "$company_id";
+        $SaleModel = $SaleModel->find(1);
+
+
+        $Contact = Contact::find($contact_id);
+        
+
+        $Chat = new ExtendedChat();        
+        $Chat->table = $attendant_id;
+        $Chat->contact_id = $Contact->id;
+        $Chat->company_id = $company_id;
+        $Chat->source = 1;
+        $Chat->type_id = MessagesTypeController::Text;
+        $Chat->status_id = MessagesStatusController::ROUTED;
+        $Chat->message = "Compra do caralho";
+        $Chat->attendant_id = $attendant_id;
+        $Chat->save();
+
+        $Company = Company::with('rpi')->find($company_id);
+        $ExternalRPIController = new ExternalRPIController($Company->rpi);
+
+        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, (object) $Chat->toArray(), (object) $SaleModel->toArray(), 'blingsales');
+
+        // $blingJob = new SendWhatsAppMsgBling($ExternalRPIController, $Contact, $Chat, $Sale, 'blingsales');
+        // dd($blingJob);
+        // $blingJob->handle();
+
+
     }
 
     function testVindi()

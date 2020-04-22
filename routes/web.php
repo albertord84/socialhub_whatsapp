@@ -20,8 +20,12 @@
 // Route::post('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'TestController@testsalesbling');
 // Route::get('testsalesbling', 'testBlingAPIKey@BlingBusiness');
-Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
 
+use Illuminate\Support\Facades\Route;
+
+//Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
+
+Route::get('testBlingJob', 'TestController@testBlingJob');
 
 Route::get('testCorreios', 'TestController@testCorreiosTrackingObject');
 // Route::get('testCorreios', 'TestController@testCorreiosTrackingObjectList');

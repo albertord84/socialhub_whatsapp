@@ -29,6 +29,7 @@ class SalesBusiness extends Business {
         try {
             // 1. Crea el contacto si no existe
             $hasClient = false;
+            $hasAttendant = false;
             if (isset($Sale->pedido->cliente)) {
                 $hasClient = true;
                 $phone = ($Sale->pedido->cliente->celular != "")? $Sale->pedido->cliente->celular : $Sale->pedido->cliente->fone;
@@ -51,6 +52,9 @@ class SalesBusiness extends Business {
                     $Contact->email = $Sale->pedido->cliente->email;
                     $Contact->save();
                 }
+                else if ($Contact->latestAttendantContact) {
+                    $hasAttendant = true;
+                }
             }
             else {
                 $Contact->id = 0;
@@ -66,35 +70,31 @@ class SalesBusiness extends Business {
                     $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
 
                     $SaleModel->message = $this->builSaleMessage($Sale, $Company);
+
+                    $SaleModel->save();
                     
                     // 3. Envia un mensage
                     $ExternalRPIController = new ExternalRPIController($Company->rpi);
+                    $Chat = null;
                     if ($hasClient && $phone) {
-                        // $checkContact = $ExternalRPIController->getContactInfo($Contact->whatsapp_id);
-                        // $checkContact = json_decode($checkContact);
-                        // if (is_object($checkContact) && isset($checkContact->name) && isset($checkContact->picurl)) {
-                            // $response = $ExternalRPIController->sendTextMessage($SaleModel->message, $Contact);
+                        if ($hasAttendant) { // Save sale chat to attendant
                             $Chat = new ExtendedChat();
                             $Chat->contact_id = $Contact->id;
                             $Chat->company_id = $Company->id;
                             $Chat->type_id = MessagesTypeController::Text;
                             $Chat->status_id = MessagesStatusController::ROUTED;
                             $Chat->message = $SaleModel->message;
-                            //$Chat->save();
+                            $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
+                            $Chat->table = "$Chat->attendant_id";
+                            $Chat->save();
+                        }
 
-                            SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $Chat, 'blingsales');
-                            $SaleModel->sended = true;
-
-                        // }
-                        // else {
-                        // }
+                        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, (object) $Chat->toArray(), (object) $SaleModel->toArray(), 'blingsales');
                     }
                         
-                    $SaleModel->save();
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
                 }
             }
-
         } catch (\Throwable $tr) {
             Log::debug('SalesBussines createSale', [$tr]);
             return false;
