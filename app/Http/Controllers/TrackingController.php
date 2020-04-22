@@ -71,7 +71,7 @@ class TrackingController extends AppBaseController
         $page = (int) ($request->page ?? '0');
         $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page);
 
-        dd($trackings);
+        // dd($trackings);
 
         return $trackings->toJson();
 
