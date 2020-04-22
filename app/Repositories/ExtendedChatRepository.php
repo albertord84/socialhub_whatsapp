@@ -6,6 +6,7 @@ use App\Http\Controllers\MessagesStatusController;
 use App\Models\AttendantsContact;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Models\Sales;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
@@ -86,6 +87,23 @@ class ExtendedChatRepository extends ChatRepository
                 $AttendantsContact->attendant_id = $attendant_id;
                 $AttendantsContact->save();
 
+                // Move from Sales table to Attendant Table
+                $Sales = new Sales();
+                $Sales->table = "$attendantUser->company_id";
+                $Sales = $Sales->where('contact_id', $ChastMessages->contact_id)->all();
+
+                foreach ($Sales as $key => $Sale) {
+                    $newChat = new ExtendedChat();
+                    $newChat->table = (string)$attendant_id;
+                    $newChat->message = $Sale->message;
+                    $newChat->attendant_id = $attendant_id;
+                    $newChat->contact_id = $ChastMessages->contact_id;
+                    $newChat->type_id = 1;
+                    $newChat->status_id =  $Sale->sended ? MessagesStatusController::SENDED : MessagesStatusController::ROUTED;
+                    $newChat->source = 1;
+                    $newChat->save();
+                }
+                
                 // Move from Chats table to Attendant Table
                 $Chats = $this->findWhere([
                     'company_id' => $attendantUser->company_id,
