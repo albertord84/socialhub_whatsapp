@@ -44,10 +44,12 @@ class TrackingBusiness extends Business {
                 }
             }
 
-            return $message;
+            return $message ?? "";
         } catch (\Throwable $th) {
             //throw $th;
         }
+
+        return "";
     }
 
     function initCorreios(\PhpSigep\Model\AccessData $accessData)
@@ -124,8 +126,10 @@ class TrackingBusiness extends Business {
 
             $response = $this->CorreiosTrackingObject($Company, $Tracking->tracking_code);
 
+            
             if ($response && count($response->getResult())) {
                 $eventList = $response->getResult()[0]->getEventos();
+                Log::debug("searchTrackingObject $Tracking->tracking_code", [$eventList]);
 
                 foreach ($eventList as $key => $event) {
                     $newTrackingList[$key] = (object) $event->toArray();
@@ -165,11 +169,11 @@ class TrackingBusiness extends Business {
         try {
             // 1. Crea el contacto si no existe
             $hasClient = false;
-            if (isset($Tracking->compradorFone)) {
+            if (isset($Tracking->compradorFone) && $Tracking->compradorFone) {
                 $hasClient = true;
                 $phone = $Tracking->compradorFone;
                 $phone = preg_replace("/[^0-9]/", "", $phone);
-                if (!(strpos('55', $phone) === 0) && ($phone != "")) {
+                if (!(strpos('55', $phone) === 0)) {
                     $phone = "55$phone";
                 }
 

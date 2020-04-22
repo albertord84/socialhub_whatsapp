@@ -33,7 +33,7 @@ class SalesBusiness extends Business {
                 $hasClient = true;
                 $phone = ($Sale->pedido->cliente->celular != "")? $Sale->pedido->cliente->celular : $Sale->pedido->cliente->fone;
                 $phone = preg_replace("/[^0-9]/", "", $phone);
-                if (!(strpos('55', $phone) === 0) && ($phone != "")) {
+                if (($phone) && !(strpos('55', $phone) === 0)) {
                     $phone = "55$phone";
                 }
 
