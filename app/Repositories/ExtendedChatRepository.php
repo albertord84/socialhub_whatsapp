@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\AttendantsContact;
-use App\Models\Chat;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Sales;
@@ -12,15 +11,15 @@ use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class ExtendedChatRepository extends ChatRepository
-{    
+{
 
-    public function contactChatAllAttendants(int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed=1): Collection{
+    public function contactChatAllAttendants(int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed = 1): Collection
+    {
         $ContactChats = new Collection();
         try {
-            $extAttContRepo = new ExtendedContactRepository(app()); 
+            $extAttContRepo = new ExtendedContactRepository(app());
 
             $Attendants = $extAttContRepo->getAttendants($contact_id);
 
@@ -38,9 +37,11 @@ class ExtendedChatRepository extends ChatRepository
 
             $msgCount = Count($ContactChats);
             $start = $msgCount - $page_length * $page - $page_length;
-            if ($start < 0 ) {  // Validating last page
+            if ($start < 0) { // Validating last page
                 if ($start + $page_length <= 0) // if after last page return empty collection
+                {
                     return $Collection;
+                }
 
                 // Needed in case the last page not to be a full page
                 $page_length = $start + $page_length;
@@ -51,7 +52,7 @@ class ExtendedChatRepository extends ChatRepository
             foreach ($Slice as $key => $value) {
                 $Collection->add($value);
             }
-            
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -60,7 +61,8 @@ class ExtendedChatRepository extends ChatRepository
         return $Collection;
     }
 
-    public function getBagContact(int $attendant_id): Contact{
+    public function getBagContact(int $attendant_id): Contact
+    {
         try {
             // First message from Bag
             $attendantUser = User::find($attendant_id);
@@ -97,40 +99,40 @@ class ExtendedChatRepository extends ChatRepository
                     $newChat->attendant_id = $attendant_id;
                     $newChat->contact_id = $ChastMessages->contact_id;
                     $newChat->type_id = 1;
+                    $newChat->status_id =  $Sale->sended ? MessagesStatusController::SENDED : MessagesStatusController::ROUTED;
                     $newChat->source = 1;
                     $newChat->save();
                 }
                 
                 // Move from Chats table to Attendant Table
                 $Chats = $this->findWhere([
-                            'company_id' => $attendantUser->company_id, 
-                            'contact_id' => $ChastMessages->contact_id
-                        ])->all();
+                    'company_id' => $attendantUser->company_id,
+                    'contact_id' => $ChastMessages->contact_id,
+                ])->all();
                 foreach ($Chats as $key => $Chat) {
                     $newChat = $Chat->replicate();
-                    $newChat->table = (string)$attendant_id;
+                    $newChat->table = (string) $attendant_id;
                     $newChat->attendant_id = $attendant_id;
                     $newChat->contact_id = $ChastMessages->contact_id;
                     $newChat->save();
-        
+
                     $Chat->delete();
                 }
 
-                
                 // Construct Contact with full data that chat need
                 $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                                    ->where(['id' => $ChastMessages->contact_id])->first();
+                    ->where(['id' => $ChastMessages->contact_id])->first();
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
-                    
+
                     // Last Chat Message
-                        // Create chat model of $attendant_id to 
-                        $chatModel = new $this->model();
-                        $chatModel->table = (string) $attendant_id;
+                    // Create chat model of $attendant_id to
+                    $chatModel = new $this->model();
+                    $chatModel->table = (string) $attendant_id;
                     $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
                     $Contact['last_message'] = $lastMesssage;
-                    
+
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                         ->where('contact_id', $Contact->id)
@@ -141,26 +143,28 @@ class ExtendedChatRepository extends ChatRepository
                 }
 
             }
-            
+
             return $Contact; //atrelar el last message igual que es atrelado en getContacts
         } catch (\Throwable $th) {
             throw $th;
         }
     }
 
-    // 
-    public function getBagContactsCount(int $company_id): int{
+    //
+    public function getBagContactsCount(int $company_id): int
+    {
         $count = $this->model()::where('company_id', $company_id)->select('contact_id')->distinct()->get();
 
         return $count->count();
     }
 
-    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed=1): Collection{
+    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed = 1): Collection
+    {
         $chatModel = new $this->model();
-        $chatModel->table = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? 'chats' : (string)$attendant_id;
-        
+        $chatModel->table = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? 'chats' : (string) $attendant_id;
+
         // Mark all messages read
-        if($set_as_readed){
+        if ($set_as_readed) {
             $chatModel
                 ->where('contact_id', $contact_id)
                 ->where('status_id', MessagesStatusController::UNREADED)
@@ -170,19 +174,20 @@ class ExtendedChatRepository extends ChatRepository
         if (!$searchMessageByStringInput) {
             $ChastMessages = $chatModel->where('contact_id', $contact_id)->get();
         } else {
-            $ChastMessages = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
+            $ChastMessages = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%' . $searchMessageByStringInput . '%')->get(); //simplePaginate($page);
         }
 
         return $ChastMessages;
     }
 
-    public function createMessage(array $attributes){   
+    public function createMessage(array $attributes)
+    {
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
-        $chatModel->table = (string)$attendant_id;
+        $chatModel->table = (string) $attendant_id;
 
         //updating contact
-        $contact_id = (int)$attributes['contact_id'];
+        $contact_id = (int) $attributes['contact_id'];
         $Contact = Contact::find($contact_id);
         $Contact->updated_at = Carbon::now();
         $Contact->save();
@@ -190,10 +195,11 @@ class ExtendedChatRepository extends ChatRepository
         return $chatModel->create($attributes);
     }
 
-    public function updateMessage(array $attributes, int $id){   
+    public function updateMessage(array $attributes, int $id)
+    {
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
-        $chatModel->table = (string)$attendant_id;
+        $chatModel->table = (string) $attendant_id;
         $chatModel->findOrFail($id);
         return $chatModel->save($attributes);
     }

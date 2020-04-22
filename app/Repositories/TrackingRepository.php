@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Tracking;
+use Illuminate\Database\Eloquent\Collection;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
@@ -29,6 +30,17 @@ class TrackingRepository extends BaseRepository
         'status_id',
         'tracking_list'
     ];
+
+    public function trackingByCompany($company_id, int $page = null): Collection
+    {
+        $Tracking = new Tracking();
+        $Tracking->table = "$company_id";
+
+        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
+        $start = $page_length * $page;
+        
+        return $Tracking->with(['contact', 'status'])->slice($start, $page_length)->all();
+    }
 
     /**
      * Configure the Model

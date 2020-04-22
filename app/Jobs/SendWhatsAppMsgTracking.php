@@ -8,6 +8,7 @@ use App\Http\Controllers\MessagesStatusController;
 use App\Http\Controllers\StatusController;
 use App\Models\Tracking;
 use App\Models\Contact;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -82,24 +83,28 @@ class SendWhatsAppMsgTracking implements ShouldQueue
         $this->Tracking = $Tracking->find($this->Tracking->id);
         $message_list = json_decode($this->Tracking->message_list) ?? array();
 
+        
         $newMessage = $TrackingBusiness->getNewTrackingMessage($this->Tracking, $this->Contact->company_id);
+        // dd($newMessage);
 
         if ($newMessage) {
-            $response = $this->rpiController->sendTextMessage($newMessage, $this->Contact);
-            // $response=null;
-            Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgTracking handled: ', [$this->Contact->whatsapp_id]);
+            // $response = $this->rpiController->sendTextMessage($newMessage, $this->Contact);
+            // $responseJson = json_decode($response);
+            // Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgTracking handled: ', [$this->Contact->whatsapp_id]);
             
-            $responseJson = json_decode($response);
-            if (isset($responseJson->MsgID) && $responseJson->MsgID != "") {
+
+            // if (isset($responseJson->MsgID) && $responseJson->MsgID != "") {
                 $this->Tracking->sended += 1;
                 // Add new Message to Object message list
                 $message_list[count($message_list)] = $newMessage;
                 $this->Tracking->message_list = json_encode($message_list);
-            } else {
+            // } else {
                 // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
-            }
+            // }
             
-            $this->Tracking->save();
         }
+
+        $this->Tracking->updated_at = Carbon::now();
+        $this->Tracking->save();
     }
 }

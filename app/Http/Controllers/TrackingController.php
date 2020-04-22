@@ -10,6 +10,7 @@ use App\Repositories\TrackingRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
@@ -26,6 +27,7 @@ class TrackingController extends AppBaseController
     public function create_company_tracking_jobs(Request $Request)
     {
         try {
+            // dd("ok  ");
             
             $Postoffice = new PostofficeBusiness();
 
@@ -45,7 +47,7 @@ class TrackingController extends AppBaseController
             
 
             $Postoffice = new PostofficeBusiness();
-            $Postoffice->importCSV($file);
+            $response = $Postoffice->importCSV($file);
 
         } catch (\Throwable $th) {
             return MyResponse::makeExceptionJson($th);
@@ -62,11 +64,17 @@ class TrackingController extends AppBaseController
      */
     public function index(Request $request)
     {
+        $User = Auth::check()? Auth::user():session('logged_user');
+        
         $this->trackingRepository->pushCriteria(new RequestCriteria($request));
-        $trackings = $this->trackingRepository->all();
 
-        return view('trackings.index')
-            ->with('trackings', $trackings);
+        $page = (int) ($request->page ?? '0');
+        $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page);
+
+        return $trackings->toJson();
+
+        // return view('trackings.index')
+            // ->with('trackings', $trackings);
     }
 
     /**

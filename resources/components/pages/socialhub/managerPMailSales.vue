@@ -7,12 +7,12 @@
         <div class="text-left">
             <div id="search-input-container">
                 <!-- Buscar envio -->
-                <label>
+                <!-- <label>
                     <div style="" class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
                         <input type="search" id="search-input" style="width:35rem" class="form-control" placeholder="Buscar envio por e-mail, CEP, CPF/CNPJ ou código de rastreio" v-model="searchInput">
                     </div>
-                </label>
+                </label> -->
 
                 <!-- Exportar envios -->
                 <div class="actions float-right pr-4 mb-3">
@@ -23,7 +23,7 @@
 
                 <!-- Subir lista de códigos de rastreio -->
                 <div class="actions float-right pr-4 mb-3">
-                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getFileSelected" accept=".csv"/>
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
                     <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
                         <i class="mdi mdi-upload fa-lg"  ></i>
                     </a>
@@ -42,8 +42,7 @@
                     </a>
                 </div> -->
             </div>
-        </div>
-        
+        </div>        
         <div class="table-responsive">
             <table ref="table" id="salesTable" class="table">
                 <thead>
@@ -51,19 +50,20 @@
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
-                        <template v-for="(column,index) in columns">
-                            <td v-if="!column.html && !column.json" :key="index">{{ collect(row,column.field) }}</td>
-                            <td v-if="column.sended" :key="index" v-html="collect(row, column.field)"></td>
-                            <td v-if="column.html" :key="index" v-html="collect(row, column.field)" ></td>
-                            <td v-if="column.actions" :key="index">
-                                <div style="position:relative; margin-left:-80px;">
-                                    <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a>
-                                    <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
-                                    <a class="text-18" href="javascript:void(0)" title="Eliminar venda" @click.prevent="actionDeleteSales(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                        <template v-for="(column,index2) in columns">
+                            <td v-if="!column.html && !column.json" :key="index2">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="index2" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="index2" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="index2">
+                                <div style="position:relative; margin-left:-130px;">
+                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Ver comprador" @click.prevent="actionSeeClient(row)"><i class='fa fa-user-circle-o text-primary mr-1' ></i> </a>
+                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Ver tracking" @click.prevent="actionSeeTacking(row)"><i class='fa fa-clock-o text-warning mr-1'  ></i> </a>
+                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditRecord(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar registro" @click.prevent="actionDeleteRecord(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                                 </div>
                             </td>
                         </template>
-                        <slot name="tbody-tr" :row="row"></slot>
+                        <!-- <slot name="tbody-tr" :row="row"></slot> -->
                     </tr>
                 </tbody>
             </table>
@@ -148,6 +148,260 @@
                 </div>
             </div>
         </b-modal>
+
+        <!-- Modal to see  client -->
+        <b-modal size="xl" v-model="showModalSeeClient" :hide-footer="true" title="Informação da venda">
+            <div class="card user-profile no-shadows">
+                
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-info-circle fa-2x text-primary" title="Geral"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0 ml-1"><b>Dados gerais</b></p>
+                        <table class="table borderless" >
+                            <tbody>
+                                <tr >
+                                    <td><b>Origem:</b></td>
+                                    <td><b>Id origem:</b></td>
+                                    <td><b>Conta:</b></td>
+                                    <td><b>Sku:</b></td>
+                                    <td><b>Id do Marketplace:</b></td>
+                                </tr>
+                                <tr >
+                                    <td>{{modelClient.origem}}</td>
+                                    <td>{{modelClient.origemId}}</td>
+                                    <td>{{modelClient.conta}}</td>
+                                    <td>{{modelClient.sku}}</td>
+                                    <td>{{modelClient.idMarketplace}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-user-circle-o fa-2x text-primary" title="Dados do comprador"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0 ml-1"><b>Dados do comprador</b></p>
+                        <p class="mt-2 mb-0 ml-1"><b>Nome:</b> {{modelClient.compradorNome}}</p>
+                        <p class="mt-1 mb-0 ml-1"><b>Email:</b> {{modelClient.compradorEmail}}</p>
+                        
+                        <table class="table borderless" >
+                            <tbody>
+                                <tr>
+                                    <td><b>Apelido:</b></td>
+                                    <td><b>Telfone:</b></td>
+                                    <td><b>CPF:</b></td>
+                                    <td><b>RG:</b></td>
+                                    <td><b>Tipo:</b></td>
+                                </tr>
+                                <tr>
+                                    <td>{{modelClient.compradorApelido}}</td>
+                                    <td>{{modelClient.compradorFone}}</td>
+                                    <td>{{modelClient.compradorCPF}}</td>
+                                    <td>{{modelClient.compradorRG}}</td>
+                                    <td>{{modelClient.compradorTipo}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-3">
+                        <span class="fa fa-map-marker fa-2x text-primary" title="Endereço de entrega"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Endereço de entrega</b></p>
+                        <p class="mt-1 mb-0">
+                            <span v-if="modelClient.enderecoRua!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoRua}}, </span>
+                            <span v-if="modelClient.enderecoNumero!='ND'" class="mt-1 mb-0"> n.<sup>o</sup> {{modelClient.enderecoNumero}}, </span>
+                            <span v-if="modelClient.enderecoComplemento!='ND'" class="mt-1 mb-0">  compl. {{modelClient.enderecoComplemento}}, </span>
+                            <span v-if="modelClient.enderecoBairro!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoBairro}}, </span>
+                            <span v-if="modelClient.enderecoCidade!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoCidade}}, </span>
+                            <span v-if="modelClient.enderecoEstado!='ND'" class="mt-1 mb-0"> {{modelClient.enderecoEstado}}, </span>
+                            <span v-if="modelClient.enderecoCep!='ND'" class="mt-1 mb-0">CEP: {{modelClient.enderecoCep}}</span>
+                            
+                        </p>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-shopping-cart fa-2x text-primary" title="Sobre o pedido"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-1"><b>Sobre o pedido</b></p>
+                        <table class="table borderless" >
+                            <tbody>
+                                <tr>
+                                    <td><b style="background-color:silver">Status:</b></td>
+                                    <td><b>ID do status:</b></td>
+                                    <td><b>ID pedido:</b></td>
+                                    <td><b>TotalProd:</b></td>
+                                    <td><b>TotalFrete:</b></td>
+                                    <td><b>Data:</b></td>
+                                </tr>
+                                <tr>
+                                    <td>{{modelClient.pedidoStatus}}</td>
+                                    <td>{{modelClient.pedidoStatusId}}</td>
+                                    <td>{{modelClient.pedidoID}}</td>
+                                    <td>{{modelClient.pedidoTotalProd}}</td>
+                                    <td>{{modelClient.pedidoTotalFrete}}</td>
+                                    <td>{{modelClient.pedidoData}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p  class="mt-1 ml-2"><b>Observações:</b> {{modelClient.pedidoObservacoes}}</p>
+
+
+                        <div v-if="modelClient.pedidoProduto && modelClient.pedidoProduto.produtos">
+                            <p class="mt-2 ml-2"><b>Produtos neste pedido:</b></p>
+                            <div v-for="(produto, index) in modelClient.pedidoProduto.produtos" v-bind:key="index" class="ml-4">
+                                <p class="mt-2 mb-0"> <b>{{index+1}}. Produto: </b>{{produto.titulo}}</p>
+                                
+                                <table class="table borderless" >
+                                    <tbody>
+                                        <tr>
+                                            <td><b>Id produto:</b></td>
+                                            <td><b>Quantidade:</b></td>
+                                            <td><b>Preço:</b></td>
+                                            <td><b>Variação:</b></td>
+                                            <td><b>Id variação:</b></td>
+                                            <td><b>Sku:</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{produto.id}}</td>
+                                            <td>{{produto.qtd}}</td>
+                                            <td>{{produto.preco}}</td>
+                                            <td>{{produto.variacao}}</td>
+                                            <td>{{produto.variacao_id}}</td>
+                                            <td>{{produto.sku}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p class="mt-2 mb-0"><b>Produtos não especificados</b></p>
+                        </div>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-money fa-2x text-primary" title="Pagamento"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Sobre o pagamento</b></p>
+
+                        <table class="table borderless" >
+                            <tbody>
+                                <tr>
+                                    <td><b style="background-color:silver">Status:</b></td>
+                                    <td><b>Forma:</b></td>
+                                    <td><b>IdMP:</b></td>
+                                    <td><b>StatusMP:</b></td>
+                                    <td><b>PagoProd:</b></td>
+                                    <td><b>PagoFrete:</b></td>
+                                    <td><b>DifTotal:</b></td>
+                                </tr>
+                                <tr>
+                                    <td>{{modelClient.pagamentoStatus}}</td>
+                                    <td>{{modelClient.pagamentoForma}}</td>
+                                    <td>{{modelClient.pagamentoIdMP}}</td>
+                                    <td>{{modelClient.pagamentoStatusMP}}</td>
+                                    <td>{{modelClient.pagamentoPagoProd}}</td>
+                                    <td>{{modelClient.pagamentoPagoFrete}}</td>
+                                    <td>{{modelClient.pagamentoDifTotal}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <hr>
+                <article class="media">
+                    <a class="float-left m-2">
+                        <span class="fa fa-money fa-2x text-primary" title="Sobre o envio"></span>
+                    </a>
+                    <div class="media-body ml-2">
+                        <p class="mt-1 mb-0"><b>Sobre o envio</b></p>
+                        <table class="table borderless" >
+                            <tbody>
+                                <tr>
+                                    <td><b style="background-color:silver">Status:</b></td>
+                                    <td><b>Transportadora:</b></td>
+                                    <td><b>CNPJ da transp:</b></td>
+                                    <td><b>Frete:</b></td>
+                                    <td><b>Rastreamento:</b></td>
+                                    <td><b>Data de envio:</b></td>
+                                    <td><b>Data de entrega:</b></td>
+                                    <td><b>Origem (id):</b></td>
+                                </tr>
+                                <tr>
+                                    <td>{{modelClient.envioStatus}}</td>
+                                    <td>{{modelClient.envioTransportadora}}</td>
+                                    <td>{{modelClient.envioTransportadoraCNPJ}}</td>
+                                    <td>{{modelClient.envioFrete}}</td>
+                                    <td>{{modelClient.envioRastreamento}}</td>
+                                    <td>{{modelClient.envioData}}</td>
+                                    <td>{{modelClient.entregaData}}</td>
+                                    <td>{{modelClient.origem}} ({{modelClient.origemId}})</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </article>
+            </div>
+        </b-modal>
+
+        <!-- Modal to see  tracking -->
+        <b-modal size="xl" v-model="showModalSeeTracking" :hide-footer="true" title="Tracking da venda">
+            <div class="card user-profile no-shadows">
+                <article class="media">
+                    <div class="media-body ml-2">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td><b style="background-color:silver">Status:</b></td>
+                                    <td><b>Tipo:</b></td>
+                                    <td><b>Data/hora:</b></td>
+                                    <td><b>Recebedor:</b></td>
+                                    <td><b>Detalhe:</b></td>
+                                    <td><b>Local:</b></td>
+                                    <td><b>Código:</b></td>
+                                    <td><b>Cidade:</b></td>
+                                    <td><b>UF:</b></td>
+                                    <td><b>Descrição:</b></td>
+                                </tr>
+                                <tr  v-for="(track,index) in modelTracking" :key="index">
+                                    <td>{{track.status}}</td>
+                                    <td>{{track.tipo}}</td>
+                                    <td>{{track.dataHora}}</td>
+                                    <td>{{track.recebedor}}</td>
+                                    <td>{{track.detalhe}}</td>
+                                    <td>{{track.local}}</td>
+                                    <td>{{track.codigo}}</td>
+                                    <td>{{track.cidade}}</td>
+                                    <td>{{track.uf}}</td>
+                                    <td>{{track.descricao}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </b-modal>
     </div>
 
 </template>
@@ -196,57 +450,51 @@
         data() {
             return {
                 userLogged:{},
-                url:'sales',
+                url:'trackings',
                 sales_id: "",
                 model:{},
+                modelClient:{},
+                modelTracking:{},
                 message_sended: false,
                 
+                showModalFileUploadCSV: false,
+                showModalSeeClient: false,
+                showModalSeeTracking: false,
+
                 modalAddDispatch: false,
                 modalEdtitDispatch: false,
                 modalDeleteDispatch: false,
                 modalFilterDispatchs: false,
-                showModalFileUploadCSV: false,
                 fileInputCSV: null,
 
                 rows:[],
                 columns: [
                     {
-                        label: 'Envio',
+                        label: 'Id',
                         field: 'id',
-                        numeric: true, 
-                        // width: "90px",
+                        numeric: true,
                         html: false,                   
                     }, {
-                        label: 'Data',
-                        field: 'json_data.pedido.data',
+                        label: 'Status',
+                        field: 'status_id',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Cliente',
-                        field: 'json_data.pedido.cliente.nome',
+                        label: 'tracking_code',
+                        field: 'tracking_code',
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Telefone',
-                        field: 'json_data.pedido.cliente.fone',
+                        label: 'post_date',
+                        field: 'post_date',
                         numeric: false,
                         html: false,
-                    },{
-                        label: 'Situação',
-                        field: 'json_data.pedido.situacao',
+                    }, {
+                        label: 'end_date',
+                        field: 'end_date',
                         numeric: false,
                         html: false,
-                    },{
-                        label: 'Produto',
-                        field: 'json_data.itensInHTML',
-                        numeric: false,
-                        html: true,
-                    }, {
-                        label: 'Mensagem',
-                        field: 'messageSended',
-                        numeric: false,
-                        html: true,
-                    }, {
+                    },  {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -267,121 +515,43 @@
                 currentPerPage: this.perPage,
                 sortColumn: -1,
                 sortType: 'asc',
-                searchInput: '',                
+                searchInput: '',
             }
         },
 
         methods: {
-            getSales: function() { //R
+            getTrackings: function() { //R
                 ApiService.get(this.url)
-                    .then(response => {
-                        response.data.forEach((sale, i)=>{
-                            sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
-                            sale.json_data = JSON.parse(sale.json_data);
-                            var str = "";
-                            try{
-                                sale.json_data.pedido.itens.forEach((itemData, j)=>{
-                                    str += "<div title='"+itemData.item.descricao+"'>"+Math.round(itemData.item.quantidade)+" "+itemData.item.un+" "+itemData.item.descricao.substring(0,10)+"... </div>";                                
-                                });
-                                sale.json_data.itensInHTML =str;
-                            }catch(error){
-                                console.log(error);
-                            }
-                        });
+                    .then(response => {                        
                         this.rows = response.data;
                     })
                     .catch(error => {
-                        this.processMessageError(error, this.url, "get");
+                        // this.processMessageError(error, this.url, "get");
                     });
             }, 
 
-            reloadDatas(){
-                this.getSales();
+            actionSeeClient: function(value){
+                value.json_csv_data = JSON.parse(value.json_csv_data);
+                value.json_csv_data.pedidoProduto = JSON.parse(value.json_csv_data.pedidoProduto);
+                this.modelClient = value.json_csv_data;
+                this.showModalSeeClient = true;
             },
 
-            showModalAddDispatch() {
-                this.modalAddDispatch =true;
-            },            
-
-            showModalEdtitDispatch() {
-                this.modalEdtitDispatch =true;
-            },
-            
-            showModalDeleteDispatch() {
-                this.modalDeleteDispatch =true;
-            },            
-
-            showModalFilterDispatchs() {
-                this.modalFilterDispatchs =true;
-            },
-            
-            showModalUploadDispatchList() {
-                this.fileInputCSV = null;
-                this.$refs.fileInputCSV.click();
+            actionSeeTacking: function(value){
+                this.modelTracking = (value.tracking_list) ? JSON.parse(value.tracking_list): [];
+                if(this.modelTracking.length>0)
+                    this.showModalSeeTracking = true;
+                else
+                miniToastr.warn('Não existem atualizações para essa venda ainda','Atenção');
             },
 
-            getFileSelected: function(e){
-                this.fileInputCSV=e.target;
-                this.showModalFileUploadCSV = true;
-            },
-            
-            closeModals(){
-                this.modalAddDispatch = false;
-                this.modalEdtitDispatch =  false;
-                this.modalDeleteDispatch =  false;
-                this.modalFilterDispatchs =  false;
-            },
-
-            actionResendMessageSales: function(value){
-                alert(value.contact_id);
-                alert(value.json_data);
-
-                // tryResendMessageSales(); // TODO: ainda por implementar
-                this.message_sended = true; // So para teste
-
-                if(this.message_sended){
-                    //  console.log("1");
-                    //  console.log(this.model);
-                    //  console.log(value);
-                    //  console.log(value.json_data);
-                    //  console.log(value.id);
-
-                    delete value.json_data.itensInHTML;
-                    delete value.created_at;
-                    delete value.updated_at;
-                    delete value.deleted_at;
-
-                    value.sended = 1;
-
-                    value.json_data = JSON.stringify(value.json_data);
-                    
-                    ApiService.put(this.url+'/'+value.id, value) 
-                        .then(response => {
-
-                            miniToastr.success("Mensagem enviada com sucesso","Sucesso");
-                                this.reloadDatas();
-                        })
-                        .catch(error => {
-                            this.processMessageError(error, this.url, "update");
-                        })
-
-                }else{
-                    miniToastr.warn("Não foi possivél enviar a mensagem. Tente mais tarde!","Atenção");
-                }   
-            },
-
-            tryResendMessageSales: function(){
-                // se mensagem enviado
-                this.message_sended = true;
-            },
-
-            actionEditSales: function(value){
+            actionEditRecord: function(value){
                 this.model = value;
                 this.sales_id = value.id;
                 this.modalEditSales = !this.modalEditSales;
             },
 
-            actionDeleteSales: function(value){
+            actionDeleteRecord: function(value){
                 this.model = value;
                 this.sales_id = value.id;
                 this.modalDeleteSales = !this.modalDeleteSales;
@@ -412,7 +582,43 @@
                 }
             },
 
+            reloadDatas(){
+                this.getTrackings();
+            },
+
+            showModalAddDispatch() {
+                this.modalAddDispatch =true;
+            },            
+
+            showModalEdtitDispatch() {
+                this.modalEdtitDispatch =true;
+            },
             
+            showModalDeleteDispatch() {
+                this.modalDeleteDispatch =true;
+            },            
+
+            showModalFilterDispatchs() {
+                this.modalFilterDispatchs =true;
+            },
+            
+            showModalUploadDispatchList() {
+                this.fileInputCSV = null;
+                this.$refs.fileInputCSV.click();
+            },
+
+            getSelectedFile: function(e){
+                this.fileInputCSV=e.target;
+                this.showModalFileUploadCSV = true;
+            },
+            
+            closeModals(){
+                this.modalAddDispatch = false;
+                this.modalEdtitDispatch =  false;
+                this.modalDeleteDispatch =  false;
+                this.modalFilterDispatchs =  false;
+            },
+
             //------ Specific DataTable methods------------
             nextPage() {
                 if (this.processedRows.length > this.currentPerPage * this.currentPage && this.currentPerPage != -1)
@@ -535,7 +741,7 @@
 
         beforeMount(){
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
-            this.getSales();
+            this.getTrackings();
         },
 
         mounted() {
@@ -651,6 +857,36 @@
     }
     .no-shadows{
         box-shadow: none !important;
+    }
+    .borderless table {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        margin-top: 0px;
+        padding-bottom: 0px;
+        margin-top: 0px;
+        padding-bottom: 0px;
+    }
+    .borderless tr {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        margin-top: 0px;
+        padding-bottom: 0px;
+        margin-top: 0px;
+        padding-bottom: 0px;
+    }
+    .borderless td {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        margin-top: 0px;
+        padding-bottom: 0px;
+        margin-top: 0px;
+        padding-bottom: 0px;
     }
 </style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

@@ -66,6 +66,20 @@ class TestController extends AppBaseController
 
         
         
+        $company_id = '49';
+        $TrackingModel = new Tracking();
+        $TrackingModel->table = "$company_id";
+
+        $Tracking = $TrackingModel->find('701')->toArray();
+
+        $Tracking = (object)$Tracking;
+
+        $Company = Company::with('rpi')->find($company_id);
+        $ExternalRPIController = new ExternalRPIController($Company->rpi);
+        $Contact = Contact::find($Tracking->contact_id);
+        $Contact->whatsapp_id = "5521965536174";
+        $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
+        $trackingJob->handle();
 
         // $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
