@@ -39,7 +39,7 @@ class TrackingBusiness extends Business {
                 $aux = json_encode($newTrackingList);
                 $Tracking->tracking_list = json_encode($newTrackingList);
 
-                if ($newTrackingList[0]->tipo == 'LDI' || $newTrackingList[0]->tipo == 'BDR') {
+                if (in_array($newTrackingList[0]->tipo, ['EST', 'LDI', 'BLQ', 'BDE', 'BDI', 'BDR']) {
                     $Tracking->status_id = StatusController::RECEIVED;
                 }
             }
