@@ -81,6 +81,7 @@ class SendWhatsAppMsgBling implements ShouldQueue
         $Sale->table = $this->Contact->company_id;
         $Sale = $Sale->find($this->objSale->id);
 
+        $Chat = null;
         if ($this->objChat) {
             $Chat = new ExtendedChat();
             $Chat->table = $this->objChat->attendant_id;
