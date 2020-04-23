@@ -35,7 +35,7 @@ class TrackingRepository extends BaseRepository
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
 
-        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 1);
+        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
         $start = $page_length * $page;
 
         // return $Tracking->with(['contact', 'status'])->slice($start, $page_length)->all();
