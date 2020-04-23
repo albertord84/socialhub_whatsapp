@@ -30,18 +30,21 @@ class TrackingRepository extends BaseRepository
         'tracking_list'
     ];
 
-    public function trackingByCompany($company_id)
+    public function trackingByCompany($company_id, int $page = null)
     {
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
 
-        // $this->table = "$company_id";
-        // return $this->get();
-        // return $this->with(['contact'])->get();
+        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 1);
+        $start = $page_length * $page;
 
-        return $Tracking->get();
-        // return $Tracking->with(['contact'])->get();
-        // return $Tracking->with('contact')->where('id', '!=', null)->get();
+        // return $Tracking->with(['contact', 'status'])->slice($start, $page_length)->all();
+        $Trackings = $Tracking->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
+            $tracking->Contact = $tracking->contact()->first();
+            $tracking->last_tracking = $tracking->last_tracking();
+        });
+
+        return $Trackings;
     }
 
     /**

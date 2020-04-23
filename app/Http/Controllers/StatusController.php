@@ -20,6 +20,24 @@ class StatusController extends AppBaseController
     const RECEIVED = 4;
     const ARRIVED  = 5;
 
+    public $STATUS_TRACKING_CORREIOS = array([
+        "BDE" => "Baixa de distribuição externa",
+        "BDI" => "Baixa de distribuição interna",
+        "BDR" => "Baixa de distribuição retroativa",
+        "BLQ" => "Bloqueio de objetos",
+        "CO"  => "Objeto coletado",
+        "DO"  => "Objeto encaminhado",
+        // "EST" => "Estorno",
+        "EST" => "Favor desconsiderar a informação anterior",
+        "FC"  => "Função complementar",
+        "LDI" => "Lista de distribuição interna",
+        "LDE" => "Lista de distribuição externa",
+        "OEC" => "Lista de Objetos Entregues ao Carteiro",
+        "PAR" => "Conferência Unidade Internacional",
+        "RO"  => "Expedição de Lista de Registro",
+        "PO " => "Postagem",
+    ]);
+
     /** @var  StatusRepository */
     private $statusRepository;
 

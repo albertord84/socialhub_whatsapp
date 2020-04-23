@@ -17,6 +17,8 @@ class Status extends Model
 {
 
     public $table = 'status';
+
+    public $connection = "socialhub_mvp";
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
