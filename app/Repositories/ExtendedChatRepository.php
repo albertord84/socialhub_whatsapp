@@ -69,12 +69,13 @@ class ExtendedChatRepository extends ChatRepository
             $ChastMessages = $this->model()::where('company_id', $attendantUser->company_id)->first();
             
             $Contact = null;
-            $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                ->where(['id' => $ChastMessages->contact_id])->first();
-
-            if ($ChastMessages && $Contact) {
+            
+            if ($ChastMessages) {
                 // Get Logged User
                 $User = Auth::check() ? Auth::user() : session('logged_user');
+
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->where(['id' => $ChastMessages->contact_id])->first();
 
                 // Get contact From Bag by Contact Id
                 // $Contact = Contact::find($ChastMessages->contact_id);
@@ -85,10 +86,12 @@ class ExtendedChatRepository extends ChatRepository
                 // $Contact->save();
 
                 // Associate contact to attendant $attendant_id
-                $AttendantsContact = new AttendantsContact();
-                $AttendantsContact->contact_id = $ChastMessages->contact_id;
-                $AttendantsContact->attendant_id = $attendant_id;
-                $AttendantsContact->save();
+                if ($Contact) {
+                    $AttendantsContact = new AttendantsContact();
+                    $AttendantsContact->contact_id = $ChastMessages->contact_id;
+                    $AttendantsContact->attendant_id = $attendant_id;
+                    $AttendantsContact->save();
+                }
 
                 // Move from Sales table to Attendant Table
                 $Sales = new Sales();
@@ -123,7 +126,7 @@ class ExtendedChatRepository extends ChatRepository
                 }
 
                 // Construct Contact with full data that chat need
-                if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
+                if ($Contact && $Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 

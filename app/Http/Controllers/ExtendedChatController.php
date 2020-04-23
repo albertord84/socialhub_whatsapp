@@ -66,7 +66,7 @@ class ExtendedChatController extends ChatController
             $UpdateContact->save();
         }
 
-        return $Contact->toJson();
+        return $Contact ? $Contact->toJson() : null;
     }
 
     /**
