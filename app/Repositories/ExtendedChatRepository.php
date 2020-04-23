@@ -61,7 +61,7 @@ class ExtendedChatRepository extends ChatRepository
         return $Collection;
     }
     
-    public function getBagContact(int $attendant_id): Contact
+    public function getBagContact(int $attendant_id): ?Contact
     {
         try {
             // First message from Bag
