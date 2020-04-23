@@ -60,16 +60,19 @@ class ExtendedChatRepository extends ChatRepository
         // return $ContactChats;
         return $Collection;
     }
-
+    
     public function getBagContact(int $attendant_id): Contact
     {
         try {
             // First message from Bag
             $attendantUser = User::find($attendant_id);
             $ChastMessages = $this->model()::where('company_id', $attendantUser->company_id)->first();
-
+            
             $Contact = null;
-            if ($ChastMessages) {
+            $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                ->where(['id' => $ChastMessages->contact_id])->first();
+
+            if ($ChastMessages && $Contact) {
                 // Get Logged User
                 $User = Auth::check() ? Auth::user() : session('logged_user');
 
@@ -120,8 +123,6 @@ class ExtendedChatRepository extends ChatRepository
                 }
 
                 // Construct Contact with full data that chat need
-                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                    ->where(['id' => $ChastMessages->contact_id])->first();
                 if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
