@@ -56,8 +56,8 @@ class ExtendedChatController extends ChatController
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
             $Contact->json_data = json_encode($contactInfo);
             $contactInfo = json_decode($Contact->json_data);
-            $Contact->first_name = ($contactInfo && strlen($contactInfo->name)) ? $contactInfo->name : $Contact->first_name;
-            $Contact->picurl = ($contactInfo && strlen($contactInfo->picurl)) ? $contactInfo->picurl : "images/contacts/default.png";
+            $Contact->first_name = ($contactInfo && isset($contactInfo->name) && strlen($contactInfo->name)) ? $contactInfo->name : $Contact->first_name;
+            $Contact->picurl = ($contactInfo && isset($contactInfo->picurl) && strlen($contactInfo->picurl)) ? $contactInfo->picurl : "images/contacts/default.png";
 
             // Update contact without latestAttendant
             $UpdateContact = Contact::find($Contact->id);
