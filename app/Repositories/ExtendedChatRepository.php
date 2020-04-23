@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\AttendantsContact;
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Sales;
@@ -61,7 +62,7 @@ class ExtendedChatRepository extends ChatRepository
         return $Collection;
     }
 
-    public function getBagContact(int $attendant_id): Contact
+    public function getBagContact(int $attendant_id): ?Contact
     {
         try {
             // First message from Bag
@@ -69,9 +70,13 @@ class ExtendedChatRepository extends ChatRepository
             $ChastMessages = $this->model()::where('company_id', $attendantUser->company_id)->first();
 
             $Contact = null;
+
             if ($ChastMessages) {
                 // Get Logged User
                 $User = Auth::check() ? Auth::user() : session('logged_user');
+
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->where(['id' => $ChastMessages->contact_id])->first();
 
                 // Get contact From Bag by Contact Id
                 // $Contact = Contact::find($ChastMessages->contact_id);
@@ -82,28 +87,34 @@ class ExtendedChatRepository extends ChatRepository
                 // $Contact->save();
 
                 // Associate contact to attendant $attendant_id
-                $AttendantsContact = new AttendantsContact();
-                $AttendantsContact->contact_id = $ChastMessages->contact_id;
-                $AttendantsContact->attendant_id = $attendant_id;
-                $AttendantsContact->save();
-
-                // Move from Sales table to Attendant Table
-                $Sales = new Sales();
-                $Sales->table = "$attendantUser->company_id";
-                $Sales = $Sales->where('contact_id', $ChastMessages->contact_id)->all();
-
-                foreach ($Sales as $key => $Sale) {
-                    $newChat = new ExtendedChat();
-                    $newChat->table = (string)$attendant_id;
-                    $newChat->message = $Sale->message;
-                    $newChat->attendant_id = $attendant_id;
-                    $newChat->contact_id = $ChastMessages->contact_id;
-                    $newChat->type_id = 1;
-                    $newChat->status_id =  $Sale->sended ? MessagesStatusController::SENDED : MessagesStatusController::ROUTED;
-                    $newChat->source = 1;
-                    $newChat->save();
+                if ($Contact) {
+                    $AttendantsContact = new AttendantsContact();
+                    $AttendantsContact->contact_id = $ChastMessages->contact_id;
+                    $AttendantsContact->attendant_id = $attendant_id;
+                    $AttendantsContact->save();
                 }
+
+                $Company = Company::find($User->company_id);
                 
+                // Move from Sales table to Attendant Table
+                if ($Company->bling_contrated) {
+                    $Sales = new Sales();
+                    $Sales->table = "$attendantUser->company_id";
+                    $Sales = $Sales->where('contact_id', $ChastMessages->contact_id)->get();
+
+                    foreach ($Sales as $key => $Sale) {
+                        $newChat = new ExtendedChat();
+                        $newChat->table = (string) $attendant_id;
+                        $newChat->message = $Sale->message;
+                        $newChat->attendant_id = $attendant_id;
+                        $newChat->contact_id = $ChastMessages->contact_id;
+                        $newChat->type_id = 1;
+                        $newChat->status_id = $Sale->sended ? MessagesStatusController::SENDED : MessagesStatusController::ROUTED;
+                        $newChat->source = 1;
+                        $newChat->save();
+                    }
+                }
+
                 // Move from Chats table to Attendant Table
                 $Chats = $this->findWhere([
                     'company_id' => $attendantUser->company_id,
@@ -120,9 +131,7 @@ class ExtendedChatRepository extends ChatRepository
                 }
 
                 // Construct Contact with full data that chat need
-                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
-                    ->where(['id' => $ChastMessages->contact_id])->first();
-                if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
+                if ($Contact && $Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 
