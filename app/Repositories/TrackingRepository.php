@@ -35,11 +35,16 @@ class TrackingRepository extends BaseRepository
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
 
-        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
-        // $start = $page_length * $page;
+        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 1);
+        $start = $page_length * $page;
 
         // return $Tracking->with(['contact', 'status'])->slice($start, $page_length)->all();
-        return $Tracking->with(['contact', 'status', 'last_tracking'])->paginate($page_length, ['*'], 'tracking', $page);
+        $Trackings = $Tracking->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
+            $tracking->Contact = $tracking->contact()->first();
+            $tracking->last_tracking = $tracking->last_tracking();
+        });
+
+        return $Trackings;
     }
 
     /**
