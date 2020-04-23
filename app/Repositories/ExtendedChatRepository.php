@@ -90,7 +90,7 @@ class ExtendedChatRepository extends ChatRepository
                 // Move from Sales table to Attendant Table
                 $Sales = new Sales();
                 $Sales->table = "$attendantUser->company_id";
-                $Sales = $Sales->where('contact_id', $ChastMessages->contact_id)->all();
+                $Sales = $Sales->where('contact_id', $ChastMessages->contact_id)->get();
 
                 foreach ($Sales as $key => $Sale) {
                     $newChat = new ExtendedChat();

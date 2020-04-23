@@ -23,7 +23,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-//Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
+Route::get('testBlingAPIKey', 'BlingController@testBlingAPIKey');
 
 Route::get('testBlingJob', 'TestController@testBlingJob');
 
