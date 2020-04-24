@@ -73,11 +73,13 @@ class SalesBusiness extends Business {
                     
                     $SaleModel->message = $this->builSaleMessage($Sale, $Company);
                     
-                    $SaleModel = $SaleModel->save();
+                    $SaleModel->save();
 
                     // var_dump($SaleModel);
 
-                    $SaleModel->id = $SaleModel->id ?? $Sale->pedido->numero;
+                    $SaleModel->id = $SaleModel->id != 0 ? $SaleModel->id : $Sale->pedido->numero;
+
+                    // dd($SaleModel);
 
                     
                     // 3. Envia un mensage
