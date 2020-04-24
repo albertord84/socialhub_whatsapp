@@ -35,12 +35,12 @@
                                             <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
                                         </a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                    <!-- <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
                                         <a href='javascript:void(0)' title="Gerenciar etiquetas" class="drpodowtext text-muted" @click.prevent="showModalCRUDTags = true">
                                             <i class="fa fa-tags" aria-hidden="true"></i>
                                             Ver etiquetas
                                         </a>
-                                    </b-dropdown-item>
+                                    </b-dropdown-item> -->
                                     <b-dropdown-item title="Encerrar sessão" class="dropdown_content">
                                         <router-link to="/" class="drpodowtext text-muted">
                                             <div v-on:click="logout">
@@ -941,7 +941,7 @@
             </div>
         </b-modal>
 
-        <!-- Modal to transfer contact-->
+        <!-- Modal to CRUD Tags-->
         <b-modal v-model="showModalCRUDTags" :hide-footer="true" size="sm" title="Gerenciar etiquetas">
             <attendantCRUDTags :userLogged="userLogged" @onclosemodal='closemodal'></attendantCRUDTags>
         </b-modal>
@@ -1388,7 +1388,8 @@
                     }
                 });                
                 if(contact_id == selectedContactId){
-                    this.displayChatRightSide();   
+                    if(this.showChatRightSide)
+                        this.displayChatRightSide();   
                     this.selectedContactIndex = -1;
                 }
             },

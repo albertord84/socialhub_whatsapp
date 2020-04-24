@@ -30,7 +30,7 @@ class TrackingRepository extends BaseRepository
         'tracking_list'
     ];
 
-    public function trackingByCompany($company_id, int $page = null)
+    public function trackingByCompany($company_id, int $page = null, string $searchInput = '')
     {
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
@@ -39,10 +39,22 @@ class TrackingRepository extends BaseRepository
         $start = $page_length * $page;
 
         // return $Tracking->with(['contact', 'status'])->slice($start, $page_length)->all();
-        $Trackings = $Tracking->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
-            $tracking->Contact = $tracking->contact()->first();
-            $tracking->last_tracking = $tracking->last_tracking();
-        });
+        if($searchInput == ''){
+            $Trackings = $Tracking
+                ->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
+                $tracking->Contact = $tracking->contact()->first();
+                $tracking->last_tracking = $tracking->last_tracking();
+            });
+        } else{
+            $Trackings = $Tracking
+                ->where('json_csv_data', 'LIKE', '%'. $searchInput.'%')
+                ->orWhere('tracking_code', 'LIKE', '%'. $searchInput.'%')
+                ->orWhere('tracking_list', 'LIKE', '%'. $searchInput.'%')
+                ->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
+                $tracking->Contact = $tracking->contact()->first();
+                $tracking->last_tracking = $tracking->last_tracking();
+            });
+        }
 
         return $Trackings;
     }

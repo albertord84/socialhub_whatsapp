@@ -69,7 +69,8 @@ class TrackingController extends AppBaseController
         $this->trackingRepository->pushCriteria(new RequestCriteria($request));
 
         $page = (int) ($request->page ?? '0');
-        $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page);
+        $searchInput = (string) ($request->searchInput ?? '');
+        $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page, $searchInput);
 
         // dd($trackings[0]);
 
