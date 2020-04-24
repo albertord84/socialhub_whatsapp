@@ -58,8 +58,8 @@ class SendWhatsAppMsgBling implements ShouldQueue
         $this->rpiController = $rpiController;
 
         $this->Contact = $Contact;
-        $this->objSale = $Sale;
         $this->objChat = $Chat;
+        $this->objSale = $Sale;
 
         $this->connection = 'database';
 
@@ -78,8 +78,11 @@ class SendWhatsAppMsgBling implements ShouldQueue
     {
         Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->objSale, $this->objChat]);
         $Sale = new Sales();
+        // dd($this);
         $Sale->table = $this->Contact->company_id;
         $Sale = $Sale->find($this->objSale->id);
+        // dd($Sale);
+
 
         $Chat = null;
         if ($this->objChat) {

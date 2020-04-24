@@ -45,7 +45,7 @@ class Sales extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'string',
+        // 'id' => 'string',
         'contact_id' => 'integer',
         'source' => 'integer',
         'sended' => 'integer',
@@ -67,7 +67,7 @@ class Sales extends Model
      */
     public static function blingConstruct(stdClass $saleBling, int $contact_id, int $company_id) : Sales
     {
-        $Sale = new Sales;
+        $Sale = new Sales();
         $Sale->table = "$company_id";
         if (isset($saleBling->pedido->numero)) {
             $Sale->id =  $saleBling->pedido->numero;
@@ -76,7 +76,7 @@ class Sales extends Model
             throw new MyException("Invalid Bling Sale Id", 1);
         }
         $Sale->contact_id = $contact_id;
-        $Sale->source = 1;
+        $Sale->source = 0;
         $Sale->json_data = json_encode($saleBling);
 
         return $Sale;

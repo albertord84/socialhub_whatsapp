@@ -23,9 +23,13 @@ class BlingBusiness extends Business
         try {
             $Companies = Company::with('rpi')->where(['bling_contrated' => true])->get();
 
+            // dd($Companies);
+
             $SalesBussines = new SalesBusiness();
             foreach ($Companies as $key => $Company) {
                 $Sales = $this->getBlingCompanySales($Company);
+
+                // dd($Sales);
 
                 foreach ($Sales as $key => $Sale) {
                     $SalesBussines->createSale($Sale, $Company);

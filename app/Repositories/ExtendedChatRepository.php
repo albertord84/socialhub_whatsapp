@@ -110,7 +110,7 @@ class ExtendedChatRepository extends ChatRepository
                         $newChat->contact_id = $ChastMessages->contact_id;
                         $newChat->type_id = 1;
                         $newChat->status_id = $Sale->sended ? MessagesStatusController::SENDED : MessagesStatusController::ROUTED;
-                        $newChat->source = 1;
+                        $newChat->source = 0;
                         $newChat->save();
                     }
                 }

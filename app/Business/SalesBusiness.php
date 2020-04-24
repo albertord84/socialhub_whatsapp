@@ -69,9 +69,16 @@ class SalesBusiness extends Business {
                 if (!$SaleModel) { // if not exist insert the Sale
                     $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
 
+                    // var_dump($SaleModel);
+                    
                     $SaleModel->message = $this->builSaleMessage($Sale, $Company);
+                    
+                    $SaleModel = $SaleModel->save();
 
-                    $SaleModel->save();
+                    // var_dump($SaleModel);
+
+                    $SaleModel->id = $SaleModel->id ?? $Sale->pedido->numero;
+
                     
                     // 3. Envia un mensage
                     $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -85,14 +92,21 @@ class SalesBusiness extends Business {
                             $Chat->status_id = MessagesStatusController::ROUTED;
                             $Chat->message = $SaleModel->message;
                             $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
+                            $Chat->source = 0;
                             $Chat->table = "$Chat->attendant_id";
                             $Chat->save();
                         }
 
+                        // var_dump($SaleModel);
                         $objSale = (object) $SaleModel->toArray();
+                        // var_dump($objSale);
+                        
                         $objChat = $Chat ? (object) $Chat->toArray() : null;
 
                         SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
+
+
+                        // dd($objSale);
                     }
                         
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
@@ -108,7 +122,7 @@ class SalesBusiness extends Business {
 
     function builSaleMessage(stdClass $Sale, Company $Company) : string
     {
-        Log::debug('SalesBussines builSaleMessage', [$Sale]);
+        // Log::debug('SalesBussines builSaleMessage', [$Sale]);
 
         $replace = [
             $Sale->pedido->desconto ?? '@desconto', 

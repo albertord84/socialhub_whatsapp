@@ -48,23 +48,23 @@ class TestController extends AppBaseController
         $this->repository = $repository;
     }
 
-    public function index(Request $request, stdClass $Sale, Company $Company) 
+    public function index(Request $request, stdClass $Sale, Company $Company)
     {
-        
 
-        
+
+
 
 
         // Test Correios
 
-        
+
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
-        
+
         // $TrackingBusiness = new TrackingBusiness();
 
-        
-        
+
+
         // $company_id = '49';
         // $TrackingModel = new Tracking();
         // $TrackingModel->table = "$company_id";
@@ -257,49 +257,54 @@ class TestController extends AppBaseController
         $this->testBlingJob($request);
     }
 
-    public function testBlingJob(Request $request){
-
-        $company_id = 30;
-        // $company_id = 1;
-        $contact_id = 1;
+    public function testBlingJob(Request $request)
+    {
+        // $SalesBussines = new SalesBusiness();
+        
+        // $company_id = 20;
+        $company_id = 1;
+        $contact_id = 25660;
         // $contact_id = 1;
-        $attendant_id = 4;
+        // $attendant_id = 4;
+
+        $Company = Company::with('rpi')->find($company_id); 
         
         $SaleModel = new Sales();
         
         $SaleModel->table = "$company_id";
-        $SaleModel = $SaleModel->find(1469);
+        $SaleModel = $SaleModel->find(2828);
         // $SaleModel = $SaleModel->find(1);
-
+        
+        // $SalesBussines->createSale($SaleModel, $Company);
+        // dd("ok testBlingJob");
 
         $Contact = Contact::find($contact_id);
-        
 
-        $Chat = new ExtendedChat();        
-        $Chat->table = $attendant_id;
-        $Chat->contact_id = $Contact->id;
-        $Chat->company_id = $company_id;
-        $Chat->source = 1;
-        $Chat->type_id = MessagesTypeController::Text;
-        $Chat->status_id = MessagesStatusController::ROUTED;
-        $Chat->message = "Compra do caralho 2";
-        $Chat->attendant_id = $attendant_id;
-        $Chat->save();
 
-        $Company = Company::with('rpi')->find(1);
+        $Chat = null;
+        // $Chat = new ExtendedChat();        
+        // $Chat->table = $attendant_id;
+        // $Chat->contact_id = $Contact->id;
+        // $Chat->company_id = $company_id;
+        // $Chat->source = 1;
+        // $Chat->type_id = MessagesTypeController::Text;
+        // $Chat->status_id = MessagesStatusController::ROUTED;
+        // $Chat->message = "Compra do caralho 2";
+        // $Chat->attendant_id = $attendant_id;
+        // $Chat->save();
+
         $ExternalRPIController = new ExternalRPIController($Company->rpi);
 
         $objSale = (object) $SaleModel->toArray();
+        // dd($objSale);
         $objChat = $Chat ? (object) $Chat->toArray() : null;
 
-        $Contact->company_id = 30;
-        // SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
+        // $Contact->company_id = 30;
+        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
 
-        $blingJob = new SendWhatsAppMsgBling($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
+        // $blingJob = new SendWhatsAppMsgBling($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
         // dd($blingJob);
-        $blingJob->handle();
-
-
+        // $blingJob->handle();
     }
 
     function testVindi()
@@ -332,7 +337,6 @@ class TestController extends AppBaseController
 
 
         dd($result);
-
     }
 
     function testExcel(Request $request)
@@ -343,15 +347,15 @@ class TestController extends AppBaseController
         $file = file_get_contents('');
         // Storage::disk('public')->
         // if ($file = $request->file('file')) {
-            // Load .xls
+        // Load .xls
 
 
-            // unlink($file->getRealPath());
+        // unlink($file->getRealPath());
         // }
     }
 
     function initCorreios(\PhpSigep\Model\AccessData $accessData)
-    {   
+    {
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
 
         $this->config = new \PhpSigep\Config();
@@ -365,27 +369,27 @@ class TestController extends AppBaseController
                     // "\PhpSigep\Cache\Storage\Adapter\AdapterOptions" e "\PhpSigep\Cache\Storage\Adapter\FileSystemOptions".
                     // Por tanto as chaves devem ser o nome de um dos atributos dessas classes.
                     'enabled' => false,
-                    'ttl' => 20,// "time to live" de 10 segundos
+                    'ttl' => 20, // "time to live" de 10 segundos
                     'cacheDir' => sys_get_temp_dir(), // Opcional. Quando não inforado é usado o valor retornado de "sys_get_temp_dir()"
                 ),
             )
         );
-        
+
         \PhpSigep\Bootstrap::start($this->config);
     }
 
     public function testCorreiosTrackingObject(Request $request)
     {
 
-        
+
         $usuario = '2689761400';
         $senha = 'H1OR;3@Y@M';
         $cnpjEmpresa = '26897614000101';
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
         $cartaopostagem = '0074969366';
-        
-        
+
+
         $accessData = new \PhpSigep\Model\AccessDataHomologacao();
         $accessData->setUsuario($usuario);
         $accessData->setSenha($senha);
@@ -395,9 +399,9 @@ class TestController extends AppBaseController
         // $accessData->setCartaoPostagem($cartaopostagem);
         // $accessData->setAnoContrato(null);
         // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
-        
+
         $this->initCorreios($accessData);
-        
+
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
 
         // $accessData->setUsuario($usuario);// Usuário e senha para teste passado no manual
@@ -407,20 +411,20 @@ class TestController extends AppBaseController
         // $dados_etiquetas = new \PhpSigep\Model\SolicitaEtiquetas();
         // $dados_etiquetas->setAccessData($this->config->getAccessData());
         // $dados_etiquetas->setQtdEtiquetas(1);
-        
+
         // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
         $etiqueta = new \PhpSigep\Model\Etiqueta();
         // $etiqueta->setEtiquetaSemDv('PM499951504BR');
         $etiqueta->setEtiquetaComDv('SI192420171BR');
         // $etiqueta->setEtiquetaComDv('PM499951504BR');
-        
+
         $params = new \PhpSigep\Model\RastrearObjeto();
         $params->setAccessData($this->config->getAccessData());
         $params->setEtiquetas([$etiqueta]);
-            
+
         $phpSigep = new \PhpSigep\Services\SoapClient\Real();
         $result = $phpSigep->rastrearObjeto($params);
-        
+
         dd($result);
         // var_dump((array)$result);
     }
@@ -433,7 +437,7 @@ class TestController extends AppBaseController
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
         $cartaopostagem = '0074969366';
-        
+
         $accessData = new \PhpSigep\Model\AccessDataHomologacao();
         $accessData->setUsuario($usuario);
         $accessData->setSenha($senha);
@@ -443,13 +447,13 @@ class TestController extends AppBaseController
         // $accessData->setCartaoPostagem($cartaopostagem);
         // $accessData->setAnoContrato(null);
         // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
-        
+
         $this->initCorreios($accessData);
 
         $plp  = new \PhpSigep\Model\SolicitaXmlPlpResult();
         // $_file_plp = 'plp.pdf';
         // $pdf->render('F', $_file_plp);
-        
+
         dd($plp);
         // var_dump((array)$result);
     }
@@ -465,7 +469,7 @@ class TestController extends AppBaseController
 
         $ContactChats = new Collection();
         try {
-            $extAttContRepo = new ExtendedContactRepository(app()); 
+            $extAttContRepo = new ExtendedContactRepository(app());
 
             $Attendants = $extAttContRepo->getAttendants($contact_id);
 
@@ -480,8 +484,6 @@ class TestController extends AppBaseController
             // $ContactChats
 
             $Collection = new Collection();
-            
-            
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -580,7 +582,7 @@ class TestController extends AppBaseController
                 ['name' => "message", 'contents' => $message],
                 ['name' => "api_token", 'contents' => $api_token],
             ],
-        ]);            
+        ]);
 
         dd($response->getBody()->getContents());
         // dd(json_decode($response->getBody()->getContents()));
@@ -614,7 +616,6 @@ class TestController extends AppBaseController
 
         dd($response);
     }
-
 }
 
 /**
