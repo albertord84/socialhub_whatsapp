@@ -941,7 +941,7 @@
             </div>
         </b-modal>
 
-        <!-- Modal to transfer contact-->
+        <!-- Modal to CRUD Tags-->
         <b-modal v-model="showModalCRUDTags" :hide-footer="true" size="sm" title="Gerenciar etiquetas">
             <attendantCRUDTags :userLogged="userLogged" @onclosemodal='closemodal'></attendantCRUDTags>
         </b-modal>
@@ -1388,7 +1388,8 @@
                     }
                 });                
                 if(contact_id == selectedContactId){
-                    this.displayChatRightSide();   
+                    if(this.showChatRightSide)
+                        this.displayChatRightSide();   
                     this.selectedContactIndex = -1;
                 }
             },

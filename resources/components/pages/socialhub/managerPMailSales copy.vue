@@ -4,74 +4,57 @@
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>        
+        <div class="text-left">
+            <div id="search-input-container">
                 <!-- Buscar envio -->
-        <div style="display:flex; align-items: center; justify-content:space-between">
-            <!-- <div id=""> -->
-                <label>
-                    <div style="" class="form-group has-seasrch">
-                        <div class="col-lg-12 input-group">
-                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar envio por CEP, CPF/CNPJ ou código de rastreio">
-                            <div class="input-group-append" title="Conferir número">
-                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="findSearchInput">
-                                    <span v-if="!isFilteringBySearchInput" class="fa fa fa-search"></span>
-                                    <span v-if="isFilteringBySearchInput" class="fa fa-spinner fa-spin "></span>
-                                </button>
-                            </div>
-                        </div>
+                <!-- <label>
+                    <div style="" class="form-group has-search">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="search" id="search-input" style="width:35rem" class="form-control" placeholder="Buscar envio por e-mail, CEP, CPF/CNPJ ou código de rastreio" v-model="searchInput">
                     </div>
-                </label>
+                </label> -->
 
-                <label>
-                    <div style="">
-                        <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getTrackings(0)">
-                            <i class="mdi mdi-chevron-double-left fa-2x" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getTrackings(actualPage-1)">
-                            <i class="mdi mdi-chevron-left fa-2x" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
-                            <b class="">{{actualPage+1}}</b>
-                        </button>
-                        <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getTrackings(actualPage+1)">
-                            <i class="mdi mdi-chevron-right fa-2x" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </label>
+                <!-- Exportar envios -->
+                <div class="actions float-right pr-4 mb-3">
+                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar envios mostrados">
+                        <i class="mdi mdi-download fa-lg"></i>
+                    </a>
+                </div>
 
-                <label style="">
-                    <div class="actisons pr-4">
-                        <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
-                        <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
-                            <i class="mdi mdi-upload fa-lg"  ></i>
-                        </a>
-
-                        <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar envios mostrados">
-                            <i class="mdi mdi-download fa-lg"></i>
-                        </a>
-                        <!-- <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalFilterDispatchs" title="Flitrar envios">
-                            <i class="mdi mdi-filter-plus"></i>
-                        </a> -->
-                        <!-- <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalAddDispatch" title="Adicionar um envio">
-                            <i class="mdi mdi-plus-box"></i>
-                        </a> -->
-                    </div>
-                </label>
-
-            <!-- </div> -->
+                <!-- Subir lista de códigos de rastreio -->
+                <div class="actions float-right pr-4 mb-3">
+                    <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
+                        <i class="mdi mdi-upload fa-lg"  ></i>
+                    </a>
+                </div>
+                                
+                <!-- Flitrar envios -->
+                <!-- <div class="actions float-right pr-4 mb-3">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalFilterDispatchs" title="Flitrar envios">
+                        <i class="mdi mdi-filter-plus"></i>
+                    </a>
+                </div> -->
+                <!-- Adicionar um envio -->
+                <!-- <div class="actions float-right pr-4 mb-3">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalAddDispatch" title="Adicionar um envio">
+                        <i class="mdi mdi-plus-box"></i>
+                    </a>
+                </div> -->
+            </div>
         </div>        
-
         <div class="table-responsive">
             <table ref="table" id="salesTable" class="table">
                 <thead>
-                    <tr> <th class="text-left" v-for="(column, i) in columns" :style="{width: column.width ? column.width : 'auto'}" :key="i"> {{column.label}}  </th> <slot name="thead-tr"></slot> </tr>
+                    <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, index) in rows" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
-                        <template v-for="(column,index) in columns" >
-                            <td v-if="!column.html && !column.json" >{{ collect(row,column.field) }}</td>
-                            <td v-if="column.sended" v-html="collect(row, column.field)" ></td>
-                            <td v-if="column.html"  v-html="collect(row, column.field)"  ></td>
-                            <td v-if="column.actions" >
+                    <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
+                        <template v-for="(column,index2) in columns">
+                            <td v-if="!column.html && !column.json" :key="index2">{{ collect(row,column.field) }}</td>
+                            <td v-if="column.sended" :key="index2" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html" :key="index2" v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" :key="index2">
                                 <div style="position:relative; margin-left:-130px;">
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver comprador" @click.prevent="actionSeeClient(row)"><i class='fa fa-user-circle-o text-primary mr-1' ></i> </a>
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver tracking" @click.prevent="actionSeeTacking(row)"><i class='fa fa-clock-o text-warning mr-1'  ></i> </a>
@@ -80,28 +63,38 @@
                                 </div>
                             </td>
                         </template>
+                        <!-- <slot name="tbody-tr" :row="row"></slot> -->
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="table-footer text-center" v-if="paginate">
-            <label>
-                <div style="">
-                    <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getTrackings(0)">
-                        <i class="mdi mdi-chevron-double-left fa-2x" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getTrackings(actualPage-1)">
-                        <i class="mdi mdi-chevron-left fa-2x" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
-                        <b class="">{{actualPage+1}}</b>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getTrackings(actualPage+1)">
-                        <i class="mdi mdi-chevron-right fa-2x" aria-hidden="true"></i>
-                    </button>
+        <div class="table-footer" v-if="paginate">
+            <div class="datatable-length float-left pl-3">
+                <span>Linhas por página:</span>
+                <select class="custom-select" v-model="currentPerPage">
+                    <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
+                    <option value="-1">Todos</option>
+                </select>
+                <div class="datatable-info  pb-2 mt-3">
+                    <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
+                    currentPerPage * currentPage)}} of {{processedRows.length}}
+                    <span>linhas</span>
                 </div>
-            </label>
-
+            </div>
+            <div class="float-right">
+                <ul class="pagination">
+                    <li>
+                        <a href="javascript:undefined" class="btn link" @click.prevent="previousPage" tabindex="0">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:undefined" class="btn link" @click.prevent="nextPage" tabindex="0">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
         
         <!-- Add Dispatch Modal -->
@@ -338,7 +331,7 @@
                 <hr>
                 <article class="media">
                     <a class="float-left m-2">
-                        <span class="mdi mdi-truck fa-2x text-primary" title="Sobre o envio"></span>
+                        <span class="fa fa-money fa-2x text-primary" title="Sobre o envio"></span>
                     </a>
                     <div class="media-body ml-2">
                         <p class="mt-1 mb-0"><b>Sobre o envio</b></p>
@@ -473,13 +466,7 @@
                 modalDeleteDispatch: false,
                 modalFilterDispatchs: false,
                 fileInputCSV: null,
-
-                searchInput: '',                
-                actualPage: 0,
-                saveActualPage: 0,
-                isFilteringBySearchInput: false,
-                isFindingNextPage: false,
-                hasMoreTrackingPage: true,
+                trackingPage: 0,
 
                 rows:[],
                 columns: [
@@ -529,46 +516,22 @@
                 currentPerPage: this.perPage,
                 sortColumn: -1,
                 sortType: 'asc',
+                searchInput: '',
             }
         },
 
         methods: {
-            getTrackings: function(page) { //R
-                if(this.isFindingNextPage){
-                    if(this.isFilteringBySearchInput)
-                        this.isFilteringBySearchInput = false;
-                    return;
-                } 
-                this.actualPage = page;
-                this.isFindingNextPage = true;
+            getTrackings: function() { //R
                 ApiService.get(this.url,{
-                    'page': this.actualPage,
-                    'searchInput': this.searchInput
+                    'page':this.trackingPage
                 })
-                .then(response => {   
-                    this.rows = response.data;
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    // this.processMessageError(error, this.url, "get");
-                })
-                .finally(()=>{
-                    this.isFindingNextPage = false;
-                    this.isFilteringBySearchInput = false;
-                });
-            },
-
-            findSearchInput() {
-                // console.log(this.searchInput); return;
-                if(this.searchInput.trim()){
-                    this.isFilteringBySearchInput = true;
-                    this.saveActualPage = this.actualPage;
-                    this.getTrackings(0);
-                }else{
-                    this.isFilteringBySearchInput = true;
-                    this.getTrackings(this.saveActualPage);
-                }
-            },
+                    .then(response => {                        
+                        this.rows = response.data;
+                    })
+                    .catch(error => {
+                        // this.processMessageError(error, this.url, "get");
+                    });
+            }, 
 
             actionSeeClient: function(value){
                 value.json_csv_data = JSON.parse(value.json_csv_data);
@@ -623,7 +586,7 @@
             },
 
             reloadDatas(){
-                this.getTrackings(this.actualPage);
+                this.getTrackings();
             },
 
             showModalAddDispatch() {
@@ -781,7 +744,7 @@
 
         beforeMount(){
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
-            this.getTrackings(0);
+            this.getTrackings();
         },
 
         mounted() {
@@ -802,43 +765,41 @@
         computed: {
             processedRows: function () {
                 var computedRows = this.rows;
-                // if (this.sortable !== false) {
-                //     computedRows = computedRows.sort((x, y) => {
-                //         if (!this.columns[this.sortColumn]) {
-                //             return 0;
-                //         }
-                //         const cook = (x) => {
-                //             x = this.collect(x, this.columns[this.sortColumn].field);
-                //             if (typeof (x) === 'string') {
-                //                 x = x.toLowerCase();
-                //                 if (this.columns[this.sortColumn].numeric)
-                //                     x = x.indexOf('.') >= 0 ? parseFloat(x) : parseInt(x);
-                //             }
-                //             return x;
-                //         }
-                //         x = cook(x);
-                //         y = cook(y);
-                //         return (x < y ? -1 : (x > y ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
-                //     })
-                // }
+                if (this.sortable !== false) {
+                    computedRows = computedRows.sort((x, y) => {
+                        if (!this.columns[this.sortColumn]) {
+                            return 0;
+                        }
+                        const cook = (x) => {
+                            x = this.collect(x, this.columns[this.sortColumn].field);
+                            if (typeof (x) === 'string') {
+                                x = x.toLowerCase();
+                                if (this.columns[this.sortColumn].numeric)
+                                    x = x.indexOf('.') >= 0 ? parseFloat(x) : parseInt(x);
+                            }
+                            return x;
+                        }
+                        x = cook(x);
+                        y = cook(y);
+                        return (x < y ? -1 : (x > y ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
+                    })
+                }
 
-                // if (this.searchInput) {
-                //     computedRows = (new Fuse(computedRows, {
-                //         keys: this.columns.map(c => c.field)
-                //     })).search(this.searchInput);
-                // }
+                if (this.searchInput) {
+                    computedRows = (new Fuse(computedRows, {
+                        keys: this.columns.map(c => c.field)
+                    })).search(this.searchInput);
+                }
                 return computedRows;
             },
 
             paginated: function () {
-                // var paginatedRows = this.processedRows;
-                // if (this.paginate && this.currentPerPage != -1) {
-                //     paginatedRows = paginatedRows.slice((this.currentPage - 1) * this.currentPerPage, this.currentPage *
-                //         this.currentPerPage);
-                // }
-                // return paginatedRows;
-                
-                return this.rows;
+                var paginatedRows = this.processedRows;
+                if (this.paginate && this.currentPerPage != -1) {
+                    paginatedRows = paginatedRows.slice((this.currentPage - 1) * this.currentPerPage, this.currentPage *
+                        this.currentPerPage);
+                }
+                return paginatedRows;
             }
         },
 
@@ -848,10 +809,10 @@
                 this.paginated;
             },
 
-            // searchInput() {
-            //     this.currentPage = 1;
-            //     this.paginated;
-            // }
+            searchInput() {
+                this.currentPage = 1;
+                this.paginated;
+            }
         },
         
     }
