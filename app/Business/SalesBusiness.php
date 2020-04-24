@@ -89,7 +89,10 @@ class SalesBusiness extends Business {
                             $Chat->save();
                         }
 
-                        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $Chat ? (object) $Chat->toArray() : null, (object) $SaleModel->toArray(), 'blingsales');
+                        $objSale = (object) $SaleModel->toArray();
+                        $objChat = $Chat ? (object) $Chat->toArray() : null;
+
+                        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
                     }
                         
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
@@ -105,6 +108,7 @@ class SalesBusiness extends Business {
 
     function builSaleMessage(stdClass $Sale, Company $Company) : string
     {
+        Log::debug('SalesBussines builSaleMessage', [$Sale]);
 
         $replace = [
             $Sale->pedido->desconto ?? '@desconto', 
@@ -208,7 +212,7 @@ class SalesBusiness extends Business {
 
         $message = str_replace($search, $replace, $Company->bling_message);
 
-        $message = str_replace($search, "não recebido", $Company->bling_message);
+        $message = str_replace($search, "[dado não recebido]", $message);
 
         return $message;
     }
