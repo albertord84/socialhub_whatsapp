@@ -89,7 +89,10 @@ class SalesBusiness extends Business {
                             $Chat->save();
                         }
 
-                        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $Chat ? (object) $Chat->toArray() : null, (object) $SaleModel->toArray(), 'blingsales');
+                        $objSale = (object) $SaleModel->toArray();
+                        $objChat = $Chat ? (object) $Chat->toArray() : null;
+
+                        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
                     }
                         
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
