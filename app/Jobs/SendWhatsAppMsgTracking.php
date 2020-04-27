@@ -88,7 +88,7 @@ class SendWhatsAppMsgTracking implements ShouldQueue
         // dd($newMessage);
 
         if ($newMessage) {
-            // $response = $this->rpiController->sendTextMessage($newMessage, $this->Contact);
+            if ($this->Contact->id == 1) $response = $this->rpiController->sendTextMessage($newMessage, $this->Contact);
             // $responseJson = json_decode($response);
             // Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgTracking handled: ', [$this->Contact->whatsapp_id]);
             

@@ -4,6 +4,7 @@ namespace App\Business;
 
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\TrackingController;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Company;
 use App\Models\Contact;
@@ -136,7 +137,8 @@ class TrackingBusiness extends Business
                 // Check whether last even need action
                 $importantEvents = PostofficeBusiness::trackingImportantEventList()[0];
                 if (count($eventList) && in_array([$eventList[0]->tipo, $eventList[0]->status], $importantEvents)) {
-                    // $Tracking->status_id
+                    $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
+                    $Tracking->save();
                 }
             }
 
