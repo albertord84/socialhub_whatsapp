@@ -3,6 +3,7 @@
 namespace App\Business;
 
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\TrackingController;
 use App\Models\Company;
 use App\Models\Tracking;
 use App\Repositories\TrackingRepository;
@@ -68,7 +69,7 @@ class PostofficeBusiness extends Business
             $TrackingModel = new Tracking();
             $TrackingModel->table = "$Company->id";
 
-            $Objects = $TrackingModel->where('status_id', '!=', StatusController::RECEIVED)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10));
+            $Objects = $TrackingModel->where('status_id', '!=', TrackingController::TRACKING_RECEIVED)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10));
 
             return $Objects;
         } catch (\Throwable $th) {
