@@ -14,11 +14,11 @@ use Response;
 class StatusController extends AppBaseController
 {
 
-    const POSTED   = 1;
-    const MOVING   = 2;
-    const STOPPED  = 3;
-    const RECEIVED = 4;
-    const ARRIVED  = 5;
+    const TRACKING_POSTED   = 1;
+    const TRACKING_MOVING   = 2;
+    const TRACKING_STOPPED  = 3;
+    const TRACKING_RECEIVED = 4;
+    const TRACKING_ARRIVED  = 5;
 
     public $STATUS_TRACKING_CORREIOS = array([
         "BDE" => "Baixa de distribuição externa",

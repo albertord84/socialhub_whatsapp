@@ -69,19 +69,12 @@ class SalesBusiness extends Business {
                 if (!$SaleModel) { // if not exist insert the Sale
                     $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
 
-                    // var_dump($SaleModel);
-                    
                     $SaleModel->message = $this->builSaleMessage($Sale, $Company);
                     
                     $SaleModel->save();
 
-                    // var_dump($SaleModel);
-
                     $SaleModel->id = $SaleModel->id != 0 ? $SaleModel->id : $Sale->pedido->numero;
 
-                    // dd($SaleModel);
-
-                    
                     // 3. Envia un mensage
                     $ExternalRPIController = new ExternalRPIController($Company->rpi);
                     $Chat = null;
@@ -99,16 +92,10 @@ class SalesBusiness extends Business {
                             $Chat->save();
                         }
 
-                        // var_dump($SaleModel);
                         $objSale = (object) $SaleModel->toArray();
-                        // var_dump($objSale);
-                        
                         $objChat = $Chat ? (object) $Chat->toArray() : null;
 
                         SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
-
-
-                        // dd($objSale);
                     }
                         
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);

@@ -32,7 +32,7 @@ class TrackingBusiness extends Business
 
             $trackingList = json_decode($Tracking->tracking_list) ?? array();
 
-            $newTrackingList = $this->searchTrackingObject($Tracking, $Company);
+            $newTrackingList = $this->processTrackingObject($Tracking, $Company);
 
             if (count($newTrackingList) > count($trackingList)) {
                 $message = $this->builTrackingMessage(json_decode($Tracking->json_csv_data), $newTrackingList[0], $Company);
@@ -118,7 +118,7 @@ class TrackingBusiness extends Business
         return $result;
     }
 
-    public function searchTrackingObject(Tracking $Tracking, Company $Company)
+    public function processTrackingObject(Tracking $Tracking, Company $Company)
     {
         try {
             $newTrackingList = array();
@@ -127,10 +127,16 @@ class TrackingBusiness extends Business
 
             if ($response && count($response->getResult())) {
                 $eventList = $response->getResult()[0]->getEventos();
-                Log::debug("searchTrackingObject $Tracking->tracking_code", [$eventList]);
+                Log::debug("processTrackingObject $Tracking->tracking_code", [$eventList]);
 
                 foreach ($eventList as $key => $event) {
                     $newTrackingList[$key] = (object) $event->toArray();
+                }
+
+                // Check whether last even need action
+                $importantEvents = PostofficeBusiness::trackingImportantEventList()[0];
+                if (count($eventList) && in_array([$eventList[0]->tipo, $eventList[0]->status], $importantEvents)) {
+                    // $Tracking->status_id
                 }
             }
 
