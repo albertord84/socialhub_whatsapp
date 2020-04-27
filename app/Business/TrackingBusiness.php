@@ -135,7 +135,7 @@ class TrackingBusiness extends Business
                 }
 
                 // Check whether last even need action
-                $importantEvents = PostofficeBusiness::trackingImportantEventList()[0];
+                $importantEvents = PostofficeBusiness::trackingImportantEventList();
                 if (count($eventList) && in_array([$eventList[0]->tipo, $eventList[0]->status], $importantEvents)) {
                     $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
                     $Tracking->save();

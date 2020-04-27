@@ -254,27 +254,44 @@ class TestController extends AppBaseController
         // $this->testJobsQueue();
         // $this->testJobsQueue();
 
-        $this->testBlingJob($request);
+        $this->testCorreiosProblems($request);
+        // $this->testBlingJob($request);
+    }
+
+    function testCorreiosProblems()
+    {
+        $Tracking = new \App\Models\Tracking();
+        $Tracking->table = 49;
+        $POB = new \App\Business\PostofficeBusiness();
+        $Trackings = $Tracking->get();
+
+        foreach ($Trackings as $key => $item) {
+            $event = json_decode($item->tracking_list)[0];
+            if ($event && in_array([$event->tipo, $event->status], $POB->trackingImportantEventList())) 
+                var_dump($item);
+        };
+
+        dd('fin');
     }
 
     public function testBlingJob(Request $request)
     {
         // $SalesBussines = new SalesBusiness();
-        
+
         // $company_id = 20;
         $company_id = 1;
         $contact_id = 25660;
         // $contact_id = 1;
         // $attendant_id = 4;
 
-        $Company = Company::with('rpi')->find($company_id); 
-        
+        $Company = Company::with('rpi')->find($company_id);
+
         $SaleModel = new Sales();
-        
+
         $SaleModel->table = "$company_id";
         $SaleModel = $SaleModel->find(2828);
         // $SaleModel = $SaleModel->find(1);
-        
+
         // $SalesBussines->createSale($SaleModel, $Company);
         // dd("ok testBlingJob");
 
