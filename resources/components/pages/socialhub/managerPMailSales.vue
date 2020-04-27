@@ -84,6 +84,7 @@
                 </tbody>
             </table>
         </div>
+
         <div class="table-footer text-center" v-if="paginate">
             <label>
                 <div style="">
@@ -144,8 +145,8 @@
         </b-modal>
 
         <!-- Modal to upload codes -->
-        <b-modal size="md" v-model="showModalFileUploadCSV" :hide-footer="true" title="Verificação">
-            <div>
+        <b-modal size="md" v-model="showModalFileUploadCSV" :hide-footer="true" title="Importação de códigos de rastreios">
+            <div v-if="steepFileUploadCSV === 2">
                 <div class="form-group p-2">
                     Confirma que deseja enviar esse arquivo de código de rastreios?
                 </div>
@@ -154,12 +155,31 @@
                     <button class="btn btn-primary  pl-5 pr-5 text-white" @click.prevent="showModalFileUploadCSV = false" >Cancelar</button>
                 </div>
             </div>
+            <div v-if="steepFileUploadCSV === 3">
+                <div class="form-group p-2">
+                    Essa tarefa pode demorar alguns minutos, por favor, espere.
+                </div>
+                <div class="form-group p-2 text-center">
+                    <span class="fa fa-spinner fa-spin fa-2x"></span>
+                </div>
+            </div>
+            <div v-if="steepFileUploadCSV === 4">
+                <div class="form-group p-2">
+                    <table style="width:100%">
+                        <tr class="my-bg-success"><td><p class="pt-2 pl-2"> {{csvImportResponse.criated}} trackings novos adicionados.</p></td></tr>
+                        <tr class="my-bg-warning"><td><p class="pt-2 pl-2"> {{csvImportResponse.already_exist}} trackings já existiam.</p></td></tr>
+                        <tr class="my-bg-danger"><td><p class="pt-2 pl-2"> {{csvImportResponse.exception}} trackings produzeram erros.</p></td></tr>
+                    </table>
+                </div>
+                <div class="form-group p-2 text-center">
+                    <button class="btn btn-primary cl-white pl-5 pr-5" @click.prevent="showModalFileUploadCSV = false">Aceitar</button>
+                </div>
+            </div>
         </b-modal>
 
         <!-- Modal to see  client -->
         <b-modal size="xl" v-model="showModalSeeClient" :hide-footer="true" title="Informação da venda">
             <div class="card user-profile no-shadows">
-                
                 <article class="media">
                     <a class="float-left m-2">
                         <span class="fa fa-info-circle fa-2x text-primary" title="Geral"></span>
@@ -186,7 +206,6 @@
                         </table>
                     </div>
                 </article>
-
                 <hr>
                 <article class="media">
                     <a class="float-left m-2">
@@ -217,8 +236,6 @@
                         </table>
                     </div>
                 </article>
-
-
                 <hr>
                 <article class="media">
                     <a class="float-left m-3">
@@ -238,7 +255,6 @@
                         </p>
                     </div>
                 </article>
-
                 <hr>
                 <article class="media">
                     <a class="float-left m-2">
@@ -301,7 +317,6 @@
                         </div>
                     </div>
                 </article>
-
                 <hr>
                 <article class="media">
                     <a class="float-left m-2">
@@ -334,7 +349,6 @@
                         </table>
                     </div>
                 </article>
-
                 <hr>
                 <article class="media">
                     <a class="float-left m-2">
@@ -473,6 +487,8 @@
                 modalDeleteDispatch: false,
                 modalFilterDispatchs: false,
                 fileInputCSV: null,
+                
+                steepFileUploadCSV:2,
 
                 searchInput: '',                
                 actualPage: 0,
@@ -547,7 +563,6 @@
                 })
                 .then(response => {   
                     this.rows = response.data;
-                    console.log(response.data);
                 })
                 .catch(error => {
                     // this.processMessageError(error, this.url, "get");
@@ -559,7 +574,6 @@
             },
 
             findSearchInput() {
-                // console.log(this.searchInput); return;
                 if(this.searchInput.trim()){
                     this.isFilteringBySearchInput = true;
                     this.saveActualPage = this.actualPage;
@@ -607,10 +621,12 @@
                     if(this.file){
                         let formData = new FormData();
                         formData.append("file",this.file);
+                        this.steepFileUploadCSV = 3;
                         ApiService.post('trackings_import_csv',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
-                                this.showModalFileUploadCSV = false;
+                                this.csvImportResponse = response.data;
                                 miniToastr.success("Arquivo enviado com sucesso", "Sucesso");
+                                this.steepFileUploadCSV = 4;
                             })
                             .catch(error => {
                                 // this.processMessageError(error, this.url, "get");
@@ -650,6 +666,7 @@
             getSelectedFile: function(e){
                 this.fileInputCSV=e.target;
                 this.showModalFileUploadCSV = true;
+                this.steepFileUploadCSV = 2;
             },
             
             closeModals(){
@@ -929,6 +946,21 @@
         padding-bottom: 0px;
         margin-top: 0px;
         padding-bottom: 0px;
+    }
+    .my-bg-success{
+        border: 1px solid #ececf6;
+        padding: 10px;
+        background-color: #c3e6cb;
+    }
+    .my-bg-warning{
+        border: 1px solid #ececf6;
+        padding: 10px;
+        background-color: #eed487;
+    }
+    .my-bg-danger{
+        border: 1px solid #ececf6;
+        padding: 10px;
+        background-color: #f1b0b7;
     }
 </style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

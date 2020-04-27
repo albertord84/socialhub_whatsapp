@@ -44,10 +44,11 @@ class TrackingController extends AppBaseController
     {
         try {
             $file = $Request->file;
-            
 
             $Postoffice = new PostofficeBusiness();
             $response = $Postoffice->importCSV($file);
+
+            return json_encode($response);
 
         } catch (\Throwable $th) {
             return MyResponse::makeExceptionJson($th);

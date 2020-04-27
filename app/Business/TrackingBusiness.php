@@ -161,7 +161,7 @@ class TrackingBusiness extends Business
         return true;
     }
 
-    public function createTracking(stdClass $Tracking, Company $Company): bool
+    public function createTracking(stdClass $Tracking, Company $Company): string
     {
         try {
             // 1. Crea la tracking
@@ -169,8 +169,7 @@ class TrackingBusiness extends Business
             if ($Tracking && isset($Tracking->pedidoID)) {
                 $TrackingModel = new Tracking();
                 $TrackingModel->table = "$Company->id";
-                $TrackingModel = $TrackingModel->find($Tracking->pedidoID);            
-                
+                $TrackingModel = $TrackingModel->find($Tracking->pedidoID);
                 if (!$TrackingModel) { // if not exist insert the Tracking
                     // 2. Crea el contacto si no existe
                     $Contact = new Contact();
@@ -205,12 +204,15 @@ class TrackingBusiness extends Business
     
                     $TrackingModel->save();
                     Log::error('Trackings Bussines createTracking', [$Contact->whatsapp_id]);
+                    return 'criated';
+                }else{
+                    return 'already_exist';
                 }
             }
         } catch (\Throwable $tr) {
             Log::debug('TrackingsBussines createTracking', [$tr]);
             throw $tr;
-            return false;
+            return 'exception';
         }
 
         return true;
