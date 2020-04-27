@@ -145,7 +145,7 @@
         </b-modal>
 
         <!-- Modal to upload codes -->
-        <b-modal size="md" v-model="showModalFileUploadCSV" :hide-footer="true" title="Importação de códigos de rastreios">
+        <b-modal size="md" v-model="showModalFileUploadCSV" :no-close-on-backdrop="true" :hide-footer="true" title="Importação de códigos de rastreios">
             <div v-if="steepFileUploadCSV === 2">
                 <div class="form-group p-2">
                     Confirma que deseja enviar esse arquivo de código de rastreios?

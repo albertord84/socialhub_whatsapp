@@ -200,9 +200,12 @@ class TrackingBusiness extends Business
                         $Contact->save();
                     }                   
 
-                    $TrackingModel = Tracking::trackingConstruct($Tracking, $Contact->id, $Company->id);
-    
-                    $TrackingModel->save();
+                    try{
+                        $TrackingModel = Tracking::trackingConstruct($Tracking, $Contact->id, $Company->id);        
+                        $TrackingModel->save();
+                    }catch (\Throwable $tr) {
+                        return 'exception';
+                    }
                     Log::error('Trackings Bussines createTracking', [$Contact->whatsapp_id]);
                     return 'criated';
                 }else{
