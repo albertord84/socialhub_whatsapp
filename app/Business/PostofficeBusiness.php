@@ -76,7 +76,7 @@ class PostofficeBusiness extends Business
         }
     }
 
-    public function importCSV(UploadedFile $file, DateTime $date = null): bool
+    public function importCSV(UploadedFile $file, DateTime $date = null): array
     {
         // $file = $file ?? Storage::disk('chats_files_1')->get('storage/Pedidos.csv');
         // $objCodeCol = 'envioRastreamento';
@@ -89,19 +89,29 @@ class PostofficeBusiness extends Business
             // Convert the file content to a Objects array
             // $Trackings = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
             $Trackings = $this->csv_to_array($file->getRealPath());
+            // var_dump($Trackings);
+            
+            $response = array(
+                'criated' => 0,
+                'already_exist' => 0,
+                'exception' => 0
+            );
 
             foreach ($Trackings as $key => $Objects) {
                 $trackingBussines = new TrackingBusiness();
-                $trackingBussines->createTracking($Objects, $Company);
+                $result = $trackingBussines->createTracking($Objects, $Company);
+                if($result === 'criated') $response['criated']++; 
+                else if($result === 'already_exist') $response['already_exist']++; 
+                else if($result === 'exception') $response['exception']++;
             }
 
-            return true;
+            return $response;
         } catch (\Throwable $th) {
             // return MyResponse::makeExceptionJson($th);
             throw $th;
         }
 
-        return false;
+        return null;
     }
 
     public function csv_to_array($filename = '', $delimiter = ';'): ?array

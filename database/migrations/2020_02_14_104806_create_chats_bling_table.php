@@ -18,7 +18,7 @@ class CreateChatsBlingTable extends Migration {
 			$table->integer('contact_id')->nullable()->index('fk_chats_contact');
 			$table->integer('attendant_id')->nullable()->index('fk_chats_attendant');
 			$table->integer('company_id')->nullable();
-			$table->integer('source')->nullable();
+			$table->integer('source')->nullable()->default(0);
 			$table->integer('response_to')->nullable();
 			$table->text('message', 65535)->nullable();
 			$table->integer('type_id')->nullable()->index('fk_chats_type');
