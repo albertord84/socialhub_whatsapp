@@ -49,5 +49,19 @@ class ContactsOriginsTableSeeder extends Seeder
         ]);
         $this->command->info('Contact Origin BLING');
 
+        ContactsOrigins::create([
+            'id' => '5',
+            'name' => 'CORREIOS',
+            'description' => 'Contact arrived from Postoffice integration',
+        ]);
+        $this->command->info('Contact Origin CORREIOS');
+
+        ContactsOrigins::create([
+            'id' => '6',
+            'name' => 'API',
+            'description' => 'Contact arrived from API integration',
+        ]);
+        $this->command->info('Contact Origin API');
+
     }
 }
