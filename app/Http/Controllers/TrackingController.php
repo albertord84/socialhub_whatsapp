@@ -16,6 +16,15 @@ use Response;
 
 class TrackingController extends AppBaseController
 {
+
+    const TRACKING_POSTED   = 1;
+    const TRACKING_MOVING   = 2;
+    const TRACKING_STOPPED  = 3;
+    const TRACKING_RECEIVED = 4;
+    const TRACKING_ARRIVED  = 5;
+
+    const TRACKING_PROBLEM  = 7;
+
     /** @var  TrackingRepository */
     private $trackingRepository;
 

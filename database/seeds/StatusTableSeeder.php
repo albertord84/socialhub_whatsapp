@@ -2,6 +2,7 @@
 use App\Models\UsersStatus;
 use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
+use App\Models\Status;
 use Illuminate\Database\Seeder;
 class StatusTableSeeder extends Seeder
 {
@@ -22,6 +23,8 @@ class StatusTableSeeder extends Seeder
         $this->CreateUsersStatus();
         $this->CreateContactsStatus();
         $this->CreateMessagesStatus();
+
+        $this->CreateTrackingStatus();
     }
 
     function CreateMessagesStatus() {
@@ -162,6 +165,40 @@ class StatusTableSeeder extends Seeder
             'description' => 'UsersStatus PAUSED',
         ]);
         $this->command->info('UsersStatus PAUSED');    
+    }
+
+    function CreateTrackingStatus() {
+        $this->command->info('Creating Status TrackingStatus:');
+        Status::create([
+            'id' => '1',
+            'name' => 'POSTED',
+            'description' => 'Tracking Status POSTED',
+        ]);
+        Status::create([
+            'id' => '2',
+            'name' => 'MOVING',
+            'description' => 'Tracking Status MOVING',
+        ]);
+        Status::create([
+            'id' => '3',
+            'name' => 'STOPPED',
+            'description' => 'Tracking Status STOPPED',
+        ]);
+        Status::create([
+            'id' => '4',
+            'name' => 'RECEIVED',
+            'description' => 'Tracking Status RECEIVED',
+        ]);
+        Status::create([
+            'id' => '5',
+            'name' => 'ARRIVED',
+            'description' => 'Tracking Status ARRIVED',
+        ]);
+        Status::create([
+            'id' => '7',
+            'name' => 'PROBLEM',
+            'description' => 'Tracking Status PROBLEM',
+        ]);
     }
 
     
