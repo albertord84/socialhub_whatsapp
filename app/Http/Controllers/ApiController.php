@@ -85,6 +85,7 @@ class ApiController extends AppBaseController
             $Contact->first_name = $request->first_name ?? $request->phone;
             $Contact->whatsapp_id = $request->phone;
             $Contact->email = $request->email ?? null;
+            $Contact->origin = ContactsOriginsController::API;
             $Contact->save();
         }
 

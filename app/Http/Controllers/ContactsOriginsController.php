@@ -13,6 +13,13 @@ use Response;
 
 class ContactsOriginsController extends AppBaseController
 {
+    const ORGANIC = 1; 
+    const MANUAL = 2; 
+    const CSV = 3; 
+    const BLING = 4; 
+    const CORREIOS = 5; 
+    const API = 6;  
+
     /** @var  ContactsOriginsRepository */
     private $contactsOriginsRepository;
 
