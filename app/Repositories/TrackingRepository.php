@@ -44,6 +44,7 @@ class TrackingRepository extends BaseRepository
                 ->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
                 $tracking->Contact = $tracking->contact()->first();
                 $tracking->last_tracking = $tracking->last_tracking();
+                $tracking->Status = $tracking->status()->first();
             });
         } else{
             $Trackings = $Tracking
@@ -53,6 +54,7 @@ class TrackingRepository extends BaseRepository
                 ->get()->slice($start, $page_length)->each(function(Tracking $tracking) {
                 $tracking->Contact = $tracking->contact()->first();
                 $tracking->last_tracking = $tracking->last_tracking();
+                $tracking->Status = $tracking->status()->first();
             });
         }
 
