@@ -72,7 +72,8 @@ class ExtendedContactController extends ContactController
         $input['company_id'] = $User->company_id;
 
         $contact = $this->contactRepository->create($input);
-
+        $contact->origin = ContactsOriginsController::MANUAL;
+        
         Flash::success('Contact saved successfully.');
 
         return $contact->toJson();
@@ -138,7 +139,7 @@ class ExtendedContactController extends ContactController
 
                     $last_attendant_id = $latestAttendantContact->attendant_id ?? null; //TODO:Alberto
                     $Contact->company_id = $User->company_id;
-                    $Contact->origin = 3;
+                    $Contact->origin = ContactsOriginsController::CSV;
                     if (preg_match("/^[a-z A-Z0-9çÇáÁéÉíÍóÓúÚàÀèÈìÌòÒùÙãÃõÕâÂêÊôÔûÛñ\._-]{2,150}$/" , $contact['Nome'])) {
                         $Contact->first_name = trim($contact['Nome']);
                     }else{
