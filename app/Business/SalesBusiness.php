@@ -2,6 +2,7 @@
 
 namespace App\Business;
 
+use App\Http\Controllers\ContactsOriginsController;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
 use App\Http\Controllers\MessagesTypeController;
@@ -50,6 +51,7 @@ class SalesBusiness extends Business {
                     $Contact->first_name = $Sale->pedido->cliente->nome;
                     $Contact->whatsapp_id = $phone;
                     $Contact->email = $Sale->pedido->cliente->email;
+                    $Contact->origin = ContactsOriginsController::BLING;
                     $Contact->save();
                 }
                 else if ($Contact->latestAttendantContact) {

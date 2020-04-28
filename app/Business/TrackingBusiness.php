@@ -2,6 +2,7 @@
 
 namespace App\Business;
 
+use App\Http\Controllers\ContactsOriginsController;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\StatusController;
 use App\Jobs\SendWhatsAppMsgTracking;
@@ -183,6 +184,7 @@ class TrackingBusiness extends Business
                     $Contact->first_name = trim($Tracking->compradorNome) ?? trim($Tracking->compradorCPF);
                     // $Contact->whatsapp_id = $Tracking->pedidoID;
                     $Contact->email = '';
+                    $Contact->origin = ContactsOriginsController::CORREIOS;
                     if (isset($Tracking->compradorFone) && $Tracking->compradorFone) {
                         $phone = $Tracking->compradorFone;
                         $phone = preg_replace("/[^0-9]/", "", $phone);
