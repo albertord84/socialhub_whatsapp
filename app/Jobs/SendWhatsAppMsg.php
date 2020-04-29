@@ -100,7 +100,7 @@ class SendWhatsAppMsg implements ShouldQueue
             // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
         }
         
-        //$ExtendedChat->save();
+        $ExtendedChat->save();
 
         $ExtendedChat->Contact = $this->Contact;
         
