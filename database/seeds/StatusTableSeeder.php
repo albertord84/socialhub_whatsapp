@@ -4,6 +4,8 @@ use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
 use App\Models\Status;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
 class StatusTableSeeder extends Seeder
 {
     /**

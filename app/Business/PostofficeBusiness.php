@@ -43,6 +43,8 @@ class PostofficeBusiness extends Business
         try {
             $Companies = Company::with('rpi')->where(['tracking_contrated' => true])->get();
 
+            // dd($Companies);
+
             $trackingBussines = new TrackingBusiness();
             foreach ($Companies as $key => $Company) {
                 $Objects = $this->getTrackingCompanyNextObjects($Company);

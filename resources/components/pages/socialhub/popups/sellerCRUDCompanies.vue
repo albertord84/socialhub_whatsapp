@@ -156,10 +156,10 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-6 form-group has-search">
+                        <!-- <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
                             <input v-model="modelRpi.mac" v-mask="'NN:NN:NN:NN:NN:NN'" title="Ex: b8:27:eb:76:21:41" name="mac" id="mac" type="text" required placeholder="Endereço MAC (*)" class="form-control"/>
-                        </div>
+                        </div> -->
                         <div  class="col-lg-6 form-group has-search">
                             <span class="fa fa-link form-control-feedback"></span>
                             <input v-model="modelRpi.api_tunnel" title="Ex: http://shrpialberto.sa.ngrok.io.ngrok.io" id="api_tunnel" name="api_tunnel" type="text" required placeholder="Tunnel da API (*)" class="form-control"/>                            
@@ -263,7 +263,7 @@
                     root_password: "",
                     tcp_tunnel: "",
                     tcp_port: "",
-                    mac: "",
+                    // mac: "",
                     api_tunnel: "",
                     soft_version: "",
                     soft_version_date: "",
@@ -414,26 +414,30 @@
                         delete modelManager_cpy.password;
                         ApiService.put(this.users_url+'/'+this.modelManager.id, modelManager_cpy)   //ECR
                             .then(response => {
+                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                this.reload();
+                                this.closeModals();
+
                                     //3. atualizando rpi
-                                    this.modelRpi.company_id = this.modelCompany.id;
-                                    if(!this.modelRpi.id) {
-                                        this.modelRpi.id=0;
-                                    }
-                                    var This=this;
-                                    ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
-                                        .then(response => {
-                                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
-                                                this.reload();
-                                                this.closeModals();
-                                            })
-                                        .catch(error => {
-                                            if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                                alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                            else{
-                                                this.processMessageError(error, this.rpi_url, "update");
-                                            }
-                                        })
-                                        .finally(() => this.isSendingUpdate = false);
+                                    // this.modelRpi.company_id = this.modelCompany.id;
+                                    // if(!this.modelRpi.id) {
+                                    //     this.modelRpi.id=0;
+                                    // }
+                                    // var This=this;
+                                    // ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
+                                    //     .then(response => {
+                                    //             miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                    //             this.reload();
+                                    //             this.closeModals();
+                                    //         })
+                                    //     .catch(error => {
+                                    //         if(!this.modelRpi.id && this.modelRpi.mac!='')
+                                    //             alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
+                                    //         else{
+                                    //             this.processMessageError(error, this.rpi_url, "update");
+                                    //         }
+                                    //     })
+                                    //     .finally(() => this.isSendingUpdate = false);
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.users_url, "update");
