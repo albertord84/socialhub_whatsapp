@@ -562,6 +562,7 @@
                     'searchInput': this.searchInput
                 })
                 .then(response => {   
+                    console.log(response.data);
                     this.rows = response.data;
                 })
                 .catch(error => {
