@@ -3,32 +3,63 @@
         <!-- Contact DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
-        </div>        
-        <div class="text-left">
-            <div id="search-input-container">
+        </div>
+
+        <div style="display:flex; align-items: center; justify-content:space-between">
                 <label>
-                    <div style="" class="form-group has-search">
-                        <span class="fa fa-search form-control-feedback"></span>
-                        <input type="search" id="search-input" class="form-control" placeholder="Buscar contato" v-model="searchInput">
+                    <div style="" class="form-group has-seasrch">
+                        <div class="col-lg-12 input-group">
+                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar contato">
+                            <div class="input-group-append" title="Buscar">
+                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="getContacts(0)">
+                                    <i v-if="!isFilteringBySearchInput" class="fa fa fa-search "></i>
+                                    <i v-if="isFilteringBySearchInput" class="fa fa-spinner fa-spin "></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </label>
-                <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="steepDownloadContacts=1, modalExportAllContacts = !modalExportAllContacts" title="Exportar contatos">
-                        <i class="fa fa-download" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
-                        <i class="fa fa-upload" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
-                        <i class="fa fa-user-plus"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+
+                <label>
+                    <div style="">
+                        <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getContacts(0)">
+                            <i class="mdi mdi-chevron-double-left my-fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getContacts(actualPage-1)">
+                            <i class="mdi mdi-chevron-left my-fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
+                            <b class="">{{actualPage+1}}</b>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getContacts(actualPage+1)">
+                            <i class="mdi mdi-chevron-right my-fa-2x" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </label>
+
+                <label style="">
+                    <div class="actisons pr-4">
+                        <div class="actions float-right pr-4 mb-3">
+                            <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="steepDownloadContacts=1, modalExportAllContacts = !modalExportAllContacts" title="Exportar contatos">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="actions float-right pr-4 mb-3">
+                            <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="steepUploadFile=1, fileInputCSV=null, showModalTemplateToImportContact=!showModalTemplateToImportContact" title="Importar contatos">
+                                <i class="fa fa-upload" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="actions float-right pr-4 mb-3">
+                            <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddContact = !modalAddContact" title="Novo contato">
+                                <i class="fa fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </label>
+
+        </div>  
+
+
         <div class="table-responsive">
             <table ref="table" class="table">
                 <thead>
@@ -51,8 +82,25 @@
                 </tbody>
             </table>
         </div>
-        <div class="table-footer" v-if="paginate">
-            <div class="row">
+        
+        <div class="table-footer text-center" v-if="paginate">
+            <label>
+                <div style="">
+                    <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getContacts(0)">
+                        <i class="mdi mdi-chevron-double-left my-fa-2x" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getContacts(actualPage-1)">
+                        <i class="mdi mdi-chevron-left my-fa-2x" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
+                        <b class="">{{actualPage+1}}</b>
+                    </button>
+                    <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getContacts(actualPage+1)">
+                        <i class="mdi mdi-chevron-right my-fa-2x" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </label>
+            <!-- <div class="row">
                 <div class="col-4">
                     <div class="datatable-length pl-3">
                         <span>Linhas por página:</span>
@@ -91,33 +139,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- <div class="datatable-length float-left pl-3">
-                <span>Linhas por página:</span>
-                <select class="custom-select" v-model="currentPerPage">
-                    <option v-for="len in pagelen" :value="len" :key="len">{{len}}</option>
-                    <option value="-1">Todos</option>
-                </select>
-                <div class="datatable-info  pb-2 mt-3">
-                    <span>Mostrando </span> {{(currentPage - 1) * currentPerPage ? (currentPage - 1) * currentPerPage : 1}} -{{currentPerPage==-1?processedRows.length:Math.min(processedRows.length,
-                    currentPerPage * currentPage)}} of {{processedRows.length}}
-                    <span>linhas</span>
-                </div>
-            </div>
-            <div class="float-right">
-                <ul class="pagination">
-                    <li>
-                        <a href="javascript:undefined" class="btn link" @click.prevent="previousPage" tabindex="0">
-                            <i class="fa fa-angle-left"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:undefined" class="btn link" @click.prevent="nextPage" tabindex="0">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </li>
-                </ul>
             </div> -->
         </div>
 
@@ -144,7 +165,7 @@
                         <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="1">
                             Apenas os contatos listados na tabela
                         </b-form-radio>
-                        <b-form-radio disabled v-model="selectedDownloadOption" name="some-radios" value="2" class="mt-2">
+                        <b-form-radio v-model="selectedDownloadOption" name="some-radios" value="2" class="mt-2">
                             Todos os contatos no Banco de Dados
                         </b-form-radio>
                     </b-form-group>
@@ -348,6 +369,11 @@
                         numeric: false,
                         html: false,
                     }, {
+                        label: 'Origem',
+                        field: 'origin_name',
+                        numeric: false,
+                        html: false,
+                    }, {
                         label: 'Atendente',
                         field: 'attendant_name',
                         numeric: false,
@@ -365,46 +391,70 @@
                 sortType: 'asc',
                 searchInput: '',     
                 steepUploadFile: 1,  
-                fileInputCSV: null,  
+                fileInputCSV: null, 
+                
+                actualPage:0,
+                pages: null,
+
+                isFilteringBySearchInput:false
             }
         },
 
         methods: {
-            getContacts: function() { //R
+            getContacts: function(page) {
                 if(this.isLoadMoreContacts) return;
                 this.isLoadMoreContacts = true;
+                this.actualPage = page;
                 ApiService.get(this.url, {
-                    'filterContactToken': "",
+                    'filterContactToken': this.searchInput.trim(),
                     'last_contact_id': 0,
-                    'last_contact_idx': this.rows.length,
+                    'last_contact_idx': (this.actualPage * process.env.MIX_APP_CONTACTS_PAGE_LENGTH_FOR_MANAGER)
                 })
-                    .then(response => {  
-                        response.data.forEach((item, i)=>{                           
-                            if(item.status)
-                                item.status_name = item.status.name;
-                            var name = "";
-                            item.contact_atendant_id = 0;
-                            if(item.latestAttendant){
-                                item.attendant_name = item.latestAttendant.name;
-                                item.contact_atendant_id = item.latestAttendant.id;
-                            }
-                        });
-                        if(this.rows.length>0 && response.data.length!=0)
-                            miniToastr.success("Página de contatos carregada corretamente", "Sucesso");
-                        if(response.data.length==0)
-                            miniToastr.warn("Todos os contatos já foram carregados", "Sucesso");
-                        this.rows = this.rows.concat(response.data);
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.url, "get");
-                    })
-                    .finally(()=>{
-                        this.isLoadMoreContacts = false;
+                .then(response => {
+                    response.data.forEach((item, i)=>{                           
+                    if(item.status)
+                        item.status_name = item.status.name;
+                        var name = "";
+                        item.contact_atendant_id = 0;
+                        if(item.latestAttendant){
+                            item.attendant_name = item.latestAttendant.name;
+                            item.contact_atendant_id = item.latestAttendant.id;
+                        }
+
+                        switch (item.origin) {
+                            case 1:
+                                item.origin_name = 'ORGANICO';
+                                break;
+                            case 2:
+                                item.origin_name = 'MANUAL';
+                                break;
+                            case 3:
+                                item.origin_name = 'Arquivo CSV';
+                                break;
+                            case 4:
+                                item.origin_name = 'BLING';
+                                break;
+                            case 4:
+                                item.origin_name = 'CORREIOS';
+                                break;
+                            case 6:
+                                item.origin_name = 'API';
+                                break;
+                        }
                     });
+                    if(response.data.length==0)
+                        miniToastr.warn("Todos os contatos já foram carregados", "Sucesso");
+                    this.rows = response.data;
+                    this.isLoadMoreContacts = false;
+                })
+                .catch(error => {
+                    this.processMessageError(error, this.url, "get");
+                    this.isLoadMoreContacts = false;
+                });
             }, 
 
             reloadDatas(){
-                this.getContacts();
+                this.getContacts(0);
             },
             
             closeModals(){
@@ -450,19 +500,20 @@
                         this.steepUploadFile = 3;
                         ApiService.post('contactsFromCSV',formData, {headers: { "Content-Type": "multipart/form-data" }})
                             .then(response => {
-                                // this.importContactsReport =  response.data;
-                                this.importContactsReportWarn1 = response.data.message2.lineWarn;
-                                this.importContactsReportWarn2 = response.data.message3.lineWarn;
-                                this.importContactsReportWarn3 = response.data.message4.lineWarn;
-                                this.importContactsReportWarn4 = response.data.message6.lineWarn;
-                                this.importContactsReportError = response.data.message5.lineError;
-                                this.importContactsReportStatistics = response.data.statistics;
-                                console.log(this.importContactsReportWarn4);
-                                // return;
-
-                                this.steepUploadFile=4;
-                                miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
-                                this.getContacts();
+                                if(typeof(response.data) != 'undefined' && response.data.code == 'error'){
+                                    miniToastr.error(response.data.cnt, "Erro");
+                                    this.showModalTemplateToImportContact = false;
+                                }else{
+                                    this.importContactsReportWarn1 = response.data.message2.lineWarn;
+                                    this.importContactsReportWarn2 = response.data.message3.lineWarn;
+                                    this.importContactsReportWarn3 = response.data.message4.lineWarn;
+                                    this.importContactsReportWarn4 = response.data.message6.lineWarn;
+                                    this.importContactsReportError = response.data.message5.lineError;
+                                    this.importContactsReportStatistics = response.data.statistics;
+                                    this.steepUploadFile=4;
+                                    miniToastr.success("Os contatos foram adicionados corretamente", "Sucesso");
+                                    this.getContacts(0);
+                                }
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.url, "get");
@@ -716,7 +767,7 @@
         beforeMount(){
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendantList();
-            this.getContacts();
+            this.getContacts(0);
         },
 
         mounted() {
@@ -739,33 +790,34 @@
 
         computed: {
             processedRows: function () {
-                var computedRows = this.rows;
-                if (this.sortable !== false) {
-                    computedRows = computedRows.sort((x, y) => {
-                        if (!this.columns[this.sortColumn]) {
-                            return 0;
-                        }
-                        const cook = (x) => {
-                            x = this.collect(x, this.columns[this.sortColumn].field);
-                            if (typeof (x) === 'string') {
-                                x = x.toLowerCase();
-                                if (this.columns[this.sortColumn].numeric)
-                                    x = x.indexOf('.') >= 0 ? parseFloat(x) : parseInt(x);
-                            }
-                            return x;
-                        }
-                        x = cook(x);
-                        y = cook(y);
-                        return (x < y ? -1 : (x > y ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
-                    })
-                }
+                // var computedRows = this.rows;
+                // if (this.sortable !== false) {
+                //     computedRows = computedRows.sort((x, y) => {
+                //         if (!this.columns[this.sortColumn]) {
+                //             return 0;
+                //         }
+                //         const cook = (x) => {
+                //             x = this.collect(x, this.columns[this.sortColumn].field);
+                //             if (typeof (x) === 'string') {
+                //                 x = x.toLowerCase();
+                //                 if (this.columns[this.sortColumn].numeric)
+                //                     x = x.indexOf('.') >= 0 ? parseFloat(x) : parseInt(x);
+                //             }
+                //             return x;
+                //         }
+                //         x = cook(x);
+                //         y = cook(y);
+                //         return (x < y ? -1 : (x > y ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
+                //     })
+                // }
 
-                if (this.searchInput) {
-                    computedRows = (new Fuse(computedRows, {
-                        keys: this.columns.map(c => c.field)
-                    })).search(this.searchInput);
-                }
-                return computedRows;
+                // if (this.searchInput) {
+                //     computedRows = (new Fuse(computedRows, {
+                //         keys: this.columns.map(c => c.field)
+                //     })).search(this.searchInput);
+                // }
+                // return computedRows;
+                return this.rows;
             },
 
             paginated: function () {
@@ -779,21 +831,21 @@
         },
 
         watch: {
-            currentPerPage() {
-                this.currentPage = 1;
-                this.paginated;
-            },
+            // currentPerPage() {
+            //     this.currentPage = 1;
+            //     this.paginated;
+            // },
 
-            searchInput() {
-                this.currentPage = 1;
-                this.paginated;
-            },
+            // searchInput() {
+            //     this.currentPage = 1;
+            //     this.paginated;
+            // },
 
-            downloadAllContact (value){
-                if(this.downloadAllContact){
+            // downloadAllContact (value){
+            //     if(this.downloadAllContact){
 
-                }
-            }
+            //     }
+            // }
         },
         
     }
@@ -850,5 +902,8 @@
         border: 1px solid #ececf6;
         padding: 10px;
         background-color: #f1b0b7;
+    }
+    .my-fa-2x{
+        font-size: 2rem !important
     }
 </style>

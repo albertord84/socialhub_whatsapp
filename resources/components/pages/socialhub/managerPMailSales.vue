@@ -4,7 +4,7 @@
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>        
-                <!-- Buscar envio -->
+        
         <div style="display:flex; align-items: center; justify-content:space-between">
             <!-- <div id=""> -->
                 <label>
@@ -627,6 +627,7 @@
                                 this.csvImportResponse = response.data;
                                 miniToastr.success("Arquivo enviado com sucesso", "Sucesso");
                                 this.steepFileUploadCSV = 4;
+                                this.reloadDatas();
                             })
                             .catch(error => {
                                 // this.processMessageError(error, this.url, "get");

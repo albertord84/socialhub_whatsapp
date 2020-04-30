@@ -4,6 +4,7 @@
             <template v-slot:backButtonText>
                 <h2>title hola mundo.com</h2>
             </template>
+
             <tab-content title="Informação" :beforeChange='steepInformation'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5">
@@ -26,6 +27,25 @@
                             <!-- <br><br>
                             - Ter feito a <a href="https://manuais.bling.com.br/manual/?item=homologacao-parceiro-api" target="_blank" rel="noopener noreferrer">Homologação</a> da API de pedidos de vendas do Bling. -->
                         </p>
+                    </div>
+                <hr>
+            </tab-content>
+
+            <tab-content title="Integração Automática" :beforeChange='steepAutomaticConfiguration'>
+                <hr>
+                    <div class="pt-3 pl-5 pr-5 pb-3">
+                        <h4 style="color:#34AD70">Configuração da Integração Automática do Bling</h4>
+                        <p class="pt-2">Antes de integrar o bling na SocialHub é necessário ativar a importação automática dos seus pedidos dentro do bling. Para isso, acesse o menu:</p>
+                        <ul class="pl-4">
+                            <li class="mb-4"> 1) Acesse em  <a href="https://www.bling.com.br/configuracoes.integracoes.lojas.virtuais.php#list" target="_blank" rel="noopener noreferrer">Preferências ( <i class="fa fa-cog" style="color: #9e9e9e"> </i>) > Integrações >  Configurações de integração com lojas virtuais e Marketplaces</a>.</li>
+                            <li class="mb-4"> 2) Clique na integração que deseja <b>ativar</b>  a <b>importação automática</b> de pedidos.</li>
+                            <li class="mb-2"> 3) No menu lateral, clique em <b>Integração Automática</b> </li>
+                            <li class="mb-2"> 4) Ative o <b>Status do pulling</b> <br>
+                                <img src="~img/socialhub/pulling_status.jpeg" alt="" >
+                            </li>
+                            <li class="mb-4"> 5) Pressionar o botão <b>Salvar</b> para finalizar a configuração da <b>Integração automática</b>.</li>
+                            <li class="mb-4"> 6) Observação: Repita o processo para todas as <b>Integrações</b> que desejar.</li>
+                        </ul>
                     </div>
                 <hr>
             </tab-content>
@@ -188,6 +208,10 @@
 
         methods:{
             steepInformation(){
+                return true;
+            },
+
+            steepAutomaticConfiguration(){
                 return true;
             },
 

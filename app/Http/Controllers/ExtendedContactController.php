@@ -42,11 +42,11 @@ class ExtendedContactController extends ContactController
             $User = Auth::check() ? Auth::user() : session('logged_user');
             if($User){
                 $Contacts = $this->contactRepository->all();
-                $filter = '';//$request->filterContactToken;
+                $filter = ($request->filterContactToken !== "") ? $request->filterContactToken: "";
                 if ($User->role_id == ExtendedContactsStatusController::MANAGER) {
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, $filter, $request->last_contact_idx);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, null, (string)$filter, $request->last_contact_idx);
                 } else if ($User->role_id == ExtendedContactsStatusController::ATTENDANT) {
-                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, $filter ?? "", $request->last_contact_idx);
+                    $Contacts = $this->contactRepository->fullContacts((int) $User->company_id, (int) $User->id, (string)$filter, $request->last_contact_idx);
                 }
                 return $Contacts->toJson();
             }else{
@@ -88,11 +88,25 @@ class ExtendedContactController extends ContactController
         if ($file = $request->file('file')) {
 
             //conver the file content to a Contacts array
+            $wrongCSVContent = false;
             $Contacts = $this->csv_to_array($file->getRealPath(), ',');
-            if(count($Contacts)>1 && count($Contacts[1])<2 ){
-                $Contacts = $this->csv_to_array($file->getRealPath(), ';');
+            if($Contacts){
+                if(count($Contacts)>1 && count($Contacts[1])<2 ){
+                    $Contacts = $this->csv_to_array($file->getRealPath(), ';');
+                    if(!$Contacts)
+                        $wrongCSVContent = true;
+                }
+            } else{
+                $wrongCSVContent = true;
             }
             unlink($file->getRealPath());
+            if($wrongCSVContent){
+                return $response["message0"] = array(
+                    // "message" => "contatos foram adicionados e atribuídos aos atendentes corretamente.",
+                    "code" => "error",
+                    "cnt" => "Os dados no arquivo não estão no formato correto. Por favor, confira."
+                );
+            }
 
             //get the updated time from the oldest updated contact
             $oldestUpdatedContact = Contact::where('company_id', '=', $User->company_id)->orderBy('updated_at', 'asc')->first();
@@ -326,6 +340,7 @@ class ExtendedContactController extends ContactController
                 ($contact->lastest_attendant)? $contact->lastest_attendant->email : ''
             ));
         }
+        fclose($file);
         
         //3. config response
         $headers = array(
@@ -441,7 +456,13 @@ class ExtendedContactController extends ContactController
                 if(!$header)
                     $header = $row;
                 else
-                    $data[] = array_combine($header, $row);
+                {
+                    try{
+                        $data[] = array_combine($header, $row);
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
+                }
             }
             fclose($handle);
         }
