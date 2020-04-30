@@ -341,7 +341,6 @@ class ExtendedContactController extends ContactController
             ));
         }
         fclose($file);
-        dd('ok');
         
         //3. config response
         $headers = array(
