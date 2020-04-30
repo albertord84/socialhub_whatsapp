@@ -136,4 +136,7 @@ Route::get('create_company_tracking_jobs', 'TrackingController@create_company_tr
 
 Route::resource('status', 'StatusController');
 
-Route::resource('apis', 'ApiController');
+// Route::resource('apis', 'ApiController');
+Route::get('apis', 'ApiController@store');
+Route::post('apis', 'ApiController@store');
+Route::get('create_company_api_jobs', 'ApiController@create_company_api_jobs');
