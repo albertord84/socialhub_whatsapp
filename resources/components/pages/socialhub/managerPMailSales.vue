@@ -4,7 +4,7 @@
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>        
-                <!-- Buscar envio -->
+        
         <div style="display:flex; align-items: center; justify-content:space-between">
             <!-- <div id=""> -->
                 <label>

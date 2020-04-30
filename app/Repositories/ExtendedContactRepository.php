@@ -82,9 +82,7 @@ class ExtendedContactRepository extends ContactRepository
         } else {
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where('company_id', $company_id);
-
-            // Apply filters to contacts query
-            if ($filter) $Contacts = $this->filterContacts($Contacts, $filter);                
+            $Contacts = $this->filterContacts($Contacts, $filter);
 
             $Contacts = $Contacts
                 ->skip($last_contact_idx)->take(env('APP_CONTACTS_PAGE_LENGTH_FOR_MANAGER', 30))->get()

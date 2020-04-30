@@ -24,7 +24,7 @@ class StatusTableSeeder extends Seeder
         $this->CreateContactsStatus();
         $this->CreateMessagesStatus();
 
-        $this->CreateTrackingStatus();
+        // $this->CreateTrackingStatus();
     }
 
     function CreateMessagesStatus() {
@@ -167,39 +167,39 @@ class StatusTableSeeder extends Seeder
         $this->command->info('UsersStatus PAUSED');    
     }
 
-    function CreateTrackingStatus() {
-        $this->command->info('Creating Status TrackingStatus:');
-        Status::create([
-            'id' => '1',
-            'name' => 'POSTED',
-            'description' => 'Tracking Status POSTED',
-        ]);
-        Status::create([
-            'id' => '2',
-            'name' => 'MOVING',
-            'description' => 'Tracking Status MOVING',
-        ]);
-        Status::create([
-            'id' => '3',
-            'name' => 'STOPPED',
-            'description' => 'Tracking Status STOPPED',
-        ]);
-        Status::create([
-            'id' => '4',
-            'name' => 'RECEIVED',
-            'description' => 'Tracking Status RECEIVED',
-        ]);
-        Status::create([
-            'id' => '5',
-            'name' => 'ARRIVED',
-            'description' => 'Tracking Status ARRIVED',
-        ]);
-        Status::create([
-            'id' => '7',
-            'name' => 'PROBLEM',
-            'description' => 'Tracking Status PROBLEM',
-        ]);
-    }
+    // function CreateTrackingStatus() {
+    //     $this->command->info('Creating Status TrackingStatus:');
+    //     Status::create([
+    //         'id' => '1',
+    //         'name' => 'POSTED',
+    //         'description' => 'Tracking Status POSTED',
+    //     ]);
+    //     Status::create([
+    //         'id' => '2',
+    //         'name' => 'MOVING',
+    //         'description' => 'Tracking Status MOVING',
+    //     ]);
+    //     Status::create([
+    //         'id' => '3',
+    //         'name' => 'STOPPED',
+    //         'description' => 'Tracking Status STOPPED',
+    //     ]);
+    //     Status::create([
+    //         'id' => '4',
+    //         'name' => 'RECEIVED',
+    //         'description' => 'Tracking Status RECEIVED',
+    //     ]);
+    //     Status::create([
+    //         'id' => '5',
+    //         'name' => 'ARRIVED',
+    //         'description' => 'Tracking Status ARRIVED',
+    //     ]);
+    //     Status::create([
+    //         'id' => '7',
+    //         'name' => 'PROBLEM',
+    //         'description' => 'Tracking Status PROBLEM',
+    //     ]);
+    // }
 
     
 }
