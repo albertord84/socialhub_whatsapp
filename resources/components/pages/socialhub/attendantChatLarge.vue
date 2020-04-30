@@ -50,29 +50,36 @@
                                         </router-link>
                                     </b-dropdown-item>
                                     <!-- <b-dropdown-item title="Contatos com mensagens favoritas" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByFavorites'" ><i class="fa fa-star-o"></i> Favoritas</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="='filterContactByFavorites'" ><i class="fa fa-star-o"></i> Favoritas</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Contatos que possuem lembretes" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByRemember'"><i class="fa fa-bell-o"></i> Lembretes</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="='filterContactByRemember'"><i class="fa fa-bell-o"></i> Lembretes</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Contatos que possuem resumo" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactBySummary'"><i class="fa fa-address-card-o"></i> Resumos</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="='filterContactBySummary'"><i class="fa fa-address-card-o"></i> Resumos</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Contatos com mensagem lidas somente" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByReadedMsg'"><i class="fa fa-envelope-open-o"></i> Lidas</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="='filterContactByReadedMsg'"><i class="fa fa-envelope-open-o"></i> Lidas</a>
                                     </b-dropdown-item>
                                     <b-dropdown-item title="Contatos com mensagem não lidas somente" exact class="dropdown_content">
-                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="filterContactToken='filterContactByUnrearedMsg'"><i class="fa fa-envelope-o"></i> Não lidas</a>
+                                        <a href="javascript:void(0)" exact class="drpodowtext" @click.prevent="='filterContactByUnrearedMsg'"><i class="fa fa-envelope-o"></i> Não lidas</a>
                                     </b-dropdown-item> -->
                                 </b-dropdown>
                             </li>
                         </ul>
                     </div>
+
                     <div v-if="isSearchContact==true" class="container-fluid">
                         <ul class='row flex-baseline mt-3'>
-                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="mdi mdi-arrow-left icons-action" @click.prevent="isSearchContact=!isSearchContact"></i></li>
-                            <li class='col-9 col-md-10 col-lg-8 col-xl-9'><input class="search-input border-0 search-contact ml-1" type="text" v-model="searchContactByStringInput" placeholder="Buscar contato" ></li>
-                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="mdi mdi-window-close icons-action" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact"></i></li>                            
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                <i class="mdi mdi-arrow-left icons-action" @click.prevent="isSearchContact=!isSearchContact"></i>
+                            </li>
+                            <li class='col-9 col-md-10 col-lg-8 col-xl-9'>
+                                <input class="search-input border-0 search-contact ml-1" type="text" v-model="searchContactByStringInput" placeholder="Buscar contato" >
+                            </li>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                <i class="mdi mdi-window-close icons-action" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact, selectedContactIndex = -1, contacts=[], getContacts()"></i>
+                            </li>                            
                         </ul>
                     </div>
                 </div>
@@ -1005,7 +1012,6 @@
                 amountContactsInBag:0,
                 selectedContactIndex: -1,
                 searchContactByStringInput:'',
-                filterContactToken: '',
                 hasMorePageContacts:true,
                 requestingNewPageContacts:false,
 
@@ -1165,10 +1171,6 @@
                 }
             },
 
-            myclass(){
-                return 'xxx';
-            },
-
             getMessageTime: function(time){
                 var weekDays =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
                 var date_format = new Date(time);
@@ -1222,8 +1224,7 @@
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
                 ApiService.get(this.contacts_url,{
-                    // 'filterContactToken': this.filterContactToken,
-                    'filterContactToken': {"filterString":this.searchContactByStringInput},
+                    'filterContactToken': (this.searchContactByStringInput.trim() !== '') ? this.searchContactByStringInput.trim() : '',
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                     'last_contact_idx': this.contacts.length-1,
                 })
@@ -2387,8 +2388,12 @@
         },
 
         watch:{
-            filterContactToken: function(){
-                this.getContacts();
+            searchContactByStringInput: function(value){
+                if(value.trim().length > 2){
+                    this.selectedContactIndex = -1;
+                    this.contacts = [];
+                    this.getContacts();
+                }
             },
 
             isSendingNewMessage: function(value){
