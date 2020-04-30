@@ -2384,7 +2384,7 @@
             //                 str.toLowerCase().indexOf(self.searchContactByStringInput.toLowerCase()) >=0
             //             );
             //     });
-            // },            
+            // },
         },
 
         watch:{

@@ -627,6 +627,7 @@
                                 this.csvImportResponse = response.data;
                                 miniToastr.success("Arquivo enviado com sucesso", "Sucesso");
                                 this.steepFileUploadCSV = 4;
+                                this.reloadDatas();
                             })
                             .catch(error => {
                                 // this.processMessageError(error, this.url, "get");

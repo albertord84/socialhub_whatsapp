@@ -212,6 +212,7 @@ class TrackingBusiness extends Business
                     }                   
 
                     try{
+                        // var_dump($Tracking);
                         $TrackingModel = Tracking::trackingConstruct($Tracking, $Contact->id, $Company->id);        
                         $TrackingModel->save();
                     }catch (\Throwable $tr) {
