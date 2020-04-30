@@ -51,7 +51,6 @@ class SalesController extends AppBaseController
         
         // return view('sales.index')
         //     ->with('sales', $sales);
-
         return $sales->toJson();
     }
 

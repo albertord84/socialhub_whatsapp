@@ -54,13 +54,13 @@
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, index) in rows" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
+                    <tr v-for="(row, index1) in rows" @click="click(row, index1)" :key="index1" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,indexColumn) in columns">
-                            <td v-if="!column.html && !column.json && !column.name" :key="indexColumn">{{ collect(row,column.field) }}</td>
-                            <td v-if="column.name " :key="indexColumn" :title="collect(row,column.field)">{{ collect(row,column.field).substr(0,30)+'...' }}</td>
-                            <td v-if="column.sended" :key="indexColumn" v-html="collect(row, column.field)"></td>
-                            <td v-if="column.html" :key="indexColumn" v-html="collect(row, column.field)" ></td>
-                            <td v-if="column.actions" :key="indexColumn">
+                            <td v-if="!column.html && !column.json && !column.name" >{{ collect(row,column.field) }}</td>
+                            <td v-if="column.name "  :title="collect(row,column.field)">{{ collect(row,column.field).substr(0,30)+'...' }}</td>
+                            <td v-if="column.sended" v-html="collect(row, column.field)"></td>
+                            <td v-if="column.html"  v-html="collect(row, column.field)" ></td>
+                            <td v-if="column.actions" >
                                 <div style="position:relative; margin-left:-80px;">
                                     <!-- <a v-if="!row.sended" class="text-18" href="javascript:void(0)" title="Reenviar mensagem" @click.prevent="actionResendMessageSales(row)"><i class="fa fa-share text-primary mr-1" aria-hidden="true"></i></a> -->
                                     <a class="text-18" href="javascript:void(0)" title="Editar venda" @click.prevent="actionEditSales(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
@@ -211,6 +211,8 @@
                     'stringFilter': (this.stringFilter.trim() != '') ? this.stringFilter.trim() : ''
                 })
                     .then(response => {
+                        console.log(Object.values(response.data));
+                        response.data = Object.values(response.data);
                         response.data.forEach((sale, i)=>{
                             sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
                             sale.json_data = JSON.parse(sale.json_data);

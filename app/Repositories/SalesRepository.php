@@ -30,17 +30,37 @@ class SalesRepository extends BaseRepository
 
     public function salesByCompany($company_id, $page, $stringFilter)
     {
-        $Sales = new Sales();
-        $Sales->table = "$company_id";
+        $Sale = new Sales();
+        $Sale->table = "$company_id";
 
-        // $this->table = "$company_id";
-        // return $this->get();
-        // return $this->with(['contact'])->get();
+        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
+        $start = $page_length * $page;
 
-        return $Sales->get();
-        // return $Sales->with(['contact'])->get();
-        // return $Sales->with('contact')->where('id', '!=', null)->get();
+        if($stringFilter == ''){
+            $Sales = $Sale
+                ->get()->slice($start, $page_length);
+        } else{
+            $Sales = $Sale
+                ->where('json_data', 'LIKE', '%'. $stringFilter.'%')
+                ->get()->slice($start, $page_length);
+        }
+        return $Sales;
     }
+
+
+    // public function salesByCompany($company_id, $page, $stringFilter)
+    // {
+    //     $Sales = new Sales();
+    //     $Sales->table = "$company_id";
+
+    //     // $this->table = "$company_id";
+    //     // return $this->get();
+    //     // return $this->with(['contact'])->get();
+
+    //     return $Sales->get();
+    //     // return $Sales->with(['contact'])->get();
+    //     // return $Sales->with('contact')->where('id', '!=', null)->get();
+    // }
 
     public function findSale($company_id, $sales_id){
         $saleModel = new $this->model();
