@@ -28,7 +28,7 @@ class SalesRepository extends BaseRepository
     ];
 
 
-    public function salesByCompany($company_id)
+    public function salesByCompany($company_id, $page, $stringFilter)
     {
         $Sales = new Sales();
         $Sales->table = "$company_id";

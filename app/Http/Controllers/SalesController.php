@@ -45,7 +45,9 @@ class SalesController extends AppBaseController
         // $sales = $this->salesRepository->all();
         
         $User = Auth::check()? Auth::user():session('logged_user');
-        $sales = $this->salesRepository->salesByCompany($User->company_id);
+        $page = ((int)$request->page) ?? 0;
+        $stringFilter = ((string)$request->stringFilter) ?? '';
+        $sales = $this->salesRepository->salesByCompany($User->company_id, $page, $stringFilter);
         
         // return view('sales.index')
         //     ->with('sales', $sales);

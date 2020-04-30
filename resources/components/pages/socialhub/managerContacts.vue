@@ -82,6 +82,7 @@
                 </tbody>
             </table>
         </div>
+        
         <div class="table-footer text-center" v-if="paginate">
             <label>
                 <div style="">
