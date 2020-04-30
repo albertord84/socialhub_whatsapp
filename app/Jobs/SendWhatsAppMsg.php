@@ -93,7 +93,7 @@ class SendWhatsAppMsg implements ShouldQueue
 
         
         $responseJson = json_decode($response);
-        if (isset($responseJson->MsgID)) {
+        if (isset($responseJson->MsgID) && ($responseJson->MsgID)) {
             $ExtendedChat->status_id = MessagesStatusController::SENDED;
         } else {
             $ExtendedChat->status_id = MessagesStatusController::FAIL;
