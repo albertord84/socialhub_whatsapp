@@ -80,7 +80,7 @@ class SendWhatsAppMsgApi implements ShouldQueue
         $Api->table = $this->Contact->company_id;
         $this->ApiMessage = $Api->find($this->ApiMessage['id']);
         $responseJson = json_decode($response);
-        if (isset($responseJson->MsgID)) {
+        if (isset($responseJson->MsgID) && ($responseJson->MsgID)) {
             $this->ApiMessage->status_id = MessagesStatusController::SENDED;
         } else {
             $this->ApiMessage->status_id = MessagesStatusController::FAIL;
