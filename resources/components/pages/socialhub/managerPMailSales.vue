@@ -68,7 +68,8 @@
                 <tbody>
                     <tr v-for="(row, index) in rows" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,index) in columns" >
-                            <td v-if="!column.html && !column.json" >{{ collect(row,column.field) }}</td>
+                            <td v-if="!column.html && !column.json && column.label !='Nome'" >{{ collect(row,column.field) }}</td>
+                            <td v-if="column.label =='Nome'"> {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim() : '' }}</td>
                             <td v-if="column.sended" v-html="collect(row, column.field)" ></td>
                             <td v-if="column.html"  v-html="collect(row, column.field)"  ></td>
                             <td v-if="column.actions" >
@@ -506,7 +507,12 @@
                         html: false,                   
                     }, {
                         label: 'Status',
-                        field: 'status_id',
+                        field: 'Status.name',
+                        numeric: false,
+                        html: false,
+                    }, {
+                        label: 'Nome',
+                        field: 'Contact.first_name',
                         numeric: false,
                         html: false,
                     }, {
@@ -562,6 +568,7 @@
                     'searchInput': this.searchInput
                 })
                 .then(response => {   
+                    console.log(response.data);
                     this.rows = response.data;
                 })
                 .catch(error => {
