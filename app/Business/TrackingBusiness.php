@@ -180,6 +180,7 @@ class TrackingBusiness extends Business
                 $TrackingModel = new Tracking();
                 $TrackingModel->table = "$Company->id";
                 $TrackingModel = $TrackingModel->find($Tracking->pedidoID);
+                // dd($TrackingModel);
                 if (!$TrackingModel) { // if not exist insert the Tracking
                     // 2. Crea el contacto si no existe
                     $Contact = new Contact();

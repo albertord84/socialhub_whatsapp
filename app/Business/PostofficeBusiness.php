@@ -92,7 +92,7 @@ class PostofficeBusiness extends Business
             // Convert the file content to a Objects array
             // $Trackings = $this->csv_to_array('/var/www/html/app.socialhub.local/public/storage/Pedidos.csv', ';');
             $Trackings = $this->csv_to_array($file->getRealPath());
-            // var_dump($Trackings);
+            // dd($Trackings);
             
             $response = array(
                 'criated' => 0,
@@ -103,6 +103,8 @@ class PostofficeBusiness extends Business
             foreach ($Trackings as $key => $Objects) {
                 $trackingBussines = new TrackingBusiness();
                 $result = $trackingBussines->createTracking($Objects, $Company);
+                // var_dump($result);
+                // dd("ok");
                 if($result === 'criated') $response['criated']++; 
                 else if($result === 'already_exist') $response['already_exist']++; 
                 else if($result === 'exception') $response['exception']++;
