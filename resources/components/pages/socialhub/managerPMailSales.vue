@@ -5,14 +5,32 @@
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>        
         
-        <div style="display:flex; align-items: center; justify-content:space-between">
-            <!-- <div id=""> -->
+        <div style="border: 1px solid #dee2e6" class="mb-3">
+            <div style="display:flex; align-items: center; justify-content: space-between">
                 <label>
-                    <div style="" class="form-group has-seasrch">
+                    <div class="form-group mt-3">
                         <div class="col-lg-12 input-group">
-                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar envio por CEP, CPF/CNPJ ou código de rastreio">
-                            <div class="input-group-append" title="Conferir número">
-                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="findSearchInput">
+                            
+                            <input type="search" id="search-input" style="width:220px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput">
+                            
+                            <div class="input-group-append ml-3">
+                                <select id="example-select" name="example-select" v-model="tackingStatus" class="form-control" size="1" style="width:180px">
+                                    <option value="0">
+                                        Status dos envios
+                                    </option>
+                                    <option v-for="(status,index) in trackingStatusOptions" :key="index" :value="status.code">{{status.name}}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group-append ml-3" title="Data início">
+                                <input type="date" v-model="dateInit" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                            </div>
+                            <div class="input-group-append ml-3" title="Data fim">
+                                <input type="date" v-model="dateEnd" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                            </div>
+
+                            <div class="input-group-append ml-3" title="Filtrar pedidos">
+                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 px-5" @click.prevent="findSearchInput">
                                     <span v-if="!isFilteringBySearchInput" class="fa fa fa-search"></span>
                                     <span v-if="isFilteringBySearchInput" class="fa fa-spinner fa-spin "></span>
                                 </button>
@@ -21,6 +39,22 @@
                     </div>
                 </label>
 
+                <label style="">
+                    <div class="actisons pr-4">
+                        <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
+                        <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
+                            <i class="mdi mdi-upload fa-lg"  ></i>
+                        </a>
+                        <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar envios mostrados">
+                            <i class="mdi mdi-download fa-lg"></i>
+                        </a>
+                        <!-- <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalAddDispatch" title="Adicionar um envio">
+                            <i class="mdi mdi-plus-box"></i>
+                        </a> -->
+                    </div>
+                </label>
+            </div>  
+            <div style="display:flex; align-items: center; justify-content: center;">
                 <label>
                     <div style="">
                         <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getTrackings(0)">
@@ -37,28 +71,8 @@
                         </button>
                     </div>
                 </label>
-
-                <label style="">
-                    <div class="actisons pr-4">
-                        <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
-                        <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
-                            <i class="mdi mdi-upload fa-lg"  ></i>
-                        </a>
-
-                        <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar envios mostrados">
-                            <i class="mdi mdi-download fa-lg"></i>
-                        </a>
-                        <!-- <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalFilterDispatchs" title="Flitrar envios">
-                            <i class="mdi mdi-filter-plus"></i>
-                        </a> -->
-                        <!-- <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalAddDispatch" title="Adicionar um envio">
-                            <i class="mdi mdi-plus-box"></i>
-                        </a> -->
-                    </div>
-                </label>
-
-            <!-- </div> -->
-        </div>        
+            </div>  
+        </div>
 
         <div class="table-responsive">
             <table ref="table" id="salesTable" class="table">
@@ -87,29 +101,30 @@
         </div>
 
         <div class="table-footer text-center" v-if="paginate">
-            <label>
-                <div style="">
-                    <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getTrackings(0)">
-                        <i class="mdi mdi-chevron-double-left fa-2x" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getTrackings(actualPage-1)">
-                        <i class="mdi mdi-chevron-left fa-2x" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
-                        <b class="">{{actualPage+1}}</b>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getTrackings(actualPage+1)">
-                        <i class="mdi mdi-chevron-right fa-2x" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </label>
-
+            <div  style="border: 1px solid #dee2e6">
+                <label class="mt-2">
+                    <div style="">
+                        <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getTrackings(0)">
+                            <i class="mdi mdi-chevron-double-left fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getTrackings(actualPage-1)">
+                            <i class="mdi mdi-chevron-left fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
+                            <b class="">{{actualPage+1}}</b>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getTrackings(actualPage+1)">
+                            <i class="mdi mdi-chevron-right fa-2x" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </label>
+            </div>
         </div>
         
         <!-- Add Dispatch Modal -->
         <b-modal v-model="modalAddDispatch" size="lg" :hide-footer="true" title="Adicionar envio">
             <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
-        </b-modal>         
+        </b-modal>
 
         <!-- Edit Dispatch Modal -->
         <b-modal v-model="modalEdtitDispatch" size="lg" :hide-footer="true" title="Editar envio">
@@ -119,30 +134,6 @@
         <!-- Delete Dispatch Modal -->
         <b-modal ref="modal-delete-matter" v-model="modalDeleteDispatch" :hide-footer="true" title="Verificação de exclusão">
             <managerCRUDBlingSales :url='url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
-        </b-modal>
-
-        <!-- Filter Dispatchs Modal -->
-        <b-modal v-model="modalFilterDispatchs" size="md" :hide-footer="true" title="Filtrar envios">
-            <form class="p-3">
-                <div class="row pl-2 pr-2">
-                    <div class="col-12 mb-4">
-                        <label for="period">Periodo</label>
-                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
-                    </div>
-                    <div class="col-12 mb-4">
-                        <label for="period">Situação</label>
-                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
-                    </div>
-                    <div class="col-12 mb-4">
-                        <label for="period">Ocorrências</label>
-                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
-                    </div>
-                    <div class="col-12 mb-4">
-                        <label for="period"> Dados do contato</label>
-                        <multiselect v-model="tag_value" tag-placeholder="Add this as new tag" placeholder="Search tag" label="name" track-by="code" :options="object_options" :multiple="false" :taggable="true" @tag="addTag"></multiselect>
-                    </div>
-                </div>
-            </form>            
         </b-modal>
 
         <!-- Modal to upload codes -->
@@ -486,7 +477,6 @@
                 modalAddDispatch: false,
                 modalEdtitDispatch: false,
                 modalDeleteDispatch: false,
-                modalFilterDispatchs: false,
                 fileInputCSV: null,
                 
                 steepFileUploadCSV:2,
@@ -497,6 +487,10 @@
                 isFilteringBySearchInput: false,
                 isFindingNextPage: false,
                 hasMoreTrackingPage: true,
+                
+                tackingStatus: 0,
+                dateInit: '',
+                dateEnd: '',
 
                 rows:[],
                 columns: [
@@ -540,11 +534,11 @@
                 ],
 
                 tag_value:null,
-                object_options: [
-                    {name: 'Vue.js', code: 'vu'}, 
-                    {name: 'Javascript',code: 'js'}, 
-                    {name: 'Monterail',code: 'pl'},
-                    {name: 'Open Source',code: 'os'}
+                trackingStatusOptions: [
+                    // {name: 'Vue.js', code: 'vu'}, 
+                    // {name: 'Javascript',code: 'js'}, 
+                    // {name: 'Monterail',code: 'pl'},
+                    // {name: 'Open Source',code: 'os'}
                 ],
 
                 currentPage: 1,
@@ -563,12 +557,14 @@
                 } 
                 this.actualPage = page;
                 this.isFindingNextPage = true;
+                console.log(this.tackingStatus);
                 ApiService.get(this.url,{
                     'page': this.actualPage,
-                    'searchInput': this.searchInput
+                    'searchInput': this.searchInput,
+                    'filterStatus': this.tackingStatus,
+                    'betweenDates': JSON.stringify(Array(this.dateInit,this.dateEnd))
                 })
                 .then(response => {   
-                    console.log(response.data);
                     this.rows = response.data;
                 })
                 .catch(error => {
@@ -577,6 +573,24 @@
                 .finally(()=>{
                     this.isFindingNextPage = false;
                     this.isFilteringBySearchInput = false;
+                });
+            },
+
+            getTrackingsStatus: function() {
+                ApiService.get('status')
+                .then(response => {  
+                    this.trackingStatusOptions = Array();
+                    response.data.some((item,i)=>{
+                        this.trackingStatusOptions.push(  {
+                            'name': item.name,
+                            'code': item.id
+                        });
+                    });
+                    this.trackingStatusOptions = Object.values(this.trackingStatusOptions); 
+                })
+                .catch(error => {
+                })
+                .finally(()=>{
                 });
             },
 
@@ -663,7 +677,6 @@
             },            
 
             showModalFilterDispatchs() {
-                this.modalFilterDispatchs =true;
             },
             
             showModalUploadDispatchList() {
@@ -681,7 +694,6 @@
                 this.modalAddDispatch = false;
                 this.modalEdtitDispatch =  false;
                 this.modalDeleteDispatch =  false;
-                this.modalFilterDispatchs =  false;
             },
 
             //------ Specific DataTable methods------------
@@ -807,6 +819,7 @@
         beforeMount(){
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getTrackings(0);
+            this.getTrackingsStatus();
         },
 
         mounted() {
@@ -827,56 +840,35 @@
         computed: {
             processedRows: function () {
                 var computedRows = this.rows;
-                // if (this.sortable !== false) {
-                //     computedRows = computedRows.sort((x, y) => {
-                //         if (!this.columns[this.sortColumn]) {
-                //             return 0;
-                //         }
-                //         const cook = (x) => {
-                //             x = this.collect(x, this.columns[this.sortColumn].field);
-                //             if (typeof (x) === 'string') {
-                //                 x = x.toLowerCase();
-                //                 if (this.columns[this.sortColumn].numeric)
-                //                     x = x.indexOf('.') >= 0 ? parseFloat(x) : parseInt(x);
-                //             }
-                //             return x;
-                //         }
-                //         x = cook(x);
-                //         y = cook(y);
-                //         return (x < y ? -1 : (x > y ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
-                //     })
-                // }
-
-                // if (this.searchInput) {
-                //     computedRows = (new Fuse(computedRows, {
-                //         keys: this.columns.map(c => c.field)
-                //     })).search(this.searchInput);
-                // }
                 return computedRows;
             },
 
             paginated: function () {
-                // var paginatedRows = this.processedRows;
-                // if (this.paginate && this.currentPerPage != -1) {
-                //     paginatedRows = paginatedRows.slice((this.currentPage - 1) * this.currentPerPage, this.currentPage *
-                //         this.currentPerPage);
-                // }
-                // return paginatedRows;
                 
                 return this.rows;
             }
         },
 
         watch: {
-            currentPerPage() {
-                this.currentPage = 1;
-                this.paginated;
+
+            dateInit(value){
+                if(this.dateEnd.trim()!=''){
+                    if(value.trim() > this.dateEnd.trim()){
+                        this.dateInit = "";
+                        this.dateEnd = "";
+                    }
+                }
             },
 
-            // searchInput() {
-            //     this.currentPage = 1;
-            //     this.paginated;
-            // }
+            dateEnd(value){
+                if(this.dateInit.trim()!=''){
+                    if(value.trim() < this.dateInit.trim()){
+                        this.dateInit = "";
+                        this.dateEnd = "";
+                    }
+                }
+            }
+            
         },
         
     }

@@ -50,9 +50,10 @@ class StatusController extends AppBaseController
     {
         $this->statusRepository->pushCriteria(new RequestCriteria($request));
         $statuses = $this->statusRepository->all();
+        return $statuses->toJson();
 
-        return view('statuses.index')
-            ->with('statuses', $statuses);
+        // return view('statuses.index')
+        //     ->with('statuses', $statuses);
     }
 
     /**
