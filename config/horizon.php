@@ -144,9 +144,10 @@ return [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
-                'balance' => 'simple',
-                'processes' => 10,
+                'queue' => ['api_message'],
+                'balance' => 'auto',
+		'minProcesses' => 1,
+		'maxProcesses'=> 2,
                 'tries' => 1,
             ],
         ],
@@ -154,9 +155,10 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
-                'balance' => 'simple',
-                'processes' => 3,
+                'queue' => ['api_message'],
+                'balance' => 'auto',
+		'minProcesses' => 1,
+		'maxProcesses' => 2,
                 'tries' => 1,
             ],
         ],

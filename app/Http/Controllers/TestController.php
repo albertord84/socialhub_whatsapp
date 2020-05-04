@@ -261,9 +261,11 @@ class TestController extends AppBaseController
     function testCorreiosProblems()
     {
         $Tracking = new \App\Models\Tracking();
-        $Tracking->table = 1;
+        $Tracking->table = "49";
         $POB = new \App\Business\PostofficeBusiness();
         $Trackings = $Tracking->get();
+
+        $TrackingBusiness = new TrackingBusiness();
 
         foreach ($Trackings as $key => $item) {
             $event = $item->tracking_list ? json_decode($item->tracking_list)[0] : null;

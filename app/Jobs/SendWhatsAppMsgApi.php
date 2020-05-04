@@ -55,7 +55,7 @@ class SendWhatsAppMsgApi implements ShouldQueue
         $this->Contact = $Contact;
         $this->ApiMessage = $ApiMessage;
 
-        $this->connection = 'database';
+        $this->connection = 'redis';
 
         $this->queue = $queue;
 
