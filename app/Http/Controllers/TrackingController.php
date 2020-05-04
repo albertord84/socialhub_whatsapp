@@ -76,8 +76,6 @@ class TrackingController extends AppBaseController
     {
         $User = Auth::check()? Auth::user():session('logged_user');
         
-        $this->trackingRepository->pushCriteria(new RequestCriteria($request));
-
         $page = (int) ($request->page ?? '0');
         $searchInput = (string) ($request->searchInput ?? '');
         $filterStatus = ($request->filterStatus ?? 0);

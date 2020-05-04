@@ -4,6 +4,8 @@ use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
 use App\Models\Status;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
 class StatusTableSeeder extends Seeder
 {
     /**
@@ -24,7 +26,8 @@ class StatusTableSeeder extends Seeder
         $this->CreateContactsStatus();
         $this->CreateMessagesStatus();
 
-        // $this->CreateTrackingStatus();
+        $this->CreateTrackingStatus();
+        $this->CreateApiStatus();
     }
 
     function CreateMessagesStatus() {
@@ -167,39 +170,72 @@ class StatusTableSeeder extends Seeder
         $this->command->info('UsersStatus PAUSED');    
     }
 
-    // function CreateTrackingStatus() {
-    //     $this->command->info('Creating Status TrackingStatus:');
-    //     Status::create([
-    //         'id' => '1',
-    //         'name' => 'POSTED',
-    //         'description' => 'Tracking Status POSTED',
-    //     ]);
-    //     Status::create([
-    //         'id' => '2',
-    //         'name' => 'MOVING',
-    //         'description' => 'Tracking Status MOVING',
-    //     ]);
-    //     Status::create([
-    //         'id' => '3',
-    //         'name' => 'STOPPED',
-    //         'description' => 'Tracking Status STOPPED',
-    //     ]);
-    //     Status::create([
-    //         'id' => '4',
-    //         'name' => 'RECEIVED',
-    //         'description' => 'Tracking Status RECEIVED',
-    //     ]);
-    //     Status::create([
-    //         'id' => '5',
-    //         'name' => 'ARRIVED',
-    //         'description' => 'Tracking Status ARRIVED',
-    //     ]);
-    //     Status::create([
-    //         'id' => '7',
-    //         'name' => 'PROBLEM',
-    //         'description' => 'Tracking Status PROBLEM',
-    //     ]);
-    // }
+    function CreateTrackingStatus() {
+        $this->command->info('Creating Status TrackingStatus:');
+        Status::create([
+            'id' => '1',
+            'name' => 'POSTED',
+            'model' => 'App\Models\Tracking',
+            'description' => 'Tracking Status POSTED',
+        ]);
+        Status::create([
+            'id' => '2',
+            'name' => 'MOVING',
+            'model' => 'App\Models\Tracking',
+            'description' => 'Tracking Status MOVING',
+        ]);
+        Status::create([
+            'id' => '3',
+            'name' => 'STOPPED',
+            'model' => 'App\Models\Tracking',
+            'description' => 'Tracking Status STOPPED',
+        ]);
+        Status::create([
+            'id' => '4',
+            'name' => 'RECEIVED',
+            'model' => 'App\Models\Tracking',
+            'description' => 'Tracking Status RECEIVED',
+        ]);
+        Status::create([
+            'id' => '5',
+            'name' => 'ARRIVED',
+            'model' => 'App\Models\Tracking',
+            'description' => 'Tracking Status ARRIVED',
+        ]);
+        Status::create([
+            'id' => '7',
+            'name' => 'PROBLEM',
+            'model' => 'App\Models\Tracking',
+            'description' => 'Tracking Status PROBLEM',
+        ]);
+    }
 
+    function CreateApiStatus() {
+        $this->command->info('Creating Status Api:');
+        Status::create([
+            'id' => '8',
+            'name' => 'RECEIVED',
+            'model' => 'App\Models\Api',
+            'description' => 'Api Status RECEIVED',
+        ]);
+        Status::create([
+            'id' => '9',
+            'name' => 'SENDED',
+            'model' => 'App\Models\Api',
+            'description' => 'Api Status SENDED',
+        ]);
+        Status::create([
+            'id' => '10',
+            'name' => 'STOPPED',
+            'model' => 'App\Models\Api',
+            'description' => 'Api Status STOPPED',
+        ]);
+        Status::create([
+            'id' => '11',
+            'name' => 'FAIL',
+            'model' => 'App\Models\Api',
+            'description' => 'Api Status FAIL',
+        ]);
+    }
     
 }
