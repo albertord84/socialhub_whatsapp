@@ -48,4 +48,33 @@ class ApiRepository extends BaseRepository
         // return $this->model;
         return Api::class;
     }
+
+    public function apiMessagesByCompany($company_id, int $page = null, string $searchInput = '')
+    {
+        $Api = new Api();
+        $Api->table = "$company_id";
+
+        $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
+        $start = $page_length * $page;
+
+        // return $Api->with(['contact', 'status'])->slice($start, $page_length)->all();
+        if($searchInput == ''){
+            $Api = $Api
+                ->get()->slice($start, $page_length)->each(function(Api $Api) {
+                $Api->Contact = $Api->contact()->first();
+                $Api->last_tracking = $Api->last_tracking();
+            });
+        } else{
+            $Api = $Api
+                ->where('json_csv_data', 'LIKE', '%'. $searchInput.'%')
+                ->orWhere('tracking_code', 'LIKE', '%'. $searchInput.'%')
+                ->orWhere('tracking_list', 'LIKE', '%'. $searchInput.'%')
+                ->get()->slice($start, $page_length)->each(function(Api $Api) {
+                $Api->Contact = $Api->contact()->first();
+                $Api->last_tracking = $Api->last_tracking();
+            });
+        }
+
+        return $Api;
+    }    
 }
