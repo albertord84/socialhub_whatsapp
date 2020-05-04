@@ -211,7 +211,6 @@
                     'stringFilter': (this.stringFilter.trim() != '') ? this.stringFilter.trim() : ''
                 })
                     .then(response => {
-                        console.log(Object.values(response.data));
                         response.data = Object.values(response.data);
                         response.data.forEach((sale, i)=>{
                             sale.messageSended = (sale.sended) ? "<span class='text-success'><i class='fa fa-check'></i> Enviada<span>" : "<span class='text-danger'><i class='fa fa-times'></i> Não enviada<span>";
