@@ -61,16 +61,14 @@ class TestController extends AppBaseController
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
 
-        // $TrackingBusiness = new TrackingBusiness();
+        $TrackingBusiness = new TrackingBusiness();
 
-
-
-        $company_id = '1';
-        // $company_id = '49';
+        // $company_id = '1';
+        $company_id = '49';
         $TrackingModel = new Tracking();
         $TrackingModel->table = "$company_id";
 
-        $Tracking = $TrackingModel->find('701')->toArray();
+        $Tracking = $TrackingModel->find('701-0002365-2406656')->toArray();
 
         $Tracking = (object)$Tracking;
 
@@ -82,9 +80,9 @@ class TestController extends AppBaseController
         // $trackingJob->handle();
 
         $tracking_code = $Tracking->tracking_code;
-        $messageList = $Tracking->messages;
+        // $messageList = $Tracking->messages;
         $Company = Company::find($company_id);
-        $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
+        $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
 
         dd($trackingList);
         dd((object) $trackingList[0]->toArray());
