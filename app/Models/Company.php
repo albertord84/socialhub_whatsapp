@@ -95,6 +95,8 @@ class Company extends Model
         'tracking_pass'=> 'string',
         'tracking_message'=> 'string',
         'tracking_contrated'=> 'integer',
+
+        'api_contrated' => 'intenger',
     ];
 
     /**

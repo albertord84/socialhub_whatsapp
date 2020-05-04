@@ -30,13 +30,19 @@ class TrackingRepository extends BaseRepository
         'tracking_list'
     ];
 
-    public function trackingByCompany($company_id, int $page = null, string $searchInput = '')
+    public function trackingByCompany($company_id, int $page = null, string $searchInput = '', $filterStatus=0, $betweenDates=null )
     {
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
 
         $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
         $start = $page_length * $page;
+
+        /*
+        TODO: los filtros por status y por fecha van a llegar asi hasta aqui
+            filterStatus --> puede ser un numero del 1 al 7 (excepto 6 que no existe en la BD), o 0 si no se especifico status
+            betweenDates --> puede ser un array (ex: betweenDates[0]='2020-04-29' y betweenDates[1]='2020-05-01']), o null
+        */
 
         // return $Tracking->with(['contact', 'status'])->slice($start, $page_length)->all();
         if($searchInput == ''){
