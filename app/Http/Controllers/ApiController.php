@@ -25,7 +25,7 @@ class ApiController extends AppBaseController
     const RECEIVED = 8;
     const SENDED = 9;
     const STOPPED = 10;
-    const FAIL = 11;
+    const PROBLEM = 11;
 
     /** @var  ApiRepository */
     private $apiRepository;
