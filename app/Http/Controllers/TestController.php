@@ -65,13 +65,14 @@ class TestController extends AppBaseController
 
 
 
+        $company_id = '1';
         // $company_id = '49';
-        // $TrackingModel = new Tracking();
-        // $TrackingModel->table = "$company_id";
+        $TrackingModel = new Tracking();
+        $TrackingModel->table = "$company_id";
 
-        // $Tracking = $TrackingModel->find('701')->toArray();
+        $Tracking = $TrackingModel->find('701')->toArray();
 
-        // $Tracking = (object)$Tracking;
+        $Tracking = (object)$Tracking;
 
         // $Company = Company::with('rpi')->find($company_id);
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -80,14 +81,14 @@ class TestController extends AppBaseController
         // $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
         // $trackingJob->handle();
 
-        // $tracking_code = $Tracking->tracking_code;
-        // $messageList = $Tracking->messages;
-        // $Company = Company::find($company_id);
-        // $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
+        $tracking_code = $Tracking->tracking_code;
+        $messageList = $Tracking->messages;
+        $Company = Company::find($company_id);
+        $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
 
-        // dd($trackingList);
-        // dd((object) $trackingList[0]->toArray());
-        // dd(json_encode($trackingList));
+        dd($trackingList);
+        dd((object) $trackingList[0]->toArray());
+        dd(json_encode($trackingList));
 
         // Teste Vindi
         // $this->testVindi();
