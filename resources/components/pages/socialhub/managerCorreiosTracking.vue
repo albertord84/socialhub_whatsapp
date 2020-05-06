@@ -82,8 +82,15 @@
                 <tbody>
                     <tr v-for="(row, index) in rows" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,index) in columns" >
-                            <td v-if="!column.html && !column.json && column.label !='Nome'" >{{ collect(row,column.field) }}</td>
+                            <td v-if="!column.html && !column.json && column.label !='Nome' && column.label !='Status'" >{{ collect(row,column.field) }}</td>
                             <td v-if="column.label =='Nome'"> {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim() : '' }}</td>
+                            
+                            <td v-if="column.label =='Status'">
+                                <span v-if="collect(row, column.field)=='PROBLEM'" style="background-color:#ec6d65">{{ collect(row, column.field) }}</span>
+                                <span v-else-if="collect(row, column.field)=='RECEIVED' || collect(row, column.field)=='ARRIVED'" style="background-color:#ccffdd">{{ collect(row, column.field) }}</span>
+                                <span v-else style="background-color:silver">{{ collect(row, column.field) }}</span>
+                            </td>                            
+
                             <td v-if="column.sended" v-html="collect(row, column.field)" ></td>
                             <td v-if="column.html"  v-html="collect(row, column.field)"  ></td>
                             <td v-if="column.actions" >
@@ -518,12 +525,7 @@
                         label: 'Data Post',
                         field: 'post_date',
                         numeric: false,
-                        html: false,
-                    }, {
-                        label: 'Data fim',
-                        field: 'end_date',
-                        numeric: false,
-                        html: false,
+                        html: false,                    
                     },  {
                         label: 'Ações',
                         field: 'button',
@@ -557,7 +559,6 @@
                 } 
                 this.actualPage = page;
                 this.isFindingNextPage = true;
-                console.log(this.tackingStatus);
                 ApiService.get(this.url,{
                     'page': this.actualPage,
                     'searchInput': this.searchInput,
@@ -610,7 +611,7 @@
                 value.json_csv_data.pedidoProduto = JSON.parse(value.json_csv_data.pedidoProduto);
                 this.modelClient = value.json_csv_data;
                 this.showModalSeeClient = true;
-            },
+            }, 
 
             actionSeeTacking: function(value){
                 this.modelTracking = (value.tracking_list) ? JSON.parse(value.tracking_list): [];

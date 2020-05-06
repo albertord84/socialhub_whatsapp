@@ -185,6 +185,11 @@
                         numeric: false,
                         html: true,
                     }, {
+                        label: 'Data',
+                        field: 'created_at',
+                        numeric: false,
+                        html: true,
+                    }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -226,6 +231,7 @@
                             }
                         });
                         this.rows = response.data;
+                        console.log(this.rows);
                     })
                     .catch(error => {
                         console.log(error);
