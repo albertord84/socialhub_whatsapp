@@ -246,9 +246,9 @@
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
                                 <div @click.prevent="displayChatRightSide()" class="pointer-hover" style="display: flex; align-items: center">
-                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" width="50px" class="profile-picture">
-                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" width="50px" class="profile-picture">
-                                    <div v-else style=";width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
+                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" class="profile-picture">
+                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" class="profile-picture">
+                                    <div v-else style="width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
                                         :class="[
                                             { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
                                             { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },

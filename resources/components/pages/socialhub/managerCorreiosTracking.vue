@@ -97,7 +97,7 @@
                                 <div style="position:relative; margin-left:-130px;">
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver comprador" @click.prevent="actionSeeClient(row)"><i class='fa fa-user-circle-o text-primary mr-1' ></i> </a>
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver tracking" @click.prevent="actionSeeTacking(row)"><i class='fa fa-clock-o text-warning mr-1'  ></i> </a>
-                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditTracking(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
+                                    <!-- <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditTracking(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a> -->
                                     <a class="text-18" href="javascript:void(0)" title="Eliminar registro" @click.prevent="actionDeleteTracking(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                                 </div>
                             </td>
