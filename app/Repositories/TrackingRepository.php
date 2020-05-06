@@ -72,6 +72,13 @@ class TrackingRepository extends BaseRepository
         return $Trackings;
     }
 
+    public function deleteTracking($tracking_id, $company_id = null){
+        $trackingModel = new $this->model();
+        $trackingModel->table = (string)$company_id;
+        $sale = $trackingModel->findOrFail($tracking_id);
+        return $sale->delete();
+    }
+
     /**
      * Configure the Model
      **/

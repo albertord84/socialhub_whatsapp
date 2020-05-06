@@ -198,18 +198,28 @@ class TrackingController extends AppBaseController
      */
     public function destroy($id)
     {
-        $tracking = $this->trackingRepository->findWithoutFail($id);
+        // $tracking = $this->trackingRepository->findWithoutFail($id);
 
-        if (empty($tracking)) {
-            Flash::error('Tracking not found');
+        // if (empty($tracking)) {
+        //     Flash::error('Tracking not found');
 
-            return redirect(route('trackings.index'));
+        //     return redirect(route('trackings.index'));
+        // }
+
+        // $this->trackingRepository->delete($id);
+
+        // Flash::success('Tracking deleted successfully.');
+
+        // return redirect(route('trackings.index'));
+
+        try {
+            $User = Auth::check()? Auth::user():session('logged_user');        
+            $this->trackingRepository->deleteTracking($id, $User->company_id);
+        } catch (\Throwable $th) {
+            return 'false';
         }
 
-        $this->trackingRepository->delete($id);
+        return 'true';
 
-        Flash::success('Tracking deleted successfully.');
-
-        return redirect(route('trackings.index'));
     }
 }
