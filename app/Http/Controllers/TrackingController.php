@@ -79,8 +79,12 @@ class TrackingController extends AppBaseController
         $page = (int) ($request->page ?? '0');
         $searchInput = (string) ($request->searchInput ?? '');
         $filterStatus = ($request->filterStatus ?? 0);
-        $betweenDates = json_decode($request->betweenDates);
-        if($betweenDates[0] =="" || $betweenDates[1] =="" || $betweenDates[1]<$betweenDates[0])
+        $stringFilter = ((string)$request->stringFilter) ?? '';
+        if(isset($request->betweenDates)){
+            $betweenDates = json_decode($request->betweenDates);
+            if($betweenDates[0] =="" || $betweenDates[1] =="" || $betweenDates[1]<$betweenDates[0])
+                $betweenDates = null;
+        }else 
             $betweenDates = null;
         $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page, $searchInput, $filterStatus, $betweenDates);
 

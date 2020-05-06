@@ -542,10 +542,6 @@
 
                 tag_value:null,
                 trackingStatusOptions: [
-                    // {name: 'Vue.js', code: 'vu'}, 
-                    // {name: 'Javascript',code: 'js'}, 
-                    // {name: 'Monterail',code: 'pl'},
-                    // {name: 'Open Source',code: 'os'}
                 ],
 
                 currentPage: 1,
@@ -700,6 +696,14 @@
                 this.modalAddDispatch = false;
                 this.modalEdtitDispatch =  false;
                 this.modalDeleteDispatch =  false;
+            },
+
+            formatDate: function(date){
+                var arr = date.split('/');
+                if(arr.length){
+                    return arr[2]+'/'+arr[0]+'/'+arr[1];
+                }
+                return '';
             },
 
             //------ Specific DataTable methods------------

@@ -47,7 +47,13 @@ class SalesController extends AppBaseController
         $User = Auth::check()? Auth::user():session('logged_user');
         $page = ((int)$request->page) ?? 0;
         $stringFilter = ((string)$request->stringFilter) ?? '';
-        $sales = $this->salesRepository->salesByCompany($User->company_id, $page, $stringFilter);
+        if(isset($request->betweenDates)){
+            $betweenDates = json_decode($request->betweenDates);
+            if($betweenDates[0] =="" || $betweenDates[1] =="" || $betweenDates[1]<$betweenDates[0])
+                $betweenDates = null;
+        }else 
+            $betweenDates = null;
+        $sales = $this->salesRepository->salesByCompany($User->company_id, $page, $stringFilter, $betweenDates);
         
         // return view('sales.index')
         //     ->with('sales', $sales);
