@@ -83,14 +83,14 @@
                     <tr v-for="(row, index) in rows" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,index) in columns" >
                             <td v-if="!column.html && !column.json && column.label !='Nome' && column.label !='Status'" >{{ collect(row,column.field) }}</td>
-                            <td v-if="column.label =='Nome'"> {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim() : '' }}</td>
-                            
+                            <td v-if="column.label =='Nome'" :title="collect(row, column.field).trim()"> 
+                                {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim().substr(0, 20) : '' }}
+                            </td>                            
                             <td v-if="column.label =='Status'">
                                 <span v-if="collect(row, column.field)=='PROBLEM'" style="background-color:#ec6d65">{{ collect(row, column.field) }}</span>
-                                <span v-else-if="collect(row, column.field)=='RECEIVED' || collect(row, column.field)=='ARRIVED'" style="background-color:#ccffdd">{{ collect(row, column.field) }}</span>
+                                <span v-else-if="collect(row, column.field)=='RECEIVED' || collect(row, column.field)=='ARRIVED'" style="background-color:#80ffaa">{{ collect(row, column.field) }}</span>
                                 <span v-else style="background-color:silver">{{ collect(row, column.field) }}</span>
-                            </td>                            
-
+                            </td>   
                             <td v-if="column.sended" v-html="collect(row, column.field)" ></td>
                             <td v-if="column.html"  v-html="collect(row, column.field)"  ></td>
                             <td v-if="column.actions" >
@@ -522,8 +522,13 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Data Post',
+                        label: 'Postado',
                         field: 'post_date',
+                        numeric: false,
+                        html: false,                    
+                    }, {
+                        label: 'Atualizado',
+                        field: 'updated_at',
                         numeric: false,
                         html: false,                    
                     },  {
