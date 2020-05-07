@@ -58,7 +58,7 @@ class TrackingBusiness extends Business
     // public function initCorreios(\PhpSigep\Model\AccessData $accessData)
     {
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
-
+        
         $this->config = new \PhpSigep\Config();
         $this->config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
         // $this->config->setEnv(\PhpSigep\Config::ENV_DEVELOPMENT);
@@ -72,9 +72,9 @@ class TrackingBusiness extends Business
                     'ttl' => 20, // "time to live" de 10 segundos
                     'cacheDir' => sys_get_temp_dir(), // Opcional. Quando não inforado é usado o valor retornado de "sys_get_temp_dir()"
                 ),
-            )
-        );
-
+                )
+            );
+            
         \PhpSigep\Bootstrap::start($this->config);
     }
 
@@ -145,7 +145,7 @@ class TrackingBusiness extends Business
 
                 // Check whether last even need action
                 $POB = new \App\Business\PostofficeBusiness();
-                if (count($eventList) && in_array([$eventList[0]->tipo, $eventList[0]->status], $POB->trackingImportantEventList())) {
+                if (count($eventList) && in_array([$newTrackingList[0]->tipo, $newTrackingList[0]->status], $POB->trackingImportantEventList())) {
                     Log::debug("processTrackingObject TRACKING_PROBLEM", [$Tracking]);
                     $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
                     $Tracking->save();
@@ -156,6 +156,7 @@ class TrackingBusiness extends Business
         } catch (\Throwable $tr) {
             // throw $tr;
         }
+        
     }
 
     public function createTrackingJob(Tracking $Tracking, Company $Company): bool
