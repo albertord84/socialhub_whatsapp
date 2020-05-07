@@ -82,11 +82,14 @@ class TestController extends AppBaseController
         $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
         $Company = Company::find($company_id);
+
+        // dd($Company);
+
         $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
 
         dd($trackingList);
-        dd((object) $trackingList[0]->toArray());
-        dd(json_encode($trackingList));
+        // dd((object) $trackingList[0]->toArray());
+        // dd(json_encode($trackingList));
 
         // Teste Vindi
         // $this->testVindi();

@@ -71,7 +71,7 @@ class ApiBusiness extends Business
             $ApiModel = new Api();
             $ApiModel->table = "$Company->id";
 
-            $Apis = $ApiModel->where('status_id', ApiController::RECEIVED)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_API_MESSAGES_X_MINUTE', 20));
+            $Apis = $ApiModel->where('status_id', ApiController::RECEIVED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 20));
 
             return $Apis;
         } catch (\Throwable $th) {
