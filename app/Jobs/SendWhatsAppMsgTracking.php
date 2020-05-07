@@ -74,15 +74,16 @@ class SendWhatsAppMsgTracking implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Handle SendWhatsAppMsgTracking...: ', [$this->Contact, $this->Tracking]);
-
+        Log::debug('Handle SendWhatsAppMsgTracking: ',);
+        
         $TrackingBusiness = new TrackingBusiness();
         
-        $Tracking = new Tracking();
-        $Tracking->table = $this->Contact->company_id;
+        $Tracking = new Tracking(); $company_id = $this->Contact->company_id;    $Tracking->table = "$company_id";
+        
         $this->Tracking = $Tracking->find($this->Tracking->id);
         $message_list = json_decode($this->Tracking->message_list) ?? array();
-
+        
+        Log::debug('Handle SendWhatsAppMsgTracking to: ', [$this->Tracking, $this->Contact]);
         
         $newMessage = $TrackingBusiness->getNewTrackingMessage($this->Tracking, $this->Contact->company_id);
         // dd($newMessage);

@@ -263,7 +263,7 @@ class ExternalRPIController extends Controller
 
             $Company = Company::where(['whatsapp' => $company_phone])->first();
             if (!$Company) {
-                Log::debug('\n\r rreciveTextMessage to Company (company not found): ', [$input]);
+                Log::debug('\n\r reciveTextMessage to Company (company not found): ', [$input]);
                 throw new MyException("Company phone ($company_phone) not found", MyException::$COMPANY_PHONE_NOT_FOUND);
             }
             // $Company = Company::where(['whatsapp' => $company_phone])->first();
@@ -271,7 +271,7 @@ class ExternalRPIController extends Controller
             $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->where(['whatsapp_id' => $contact_Jid, 'company_id' => $Company->id])
                 ->first();
-            Log::debug('\n\rreciveTextMessage to Contact: ', [$Contact]);
+            Log::debug('\n\r reciveTextMessage to Contact: ', [$Contact]);
 
             $Chat = $this->messageToChatModel($input, $Contact);
             if (!$Chat) {

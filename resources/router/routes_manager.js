@@ -52,20 +52,20 @@ const layout = [
 
     
     {
-        path: '/manager/pmail',
-        component: resolve => require(['pages/socialhub/managerPMailIntegration'], resolve),
+        path: '/manager/correios',
+        component: resolve => require(['pages/socialhub/managerCorreiosIntegration'], resolve),
         meta: {
             title: "Integração",
         }
     },{
-        path: '/manager/pmailSales',    
-        component: resolve => require(['pages/socialhub/managerPMailSales'], resolve),
+        path: '/manager/trackings',    
+        component: resolve => require(['pages/socialhub/managerCorreiosTracking'], resolve),
         meta: {
             title: "Envios",
         }
     },{
-        path: '/manager/pmailStatistics',    
-        component: resolve => require(['pages/socialhub/managerPMailStatistics'], resolve),
+        path: '/manager/correiosSatistics',    
+        component: resolve => require(['pages/socialhub/managerCorreiosStatistics'], resolve),
         meta: {
             title: "Estatísticas",
         }

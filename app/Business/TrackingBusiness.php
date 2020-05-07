@@ -42,7 +42,7 @@ class TrackingBusiness extends Business
                 $Tracking->tracking_list = json_encode($newTrackingList);
 
                 if (in_array($newTrackingList[0]->tipo, ['EST', 'LDI', 'BLQ', 'BDE', 'BDI', 'BDR'])) {
-                    $Tracking->status_id = StatusController::RECEIVED;
+                    $Tracking->status_id = TrackingController::TRACKING_RECEIVED;
                 }
             }
 
@@ -108,6 +108,7 @@ class TrackingBusiness extends Business
 
         // $dados_etiqueta->setServicoDePostagem(\PhpSigep\Model\ServicoDePostagem::SERVICE_PAC_41068);
         $etiqueta = new \PhpSigep\Model\Etiqueta();
+        Log::debug('CorreiosTrackingObject', [$tracking_code]);
         $etiqueta->setEtiquetaComDv($tracking_code);
 
         $params = new \PhpSigep\Model\RastrearObjeto();
@@ -126,10 +127,10 @@ class TrackingBusiness extends Business
             $newTrackingList = array();
 
             $response = $this->CorreiosTrackingObject($Company, $Tracking->tracking_code);
+            Log::debug("processTrackingObject $Tracking->tracking_code", [$response->getResult()]);
 
             if ($response && count($response->getResult())) {
                 $eventList = $response->getResult()[0]->getEventos();
-                Log::debug("processTrackingObject $Tracking->tracking_code", [$eventList]);
 
                 foreach ($eventList as $key => $event) {
                     $newTrackingList[$key] = (object) $event->toArray();

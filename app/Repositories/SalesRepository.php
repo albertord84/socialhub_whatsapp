@@ -28,7 +28,7 @@ class SalesRepository extends BaseRepository
     ];
 
 
-    public function salesByCompany($company_id, $page, $stringFilter)
+    public function salesByCompany($company_id, $page=0, $stringFilter ='', $betweenDates=null)
     {
         $Sale = new Sales();
         $Sale->table = "$company_id";
@@ -36,14 +36,22 @@ class SalesRepository extends BaseRepository
         $page_length = env('APP_TRACKING_PAGE_LENGTH_FOR_MANAGER', 100);
         $start = $page_length * $page;
 
-        if($stringFilter == ''){
-            $Sales = $Sale
-                ->get()->slice($start, $page_length);
-        } else{
-            $Sales = $Sale
-                ->where('json_data', 'LIKE', '%'. $stringFilter.'%')
-                ->get()->slice($start, $page_length);
-        }
+        // dd($betweenDates);
+        $Sales = $Sale
+            ->where(function($query) use ($stringFilter){
+                if ($stringFilter != '') {
+                    $query
+                    ->where('json_data', 'LIKE', '%'. $stringFilter.'%');
+                }})
+            ->where(function($query) use ($betweenDates){
+                if($betweenDates) {
+                    $query
+                        ->where('updated_at', '>=', $betweenDates[0].' 00:00:00')
+                        ->where('updated_at', '<=', $betweenDates[1].' 00:00:00');
+                }})
+            ->get()
+            ->slice($start, $page_length);
+
         return $Sales;
     }
 

@@ -53,6 +53,7 @@ class Tracking extends Model
      * @var array
      */
     protected $casts = [
+        'id' => 'string',
         'contact_id' => 'string',
         'post_card' => 'string',
         'post_date' => 'datetime',

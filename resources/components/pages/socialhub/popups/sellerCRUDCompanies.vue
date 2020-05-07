@@ -418,26 +418,25 @@
                                 this.reload();
                                 this.closeModals();
 
-                                    //3. atualizando rpi
-                                    // this.modelRpi.company_id = this.modelCompany.id;
-                                    // if(!this.modelRpi.id) {
-                                    //     this.modelRpi.id=0;
-                                    // }
-                                    // var This=this;
-                                    // ApiService.put(this.rpi_url+'/'+this.modelRpi.id, this.modelRpi)
-                                    //     .then(response => {
-                                    //             miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
-                                    //             this.reload();
-                                    //             this.closeModals();
-                                    //         })
-                                    //     .catch(error => {
-                                    //         if(!this.modelRpi.id && this.modelRpi.mac!='')
-                                    //             alert("O endereço MAC informado não existe no banco de dados. Peça ao Gerente dessa empressa ligar o Hardware e concectar à internet");
-                                    //         else{
-                                    //             this.processMessageError(error, this.rpi_url, "update");
-                                    //         }
-                                    //     })
-                                    //     .finally(() => this.isSendingUpdate = false);
+                                    // 3. atualizando ou criando o rpi (sem MAC agora)
+                                    this.modelRpi.company_id = this.modelCompany.id;
+                                    if(!this.modelRpi.id) {
+                                        this.modelRpi.id=0;
+                                    }
+                                    var This=this;
+                                    ApiService.put(this.rpi_url+'/'+this.modelRpi.id, {
+                                            'rpi': this.modelRpi,
+                                            'company_id': this.modelCompany.id
+                                        })
+                                        .then(response => {
+                                                miniToastr.success('Dados atualizados corretamente', "Sucesso"); 
+                                                this.reload();
+                                                this.closeModals();
+                                            })
+                                        .catch(error => {
+                                            
+                                        })
+                                        .finally(() => this.isSendingUpdate = false);
                             })
                             .catch(error => {
                                 this.processMessageError(error, this.users_url, "update");
