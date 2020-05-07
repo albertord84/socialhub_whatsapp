@@ -42,7 +42,7 @@
                 <label style="">
                     <div class="actisons pr-4">
                         <input id="fileInputCSV" ref="fileInputCSV" style="display:none" type="file" @change.prevent="getSelectedFile" accept=".csv"/>
-                        <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadDispatchList" title="Subir lista de códigos de rastreio">
+                        <a href="javascript:undefined" class="btn btn-info text-white" @click="showModalUploadCSVTrackings" title="Subir lista de códigos de rastreio">
                             <i class="mdi mdi-upload fa-lg"  ></i>
                         </a>
                         <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar envios mostrados">
@@ -82,16 +82,23 @@
                 <tbody>
                     <tr v-for="(row, index) in rows" @click="click(row, index)" :key="index" :class="row.sended ? 'sended' : 'notSended'">
                         <template v-for="(column,index) in columns" >
-                            <td v-if="!column.html && !column.json && column.label !='Nome'" >{{ collect(row,column.field) }}</td>
-                            <td v-if="column.label =='Nome'"> {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim() : '' }}</td>
+                            <td v-if="!column.html && !column.json && column.label !='Nome' && column.label !='Status'" >{{ collect(row,column.field) }}</td>
+                            <td v-if="column.label =='Nome'" :title="collect(row, column.field).trim()"> 
+                                {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim().substr(0, 20) : '' }}
+                            </td>                            
+                            <td v-if="column.label =='Status'">
+                                <span v-if="collect(row, column.field)=='PROBLEM'" style="background-color:#ec6d65">{{ collect(row, column.field) }}</span>
+                                <span v-else-if="collect(row, column.field)=='RECEIVED' || collect(row, column.field)=='ARRIVED'" style="background-color:#80ffaa">{{ collect(row, column.field) }}</span>
+                                <span v-else style="background-color:silver">{{ collect(row, column.field) }}</span>
+                            </td>   
                             <td v-if="column.sended" v-html="collect(row, column.field)" ></td>
                             <td v-if="column.html"  v-html="collect(row, column.field)"  ></td>
                             <td v-if="column.actions" >
                                 <div style="position:relative; margin-left:-130px;">
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver comprador" @click.prevent="actionSeeClient(row)"><i class='fa fa-user-circle-o text-primary mr-1' ></i> </a>
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver tracking" @click.prevent="actionSeeTacking(row)"><i class='fa fa-clock-o text-warning mr-1'  ></i> </a>
-                                    <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditRecord(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a>
-                                    <a class="text-18" href="javascript:void(0)" title="Eliminar registro" @click.prevent="actionDeleteRecord(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                    <!-- <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditTracking(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a> -->
+                                    <a class="text-18" href="javascript:void(0)" title="Eliminar registro" @click.prevent="actionDeleteTracking(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                                 </div>
                             </td>
                         </template>
@@ -121,19 +128,19 @@
             </div>
         </div>
         
-        <!-- Add Dispatch Modal -->
-        <b-modal v-model="modalAddDispatch" size="lg" :hide-footer="true" title="Adicionar envio">
-            <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
+        <!-- Modal to insert a tracking -->
+        <b-modal v-model="modalAddTracking" size="lg" :hide-footer="true" title="Adicionar envio">
+            <managerCRUDBlingTrackings :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingTrackings>            
         </b-modal>
 
-        <!-- Edit Dispatch Modal -->
-        <b-modal v-model="modalEdtitDispatch" size="lg" :hide-footer="true" title="Editar envio">
-            <managerCRUDBlingSales :url='url' :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
+        <!-- Modal to edit a tracking -->
+        <b-modal v-model="modalEditTracking" size="lg" :hide-footer="true" title="Editar envio">
+            <managerCRUDBlingTrackings :action='"edit"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingTrackings>            
         </b-modal>
 
-        <!-- Delete Dispatch Modal -->
-        <b-modal ref="modal-delete-matter" v-model="modalDeleteDispatch" :hide-footer="true" title="Verificação de exclusão">
-            <managerCRUDBlingSales :url='url' :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingSales>            
+        <!-- Modal to delete a tracking -->
+        <b-modal v-model="modalDeleteTracking" :hide-footer="true" title="Verificação de exclusão">
+            <managerCRUDBlingTrackings :action='"delete"' :item='model' @onreloaddatas='reloadDatas' @modalclose='closeModals'> </managerCRUDBlingTrackings>            
         </b-modal>
 
         <!-- Modal to upload codes -->
@@ -424,7 +431,7 @@
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
-    import managerCRUDBlingSales from "./popups/managerCRUDBlingSales";
+    import managerCRUDBlingTrackings from "./popups/managerCRUDBlingTrackings";
     import Multiselect from 'vue-multiselect';
     Vue.component(Multiselect);
 
@@ -456,7 +463,7 @@
         },
 
         components:{
-            managerCRUDBlingSales,
+            managerCRUDBlingTrackings,
             Multiselect
         },
 
@@ -474,9 +481,10 @@
                 showModalSeeClient: false,
                 showModalSeeTracking: false,
 
-                modalAddDispatch: false,
-                modalEdtitDispatch: false,
-                modalDeleteDispatch: false,
+                modalAddTracking: false,
+                modalEditTracking: false,
+                modalDeleteTracking: false,
+
                 fileInputCSV: null,
                 
                 steepFileUploadCSV:2,
@@ -515,15 +523,15 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'Data Post',
+                        label: 'Postado',
                         field: 'post_date',
                         numeric: false,
-                        html: false,
+                        html: false,                    
                     }, {
-                        label: 'Data fim',
-                        field: 'end_date',
+                        label: 'Atualizado',
+                        field: 'updated_at',
                         numeric: false,
-                        html: false,
+                        html: false,                    
                     },  {
                         label: 'Ações',
                         field: 'button',
@@ -535,10 +543,6 @@
 
                 tag_value:null,
                 trackingStatusOptions: [
-                    // {name: 'Vue.js', code: 'vu'}, 
-                    // {name: 'Javascript',code: 'js'}, 
-                    // {name: 'Monterail',code: 'pl'},
-                    // {name: 'Open Source',code: 'os'}
                 ],
 
                 currentPage: 1,
@@ -557,7 +561,6 @@
                 } 
                 this.actualPage = page;
                 this.isFindingNextPage = true;
-                console.log(this.tackingStatus);
                 ApiService.get(this.url,{
                     'page': this.actualPage,
                     'searchInput': this.searchInput,
@@ -610,7 +613,7 @@
                 value.json_csv_data.pedidoProduto = JSON.parse(value.json_csv_data.pedidoProduto);
                 this.modelClient = value.json_csv_data;
                 this.showModalSeeClient = true;
-            },
+            }, 
 
             actionSeeTacking: function(value){
                 this.modelTracking = (value.tracking_list) ? JSON.parse(value.tracking_list): [];
@@ -620,16 +623,16 @@
                 miniToastr.warn('Não existem atualizações para essa venda ainda','Atenção');
             },
 
-            actionEditRecord: function(value){
+            actionEditTracking: function(value){
                 this.model = value;
                 this.sales_id = value.id;
-                this.modalEditSales = !this.modalEditSales;
+                this.modalEditSales = true;
             },
 
-            actionDeleteRecord: function(value){
+            actionDeleteTracking: function(value){
                 this.model = value;
                 this.sales_id = value.id;
-                this.modalDeleteSales = !this.modalDeleteSales;
+                this.modalDeleteTracking = true;
             },
 
             uploadCSVFile: function(){
@@ -663,23 +666,8 @@
             reloadDatas(){
                 this.getTrackings(this.actualPage);
             },
-
-            showModalAddDispatch() {
-                this.modalAddDispatch =true;
-            },            
-
-            showModalEdtitDispatch() {
-                this.modalEdtitDispatch =true;
-            },
-            
-            showModalDeleteDispatch() {
-                this.modalDeleteDispatch =true;
-            },            
-
-            showModalFilterDispatchs() {
-            },
-            
-            showModalUploadDispatchList() {
+                        
+            showModalUploadCSVTrackings() {
                 this.fileInputCSV = null;
                 this.$refs.fileInputCSV.click();
             },
@@ -691,9 +679,17 @@
             },
             
             closeModals(){
-                this.modalAddDispatch = false;
-                this.modalEdtitDispatch =  false;
-                this.modalDeleteDispatch =  false;
+                this.modalAddTracking = false;
+                this.modalEditTracking =  false;
+                this.modalDeleteTracking =  false;
+            },
+
+            formatDate: function(date){
+                var arr = date.split('/');
+                if(arr.length){
+                    return arr[2]+'/'+arr[0]+'/'+arr[1];
+                }
+                return '';
             },
 
             //------ Specific DataTable methods------------

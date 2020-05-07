@@ -6,47 +6,59 @@
             <h4 class="table-title text-center mt-3">{{title}}</h4>
         </div>
 
-        <div style="display:flex; align-items: center; justify-content:space-between">
-            <label>
-                <div style="" class="form-group has-seasrch">
-                    <div class="col-lg-12 input-group">
-                        <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="stringFilter" title="Buscar venda">
-                        <div class="input-group-append" title="Buscar">
-                            <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="getSales(0)">
-                                <i class="fa fa fa-search "></i>
-                            </button>
+        <div style="border: 1px solid #dee2e6" class="mb-3">
+            <div style="display:flex; align-items: center; justify-content: space-between">
+                <label>
+                    <div class="form-group mt-3">
+                        <div class="col-lg-12 input-group">
+                            
+                            <input type="search" id="search-input" style="width:220px" class="form-control" placeholder="Digite sua busca ..." v-model="stringFilter" title="Buscar venda">
+                            
+                            <div class="input-group-append ml-3" title="Data início">
+                                <input type="date" v-model="dateInit" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                            </div>
+                            <div class="input-group-append ml-3" title="Data fim">
+                                <input type="date" v-model="dateEnd" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                            </div>
+
+                            <div class="input-group-append ml-3" title="Filtrar pedidos">
+                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 px-5" @click.prevent="getSales(0)">
+                                    <span v-if="!isFilteringBySearchInput" class="fa fa fa-search"></span>
+                                    <span v-if="isFilteringBySearchInput" class="fa fa-spinner fa-spin "></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </label>
+                </label>
 
-            <label>
-                <div style="">
-                    <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getSales(0)">
-                        <i class="mdi mdi-chevron-double-left my-fa-2x" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getSales(actualPage-1)">
-                        <i class="mdi mdi-chevron-left my-fa-2x" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
-                        <b class="">{{actualPage+1}}</b>
-                    </button>
-                    <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getSales(actualPage+1)">
-                        <i class="mdi mdi-chevron-right my-fa-2x" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </label>
-
-            <label style="">
-                <div class="actisons pr-4">
-                    <div class="actions float-right pr-4 mb-3">
-                        <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar contatos">
-                            <i class="fa fa-download" aria-hidden="true"></i>
+                <label style="">
+                    <div class="actisons pr-4">                        
+                        <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar vendas mostradas">
+                            <i class="mdi mdi-download fa-lg"></i>
                         </a>
                     </div>
-                </div>
-            </label>
-        </div>  
+                </label>
+            </div>  
+            <div style="display:flex; align-items: center; justify-content: center;">
+                <label>
+                    <div style="">
+                        <button type="button" class="btn btn-flat btn-lg  p-0" :disabled="actualPage===0" @click.prevent="getSales(0)">
+                            <i class="mdi mdi-chevron-double-left fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg p-0" :disabled="actualPage===0" @click.prevent="getSales(actualPage-1)">
+                            <i class="mdi mdi-chevron-left fa-2x" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg  p-3 pl-3 pr-3">
+                            <b class="">{{actualPage+1}}</b>
+                        </button>
+                        <button type="button" class="btn btn-flat btn-lg  p-0" @click.prevent="getSales(actualPage+1)">
+                            <i class="mdi mdi-chevron-right fa-2x" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </label>
+            </div>  
+        </div>
+
 
         <div class="table-responsive">
             <table ref="table" id="salesTable" class="table">
@@ -185,6 +197,11 @@
                         numeric: false,
                         html: true,
                     }, {
+                        label: 'Atualizado',
+                        field: 'updated_at',
+                        numeric: false,
+                        html: true,
+                    }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -199,16 +216,24 @@
                 searchInput: '',   
                 
                 actualPage: 0,
-                stringFilter: ''
+                stringFilter: '',
+                isFilteringBySearchInput: '',
+                dateInit: '',
+                dateEnd: '',
             }
         },
 
         methods: {
             getSales: function(page) { //R
                 this.actualPage = page;
+                this.isFilteringBySearchInput = true;
                 ApiService.get(this.url,{
                     'page': page,
-                    'stringFilter': (this.stringFilter.trim() != '') ? this.stringFilter.trim() : ''
+                    'stringFilter': (this.stringFilter.trim() != '') ? this.stringFilter.trim() : '',
+                    'betweenDates': JSON.stringify(Array(
+                        this.dateInit,
+                        this.dateEnd
+                    ))
                 })
                     .then(response => {
                         response.data = Object.values(response.data);
@@ -230,7 +255,8 @@
                     .catch(error => {
                         console.log(error);
                         this.processMessageError(error, this.url, "get");
-
+                    }).finally(()=>{
+                        this.isFilteringBySearchInput = false;
                     });
             }, 
 
@@ -294,7 +320,6 @@
                 this.sales_id = value.id;
                 this.modalDeleteSales = !this.modalDeleteSales;
             },
-
             
             //------ Specific DataTable methods------------
             nextPage() {

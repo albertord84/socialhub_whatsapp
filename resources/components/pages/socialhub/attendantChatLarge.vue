@@ -246,9 +246,9 @@
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
                                 <div @click.prevent="displayChatRightSide()" class="pointer-hover" style="display: flex; align-items: center">
-                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" width="50px" class="profile-picture">
-                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" width="50px" class="profile-picture">
-                                    <div v-else style=";width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
+                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" class="profile-picture">
+                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" class="profile-picture">
+                                    <div v-else style="width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
                                         :class="[
                                             { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
                                             { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
@@ -265,12 +265,11 @@
                                             {{ (contacts[selectedContactIndex].first_name)? contacts[selectedContactIndex].first_name.slice(0,1) : contacts[selectedContactIndex].whatsapp_id.slice(-1)}}
                                         </b>
                                     </div>
-
                                     <b style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
                                 </div>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:-18px"></i>
+                                <i title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:5px"></i>
                             </li>
                             <!-- <li> -->
                                 <!-- <form action="">
@@ -364,10 +363,10 @@
                                                         <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
                                                         <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
                                                         <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
-                                                        <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" style="background-color:white"></i>
                                                         <b style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
-                                                        <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
-                                                            <i class="mdi mdi-download fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                        <a :href="message.path" :download="message.data.ClientOriginalName" class="document_received_download">
+                                                            <img src="~/img/socialhub/download.png" class="document_received">
                                                         </a>
                                                         <br>
                                                     </span>
@@ -441,10 +440,10 @@
                                                 <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
                                                 <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
                                                 <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
-                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" style="background-color:#007bff" ></i>
                                                 <b  style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
-                                                <a :href="message.path" :download="message.data.ClientOriginalName" :class="[{ document_sent_download: message.source==0 },{ document_received_download: message.source==1 }]">
-                                                    <i class="mdi mdi-download fa-2x" aria-hidden="true" :class="[{ document_sent: message.source==0 },{ document_received: message.source==1 }]"></i>
+                                                <a :href="message.path" :download="message.data.ClientOriginalName" class="document_sent_download">
+                                                    <img src="~/img/socialhub/download.png" class="document_sent">
                                                 </a>
                                                 <br>                                      
                                             </span>
@@ -2482,7 +2481,8 @@
         text-overflow: ellipsis;
     }
     .wrapper .converstion_back .ss-container{
-        background-color: #eaedf2;
+        background-color: white;
+        // background-color: #eaedf2;
     }
     .colors{
         line-height: 1rem;
@@ -2602,7 +2602,8 @@
     /* CHAT - MESSAGES  */
     .receivedMessageText{
         color: black;
-        background-color:white; 
+        background-color:#eaedf2; 
+        // background-color:white; 
         padding:1em; 
         border-top-left-radius:1em; 
         border-top-right-radius:1em; 
@@ -2676,24 +2677,30 @@
     .text-message{
         word-break: break-word; 
     }
+    
     .document_sent{
+        width: 50px;
+        height: 50px;
         color:white;
-    }
-    .document_received{
-        color: #007bff;
-    }
-    .document_sent_download{
-        float:right; 
         padding:0.1rem 0.6rem; 
         border:1px solid white;
         border-radius:50%
     }
-    .document_received_download{
-        float:right;
+    .document_received{
+        width: 50px;
+        height: 50px;
+        color: #007bff;
         padding:0.1rem 0.6rem;
         border:1px solid #007bff;
         border-radius:50%
     }
+    .document_sent_download{
+        float:right; 
+    }
+    .document_received_download{
+        float:right;
+    }
+
     .midia-files{
         width: 15em;
     }

@@ -62,6 +62,31 @@ class ExtendedRpiController extends RpiController
      */
     public function update($id, UpdateRpiRequest $request)
     {
+        $rpi = $request->rpi;
+        $company_id = $request->company_id;
+        
+        //relembrando que agora não vai existir MAC nem rpi, então ...
+        if($id == 0){
+            //criar uma nova entrada na tabela de rpi
+            $new_rpi = $this->rpiRepository->create($rpi);
+
+            // Update Company RPi id
+            $Company = Company::find($company_id);
+            if ($Company) {
+                $Company->rpi_id = $new_rpi->id;
+                $Company->save();
+                $rpi = (object) $rpi;
+            }
+            return $new_rpi;
+        }else{
+            //atualizar um regitro existente na tabela de rpis
+            $rpi = $this->rpiRepository->update($rpi, $id);
+            return $rpi ? $rpi->toJson() : null;            
+        }
+    }
+
+    public function updateOld($id, UpdateRpiRequest $request)
+    {
         $input = $request->all();
         $mac = $request->mac;
         $company_id = $request->company_id;
@@ -78,7 +103,6 @@ class ExtendedRpiController extends RpiController
             if ($rpi->id != $id) { // Tentando atuaizar uma MAC que ja existe
                 $id = $rpi->id;
             }
-            
         }
 
         if (!empty($rpi)) {

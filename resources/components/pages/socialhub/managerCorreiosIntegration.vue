@@ -33,11 +33,11 @@
                 <hr>
             </tab-content>
 
-            <tab-content title="Configuração das contas" :beforeChange='steepPMailAccounts'>
+            <tab-content title="Configuração da conta" :beforeChange='steepPMailAccounts'>
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
-                        <h4 style="color:#34AD70">Configuração das contas a serem monitoradas</h4>
-                        <p class="pl-4"> Aqui você deve informar as suas contas nos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a>  que deseja que sejam monitoradas.</p>
+                        <h4 style="color:#34AD70">Configuração da conta a ser monitorada</h4>
+                        <p class="pl-4"> Aqui você deve informar sua conta nos <a href="http://www.correios.com.br/" target="_blank" rel="noopener noreferrer">Correios</a>  que deseja monitorar.</p>
                     </div>
                     <div class="row pl-5 pr-5 pb-3">
                         <div class="col-3"></div>                        
@@ -142,7 +142,7 @@
 <script>
     import Vue from 'vue';
     import ApiService from "../../../common/api.service";
-    import managerPMailAddedAccounts from "./managerPMailAddedAccounts.vue";
+    // import managerPMailAddedAccounts from "./managerPMailAddedAccounts.vue";
     import miniToastr from "mini-toastr";
     miniToastr.init();
 
@@ -155,7 +155,7 @@
         components:{
             FormWizard,
             TabContent,
-            managerPMailAddedAccounts
+            // managerPMailAddedAccounts
         },
 
         data(){

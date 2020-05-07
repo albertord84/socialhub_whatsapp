@@ -20,6 +20,7 @@ class StatusTableSeeder extends Seeder
         DB::table('users_status')->truncate();
         DB::table('contacts_status')->truncate();
         DB::table('messages_status')->truncate();
+        DB::table('status')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->CreateUsersStatus();
