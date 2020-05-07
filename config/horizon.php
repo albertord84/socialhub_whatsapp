@@ -96,9 +96,9 @@ return [
     'trim' => [
         'recent' => 60,
         'completed' => 60,
-        'recent_failed' => 10080,
-        'failed' => 10080,
-        'monitored' => 10080,
+        'recent_failed' => 2880,
+        'failed' => 2880,
+        'monitored' => 2880,
     ],
 
     /*
@@ -162,5 +162,25 @@ return [
                 'tries' => 1,
             ],
         ],
+        // 'local' => [
+        //     'supervisor-2' => [
+        //         'connection' => 'redis',
+        //         'queue' => ['tracking_update'],
+        //         'balance' => 'auto',
+        //         'minProcesses' => 2,
+        //         'maxProcesses' => 4,
+        //         'tries' => 1,
+        //     ],
+        // ],
+        // 'local' => [
+        //     'supervisor-3' => [
+        //         'connection' => 'redis',
+        //         'queue' => ['blingsales'],
+        //         'balance' => 'auto',
+        //         'minProcesses' => 2,
+        //         'maxProcesses' => 4,
+        //         'tries' => 1,
+        //     ],
+        // ],
     ],
 ];

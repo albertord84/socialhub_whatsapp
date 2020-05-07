@@ -71,7 +71,7 @@ class ApiBusiness extends Business
             $ApiModel = new Api();
             $ApiModel->table = "$Company->id";
 
-            $Apis = $ApiModel->where('status_id', ApiController::RECEIVED)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_API_MESSAGES_X_MINUTE', 20));
+            $Apis = $ApiModel->where('status_id', ApiController::RECEIVED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 20));
 
             return $Apis;
         } catch (\Throwable $th) {
@@ -87,9 +87,11 @@ class ApiBusiness extends Business
 
             if ($Contact) {
                 $Api = $Api->toArray();
+                
                 SendWhatsAppMsgApi::dispatch($ERPIC, $Contact, $Api, 'api_messages');
                 // $apiJob = new SendWhatsAppMsgApi($ERPIC, $Contact, $Api);
                 // $apiJob->handle();
+            
             } else {
                 throw new \Exception("createApiSendWhatsAppMsgApiJob Contact($Api->contact_id) not found in Api ($Api->id)");
             }
