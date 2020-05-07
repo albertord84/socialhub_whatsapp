@@ -270,7 +270,7 @@
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                                 <i v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" 
-                                    title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:-5px">
+                                    title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:-10px">
                                 </i>
                                 <i v-else
                                     title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:5px">
