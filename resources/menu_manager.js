@@ -35,15 +35,15 @@ const menu_items = [
     child: [
         {
             name: 'Integração',
-            link: '/manager/pmail',
+            link: '/manager/correios',
             icon: 'mdi mdi-settings-transfer-outline'
         },{
             name: 'Envios',
-            link: '/manager/pmailSales',
+            link: '/manager/trackings',
             icon: 'mdi mdi-bus-clock'
         },{
             name: 'Estatísticas',
-            link: '/manager/pmailStatistics',
+            link: '/manager/correiosSatistics',
             icon: 'mdi mdi-chart-line'
         }
     ]

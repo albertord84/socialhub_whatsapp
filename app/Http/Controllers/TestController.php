@@ -61,15 +61,14 @@ class TestController extends AppBaseController
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
 
-        // $TrackingBusiness = new TrackingBusiness();
+        $TrackingBusiness = new TrackingBusiness();
 
+        // $company_id = '1';
+        $company_id = '49';
+        $TrackingModel = new Tracking();
+        $TrackingModel->table = "$company_id";
 
-
-        // $company_id = '49';
-        // $TrackingModel = new Tracking();
-        // $TrackingModel->table = "$company_id";
-
-        // $Tracking = $TrackingModel->find('701')->toArray();
+        $Tracking = $TrackingModel->find('701-0002365-2406656');
 
         // $Tracking = (object)$Tracking;
 
@@ -80,12 +79,15 @@ class TestController extends AppBaseController
         // $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
         // $trackingJob->handle();
 
-        // $tracking_code = $Tracking->tracking_code;
+        $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
-        // $Company = Company::find($company_id);
-        // $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
+        $Company = Company::find($company_id);
 
-        // dd($trackingList);
+        // dd($Company);
+
+        $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
+
+        dd($trackingList);
         // dd((object) $trackingList[0]->toArray());
         // dd(json_encode($trackingList));
 
@@ -261,9 +263,11 @@ class TestController extends AppBaseController
     function testCorreiosProblems()
     {
         $Tracking = new \App\Models\Tracking();
-        $Tracking->table = 1;
+        $Tracking->table = "49";
         $POB = new \App\Business\PostofficeBusiness();
         $Trackings = $Tracking->get();
+
+        $TrackingBusiness = new TrackingBusiness();
 
         foreach ($Trackings as $key => $item) {
             $event = $item->tracking_list ? json_decode($item->tracking_list)[0] : null;

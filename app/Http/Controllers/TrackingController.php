@@ -79,8 +79,12 @@ class TrackingController extends AppBaseController
         $page = (int) ($request->page ?? '0');
         $searchInput = (string) ($request->searchInput ?? '');
         $filterStatus = ($request->filterStatus ?? 0);
-        $betweenDates = json_decode($request->betweenDates);
-        if($betweenDates[0] =="" || $betweenDates[1] =="" || $betweenDates[1]<$betweenDates[0])
+        $stringFilter = ((string)$request->stringFilter) ?? '';
+        if(isset($request->betweenDates)){
+            $betweenDates = json_decode($request->betweenDates);
+            if($betweenDates[0] =="" || $betweenDates[1] =="" || $betweenDates[1]<$betweenDates[0])
+                $betweenDates = null;
+        }else 
             $betweenDates = null;
         $trackings = $this->trackingRepository->trackingByCompany($User->company_id, $page, $searchInput, $filterStatus, $betweenDates);
 
@@ -194,18 +198,28 @@ class TrackingController extends AppBaseController
      */
     public function destroy($id)
     {
-        $tracking = $this->trackingRepository->findWithoutFail($id);
+        // $tracking = $this->trackingRepository->findWithoutFail($id);
 
-        if (empty($tracking)) {
-            Flash::error('Tracking not found');
+        // if (empty($tracking)) {
+        //     Flash::error('Tracking not found');
 
-            return redirect(route('trackings.index'));
+        //     return redirect(route('trackings.index'));
+        // }
+
+        // $this->trackingRepository->delete($id);
+
+        // Flash::success('Tracking deleted successfully.');
+
+        // return redirect(route('trackings.index'));
+
+        try {
+            $User = Auth::check()? Auth::user():session('logged_user');        
+            $this->trackingRepository->deleteTracking($id, $User->company_id);
+        } catch (\Throwable $th) {
+            return 'false';
         }
 
-        $this->trackingRepository->delete($id);
+        return 'true';
 
-        Flash::success('Tracking deleted successfully.');
-
-        return redirect(route('trackings.index'));
     }
 }

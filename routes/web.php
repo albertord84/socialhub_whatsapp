@@ -106,6 +106,7 @@ Route::get('getBagContact', 'ExtendedChatController@getBagContact');
 Route::get('getBagContactsCount', 'ExtendedChatController@getBagContactsCount');
 
 Route::resource('test', 'TestController');
+Route::resource('josetest', 'JoseTestController');
 
 Route::resource('socialnetworks', 'SocialnetworkController');
 

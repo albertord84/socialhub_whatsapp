@@ -27,6 +27,8 @@ class Tracking extends Model
 
     public $table = 'tracking';
 
+    public $incrementing = false;
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -51,6 +53,7 @@ class Tracking extends Model
      * @var array
      */
     protected $casts = [
+        'id' => 'string',
         'contact_id' => 'string',
         'post_card' => 'string',
         'post_date' => 'datetime',
