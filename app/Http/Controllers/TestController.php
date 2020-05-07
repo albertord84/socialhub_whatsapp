@@ -68,9 +68,9 @@ class TestController extends AppBaseController
         $TrackingModel = new Tracking();
         $TrackingModel->table = "$company_id";
 
-        $Tracking = $TrackingModel->find('701-0002365-2406656')->toArray();
+        $Tracking = $TrackingModel->find('701-0002365-2406656');
 
-        $Tracking = (object)$Tracking;
+        // $Tracking = (object)$Tracking;
 
         // $Company = Company::with('rpi')->find($company_id);
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);
