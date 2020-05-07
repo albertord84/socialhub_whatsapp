@@ -94,7 +94,7 @@
                             <td v-if="column.sended" v-html="collect(row, column.field)" ></td>
                             <td v-if="column.html"  v-html="collect(row, column.field)"  ></td>
                             <td v-if="column.actions" >
-                                <div style="position:relative; margin-left:-130px;">
+                                <div style="position:relative; margin-left:-80px;">
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver comprador" @click.prevent="actionSeeClient(row)"><i class='fa fa-user-circle-o text-primary mr-1' ></i> </a>
                                     <a class="text-18 mr-1" href="javascript:void(0)" title="Ver tracking" @click.prevent="actionSeeTacking(row)"><i class='fa fa-clock-o text-warning mr-1'  ></i> </a>
                                     <!-- <a class="text-18 mr-1" href="javascript:void(0)" title="Editar registro" @click.prevent="actionEditTracking(row)"><i class='fa fa-pencil text-success mr-1' ></i> </a> -->
