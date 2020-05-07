@@ -7,7 +7,7 @@
         <!-- Left side of chat-->
         <div id="chat-left-side" class="ccol-lg-3 width-30 p-0">
             <div class="chatalign">
-                <div class="sect_header">
+                <div class="sect_header sect_header_color">
                     <div v-if="isSearchContact==false" class="container-fluid">
                         <ul class='row flex-baseline'>
                             <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
@@ -238,7 +238,7 @@
         <div id="chat-center-side" ref="chatCenterSide" class="ccol-lg-9 width-70 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
             <!-- If selected contact -->
             <div v-if="selectedContactIndex>=0" class="converstion_back">
-                <div class="sect_header">     
+                <div class="sect_header sect_header_color">     
                     <div class="container-fluid mt-2">
                         <ul class='row flex-baseline'>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 d-block d-lg-none'>
@@ -568,7 +568,7 @@
         
         <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
         <div id="chat-right-side" v-show="showChatRightSide==true" class="ccol-lg-3 width-25 p-0">
-            <div class="sect_header">
+            <div class="sect_header sect_header_color">
                 <div class="container-fluid">
                     <ul class='row flex-baseline' style="margin-top:1.1rem; margin-left:-3rem">
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
@@ -845,7 +845,7 @@
 
         <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
         <div id="chat-find-side" v-show="showChatFindMessages==true" class="ccol-lg-3 width-25 bg-white p-0">
-            <div class="col-lg-12 sect_header">
+            <div class="col-lg-12 sect_header sect_header_color">
                 <div class="container-fluid">
                     <ul class='row flex-baseline' style="margin-left:-3.7rem">
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="mdi mdi-window-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i></li>
@@ -1163,6 +1163,7 @@
                             message.status_id = 4;
                             this.messages.push(Object.assign({}, message));
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            this.$refs.message_scroller.scrolltobottom();
                             this.$refs.message_scroller.scrolltobottom();
                         })
                         .catch(error => {
@@ -2486,8 +2487,8 @@
         text-overflow: ellipsis;
     }
     .wrapper .converstion_back .ss-container{
-        background-color: white;
-        // background-color: #eaedf2;
+        // background-color: white;
+        background-color: #eaedf2;
     }
     .colors{
         line-height: 1rem;
@@ -2501,6 +2502,9 @@
         height:6.5rem; // height:70px;
         border-bottom: 1px solid #e9e9e9;
         padding-top:10px; 
+    }
+    .sect_header_color{
+        background-color:#fefefe;        
     }
     .sec_decription p, h4{
         text-align: center !important;
@@ -2607,8 +2611,8 @@
     /* CHAT - MESSAGES  */
     .receivedMessageText{
         color: black;
-        background-color:#eaedf2; 
-        // background-color:white; 
+        // background-color:#eaedf2; 
+        background-color:white; 
         padding:1em; 
         border-top-left-radius:1em; 
         border-top-right-radius:1em; 

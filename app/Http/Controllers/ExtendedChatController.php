@@ -54,7 +54,7 @@ class ExtendedChatController extends ChatController
             // Get cotact info (profile photo etc..)
             $Controller = new ExternalRPIController(null);
             $contactInfo = $Controller->getContactInfo($Contact->whatsapp_id);
-            $Contact->json_data = json_encode($contactInfo);
+            $Contact->json_data = ($contactInfo); // $Contact->json_data = json_encode($contactInfo);
             $contactInfo = json_decode($Contact->json_data);
             $Contact->first_name = ($contactInfo && isset($contactInfo->name) && strlen($contactInfo->name)) ? $contactInfo->name : $Contact->first_name;
             $Contact->picurl = ($contactInfo && isset($contactInfo->picurl) && strlen($contactInfo->picurl)) ? $contactInfo->picurl : "images/contacts/default.png";
