@@ -36,7 +36,10 @@ class Sales extends Model
         'source', // Defaul 1 -> Bling
         'sended',
         'message',
-        'json_data'
+        'json_data',
+        'has_attendant',
+        'attendant_id',
+        'chat_id'
     ];
 
     /**
