@@ -97,6 +97,8 @@ class SalesBusiness extends Business {
                             $SaleModel->has_attendant = true;
                             $SaleModel->attendant_id = $Chat->attendant_id;
                             $SaleModel->chat_id = $Chat->id;
+                            $SaleModel->status_id = $Chat->status_id;
+                        
                         }
                         
                         $SaleModel->save();
@@ -147,7 +149,7 @@ class SalesBusiness extends Business {
             $SalesModel = new Sales();
             $SalesModel->table = "$Company->id";
 
-            $Sales = $SalesModel->where('sended', false)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 20));
+            $Sales = $SalesModel->where('status_id', MessagesStatusController::ROUTED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 20));
 
             return $Sales;
         } catch (\Throwable $th) {

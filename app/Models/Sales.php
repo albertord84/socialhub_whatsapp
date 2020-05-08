@@ -39,7 +39,8 @@ class Sales extends Model
         'json_data',
         'has_attendant',
         'attendant_id',
-        'chat_id'
+        'chat_id',
+        'status_id'
     ];
 
     /**

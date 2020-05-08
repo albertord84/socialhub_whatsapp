@@ -172,15 +172,15 @@ return [
         //         'tries' => 1,
         //     ],
         // ],
-        // 'local' => [
-        //     'supervisor-3' => [
-        //         'connection' => 'redis',
-        //         'queue' => ['blingsales'],
-        //         'balance' => 'auto',
-        //         'minProcesses' => 2,
-        //         'maxProcesses' => 4,
-        //         'tries' => 1,
-        //     ],
-        // ],
+        'local' => [
+            'supervisor-3' => [
+                'connection' => 'redis',
+                'queue' => ['blingsales'],
+                'balance' => 'auto',
+                'minProcesses' => 2,
+                'maxProcesses' => 4,
+                'tries' => 1,
+            ],
+        ],
     ],
 ];
