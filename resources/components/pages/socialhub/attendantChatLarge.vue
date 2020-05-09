@@ -8,7 +8,7 @@
         <div id="chat-left-side" class="ccol-lg-3 width-30 p-0">
             <div class="chatalign">
                 <div class="sect_header sect_header_color">
-                    <div v-if="isSearchContact==false" class="container-fluid">
+                    <div v-show="isSearchContact==false" class="container-fluid">
                         <ul class='row flex-baseline'>
                             <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
@@ -16,7 +16,7 @@
                                 </a>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i class=" mdi mdi-magnify icons-action" @click.prevent="isSearchContact=!isSearchContact" aria-hidden="true" title="Buscar contato ..." ></i>
+                                <i class=" mdi mdi-magnify icons-action" @click.prevent="showSearchContact" aria-hidden="true" title="Buscar contato ..." ></i>
                             </li>
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
@@ -69,16 +69,16 @@
                         </ul>
                     </div>
 
-                    <div v-if="isSearchContact==true" class="container-fluid">
+                    <div v-show="isSearchContact==true" class="container-fluid">
                         <ul class='row flex-baseline mt-3'>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i class="mdi mdi-arrow-left icons-action" @click.prevent="isSearchContact=!isSearchContact"></i>
+                                <i class="mdi mdi-arrow-left icons-action" @click.prevent="hideSearchContact"></i>
                             </li>
                             <li class='col-9 col-md-10 col-lg-8 col-xl-9'>
-                                <input class="search-input border-0 search-contact ml-1" type="text" v-model="searchContactByStringInput" placeholder="Buscar contato" >
+                                <input class="search-input border-0 search-contact ml-1" type="text" ref="inputSearchContactByString" v-model="searchContactByString" placeholder="Buscar contato" >
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i class="mdi mdi-window-close icons-action" @click.prevent="searchContactByStringInput=''; isSearchContact=!isSearchContact, selectedContactIndex = -1, contacts=[], getContacts()"></i>
+                                <i class="mdi mdi-window-close icons-action" @click.prevent="hideSearchContact"></i>
                             </li>                            
                         </ul>
                     </div>
@@ -88,7 +88,7 @@
                         <ul style="margin-left:25%" class="list-group list-group-horizontal">
                             <!-- <li class="list-group-item border-0 m-0 p-0  bg-transparent">
                                 <a href="javascript:void()">
-                                    <span class="mdi mdi-message-text fa-2x cl-blue"></span><br>
+                                    <span class="mdi mdi-message-text fa-2x cinputTextAreaMessagel-blue"></span><br>
                                     <span style="position:relative; top:-0.8em" class="principal-icons">Chats</span>
                                 </a>
                             </li> -->
@@ -337,50 +337,66 @@
                                         <div class="row">
                                             <div  class="col-1"></div>
                                             <div class="col-11" >
-                                                <p style="float:left;" class="receivedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
-                                                    <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
-                                                    <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                                        <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                                            <img :src="message.path" class="midia-files"/>
-                                                        </a>
-                                                        <br>
-                                                    </span>                               
-                                                    <span v-if='message.type_id == "3"' class='text-center'>
-                                                        <br>
-                                                        <audio controls class="mycontrolBar m-2">
-                                                            <source :src="message.path" type="audio/ogg">
-                                                            <source :src="message.path" type="audio/mp3">
-                                                            Seu navegador não suporta o elemento de áudio.
-                                                        </audio>
-                                                        <br>
-                                                    </span>
-                                                    <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                                        <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                                            <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                                <source :src="message.path+'#t=2'" type="video/mp4">
-                                                                Seu navegador não suporta o elemento de vídeo.
-                                                            </video>
-                                                        </a>
-                                                        <br>
-                                                    </span>
-                                                    <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                        <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
-                                                        <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
-                                                        <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
-                                                        <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
-                                                        <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" style="background-color:white"></i>
-                                                        <b style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
-                                                        <a :href="message.path" :download="message.data.ClientOriginalName" class="document_received_download">
-                                                            <img src="~/img/socialhub/download.png" class="document_received">
-                                                        </a>
-                                                        <br>
-                                                    </span>
-                                                    <span v-if="message.message && message.message !=''" class="text-message">
-                                                        {{ message.message ? message.message : "" }}
-                                                    </span>
-                                                    <br>
+                                                <div style="float:left;" class="receivedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
+                                                    <!-- <div v-if="message.message && message.message !='' && message.message.isLink" style="min-height:100px; border: 1px solid silver; border-radius: 5px; background-color: rgba(255,255,255,0.1); display: flex; align-items: center;" class="mb-2 mt-2">
+                                                        <link-prevue url="https://google.com" style="min-width:350px; max-width:80%; min-height: 150px; max-height: 250px; text-align:center">
+                                                            <template slot="loading">
+                                                                <h6 style="color: black;"> <i class="fa fa-spinner fa-spin fa-2x ml-3" style="color: black"></i> Pré-visualização ...</h6>
+                                                            </template>
+                                                        </link-prevue>
+                                                    </div> -->
                                                     
-                                                </p>                                                 
+                                                    <p>
+                                                        <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>
+                                                        <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                            <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                                <img :src="message.path" class="midia-files"/>
+                                                            </a>
+                                                            <br>
+                                                        </span>                               
+                                                        <span v-if='message.type_id == "3"' class='text-center'>
+                                                            <br>
+                                                            <audio controls class="mycontrolBar m-2">
+                                                                <source :src="message.path" type="audio/ogg">
+                                                                <source :src="message.path" type="audio/mp3">
+                                                                Seu navegador não suporta o elemento de áudio.
+                                                            </audio>
+                                                            <br>
+                                                        </span>
+                                                        <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                            <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                                <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                                    <source :src="message.path+'#t=2'" type="video/mp4">
+                                                                    Seu navegador não suporta o elemento de vídeo.
+                                                                </video>
+                                                            </a>
+                                                            <br>
+                                                        </span>
+                                                        <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                            <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                            <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                            <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                            <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                            <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" style="background-color:white"></i>
+                                                            <b style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                            <a :href="message.path" :download="message.data.ClientOriginalName" class="document_received_download">
+                                                                <img src="~/img/socialhub/download.png" class="document_received">
+                                                            </a>
+                                                            <br>
+                                                        </span>
+
+                                                        <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message"></span>
+                                                        <span v-else> </span>
+
+                                                        <!-- <span v-if="message.message && message.message !=''" v-html="'el link es <a target=\'_blank\' href=\'http://www.google.com\'>www.google.com</a>'" class="text-message"></span> -->
+                                                        
+                                                        <!-- <span v-if="message.message && message.message !=''" class="text-message">
+                                                            {{ message.message ? message.message : "" }}
+                                                        </span> -->
+                                                        <br>
+                                                        
+                                                    </p>                                                 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -414,55 +430,67 @@
                                 <!-- sended messages-->
                                 <div v-if="message.source==0" class="row mt-2">
                                     <div class="col-11">
-                                        <p style="float:right" class="sendedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
-                                            <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>                                            
-                                            <span v-if='message.type_id == "2"' class='mb-2 text-center'>
-                                                <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
-                                                    <img :src="message.path" class="midia-files"/>
-                                                </a>
+                                        <div style="float:right" class="sendedMessageText" @mouseover="1/*mouseOverMessage('message_'+index)*/" @mouseleave="1/*mouseLeaveMessage('message_'+index)*/">
+                                            <!-- <div v-if="message.message && message.message !='' && message.message.isLink" style="min-height:100px; border: 1px solid silver; border-radius: 5px; background-color: rgba(255,255,255,0.1); display: flex; align-items: center;" class="mb-2 mt-2">
+                                                <link-prevue url="https://google.com" style="min-width:350px; max-width:80%; min-height: 150px; max-height: 250px; text-align:center">
+                                                    <template slot="loading">
+                                                        <h6 style="color: black;"> <i class="fa fa-spinner fa-spin fa-2x ml-3" style="color: black"></i> Pré-visualização ...</h6>
+                                                    </template>
+                                                </link-prevue>
+                                            </div> -->
+                                            
+                                            <p>
+                                                <i :id="'message_'+index" class="fa fa-angle-down message-hout message-options-style" aria-hidden="true"></i>                                            
+                                                <span v-if='message.type_id == "2"' class='mb-2 text-center'>
+                                                    <a href="javascript:void()" @click.prevent="modalShowImageSrc= message.path; modalShowImage=!modalShowImage">
+                                                        <img :src="message.path" class="midia-files"/>
+                                                    </a>
+                                                    <br>
+                                                </span>                               
+                                                <span v-if='message.type_id == "3"' class='text-center'>
+                                                    <br>
+                                                    <audio controls class="mycontrolBar m-2">
+                                                        <source :src="message.path" type="audio/ogg">
+                                                        <source :src="message.path" type="audio/mp3">
+                                                        Seu navegador não suporta o elemento de áudio.
+                                                    </audio>
+                                                    <br>
+                                                </span>
+                                                <span v-if='message.type_id == "4"' class='mb-2 text-center'>
+                                                    <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
+                                                        <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
+                                                            <source :src="message.path+'#t=2'" type="video/mp4">
+                                                            Seu navegador não suporta o elemento de vídeo.
+                                                        </video>
+                                                    </a>
+                                                    <br>
+                                                </span>
+                                                <span v-if='message.type_id == "5"' class='mb-2 text-center'>
+                                                    <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
+                                                    <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
+                                                    <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
+                                                    <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
+                                                    <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" style="background-color:#007bff" ></i>
+                                                    <b  style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
+                                                    <a :href="message.path" :download="message.data.ClientOriginalName" class="document_sent_download">
+                                                        <img src="~/img/socialhub/download.png" class="document_sent">
+                                                    </a>
+                                                    <br>                                      
+                                                </span>
+                                                <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color: white"></span>
+                                                <span v-else> </span>
+                                                <!-- <span v-if="message.message && message.message !=''" class="text-message">
+                                                    {{ message.message ? message.message : "" }}
+                                                </span> -->
                                                 <br>
-                                            </span>                               
-                                            <span v-if='message.type_id == "3"' class='text-center'>
-                                                <br>
-                                                <audio controls class="mycontrolBar m-2">
-                                                    <source :src="message.path" type="audio/ogg">
-                                                    <source :src="message.path" type="audio/mp3">
-                                                    Seu navegador não suporta o elemento de áudio.
-                                                </audio>
-                                                <br>
-                                            </span>
-                                            <span v-if='message.type_id == "4"' class='mb-2 text-center'>
-                                                <a href="javascript:void()" @click.prevent="modalShowVideoSrc= message.path; modalShowVideo=!modalShowVideo">
-                                                    <video class="midia-files" style="outline: none;text-decoration: none;" preload="metadata">
-                                                        <source :src="message.path+'#t=2'" type="video/mp4">
-                                                        Seu navegador não suporta o elemento de vídeo.
-                                                    </video>
-                                                </a>
-                                                <br>
-                                            </span>
-                                            <span v-if='message.type_id == "5"' class='mb-2 text-center'>
-                                                <img v-if="['pdf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/pdf.svg')"/>
-                                                <img v-else-if="['doc','docm','docx','dot','dotm','dotx','odt','rtf'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/word.svg')"/>
-                                                <img v-else-if="['csv','ods','xlam','xls','xlsb','xlsm','xlsx','xlt','xltm','xltx','xlw','xml','xml','xps'].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/excel.svg')"/>
-                                                <img v-else-if="['pot','potm','potx','ppa','ppam','pps','ppsm','ppsx','ppt','pptm','pptx','','','','','','','','','','','','',''].includes(message.data.ClientOriginalExtension)" :src="require('../../../img/icons/powerpoint.svg')"/>
-                                                <i v-else class="fa fa-file-text fa-3x" aria-hidden="true" style="background-color:#007bff" ></i>
-                                                <b  style="margin-right:10px" :title="message.data.ClientOriginalName">{{textTruncate(message.data.ClientOriginalName,30)}}</b>
-                                                <a :href="message.path" :download="message.data.ClientOriginalName" class="document_sent_download">
-                                                    <img src="~/img/socialhub/download.png" class="document_sent">
-                                                </a>
-                                                <br>                                      
-                                            </span>
-                                            <span v-if="message.message && message.message !=''" class="text-message">
-                                                {{ message.message ? message.message : "" }}
-                                            </span>
-                                            <br>
-                                            <span class="pt-2" style="float:right; font-size:1.3rem">
-                                                <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
-                                                <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
-                                                <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
-                                                <!-- <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span> -->
-                                            </span>
-                                        </p>                                        
+                                                <span class="pt-2" style="float:right; font-size:1.3rem">
+                                                    <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
+                                                    <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
+                                                    <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
+                                                    <!-- <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span> -->
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
                                     <div class="col-1"></div>
                                     
@@ -494,7 +522,6 @@
                             <i class="mdi mdi-file-cancel-outline fa-1_5x pr-4 input-group-text border border-left-0 container-icons-action-message pointer-hover" @click.prevent="modalRemoveSelectedFile = !modalRemoveSelectedFile" title="Remover o arquivo" style="color:red"></i>
                         </div>
                         
-                        
                         <!-- <div v-if="isRecordingAudio==true" class="input-group-prepend">                           
                                 <div class="input-group-prepend" @click.prevent="isRecordingAudio = false; stopNativeRecordVoice()">
                                     <i class="input-group-text mdi mdi-close-circle-outline pr-4 fa-1_5x text-danger border border-left-0 container-icons-action-message pointer-hover" title="Excluir" ></i>
@@ -509,7 +536,6 @@
                         <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
-
 
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
                             <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
@@ -868,7 +894,6 @@
             </v-scroll>
         </div>
 
-
         <!-- Modal to show image in message-->
         <b-modal v-model="modalShowImage" :hide-footer="true" centered class="" :hide-header="true" size="lg" content-class="text-center border-0 bg-transparent">
             <b-img  fluid :src="modalShowImageSrc" style="max-height:540px; max-width:700px; padding:0px; text-align:center"></b-img>
@@ -972,6 +997,7 @@
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import attendantCRUDTags from "src/components/pages/socialhub/popups/attendantCRUDTags.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
+    import LinkPrevue from 'link-prevue';
 
     // import MicRecorder from "mic-recorder-to-mp3"; 
     import routes from '../../../router/index'; //ECR    
@@ -994,7 +1020,8 @@
             userCRUDDatas,
             attendantCRUDContact,
             sendMessageFiles,
-            attendantCRUDTags
+            attendantCRUDTags,
+            LinkPrevue
         },
 
         data() {
@@ -1015,7 +1042,7 @@
 
                 amountContactsInBag:0,
                 selectedContactIndex: -1,
-                searchContactByStringInput:'',
+                searchContactByString:'',
                 hasMorePageContacts:true,
                 requestingNewPageContacts:false,
 
@@ -1147,21 +1174,11 @@
                             this.file = null;
                             
                             //---------------set the target contact as the first----------------------
-                            // var targetContact = Object.assign({}, this.contacts[this.selectedContactIndex]);
-                            // var A = this.contacts.slice(0, this.selectedContactIndex);
-                            // var B = this.contacts.slice(this.selectedContactIndex+1, this.contacts.length);
-                            // this.contacts = A.concat(B); 
-                            // this.contacts.unshift(targetContact);
-                            // var i = 0;
-                            // this.contacts.forEach(function(item, i){
-                            //     item.index = i++;
-                            // });
-                            // this.selectedContactIndex = 0;
                             this.shiftContactAsFirtInList(this.contacts[this.selectedContactIndex].id);
 
                             // //----------update the message list and the last message of the contact-----
                             message.status_id = 4;
-                            this.messages.push(Object.assign({}, message));
+                            this.messages.push(Object.assign({}, this.transformToRichText(message)));
                             this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
                             this.$refs.message_scroller.scrolltobottom();
                             this.$refs.message_scroller.scrolltobottom();
@@ -1229,7 +1246,7 @@
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
                 ApiService.get(this.contacts_url,{
-                    'filterContactToken': (this.searchContactByStringInput.trim() !== '') ? this.searchContactByStringInput.trim() : '',
+                    'filterContactToken': (this.searchContactByString.trim() !== '') ? this.searchContactByString.trim() : '',
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
                     'last_contact_idx': this.contacts.length-1,
                 })
@@ -1304,6 +1321,7 @@
                 this.isAddingContactFromBag = true;
                 ApiService.get(this.contacts_bag_url)
                 .then(response => {
+
                     this.modalNewContactFromBag = !this.modalNewContactFromBag;
                     var newContact = response.data;
                     newContact.index = this.contacts.length;
@@ -1312,7 +1330,9 @@
                     this.contacts.forEach(function(item, i){
                         item.index = i++;
                     });
-                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");   
+                    miniToastr.success("Sucesso", "Contato adicionado com sucesso");
+                    
+                    this.selectedContactIndex = 0;
                 })
                 .catch(error => {
                     this.processMessageError(error, this.contacts_bag_url,"add");
@@ -1416,6 +1436,21 @@
                 this.getContacts();
             },
 
+            showSearchContact: function () {
+                this.isSearchContact= true;
+                setTimeout(()=>{
+                    this.$refs.inputSearchContactByString.focus();
+                },400);
+            },
+
+            hideSearchContact: function() {
+                this.searchContactByString = '';
+                this.isSearchContact = false;
+                this.selectedContactIndex = -1;
+                this.contacts = [];
+                this.getContacts();
+            },
+
             //------------------Get chats----------------------------
             getContactChat: function(contact,index) {   
                 this.reloadContactPicUrl(contact);
@@ -1473,6 +1508,8 @@
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
+                                item.lifePreview = false;
+                                item.message = this.transformToRichText(item.message,item.source);                                
                                 messages_copy.push(item);
                             } catch (error) {
                             }
@@ -1481,9 +1518,10 @@
                     }else{
                         this.hasMorePageMessage =false;
                     }
+                    this.$refs.inputTextAreaMessage.focus();
                 })
                 .catch(function(error) {
-                    miniToastr.error(error, "Error carregando os contatos");   
+                    miniToastr.error(error, "Error carregando as mensagens");   
                 }).finally(()=>{                    
                 });
             },
@@ -1504,6 +1542,43 @@
                     }
                     this.requestingNewPage = false;
                 }
+            },
+
+            transformToRichText: function(message, source) {
+                var arr = message.split(' ');
+                var str = '';
+                var firstLink = '';
+                var styleColor = (!source) ? 'color: white !important; text-decoration: none !important' : 'color: black !important; text-decoration: none !important';
+                arr.some((item,i) => {
+                    var link = '';
+                    if(this.validURL(item)){
+                        if(item.includes('http://') || item.includes('https://')) {
+                            link = '<u><a style=\''+styleColor+'\' target=\'_blank\' href=\'' +item+ '\'>' +item+ '</u></b>';
+                        }else { 
+                            link = '<u><a style=\''+styleColor+'\' target=\'_blank\' href=\'http://' +item+ '\'>' +item+ '</u></b>';
+                        }
+                        str += ' ' + link+ ' ';
+                        if(firstLink == '')
+                            firstLink = link;
+                    } else {
+                        str += item + ' ';
+                    }
+                });
+                return {
+                    'firstLink': firstLink,
+                    'richText': str,
+                    'isLink': (firstLink != '')? true : false
+                };
+            },
+
+            validURL: function (str) {
+                var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                return !!pattern.test(str);
             },
 
             gettingChatQuebraGalhoDeAlberto: function(){
@@ -2233,7 +2308,7 @@
                         var isSelectedContact = false;
                         //------show the recived message if the target contact is selected----------
                         if(this.selectedContactIndex > -1 && this.contacts[this.selectedContactIndex].id == message.contact_id){
-                            this.messages.push(Object.assign({}, message));
+                            this.messages.push(Object.assign({}, this.transformToRichText(message,1)));
                             this.contacts[this.selectedContactIndex].last_message = message;
                             this.contacts[this.selectedContactIndex].last_message = message;
                             if(this.$refs.message_scroller)
@@ -2386,14 +2461,14 @@
             //                 ' '+contact.linkedin_id +
             //                 ' '+contact.instagram_id;
             //             return (
-            //                 str.toLowerCase().indexOf(self.searchContactByStringInput.toLowerCase()) >=0
+            //                 str.toLowerCase().indexOf(self.searchContactByString.toLowerCase()) >=0
             //             );
             //     });
             // },
         },
 
         watch:{
-            searchContactByStringInput: function(value){
+            searchContactByString: function(value){
                 if(value.trim().length > 2){
                     this.selectedContactIndex = -1;
                     this.contacts = [];
@@ -2409,7 +2484,6 @@
                 }
             },             
         }
-
     }
 </script>
 
