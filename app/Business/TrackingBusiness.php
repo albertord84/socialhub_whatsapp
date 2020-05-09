@@ -54,12 +54,12 @@ class TrackingBusiness extends Business
         return "";
     }
 
-    public function initCorreios(\PhpSigep\Model\AccessData $accessData)
+    public function initCorreios()
+    // public function initCorreios(\PhpSigep\Model\AccessData $accessData)
     {
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
-
+        
         $this->config = new \PhpSigep\Config();
-        $this->config->setAccessData($accessData);
         $this->config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
         // $this->config->setEnv(\PhpSigep\Config::ENV_DEVELOPMENT);
         $this->config->setCacheOptions(
@@ -72,9 +72,9 @@ class TrackingBusiness extends Business
                     'ttl' => 20, // "time to live" de 10 segundos
                     'cacheDir' => sys_get_temp_dir(), // Opcional. Quando não inforado é usado o valor retornado de "sys_get_temp_dir()"
                 ),
-            )
-        );
-
+                )
+            );
+            
         \PhpSigep\Bootstrap::start($this->config);
     }
 
@@ -82,14 +82,21 @@ class TrackingBusiness extends Business
     {
         $usuario = $Company->tracking_user;
         $senha = $Company->tracking_pass;
-        // $cnpjEmpresa = '26897614000101';
-        // $numcontrato = '9912467470';
-        // $codigoadm = '19185251';
-        // $cartaopostagem = '0074969366';
+        $cnpjEmpresa = '26897614000101';
+        $numcontrato = '9912467470';
+        $codigoadm = '19185251';
+        $cartaopostagem = '0074969366';
+
+        $this->initCorreios();
+
 
         $accessData = new \PhpSigep\Model\AccessDataHomologacao();
+
         $accessData->setUsuario($usuario);
         $accessData->setSenha($senha);
+        $accessData->setCodAdministrativo(null);
+
+        $this->config->setAccessData($accessData);
         // $accessData->setCnpjEmpresa($cnpjEmpresa);
         // $accessData->setCodAdministrativo($codigoadm);
         // $accessData->setNumeroContrato($numcontrato);
@@ -97,7 +104,7 @@ class TrackingBusiness extends Business
         // $accessData->setAnoContrato(null);
         // $accessData->setDiretoria(new \PhpSigep\Model\Diretoria(\PhpSigep\Model\Diretoria::DIRETORIA_DR_SAO_PAULO));
 
-        $this->initCorreios($accessData);
+        // $this->initCorreios($accessData);
 
         // $accessData = new \PhpSigep\Model\AccessDataHomologacao();
 
@@ -138,7 +145,7 @@ class TrackingBusiness extends Business
 
                 // Check whether last even need action
                 $POB = new \App\Business\PostofficeBusiness();
-                if (count($eventList) && in_array([$eventList[0]->tipo, $eventList[0]->status], $POB->trackingImportantEventList())) {
+                if (count($eventList) && in_array([$newTrackingList[0]->tipo, $newTrackingList[0]->status], $POB->trackingImportantEventList())) {
                     Log::debug("processTrackingObject TRACKING_PROBLEM", [$Tracking]);
                     $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
                     $Tracking->save();
@@ -149,6 +156,7 @@ class TrackingBusiness extends Business
         } catch (\Throwable $tr) {
             // throw $tr;
         }
+        
     }
 
     public function createTrackingJob(Tracking $Tracking, Company $Company): bool
@@ -163,7 +171,6 @@ class TrackingBusiness extends Business
             } else {
                 throw new \Exception("createTrackingJob Contact($Tracking->contact_id) not found in Tracking ($Tracking->id)");
             }
-
         } catch (\Throwable $tr) {
             Log::debug('TrackingsBussines createTracking Job', [$tr]);
             return false;
@@ -211,18 +218,18 @@ class TrackingBusiness extends Business
                         }
                     } else {
                         $Contact->save();
-                    }                   
+                    }
 
-                    try{
+                    try {
                         // var_dump($Tracking);
-                        $TrackingModel = Tracking::trackingConstruct($Tracking, $Contact->id, $Company->id);        
+                        $TrackingModel = Tracking::trackingConstruct($Tracking, $Contact->id, $Company->id);
                         $TrackingModel->save();
-                    }catch (\Throwable $tr) {
+                    } catch (\Throwable $tr) {
                         return 'exception';
                     }
                     Log::error('Trackings Bussines createTracking', [$Contact->whatsapp_id]);
                     return 'criated';
-                }else{
+                } else {
                     return 'already_exist';
                 }
             }
@@ -323,5 +330,4 @@ class TrackingBusiness extends Business
 
         return $message;
     }
-
 }

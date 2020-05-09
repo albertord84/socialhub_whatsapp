@@ -61,18 +61,16 @@ class TestController extends AppBaseController
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
 
-        // $TrackingBusiness = new TrackingBusiness();
+        $TrackingBusiness = new TrackingBusiness();
 
-
-
-        $company_id = '1';
-        // $company_id = '49';
+        // $company_id = '1';
+        $company_id = '49';
         $TrackingModel = new Tracking();
         $TrackingModel->table = "$company_id";
 
-        $Tracking = $TrackingModel->find('701')->toArray();
+        $Tracking = $TrackingModel->find('701-0002365-2406656');
 
-        $Tracking = (object)$Tracking;
+        // $Tracking = (object)$Tracking;
 
         // $Company = Company::with('rpi')->find($company_id);
         // $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -82,13 +80,16 @@ class TestController extends AppBaseController
         // $trackingJob->handle();
 
         $tracking_code = $Tracking->tracking_code;
-        $messageList = $Tracking->messages;
+        // $messageList = $Tracking->messages;
         $Company = Company::find($company_id);
-        $trackingList = $TrackingBusiness->searchTrackingObject($Tracking, $Company);
+
+        // dd($Company);
+
+        $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
 
         dd($trackingList);
-        dd((object) $trackingList[0]->toArray());
-        dd(json_encode($trackingList));
+        // dd((object) $trackingList[0]->toArray());
+        // dd(json_encode($trackingList));
 
         // Teste Vindi
         // $this->testVindi();
