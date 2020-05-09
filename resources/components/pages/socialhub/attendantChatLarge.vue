@@ -997,7 +997,7 @@
     import userCRUDDatas from "src/components/pages/socialhub/popups/userCRUDDatas.vue";
     import attendantCRUDTags from "src/components/pages/socialhub/popups/attendantCRUDTags.vue";
     import sendMessageFiles from "src/components/pages/socialhub/popups/sendMessageFiles.vue";
-    import LinkPrevue from 'link-prevue';
+    // import LinkPrevue from 'link-prevue';
 
     // import MicRecorder from "mic-recorder-to-mp3"; 
     import routes from '../../../router/index'; //ECR    
@@ -1021,7 +1021,7 @@
             attendantCRUDContact,
             sendMessageFiles,
             attendantCRUDTags,
-            LinkPrevue
+            // LinkPrevue
         },
 
         data() {
