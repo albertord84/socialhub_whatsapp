@@ -385,14 +385,12 @@
                                                             <br>
                                                         </span>
 
-                                                        <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message"></span>
-                                                        <span v-else> </span>
-
-                                                        <!-- <span v-if="message.message && message.message !=''" v-html="'el link es <a target=\'_blank\' href=\'http://www.google.com\'>www.google.com</a>'" class="text-message"></span> -->
+                                                        <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:black"></span>
+                                                        <span v-else> </span> -->
                                                         
-                                                        <!-- <span v-if="message.message && message.message !=''" class="text-message">
-                                                            {{ message.message ? message.message : "" }}
-                                                        </span> -->
+                                                        <span v-if="message.message && message.message !=''" class="text-message" style="color:black">
+                                                            {{ message.message ? message.message.richText : "" }}
+                                                        </span>
                                                         <br>
                                                         
                                                     </p>                                                 
@@ -477,11 +475,11 @@
                                                     </a>
                                                     <br>                                      
                                                 </span>
-                                                <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color: white"></span>
-                                                <span v-else> </span>
-                                                <!-- <span v-if="message.message && message.message !=''" class="text-message">
-                                                    {{ message.message ? message.message : "" }}
-                                                </span> -->
+                                                <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color: white"></span>
+                                                <span v-else> </span> -->
+                                                <span v-if="message.message && message.message !=''" class="text-message" style="color:white">
+                                                    {{ message.message ? message.message.richText : "" }}
+                                                </span>
                                                 <br>
                                                 <span class="pt-2" style="float:right; font-size:1.3rem">
                                                     <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
@@ -1178,8 +1176,10 @@
 
                             // //----------update the message list and the last message of the contact-----
                             message.status_id = 4;
-                            this.messages.push(Object.assign({}, this.transformToRichText(message)));
-                            this.contacts[this.selectedContactIndex].last_message = Object.assign({}, message);
+                            this.contacts[this.selectedContactIndex].last_message = message;
+                            message = Object.assign({}, message);
+                            message.message = this.transformToRichText(message.message)
+                            this.messages.push(message);
                             this.$refs.message_scroller.scrolltobottom();
                             this.$refs.message_scroller.scrolltobottom();
                         })
@@ -1545,6 +1545,14 @@
             },
 
             transformToRichText: function(message, source) {
+                return {
+                    'firstLink': '',
+                    'richText': message,
+                    'isLink': false
+                };
+            },
+
+            transformToRichTextGood: function(message, source) {
                 var arr = message.split(' ');
                 var str = '';
                 var firstLink = '';
@@ -2308,9 +2316,10 @@
                         var isSelectedContact = false;
                         //------show the recived message if the target contact is selected----------
                         if(this.selectedContactIndex > -1 && this.contacts[this.selectedContactIndex].id == message.contact_id){
-                            this.messages.push(Object.assign({}, this.transformToRichText(message,1)));
                             this.contacts[this.selectedContactIndex].last_message = message;
-                            this.contacts[this.selectedContactIndex].last_message = message;
+                            message = Object.assign({}, message);
+                            message.message = this.transformToRichText(message.message,1);
+                            this.messages.push(message);
                             if(this.$refs.message_scroller)
                                 this.$refs.message_scroller.scrolltobottom();
                             targetIndex = this.contacts[this.selectedContactIndex].index;
