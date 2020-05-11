@@ -97,15 +97,15 @@ class SendWhatsAppMsgBling implements ShouldQueue
         if (isset($responseJson->MsgID)) {
             Log::debug('\n\r SendedTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
             $Sale->sended = true;
+            $Sale->status_id = MessagesStatusController::SENDED;
             if ($Chat) {
-                $Sale->status_id = MessagesStatusController::SENDED;
                 $Chat->status_id = MessagesStatusController::SENDED;
                 $Chat->save();
             }
         } else {
             $Sale->sended = false;
+            $Sale->status_id = MessagesStatusController::FAIL;
             if ($Chat) {
-                $Sale->status_id = MessagesStatusController::FAIL;
                 $Chat->status_id = MessagesStatusController::FAIL;
                 $Chat->save();
             }
