@@ -75,7 +75,7 @@ class SalesBusiness extends Business {
                     $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
                     
                     $SaleModel->message = $this->builSaleMessage($Sale, $Company);
-                    
+                    $SaleModel->status_id = MessagesStatusController::ROUTED;
                     
                     // $SaleModel->id = $SaleModel->id != 0 ? $SaleModel->id : $Sale->pedido->numero;
                     
