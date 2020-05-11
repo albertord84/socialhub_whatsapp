@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:create_company_api_jobs')->cron('*/2 * * * *');
         $schedule->command('command:Create_company_bling_jobs')->cron('*/2 * * * *');
         $schedule->command('command:Create_company_tracking_jobs')->cron('*/50 * * * *');
-        $schedule->command('command:Get_sales_bling')->cron('* */2 * * *');
+        $schedule->command('command:Get_sales_bling')->cron('0 */2 * * *');
     }
 
     /**
