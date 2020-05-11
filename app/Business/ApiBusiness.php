@@ -87,9 +87,11 @@ class ApiBusiness extends Business
 
             if ($Contact) {
                 $Api = $Api->toArray();
+                
                 SendWhatsAppMsgApi::dispatch($ERPIC, $Contact, $Api, 'api_messages');
                 // $apiJob = new SendWhatsAppMsgApi($ERPIC, $Contact, $Api);
                 // $apiJob->handle();
+            
             } else {
                 throw new \Exception("createApiSendWhatsAppMsgApiJob Contact($Api->contact_id) not found in Api ($Api->id)");
             }

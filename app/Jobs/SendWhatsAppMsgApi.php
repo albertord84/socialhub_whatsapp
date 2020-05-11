@@ -20,7 +20,7 @@ class SendWhatsAppMsgApi implements ShouldQueue
 
     public $tries = 3;
 
-    const QUEUE_NAME = 'api_message';
+    const QUEUE_NAME = 'api_messages';
     
     
     /**
@@ -43,6 +43,7 @@ class SendWhatsAppMsgApi implements ShouldQueue
     private $Contact;
 
     private $ApiMessage;
+    
 
     /**
      * Create a new job instance.
@@ -74,10 +75,10 @@ class SendWhatsAppMsgApi implements ShouldQueue
     {
         Log::debug('Handle SendWhatsAppMsgApi...: ', [$this->Contact, $this->ApiMessage]);
 
-        if (isset($this->ApiMessage['file_name'])) {
-            $response = $this->rpiController->sendFileMessage($this->ApiMessage['file_name'], $this->ApiMessage['file_type'], $this->ApiMessage['message'], $this->Contact);
-        } else {
+        if (!$this->ApiMessage['file_name']) {
             $response = $this->rpiController->sendTextMessage($this->ApiMessage['message'], $this->Contact);
+        } else {
+            $response = $this->rpiController->sendFileMessage($this->ApiMessage['file_name'], $this->ApiMessage['file_type'], $this->ApiMessage['message'], $this->Contact);
         }
         // $response=null;
         Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
