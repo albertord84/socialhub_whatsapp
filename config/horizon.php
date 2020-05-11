@@ -144,10 +144,10 @@ return [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['api_messages'],
+                'queue' => ['api_messages', 'blingsales','tracking_update'],
                 'balance' => 'auto',
-                'minProcesses' => 1,
-                'maxProcesses' => 2,
+                'minProcesses' => 2,
+                'maxProcesses' => 10,
                 'tries' => 1,
             ],
         ],
@@ -155,10 +155,10 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['api_messages'],
+                'queue' => ['api_messages', 'blingsales', 'tracking_update'],
                 'balance' => 'auto',
-                'minProcesses' => 1,
-                'maxProcesses' => 2,
+                'minProcesses' => 2,
+                'maxProcesses' => 10,
                 'tries' => 1,
             ],
         ],
@@ -172,15 +172,15 @@ return [
         //         'tries' => 1,
         //     ],
         // ],
-        // 'local' => [
-        //     'supervisor-3' => [
-        //         'connection' => 'redis',
-        //         'queue' => ['blingsales'],
-        //         'balance' => 'auto',
-        //         'minProcesses' => 2,
-        //         'maxProcesses' => 4,
-        //         'tries' => 1,
-        //     ],
+        // // 'local' => [
+        // //     'supervisor-3' => [
+        // //         'connection' => 'redis',
+        // //         'queue' => ['blingsales'],
+        // //         'balance' => 'auto',
+        // //         'minProcesses' => 2,
+        // //         'maxProcesses' => 4,
+        // //         'tries' => 1,
+        // //     ],
         // ],
     ],
 ];

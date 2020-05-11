@@ -33,21 +33,21 @@ class TrackingController extends AppBaseController
         $this->trackingRepository = $trackingRepo;
     }
 
-    public function create_company_tracking_jobs(Request $Request)
-    {
-        try {
-            // dd("ok  ");
+    // public function create_company_tracking_jobs(Request $Request)
+    // {
+    //     try {
+    //         // dd("ok  ");
             
-            $Postoffice = new PostofficeBusiness();
+    //         $Postoffice = new PostofficeBusiness();
 
-            $Postoffice->createCompaniesJobs();
+    //         $Postoffice->createCompaniesJobs();
 
-        } catch (\Throwable $th) {
-            return MyResponse::makeExceptionJson($th);
-        }
+    //     } catch (\Throwable $th) {
+    //         return MyResponse::makeExceptionJson($th);
+    //     }
 
-        return MyResponse::makeResponseJson("ok");
-    }
+    //     return MyResponse::makeResponseJson("ok");
+    // }
 
     public function trackings_import_csv(Request $Request)
     {

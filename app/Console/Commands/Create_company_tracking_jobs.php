@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Business\MyResponse;
+use App\Business\PostofficeBusiness;
 use Illuminate\Console\Command;
 
 class Create_company_tracking_jobs extends Command
@@ -37,6 +39,17 @@ class Create_company_tracking_jobs extends Command
      */
     public function handle()
     {
-        //
+        try {
+            // dd("ok  ");
+            
+            $Postoffice = new PostofficeBusiness();
+
+            $Postoffice->createCompaniesJobs();
+
+        } catch (\Throwable $th) {
+            return MyResponse::makeExceptionJson($th);
+        }
+
+        return MyResponse::makeResponseJson("ok");
     }
 }
