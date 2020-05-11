@@ -85,7 +85,7 @@
                             <td v-if="!column.html && !column.json && column.label !='Nome' && column.label !='Status'" >{{ collect(row,column.field) }}</td>
                             <td v-if="column.label =='Nome'" :title="collect(row, column.field).trim()"> 
                                 {{(collect(row, column.field).trim() != '')? collect(row, column.field).trim().substr(0, 20) : '' }}
-                            </td>                            
+                            </td>
                             <td v-if="column.label =='Status'">
                                 <span v-if="collect(row, column.field)=='PROBLEM'" style="background-color:#ec6d65">{{ collect(row, column.field) }}</span>
                                 <span v-else-if="collect(row, column.field)=='RECEIVED' || collect(row, column.field)=='ARRIVED'" style="background-color:#80ffaa">{{ collect(row, column.field) }}</span>
@@ -584,6 +584,7 @@
                 .then(response => {  
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
+                        console.log()
                         this.trackingStatusOptions.push(  {
                             'name': item.name,
                             'code': item.id
