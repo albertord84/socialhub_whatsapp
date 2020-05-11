@@ -153,9 +153,25 @@ return [
         ],
 
         'local' => [
-            'supervisor-1' => [
+            'supervisor-api_messages' => [
                 'connection' => 'redis',
-                'queue' => ['api_messages', 'blingsales', 'tracking_update'],
+                'queue' => 'api_messages',
+                'balance' => 'auto',
+                'minProcesses' => 2,
+                'maxProcesses' => 10,
+                'tries' => 1,
+            ],
+            'supervisor-blingsales' => [
+                'connection' => 'redis',
+                'queue' => 'blingsales',
+                'balance' => 'auto',
+                'minProcesses' => 2,
+                'maxProcesses' => 10,
+                'tries' => 1,
+            ],
+            'supervisor-tracking_update' => [
+                'connection' => 'redis',
+                'queue' => 'tracking_update',
                 'balance' => 'auto',
                 'minProcesses' => 2,
                 'maxProcesses' => 10,
