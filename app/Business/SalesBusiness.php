@@ -149,7 +149,7 @@ class SalesBusiness extends Business {
             $SalesModel = new Sales();
             $SalesModel->table = "$Company->id";
 
-            $Sales = $SalesModel->where('status_id', MessagesStatusController::ROUTED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 20));
+            $Sales = $SalesModel->where('status_id', MessagesStatusController::ROUTED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 10));
 
             return $Sales;
         } catch (\Throwable $th) {
