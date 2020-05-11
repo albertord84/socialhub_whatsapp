@@ -72,40 +72,10 @@ class SalesBusiness extends Business {
                 $SaleModel->table = "$Company->id";
                 $SaleModel = $SaleModel->find($Sale->pedido->numero);
                 if (!$SaleModel) { // if not exist insert the Sale
-                    $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
-                    
-                    $SaleModel->message = $this->builSaleMessage($Sale, $Company);
-                    $SaleModel->status_id = MessagesStatusController::ROUTED;
-                    
-                    // $SaleModel->id = $SaleModel->id != 0 ? $SaleModel->id : $Sale->pedido->numero;
-                    
                     // 3. Salvar un mensage
-                    $Chat = null;
                     if ($hasClient && $phone) {
-                        if ($hasAttendant) { // Save sale chat to attendant
-                            $Chat = new ExtendedChat();
-                            $Chat->contact_id = $Contact->id;
-                            $Chat->company_id = $Company->id;
-                            $Chat->type_id = MessagesTypeController::Text;
-                            $Chat->status_id = MessagesStatusController::ROUTED;
-                            $Chat->message = $SaleModel->message;
-                            $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
-                            $Chat->source = 0;
-                            $Chat->table = "$Chat->attendant_id";
-                            $Chat->save();
-
-                            $SaleModel->has_attendant = true;
-                            $SaleModel->attendant_id = $Chat->attendant_id;
-                            $SaleModel->chat_id = $Chat->id;
-                            $SaleModel->status_id = $Chat->status_id;
-                        
-                        }
-                        
+                        $SaleModel = Sales::blingConstruct($Sale, $Contact, $Company, $hasAttendant);
                         $SaleModel->save();
-                        // $objSale = (object) $SaleModel->toArray();
-                        // $objChat = $Chat ? (object) $Chat->toArray() : null;
-                        
-                        // SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
                     }
                     
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
@@ -123,9 +93,12 @@ class SalesBusiness extends Business {
     {
         $Sales = new Collection();
         try {
-            $Companies = Company::with('rpi')->where(['api_contrated' => true])->get();
+            $Companies = Company::with('rpi')->where('bling_contrated', true)->get();
+
+            Log::debug('SalesBusiness > createCompaniesJobs', [$Companies->count()]);
 
             foreach ($Companies as $key => $Company) {
+                Log::debug('SalesBusiness > createCompaniesJobs', [$Companies]);
                 $Sales = $this->getBlingCompanyNextObjects($Company);
 
                 $ExternalRPIController = new ExternalRPIController($Company->rpi);
@@ -150,6 +123,8 @@ class SalesBusiness extends Business {
             $SalesModel->table = "$Company->id";
 
             $Sales = $SalesModel->where('status_id', MessagesStatusController::ROUTED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 10));
+
+            Log::debug('SalesBusiness > getBlingCompanyNextObjects', [$Sales->count()]);
 
             return $Sales;
         } catch (\Throwable $th) {
@@ -179,8 +154,9 @@ class SalesBusiness extends Business {
         }
 
         return true;
-    }    
-    function builSaleMessage(stdClass $Sale, Company $Company) : string
+    }  
+      
+    public static function builSaleMessage(stdClass $Sale, Company $Company) : string
     {
         // Log::debug('SalesBussines builSaleMessage', [$Sale]);
 
