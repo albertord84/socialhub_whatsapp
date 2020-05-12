@@ -81,7 +81,7 @@ class ExtendedChatController extends ChatController
         $set_as_readed = (int) $request['set_as_readed'];
 
         $page = (int) $request['page'];
-        $searchMessageByStringInput = (isset($request['searchMessageByStringInput'])) ? $request['searchMessageByStringInput'] : '';
+        $searchMessageByStringInput = $request['searchMessageByStringInput'] ?? '';
 
         $ContactChats = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput, $set_as_readed);
 
