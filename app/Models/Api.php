@@ -32,7 +32,10 @@ class Api extends Model
         'message',
         'type_id',
         'data',
-        'status_id'
+        'status_id',
+        'file_name',
+        'file_type'
+        
     ];
 
     /**
@@ -47,7 +50,8 @@ class Api extends Model
         'message' => 'string',
         'type_id' => 'integer',
         'data' => 'string',
-        'status_id' => 'integer'
+        'status_id' => 'integer',
+        
     ];
 
     /**

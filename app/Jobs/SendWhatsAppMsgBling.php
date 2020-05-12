@@ -45,7 +45,6 @@ class SendWhatsAppMsgBling implements ShouldQueue
     private $Contact;
 
     private $objSale;
-    private $objChat;
 
 
     /**
@@ -53,15 +52,14 @@ class SendWhatsAppMsgBling implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ExternalRPIController $rpiController, Contact $Contact, $Chat, $Sale, string $queue = null)
+    public function __construct(ExternalRPIController $rpiController, Contact $Contact, $Sale, string $queue = null)
     {
         $this->rpiController = $rpiController;
 
         $this->Contact = $Contact;
-        $this->objChat = $Chat;
         $this->objSale = $Sale;
 
-        $this->connection = 'database';
+        $this->connection = 'redis';
 
         $this->queue = $queue;
 
@@ -76,7 +74,7 @@ class SendWhatsAppMsgBling implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->objSale, $this->objChat]);
+        Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->objSale]);
         $Sale = new Sales();
         // dd($this);
         $Sale->table = $this->Contact->company_id;
@@ -85,10 +83,10 @@ class SendWhatsAppMsgBling implements ShouldQueue
 
 
         $Chat = null;
-        if ($this->objChat) {
+        if ($Sale->has_attendant) {
             $Chat = new ExtendedChat();
-            $Chat->table = $this->objChat->attendant_id;
-            $Chat = $Chat->find($this->objChat->id);
+            $Chat->table = "$Sale->attendant_id";
+            $Chat = $Chat->find($Sale->chat_id);
         }
         
         $response = $this->rpiController->sendTextMessage($Sale->message, $this->Contact);
@@ -99,12 +97,14 @@ class SendWhatsAppMsgBling implements ShouldQueue
         if (isset($responseJson->MsgID)) {
             Log::debug('\n\r SendedTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
             $Sale->sended = true;
+            $Sale->status_id = MessagesStatusController::SENDED;
             if ($Chat) {
                 $Chat->status_id = MessagesStatusController::SENDED;
                 $Chat->save();
             }
         } else {
             $Sale->sended = false;
+            $Sale->status_id = MessagesStatusController::FAIL;
             if ($Chat) {
                 $Chat->status_id = MessagesStatusController::FAIL;
                 $Chat->save();

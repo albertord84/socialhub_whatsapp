@@ -2,6 +2,7 @@
 
 namespace App\Business;
 
+use App\Http\Controllers\BlingController;
 use App\Http\Controllers\ContactsOriginsController;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
@@ -12,6 +13,7 @@ use App\Models\Contact;
 use App\Models\ExtendedChat;
 use App\Models\Sales;
 use App\Repositories\SalesRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 use Throwable;
@@ -25,6 +27,7 @@ class SalesBusiness extends Business {
         $this->repo = new SalesRepository(app());
     }    
 
+    
     function createSale(stdClass $Sale, Company $Company) : bool
     {
         try {
@@ -38,7 +41,7 @@ class SalesBusiness extends Business {
                 if (($phone) && !(strpos('55', $phone) === 0)) {
                     $phone = "55$phone";
                 }
-
+                
                 // Check if the Contact already exist for this company
                 $Contact = Contact::where([
                         'company_id' => $Company->id,
@@ -61,7 +64,7 @@ class SalesBusiness extends Business {
             else {
                 $Contact->id = 0;
             }
-
+            
             // 2. Crea la venta
             // Check if the Sale already exist for this company
             if (isset($Sale->pedido->numero)) {
@@ -69,37 +72,12 @@ class SalesBusiness extends Business {
                 $SaleModel->table = "$Company->id";
                 $SaleModel = $SaleModel->find($Sale->pedido->numero);
                 if (!$SaleModel) { // if not exist insert the Sale
-                    $SaleModel = Sales::blingConstruct($Sale, $Contact->id, $Company->id);
-
-                    $SaleModel->message = $this->builSaleMessage($Sale, $Company);
-                    
-                    $SaleModel->save();
-
-                    $SaleModel->id = $SaleModel->id != 0 ? $SaleModel->id : $Sale->pedido->numero;
-
-                    // 3. Envia un mensage
-                    $ExternalRPIController = new ExternalRPIController($Company->rpi);
-                    $Chat = null;
+                    // 3. Salvar un mensage
                     if ($hasClient && $phone) {
-                        if ($hasAttendant) { // Save sale chat to attendant
-                            $Chat = new ExtendedChat();
-                            $Chat->contact_id = $Contact->id;
-                            $Chat->company_id = $Company->id;
-                            $Chat->type_id = MessagesTypeController::Text;
-                            $Chat->status_id = MessagesStatusController::ROUTED;
-                            $Chat->message = $SaleModel->message;
-                            $Chat->attendant_id = $Contact->latestAttendantContact->attendant_id;
-                            $Chat->source = 0;
-                            $Chat->table = "$Chat->attendant_id";
-                            $Chat->save();
-                        }
-
-                        $objSale = (object) $SaleModel->toArray();
-                        $objChat = $Chat ? (object) $Chat->toArray() : null;
-
-                        SendWhatsAppMsgBling::dispatch($ExternalRPIController, $Contact, $objChat, $objSale, 'blingsales');
+                        $SaleModel = Sales::blingConstruct($Sale, $Contact, $Company, $hasAttendant);
+                        $SaleModel->save();
                     }
-                        
+                    
                     Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
                 }
             }
@@ -107,11 +85,78 @@ class SalesBusiness extends Business {
             Log::debug('SalesBussines createSale', [$tr]);
             return false;
         }
-
+        
         return true;
     }
+    
+    public function createCompaniesJobs()
+    {
+        $Sales = new Collection();
+        try {
+            $Companies = Company::with('rpi')->where('bling_contrated', true)->get();
 
-    function builSaleMessage(stdClass $Sale, Company $Company) : string
+            Log::debug('SalesBusiness > createCompaniesJobs', [$Companies->count()]);
+
+            foreach ($Companies as $key => $Company) {
+                Log::debug('SalesBusiness > createCompaniesJobs', [$Company]);
+                $Sales = $this->getBlingCompanyNextObjects($Company);
+
+                $ExternalRPIController = new ExternalRPIController($Company->rpi);
+
+                // dd($Apis);
+
+                foreach ($Sales as $key => $Sale) {
+                    $this->createBlingJob($Sale, $ExternalRPIController);
+                }
+            }
+        } catch (\Throwable $tr) {
+            throw $tr;
+        }
+
+        return $Sales;
+    }
+
+    public function getBlingCompanyNextObjects(Company $Company): Collection
+    {
+        try {
+            $SalesModel = new Sales();
+            $SalesModel->table = "$Company->id";
+
+            $Sales = $SalesModel->where('status_id', MessagesStatusController::ROUTED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 10));
+
+            Log::debug('SalesBusiness > getBlingCompanyNextObjects', [$Sales->count()]);
+
+            return $Sales;
+        } catch (\Throwable $th) {
+            MyResponse::makeExceptionJson($th);
+        }
+    }
+
+    public function createBlingJob(Sales $Sale, ExternalRPIController $ERPIC)
+    {
+        try {
+            $Contact = Contact::find($Sale->contact_id);
+
+            if ($Contact) {
+                $Sale = (object) $Sale->toArray();
+
+                SendWhatsAppMsgBling::dispatch($ERPIC, $Contact, $Sale, 'blingsales');
+                // $apiJob = new SendWhatsAppMsgApi($ERPIC, $Contact, $Api);
+                // $apiJob->handle();
+            
+            } else {
+                throw new \Exception("createApiSendWhatsAppMsgApiJob Contact($Sale->contact_id) not found in Api ($Sale->id)");
+            }
+
+        } catch (\Throwable $tr) {
+            Log::debug('ApiSendWhatsAppMsgApisBussines createApiSendWhatsAppMsgApi Job', [$tr]);
+            return false;
+        }
+
+        return true;
+    }  
+      
+    public static function builSaleMessage(stdClass $Sale, Company $Company) : string
     {
         // Log::debug('SalesBussines builSaleMessage', [$Sale]);
 

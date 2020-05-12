@@ -35,21 +35,21 @@ class ApiController extends AppBaseController
         $this->apiRepository = $apiRepo;
     }
 
-    public function create_company_api_jobs(Request $Request)
-    {
-        try {
-            // dd("ok  ");
+    // public function create_company_api_jobs(Request $Request)
+    // {
+    //     try {
+    //         // dd("ok  ");
             
-            $APIBusiness = new ApiBusiness();
+    //         $APIBusiness = new ApiBusiness();
 
-            $APIBusiness->createCompaniesJobs();
+    //         $APIBusiness->createCompaniesJobs();
 
-        } catch (\Throwable $th) {
-            return MyResponse::makeExceptionJson($th);
-        }
+    //     } catch (\Throwable $th) {
+    //         return MyResponse::makeExceptionJson($th);
+    //     }
 
-        return MyResponse::makeResponseJson("ok");
-    }
+    //     return MyResponse::makeResponseJson("ok");
+    // }
 
     /**
      * Display a listing of the Api.
@@ -119,15 +119,16 @@ class ApiController extends AppBaseController
         $file = $input['file'] ?? null;
         Log::debug('ApiController Store Files', [$file]);
 
+        
         // $file_name = $request->file()->getFileName();
 
         if (isset($input['file'])) {
             $filePath = "companies/$Contact->company_id/contacts/$Contact->id/chat_files";
             $json_data = FileUtils::SavePostFile($request->file, $filePath, $file->getBasename());
             if ($json_data) { // Save file to disk (public/app/..)
-                Log::debug('ApiController Store Saved File', [$json_data]);
                 $input['file_name'] = "$filePath/$json_data->SavedFileName";
                 $input['file_type'] = '2';
+                Log::debug('ApiController Store Saved File', [$json_data]);
             }
         }
 
@@ -140,7 +141,7 @@ class ApiController extends AppBaseController
         $this->apiRepository->model->setTable($User->company_id);
         $api = $this->apiRepository->create($input);
         $input['id'] = $api->id;
-
+        
         // Create Job
         $Company = Company::with('rpi')->find($User->company_id);
         $ExternalRPIController = new ExternalRPIController($Company->rpi);
