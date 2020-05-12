@@ -5,23 +5,27 @@
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
-        <div id="chat-left-side" class="ccol-lg-3 width-30 p-0">
+        <div id="chat-left-side" class="width-30 p-0">
             <div class="chatalign">
                 <div class="sect_header sect_header_color">
                     <div v-show="isSearchContact==false" class="container-fluid">
                         <ul class='row flex-baseline'>
-                            <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
+                            <li class='col-10 col-md-10 col-lg-8 col-xl-9'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
                                     <img :src="userLogged.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
-                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i class=" mdi mdi-magnify icons-action" @click.prevent="showSearchContact" aria-hidden="true" title="Buscar contato ..." ></i>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1 mt-3'>
+                                <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
+                                    <i class="mdi mdi-message-processing-outline icons-action" title="Adherir novo contato"></i>
+                                    <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="badge badge-primary badge-pill amount-contacts-in-bag  cl-gray">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag ">{{amountContactsInBag}}</span>
+                                </a>
                             </li>
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
-                                        <i class="mdi mdi-dots-horizontal icons-action" title="Opções"  aria-hidden="false"></i>
+                                        <i class="mdi mdi-dots-horizontal icons-action" style="top:-50px" title="Opções"  aria-hidden="false"></i>
                                     </template>
                                     <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
                                         <a href='javascript:void(0)' class="drpodowtext text-muted" @click="toggleLeft('toggle-add-contact')">
@@ -68,30 +72,32 @@
                             </li>
                         </ul>
                     </div>
+                </div>
 
-                    <div v-show="isSearchContact==true" class="container-fluid">
-                        <ul class='row flex-baseline mt-3'>
-                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i class="mdi mdi-arrow-left icons-action" @click.prevent="hideSearchContact"></i>
-                            </li>
-                            <li class='col-9 col-md-10 col-lg-8 col-xl-9'>
-                                <input class="search-input border-0 search-contact ml-1" type="text" ref="inputSearchContactByString" v-model="searchContactByString" placeholder="Buscar contato" >
-                            </li>
-                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                <i class="mdi mdi-window-close icons-action" @click.prevent="hideSearchContact"></i>
-                            </li>                            
-                        </ul>
+                <div class="sect_header" style="background-color:#fafafa;">
+                    <div class="col-lg-12 sect_header sect_header_color search-message">
+                        <div class="container-fluid">
+                            <ul class='row flex-baseline ' style="margin-left:1rem">
+                                <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                    <i class="mdi mdi-magnify icons-action mt-2" v-if="!searchContactFocus" @click="hideSearchContact"></i>
+                                    <i class="mdi mdi-arrow-left icons-action mt-2" v-if="searchContactFocus" @click="hideSearchContact"></i>
+                                </li>
+                                <li class='col-9 col-md-9 col-lg-9 col-xl-9'>
+                                    <input class="form-control search-input border-0 mt-3"  type="text" @focus="searchContactFocus=true" @blur="seeSearchContactFocus" v-model="searchContactByString" placeholder="Buscar contato">
+                                </li>
+                                <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                    <i v-if="!requestingNewPageContacts" class="mdi mdi-window-close icons-action mt-2" @click="hideSearchContact"></i>
+                                    <i v-if="requestingNewPageContacts" class="fa fa-circle-o-notch fa-spin fa-fw icons-action mt-2"></i>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="sect_header" style="background-color:#fafafa;">
+
+                <!-- antiga sacola 
+                    <div class="sect_header" style="background-color:#fafafa;"> 
                     <div class="text-center">
                         <ul style="margin-left:25%" class="list-group list-group-horizontal">
-                            <!-- <li class="list-group-item border-0 m-0 p-0  bg-transparent">
-                                <a href="javascript:void()">
-                                    <span class="mdi mdi-message-text fa-2x cinputTextAreaMessagel-blue"></span><br>
-                                    <span style="position:relative; top:-0.8em" class="principal-icons">Chats</span>
-                                </a>
-                            </li> -->
                             <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
                                     <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adherir novo contato"></span><br>
@@ -102,7 +108,8 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
+
                 <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px" ref="contact_scroller" :seeSrolling="'true'" @onbottom="onBottomContacts">
                     <ul>
                         <li v-for="(contact,index) in contacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
@@ -145,7 +152,7 @@
                                                         <i>Sem mensagens</i>
                                                     </span>                                           
                                                     <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
-                                                        {{textTruncate(contact.last_message.message,30)}}
+                                                        {{textTruncate(contact.last_message.message,26)}}
                                                     </span>
                                                     <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
                                                         <i>Arquivo de imagem</i>
@@ -235,11 +242,11 @@
         </div>
 
         <!-- Center side of chat-->
-        <div id="chat-center-side" ref="chatCenterSide" class="ccol-lg-9 width-70 p-0 "><!-- <div class="col-sm-4 col-md-5 mt-3"> -->            
+        <div id="chat-center-side" ref="chatCenterSide" class="width-70 p-0 ">            
             <!-- If selected contact -->
             <div v-if="selectedContactIndex>=0" class="converstion_back">
                 <div class="sect_header sect_header_color">     
-                    <div class="container-fluid mt-2">
+                    <div class="container-fluid ml-2">
                         <ul class='row flex-baseline'>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 d-block d-lg-none'>
                                 <span id="btn-back" class="mdi mdi-arrow-left btn-back icons-action" @click.prevent="chatCenterSideBack" style="position:relative; top:-18px"></span>
@@ -477,13 +484,13 @@
                                                 </span>
                                                 <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color: white"></span>
                                                 <span v-else> </span> -->
-                                                <span v-if="message.message && message.message !=''" class="text-message" style="color:white">
+                                                <span v-if="message.message && message.message !=''" class="text-message" style="color:#000">
                                                     {{ message.message ? message.message.richText : "" }}
                                                 </span>
                                                 <br>
                                                 <span class="pt-2" style="float:right; font-size:1.3rem">
-                                                    <span v-if="message.status_id==4" class="mdi mdi-check cl-white" title="Encaminhado"></span>
-                                                    <span v-if="message.status_id==2" class="mdi mdi-check-all cl-white" title="Enviado"></span>
+                                                    <span v-if="message.status_id==4" class="mdi mdi-check " title="Encaminhado"></span>
+                                                    <span v-if="message.status_id==2" class="mdi mdi-check-all " title="Enviado"></span>
                                                     <span v-if="message.status_id==7" class="mdi mdi-alert-circle-outline cl-danger" title="Falha no envio"></span>
                                                     <!-- <span v-if="message.status_id==7" class="mdi mdi-check cl-white" title="Encaminhado"></span> -->
                                                 </span>
@@ -590,16 +597,16 @@
             </div>
         </div>
         
-        <!-- Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-right-side" v-show="showChatRightSide==true" class="ccol-lg-3 width-25 p-0">
+        <!-- Right side of chat-->
+        <div id="chat-right-side" v-show="showChatRightSide==true" class="width-25 p-0">
             <div class="sect_header sect_header_color">
                 <div class="container-fluid">
-                    <ul class='row flex-baseline' style="margin-top:1.1rem; margin-left:-3rem">
+                    <ul class='row ' style="margin-top:0.7rem; margin-left:1rem; text-transform: uppercase;">
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                            <i class="mdi mdi-window-close icons-action" @click.prevent="displayChatRightSide()" aria-hidden="true"></i>
+                            <i class="mdi mdi-window-close icons-action mt-2" @click.prevent="displayChatRightSide()" aria-hidden="true"></i>
                         </li>
-                        <li class='col-9 col-md-9 col-lg-9 col-xl-9'>
-                            <span class="header-title text-muted">Detalhes</span>
+                        <li class='col-9 col-md-9 col-lg-9 col-xl-9' style="padding-top: 0.4rem;">
+                            <strong style="font-size:1em;">Detalhes</strong>
                         </li>
                         <li class="col-1 col-md-1 col-lg-1 col-xl-1">
                             <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none"  right="" >
@@ -657,14 +664,11 @@
                         <h4 class="profile-decription-name">{{contacts[selectedContactIndex].first_name}}</h4>
                         
                         <!-- Informação -->
-                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                        <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063;  text-transform: uppercase;">
                             <div class="container-fluid">
                                 <div class="row flex-baseline" >
-                                    <div class="col-1 pt-2 pb-2">
-                                        <i class="mdi mdi-account-card-details-outline fa-1_5x text-muted" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="col-8 pt-2 pb-2" style="text-align:left">
-                                        <span class="text-muted" style="font-size:1.1rem">Informação</span>
+                                    <div class="col-10 pt-2 pb-2" style="text-align:left">
+                                        <span class="" style="font-size:1.1rem; font-weight: 600;color: #39a063 !important;">Informação</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
                                         <i v-show="showContactInformation" @click.prevent="copyContact(contacts[selectedContactIndex]); isEditingContact=!isEditingContact"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
@@ -676,58 +680,57 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="showContactInformation" class="border border-top-0 p-1 mr-2 fadeIn">
-                            <ul class="list-group list-group-horizontal">
+                        <div v-if="showContactInformation" class="border-top-0 p-1 mr-2 fadeIn">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].first_name || isEditingContact">
                                 <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-outline fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:0.4em !important">
                                     <span v-show="!isEditingContact">{{contacts[selectedContactIndex].first_name}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" placeholder="Nome completo (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].email || isEditingContact">
                                 <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:0.4em !important">
                                     <span  v-show="!isEditingContact">{{contacts[selectedContactIndex].email}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" placeholder="Email" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>                            
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].whatsapp_id || isEditingContact"> 
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:0.4em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{contacts[selectedContactIndex].whatsapp_id}}</span>
                                     <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 5511988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].phone || isEditingContact">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-phone fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:0.4em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].phone}}</span>
                                     <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 551188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
-
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].cidade || isEditingContact">
                                 <li class="list-group-item border-0" title="Cidade"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:0.4em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].cidade}}</span>
-                                    <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic" style="width:100%">
                                 </li>
                             </ul>
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].estado || isEditingContact">
                                 <li class="list-group-item border-0" title="Estado"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:0.4em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].estado}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].categoria1 || isEditingContact">
                                 <li class="list-group-item border-0" title="Categoria 1"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].categoria1}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 1" v-model="selectedContactToEdit.categoria1" placeholder="Categoria 1" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].categoria2 || isEditingContact">
                                 <li class="list-group-item border-0" title="Categoria 2"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
                                 <li style="margin-top:1em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].categoria2}}</span>
@@ -736,21 +739,18 @@
                             </ul>
 
                             <div v-show="isEditingContact">
-                                <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                <button class="btn btn-success text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
                                     <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
                                 </button>
                             </div>
                         </div>
 
                         <!-- Nota resumo -->
-                        <div class="border mt-3 p-1 mr-2" style="background-color:#fafafa">
+                        <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063;  text-transform: uppercase;">
                             <div class="container-fluid">
                                 <div class="row flex-baseline">
-                                    <div class="col-1 pt-2 pb-2">
-                                        <i class="mdi mdi-account-badge-horizontal-outline fa-1_5x text-muted" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="col-8 pt-2 pb-2" style="text-align:left">
-                                        <span class="text-muted" style="font-size:1.1em">Nota resumo</span>
+                                    <div class="col-10 pt-2 pb-2" style="text-align:left">
+                                        <span class="" style="font-size:1.1rem; font-weight: 600;color: #39a063 !important;">Nota resumo</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
                                         <i v-show="showContactSummary" style="" @click.prevent="copyContact(contacts[selectedContactIndex]); isEditingContactSummary=!isEditingContactSummary"  class="fa fa-pencil text-muted action-icons-fade" aria-hidden="true"></i>
@@ -762,13 +762,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="showContactSummary" class="border border-top-0 p-1 mr-2 fadeIn">
-                            <div class="attachments  p-2" style="min-height:40px">
+                        <div v-if="showContactSummary" class="border-top-0 p-1 mr-2 fadeIn">
+                            <div class="attachments p-2" style="min-height:40px">
                                 <p v-show="!isEditingContactSummary" style="word-break: break-word; color:black" class="text-center">{{contacts[selectedContactIndex].summary}}</p>
-                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="border border-top-0 border-left-0 border-right-0 font-italic text-center" style="word-break: break-word; text-align:justify; width:100%; resize: none;"></textarea>
+                                <textarea v-show="isEditingContactSummary" rows="4" v-model="selectedContactToEdit.summary" class="font-italic text-center" 
+                                        style="word-break: break-word; text-align:justify; width:100%; resize: none;  border: 2px solid #39a063; border-radius: 13px;margin-top: 0.6rem; outline: none"></textarea>
                             </div>
                             <div v-show="isEditingContactSummary">
-                                <button class="btn btn-primary text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                <button class="btn btn-success text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
                                     <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
                                 </button>
                             </div>
@@ -863,21 +864,40 @@
                         </div> -->
 
                     </div>
-                </v-scroll>
+                </v-scroll>primary
             </div>
         </div>
 
-        <!-- Find-Right side of chat--><!-- <div class="col-sm-4 col-md-3 mt-3"> -->
-        <div id="chat-find-side" v-show="showChatFindMessages==true" class="ccol-lg-3 width-25 bg-white p-0">
+        <!-- Find-Right side of chat-->
+        <div id="chat-find-side" v-show="showChatFindMessages==true" class="width-25 bg-white p-0">
             <div class="col-lg-12 sect_header sect_header_color">
                 <div class="container-fluid">
-                    <ul class='row flex-baseline' style="margin-left:-3.7rem">
-                        <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="mdi mdi-window-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i></li>
-                        <li class='col-9 col-md-9 col-lg-9 col-xl-9'><input class="form-control search-input border-0 mt-3"  type="text" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" ref="searchMessageByStringInputref" placeholder="Buscar mensagens ..." ></li>
-                        <!-- <li class='col-1 col-md-1 col-lg-1 col-xl-1'><i class="mdi mdi-arrow-left icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i></li> -->
+                    <ul class='row' style="margin-left:1rem; margin-top: 1rem; text-transform: uppercase;">
+                        <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                            <i class="mdi mdi-window-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i>
+                        </li>
+                        <li class='col-9 col-md-9 col-lg-9 col-xl-9' style="margin-top: 0.4rem;"><strong>Pesquisar mensagens</strong></li>                        
                     </ul>
                 </div>
             </div>
+
+            <div class="col-lg-12 sect_header sect_header_color search-message">
+                <div class="container-fluid">
+                    <ul class='row flex-baseline ' style="margin-left:1rem">
+                        <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                            <i class="mdi mdi-magnify icons-action mt-2" v-if="!searchMessageFocus" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i>
+                            <i class="mdi mdi-arrow-left-thick icons-action mt-2" v-if="searchMessageFocus" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i>
+                        </li>
+                        <li class='col-9 col-md-9 col-lg-9 col-xl-9'>
+                            <input class="form-control search-input border-0 mt-3"  type="text" @focus="searchMessageFocus = true" @blur="seeSearchMessageFocus" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" ref="searchMessageByStringInputref" placeholder="Buscar mensagens ..." >    
+                        </li>
+                        <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                            <i class="mdi mdi-window-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[];"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <v-scroll :height="Height(100)" class="pl-0" color="#ccc" style="background-color:white" bar-width="8px">
                 <ul style="margin-left:-35px">
                     <li v-for="(message,index) in messagesWhereLike" class="chat_block pt-3 pb-3 founded-messages" :key="index">
@@ -1047,7 +1067,7 @@
                 handleTimeToReloadContacts:null,
                 
                 messages:[],
-                searchMessageByStringInput:'',
+                searchMessageByStringInput:'searchMessageByStringInput:',
                 messagesWhereLike:[],
                 findAroundMessageId:null, //for find in database when the clicked and founded message is not in actual page
                 messageTimeDelimeter:'',
@@ -1067,6 +1087,8 @@
                 hasMorePageMessage:true,
                 requestingNewPage:false,
                 // messageInTop:null,
+                searchMessageFocus: false,
+                searchContactFocus: false,
 
                 percent:0,
 
@@ -1491,7 +1513,7 @@
                         this.findAroundMessageId = null;
                         this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
                         this.messagesWhereLike = [];
-                        this.searchMessageByStringInput = [];
+                        this.searchMessageByStringInput = '';
                         let messages_copy=new Array();
                         response.data.forEach((item, i)=>{
                             try {
@@ -1587,54 +1609,6 @@
                     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
                     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
                 return !!pattern.test(str);
-            },
-
-            gettingChatQuebraGalhoDeAlberto: function(){
-                if(this.selectedContactIndex<0) return;
-                ApiService.get(this.chat_url,{
-                    'contact_id':this.contacts[this.selectedContactIndex].id,
-                    'message_id': null,
-                    'page':0,
-                    'set_as_readed':0,
-                })
-                .then(response => {
-                    if(response.data.length>0){
-                        this.messageTimeDelimeter = '';
-                        this.findAroundMessageId = null;
-                        // this.contacts[this.selectedContactIndex].count_unread_messagess = 0;
-                        this.messagesWhereLike = [];
-                        this.searchMessageByStringInput = [];
-                        let messages_copy = new Array();
-
-                        response.data.forEach((item, i)=>{
-                            try {
-                                item.time = this.getMessageTime(item.created_at);
-                                if(item.time.date != this.messageTimeDelimeter){
-                                    messages_copy.push({
-                                        'type_id': 'date_separator',
-                                        'time':{'date':item.time.date}
-                                    });
-                                    this.messageTimeDelimeter = item.time.date;
-                                }
-                                if(item.data != "" && item.data != null && item.data.length>0) {
-                                    item.data = JSON.parse(item.data);
-                                    if (item.type_id > 1)
-                                        item.path = item.data.FullPath;
-                                }
-                                messages_copy.push(item);
-                            } catch (error) {
-                            }
-                        });
-                        if(this.messages.length != messages_copy.length){
-                            this.messages = messages_copy.slice();
-                        }   
-                    }else{
-                        this.hasMorePageMessage =false;
-                    }
-                })
-                .catch(function(error) {
-                }).finally(()=>{                    
-                });
             },
 
             getContactChatWhereLike: function(cont) {
@@ -2412,6 +2386,18 @@
                 }
             },
 
+            seeSearchMessageFocus: function() {
+                if (this.searchMessageByStringInput.trim() === '') {
+                    this.searchMessageFocus = false;
+                } 
+            }, 
+
+            seeSearchContactFocus: function() {
+                if (this.searchContactByString.trim() === '') {
+                    this.searchContactFocus = false;
+                } 
+            }
+
         },
 
         updated(){
@@ -2478,11 +2464,11 @@
 
         watch:{
             searchContactByString: function(value){
-                if(value.trim().length > 2){
+                // if(value.trim().length > 2){
                     this.selectedContactIndex = -1;
                     this.contacts = [];
                     this.getContacts();
-                }
+                // }
             },
 
             isSendingNewMessage: function(value){
@@ -2497,19 +2483,37 @@
 </script>
 
 
-<style scoped lang="scss">
-    .width-30{
-        width: 30% !important;
+<style scoped lang="scss">  
+    * {
+        margin: 0;
+        padding: 0;
+
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+    .width-30 {
+        width: 23%!important;
     }
     .width-70{
-        width: 70% !important;
+        width: 76.9% !important;
+        // width: 70% !important;
     }
     .width-25{
-        width: 25% !important;
+        width: 22% !important;
+        // width: 25% !important;
     }
     .width-45{
-        width: 45% !important;
+        width: 55% !important;
+        // width: 45% !important;
     }
+
+    /*JUNIOR*/
+    .search-message{
+        background-color: #fff !important;
+        border-bottom: 1px solid #e9e9e9 !important;
+    }
+
 
     /* LAYOUT */
     .desc-img {
@@ -2517,8 +2521,8 @@
         width: 3.6rem;
     }
     .desc-img2 {
-        height: 10rem;
-        width: 10rem;
+        height: 7rem;
+        width: 7rem;
     }
     .chat {
         min-height: calc(100vh); // min-height: calc(100vh - 70px);
@@ -2545,7 +2549,8 @@
         height:100%; // height: calc(100% - 170px);
         overflow: hidden;
         background: #fff !important;
-        border: 1px solid #d8d6d6;
+        border-left: 1px solid #d8d6d6;
+        border-right: 1px solid #d8d6d6;
         ul {
             padding: 0;
         }
@@ -2572,6 +2577,9 @@
     .wrapper .converstion_back .ss-container{
         // background-color: white;
         background-color: #eaedf2;
+        background-size: 716px;
+        background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+
     }
     .colors{
         line-height: 1rem;
@@ -2582,12 +2590,12 @@
     }    
     .sect_header{
         background-color:#fefefe;        
-        height:6.5rem; // height:70px;
-        border-bottom: 1px solid #e9e9e9;
-        padding-top:10px; 
+        height:5.2rem; // height:70px;
+        border-bottom: 0px solid #e9e9e9;
+        padding-top:6px; 
     }
     .sect_header_color{
-        background-color:#fefefe;        
+        background-color:#f5f5f5;        
     }
     .sec_decription p, h4{
         text-align: center !important;
@@ -2628,16 +2636,16 @@
     }
     .contact-picture{
         border-radius: 50%;
-        width: 50px;
-        width: 50px;
+        width: 37px;
+        width: 37px;
         padding: 0px !important;
         margin: 0px !important;
     }
     .contact-non-picture{
         display: flex; align-items: center; justify-content:center;
         border-radius: 50%;
-        height: 50px;
-        width: 50px;
+        height: 37px;
+        width: 37px;
     }
     .bg0{background-color:#ff4444}
     .bg1{background-color:#ffbb33}
@@ -2712,8 +2720,8 @@
         right:-1em
     }
     .sendedMessageText{
-        color: white;
-        background-color: #0377FE;
+        color: #000;
+        background-color: #dcf8c6;
         padding:1em; 
         border-top-left-radius:1em; 
         border-top-right-radius:1em; 
@@ -2722,13 +2730,14 @@
         // width: 80%;
         // max-width: 40em;
         max-width: 40rem;
+        box-shadow: 3px 3px 5px -4px #000;
     }
     .sendedMessageImg{
         width:40px;
         height:40px;
         position:relative; 
         top:-1.6em; 
-        right:1.4em
+        right:-0.9em
     }
     .mycontrolBar{
         background-color: white !important;
@@ -2872,8 +2881,8 @@
         // border-radius: 50%;
         font-size: 1rem;
         position:relative; 
-        top:-40px;
-        left: -20px;
+        top:-34px;
+        left: 18px;
     }
     
 
@@ -2892,12 +2901,11 @@
     }    
     .icons-action-send{
         position: relative;
-        top: 0.5rem;
-        color:white;
+        top: 0.3rem;
+        color: #a1a1a1;
         width: 4rem;
         height: 4rem;
         font-size: 2rem;
-        background: #007bff;
         border-radius: 50%;
         padding: 0.5rem 1.1rem;
     }
@@ -3096,8 +3104,6 @@
             width: 80%;
         }
         .sendedMessageText{
-            color: white;
-            background-color: #0377FE;
             padding:1em; 
             border-top-left-radius:1em; 
             border-top-right-radius:1em; 

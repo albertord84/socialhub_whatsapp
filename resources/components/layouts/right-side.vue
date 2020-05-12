@@ -26,7 +26,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .right-aside {
-        // padding: 0 20px 10px 20px;
+        padding: 0 0px 10px 0px;
         width: 100%;
         max-width: 100%;
         min-height: 100vh;

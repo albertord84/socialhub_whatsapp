@@ -22,7 +22,7 @@
                 </button>
 
                 <div class="col-12 mt-3">
-                    <div class="login-text text-right">
+                    <div class="login-text text-center">
                         <router-link id="lnk_forgot_pass" tag="a" to="/forgotpassword" class="text-muted">Esqueceu sua senha?</router-link>
                     </div>
                 </div>

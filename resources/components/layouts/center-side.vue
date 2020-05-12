@@ -16,7 +16,7 @@
 
 <style lang="scss" scoped>
     .right-aside {
-        padding: 0 20px 0px 20px;
+        padding: 0 0px 0px 0px;
         width: 100%;
         max-width: 100%;
         height: calc(100vh-100px);
