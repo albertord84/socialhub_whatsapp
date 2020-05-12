@@ -20,15 +20,15 @@ class SendWhatsAppMsg implements ShouldQueue
 
     public $tries = 3;
     
-    
     /**
      * O --timeoutvalor sempre deve ser pelo menos alguns segundos menor que o retry_aftervalor da configuração. 
      *Isso garantirá que um trabalhador que processa um determinado trabalho seja sempre morto antes que o trabalho seja tentado novamente. 
      *Se sua --timeoutopção for maior que o retry_aftervalor de configuração, seus trabalhos poderão ser processados ​​duas vezes.     
      */
     public $timeout = 25;
+
     // Time worker will wait to retry again each work
-    public $retryAfter = 30;
+    public $retryAfter = 3;
     
     // Time worker will be sleeping wheter not work
     public $sleep = 3;
@@ -61,7 +61,7 @@ class SendWhatsAppMsg implements ShouldQueue
         $this->file_name = $file_name;
         $this->file_type = $file_type;
 
-        $this->connection = 'database';
+        $this->connection = 'redis';
 
         $this->queue = $queue;
 
@@ -76,11 +76,17 @@ class SendWhatsAppMsg implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Handle...: ', [$this->chat_input]);
+        Log::debug('SendWhatsAppMsg Handle...: ', [$this->chat_input]);
 
         $ExtendedChat = new ExtendedChat();
         $ExtendedChat->table = $this->chat_input['attendant_id'];
         $ExtendedChat = $ExtendedChat->find($this->chat_input['chat_id']);
+
+        // Tell the user we're retrying for the nth time
+        if ($this->attempts() > 1) {
+            Log::debug('SendWhatsAppMsg Handle attempts...: ', [$this->attempts()]);
+            // broadcast(new MessageToAttendant($ExtendedChat));
+        }
 
         if (!$this->file_name) { // Send normal message
             $response = $this->rpiController->sendTextMessage($ExtendedChat->message, $this->Contact);
