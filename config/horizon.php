@@ -158,7 +158,7 @@ return [
                 'queue' => 'api_messages',
                 'balance' => 'auto',
                 'minProcesses' => 2,
-                'maxProcesses' => 10,
+                'maxProcesses' => 5,
                 'tries' => 1,
             ],
             'supervisor-blingsales' => [
@@ -166,7 +166,7 @@ return [
                 'queue' => 'blingsales',
                 'balance' => 'auto',
                 'minProcesses' => 2,
-                'maxProcesses' => 10,
+                'maxProcesses' => 5,
                 'tries' => 1,
             ],
             'supervisor-tracking_update' => [
@@ -174,8 +174,16 @@ return [
                 'queue' => 'tracking_update',
                 'balance' => 'auto',
                 'minProcesses' => 2,
-                'maxProcesses' => 10,
+                'maxProcesses' => 5,
                 'tries' => 1,
+            ],
+            'supervisor-whatsapp' => [
+                'connection' => 'redis',
+                'queue' => 'whatsapp',
+                'balance' => 'auto',
+                'minProcesses' => 2,
+                'maxProcesses' => 10,
+                'tries' => 3,
             ],
         ],
         // 'local' => [
