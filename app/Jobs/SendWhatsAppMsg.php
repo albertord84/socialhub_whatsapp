@@ -117,6 +117,8 @@ class SendWhatsAppMsg implements ShouldQueue
                 $this->handle();
 
                 return -1;
+            } else {
+                Log::debug('\n\r SendingMessage Failed after 4 times!', [$responseJson, $ExtendedChat->message]);
             }
             // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
         }
