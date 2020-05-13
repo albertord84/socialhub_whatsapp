@@ -58,7 +58,7 @@ class SendWhatsAppMsgTracking implements ShouldQueue
         $this->Contact = $Contact;
         $this->Tracking = $Tracking;
 
-        $this->connection = 'database';
+        $this->connection = 'redis';
         // $this->connection = 'redis';
 
         $this->queue = $queue;
