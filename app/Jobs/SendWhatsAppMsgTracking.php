@@ -74,7 +74,7 @@ class SendWhatsAppMsgTracking implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Handle SendWhatsAppMsgTracking: ',);
+        //Log::debug('Handle SendWhatsAppMsgTracking: ',);
         
         $TrackingBusiness = new TrackingBusiness();
         
