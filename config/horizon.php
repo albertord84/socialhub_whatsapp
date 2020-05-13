@@ -144,7 +144,7 @@ return [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['api_messages', 'blingsales','tracking_update'],
+                'queue' => ['api_messages', 'blingsales','tracking_update', 'whatsapp'],
                 'balance' => 'auto',
                 'minProcesses' => 2,
                 'maxProcesses' => 10,
