@@ -74,7 +74,7 @@ class SendWhatsAppMsgBling implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->objSale]);
+        //Log::debug('Handle SendWhatsAppMsgBling...: ', [$this->objSale]);
         $Sale = new Sales();
         // dd($this);
         $Sale->table = $this->Contact->company_id;
@@ -91,11 +91,11 @@ class SendWhatsAppMsgBling implements ShouldQueue
         
         $response = $this->rpiController->sendTextMessage($Sale->message, $this->Contact);
         // $response=null;
-        Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
+       // Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
         
         $responseJson = json_decode($response);
         if (isset($responseJson->MsgID)) {
-            Log::debug('\n\r SendedTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
+          //  Log::debug('\n\r SendedTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id]);
             $Sale->sended = true;
             $Sale->status_id = MessagesStatusController::SENDED;
             if ($Chat) {
