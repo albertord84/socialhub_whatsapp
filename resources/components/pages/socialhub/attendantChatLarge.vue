@@ -152,7 +152,7 @@
                                                         <i>Sem mensagens</i>
                                                     </span>                                           
                                                     <span v-if="contact.last_message && contact.last_message.type_id==1" style="font-size:1em" :title='textTruncate(contact.last_message.message,40)'>
-                                                        {{textTruncate(contact.last_message.message,26)}}
+                                                        {{textTruncate(contact.last_message.message,24)}}
                                                     </span>
                                                     <span v-else-if="contact.last_message && contact.last_message.type_id==2" style="font-size:1em" title='Arquivo de imagem'>
                                                         <i>Arquivo de imagem</i>
@@ -683,56 +683,56 @@
                         <div v-if="showContactInformation" class="border-top-0 p-1 mr-2 fadeIn">
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].first_name || isEditingContact">
                                 <li class="list-group-item border-0" title="Nome"><i class="mdi mdi-account-outline fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:0.4em !important">
+                                <li style="margin-top:0.4em !important; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact">{{contacts[selectedContactIndex].first_name}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.first_name" placeholder="Nome completo (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].email || isEditingContact">
                                 <li class="list-group-item border-0" title="Email"><i class="mdi mdi-email-outline fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:0.4em !important">
+                                <li style="margin-top:0.4em !important; margin-left:0.6em !important">
                                     <span  v-show="!isEditingContact">{{contacts[selectedContactIndex].email}}</span>
                                     <input v-show="isEditingContact" type="text" v-model="selectedContactToEdit.email" placeholder="Email" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>                            
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].whatsapp_id || isEditingContact"> 
                                 <li class="list-group-item border-0" title="Whatsapp"><i class="mdi mdi-whatsapp fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:0.4em !important">
+                                <li style="margin-top:0.4em !important; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact" style="word-break: break-word;">{{contacts[selectedContactIndex].whatsapp_id}}</span>
                                     <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 5511988888888" v-model="selectedContactToEdit.whatsapp_id" placeholder="WhatsApp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].phone || isEditingContact">
                                 <li class="list-group-item border-0" title="Telefone"><i class="mdi mdi-phone fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:0.4em !important">
+                                <li style="margin-top:0.4em !important; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].phone}}</span>
                                     <input v-show="isEditingContact" type="text" v-mask="'###############'" title="Ex: 551188888888" v-model="selectedContactToEdit.phone" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].cidade || isEditingContact">
                                 <li class="list-group-item border-0" title="Cidade"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:0.4em !important">
+                                <li style="margin-top:0.4em !important; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].cidade}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Niterói" v-model="selectedContactToEdit.cidade" placeholder="Cidade" class="border border-top-0 border-left-0 border-right-0 font-italic" style="width:100%">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].estado || isEditingContact">
                                 <li class="list-group-item border-0" title="Estado"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:0.4em !important">
+                                <li style="margin-top:0.4em !; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].estado}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Rio de Janeiro" v-model="selectedContactToEdit.estado" placeholder="Estado" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].categoria1 || isEditingContact">
                                 <li class="list-group-item border-0" title="Categoria 1"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:1em !important; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].categoria1}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 1" v-model="selectedContactToEdit.categoria1" placeholder="Categoria 1" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                             <ul class="list-group list-group-horizontal" v-if="contacts[selectedContactIndex].categoria2 || isEditingContact">
                                 <li class="list-group-item border-0" title="Categoria 2"><i class="fa fa-id-card fa-1_5x text-muted"></i></li>
-                                <li style="margin-top:1em !important">
+                                <li style="margin-top:1em !important; margin-left:0.6em !important">
                                     <span v-show="!isEditingContact" class="mt-1">{{contacts[selectedContactIndex].categoria2}}</span>
                                     <input v-show="isEditingContact" type="text" title="Ex: Categoria 2" v-model="selectedContactToEdit.categoria2" placeholder="Categoria 2" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
