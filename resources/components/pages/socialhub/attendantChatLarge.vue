@@ -18,8 +18,8 @@
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 mt-3'>
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
                                     <i class="mdi mdi-message-processing-outline icons-action" title="Adherir novo contato"></i>
-                                    <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="badge badge-primary badge-pill amount-contacts-in-bag  cl-gray">{{amountContactsInBag}}</span>
-                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag ">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="badge badge-primary badge-pill amount-contacts-in-bag  cl-gray" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px">{{amountContactsInBag}}</span>
+                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
@@ -165,7 +165,7 @@
                                                 <span v-if="contact.status_id == 6" class="mdi mdi-volume-off text-muted fa-1_5x" style="m1argin-top: 7px; m1argin-left:-12px" title="Notificações silenciadas"></span>
                                             </div>
                                             <div class="m-0">
-                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:5px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
+                                                <div v-show="contact.count_unread_messagess>0" class="badge badge-success badge-pill amount-unreaded-messages" style="margin-top: 7px; margin-left:5px; padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; background:#5AD856"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
                                                 <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
                                             </div>
 
@@ -391,7 +391,7 @@
                                     <div class="col-1 text-right">
                                         <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
                                         <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contacts[selectedContactIndex].id" class="conversation-picture receivedMessageImg">
-                                        <div v-else class="conversation-picture receivedMessageImg" style="display: flex; align-items: center; justify-content:center;" 
+                                        <div v-else class="conversation-picture receivedMessageDiv" style="display: flex; align-items: center; justify-content:center;" 
                                             :class="[
                                                 { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
                                                 { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
@@ -2232,7 +2232,7 @@
                     var message = JSON.parse(e.message);
                     var subjacentContact = null;       
     
-                    if(message.source == 0){ //message to update the message status to 2 or 7
+                    if(message.source == 0){ //message to update the message_status to 2 or 7
                         if(this.selectedContactIndex>-1 && message.contact_id == this.contacts[this.selectedContactIndex].id){
                             this.messages.some((item,i)=>{
                                 if(message.id == item.id){
@@ -2278,7 +2278,7 @@
                                 if(item.id == message.contact_id){
                                     item.count_unread_messagess = item.count_unread_messagess + 1;
                                     item.last_message = message;
-                                    targetIndex = i;
+                                    targetIndex = i;                                    
                                     return;
                                 }
                             });
@@ -2286,6 +2286,8 @@
 
                         if(targetIndex > -1){ // set the target contact as firt if is in contacts list
                             this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
+                            if(this.contacts[targetIndex].status_id != 6)
+                                this.$refs.newMessageSound.play();
                         }else{ //insert the target contact in contacts list if isnt
                             subjacentContact.count_unread_messagess = 1;
                             subjacentContact.last_message = message;
@@ -2298,12 +2300,9 @@
                             if(this.selectedContactIndex > -1){
                                 this.selectedContactIndex ++;
                             }
-                        }
-    
-                        if(!this.userLogged.mute_notifications
-                                && this.selectedContactIndex >-1 
-                                && !this.contacts[this.selectedContactIndex].status_id==6)
-                            this.$refs.newMessageSound.play();
+                            if(subjacentContact.status_id != 6)                            
+                                this.$refs.newMessageSound.play();
+                        }                       
 
                     }                    
                 });
@@ -2712,6 +2711,13 @@
         height:40px;
         position:relative; 
         top:-1.6em; 
+        right:1em
+    }
+    .receivedMessageDiv{
+        width:40px;
+        height:40px;
+        position:relative; 
+        top:-1.6em; 
         right:-1em
     }
     .sendedMessageText{
@@ -2882,7 +2888,7 @@
         font-size: 1rem;
         position:relative; 
         top:-34px;
-        left: 18px;
+        left: 10px;
     }
     
 
@@ -3127,7 +3133,12 @@
         .width-25{
             width: 100% !important;
         }
-        
+        .badge-whatsapp-notification{
+            background-color: #5AD856 !important;
+        }
+        .badge-success{
+            background-color: #5AD856 !important;
+        }
     }
     
 </style>
