@@ -95,10 +95,10 @@ class SalesBusiness extends Business {
         try {
             $Companies = Company::with('rpi')->where('bling_contrated', true)->get();
 
-            Log::debug('SalesBusiness > createCompaniesJobs', [$Companies->count()]);
+            // Log::debug('SalesBusiness > createCompaniesJobs', [$Companies->count()]);
 
             foreach ($Companies as $key => $Company) {
-                Log::debug('SalesBusiness > createCompaniesJobs', [$Company]);
+                // Log::debug('SalesBusiness > createCompaniesJobs', [$Company]);
                 $Sales = $this->getBlingCompanyNextObjects($Company);
 
                 $ExternalRPIController = new ExternalRPIController($Company->rpi);
