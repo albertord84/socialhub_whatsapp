@@ -74,48 +74,30 @@
                     </div>
                 </div>
 
-                <div class="sect_header" style="background-color:#fafafa;">
-                    <div class="col-lg-12 sect_header sect_header_color search-message">
-                        <div class="container-fluid">
-                            <ul class='row flex-baseline ' style="margin-left:1rem">
-                                <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                    <i class="mdi mdi-magnify icons-action mt-2" v-if="!searchContactFocus" @click="hideSearchContact"></i>
-                                    <i class="mdi mdi-arrow-left icons-action mt-2" v-if="searchContactFocus" @click="hideSearchContact"></i>
-                                </li>
-                                <li class='col-9 col-md-9 col-lg-9 col-xl-9'>
-                                    <input class="form-control search-input border-0 mt-3"  type="text" @focus="searchContactFocus=true" @blur="seeSearchContactFocus" v-model="searchContactByString" placeholder="Buscar contato">
-                                </li>
-                                <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                    <i v-if="!requestingNewPageContacts" class="mdi mdi-window-close icons-action mt-2" @click="hideSearchContact"></i>
-                                    <i v-if="requestingNewPageContacts" class="fa fa-circle-o-notch fa-spin fa-fw icons-action mt-2"></i>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- antiga sacola 
-                    <div class="sect_header" style="background-color:#fafafa;"> 
-                    <div class="text-center">
-                        <ul style="margin-left:25%" class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0 m-0 ml-5 p-0  bg-transparent">
-                                <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
-                                    <span class="mdi mdi-account-box-outline fa-2x cl-blue" title="Adherir novo contato"></span><br>
-                                    <span style="position:relative; top:-0.8em; left:0.5em" title="Adherir novo contato" class="principal-icons">Contatos</span>                                                                        
-                                    <span v-if="amountContactsInBag==0" :title="' Nenhum contato novo disponível'" class="badge badge-primary badge-pill amount-contacts-in-bag  cl-gray">{{amountContactsInBag}}</span>
-                                    <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag ">{{amountContactsInBag}}</span>
-                                </a>
+                <div class="col-lg-12 pt-3 pb-3" style="background-color:#; border-bottom: 1px solid #e9e9e9">
+                    <div class="container-fluid">
+                        <ul class='row' style="margin-left:1rem">
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                <i class="mdi mdi-magnify icons-action mt-2" v-if="!searchContactFocus" @click="hideSearchContact"></i>
+                                <i class="mdi mdi-arrow-left icons-action mt-2" v-if="searchContactFocus" @click="hideSearchContact"></i>
+                            </li>
+                            <li class='col-9 col-md-9 col-lg-9 col-xl-9'>
+                                <input class="form-control search-input border-0"  type="text" @focus="searchContactFocus=true" @blur="seeSearchContactFocus" v-model="searchContactByString" placeholder="Buscar contato">
+                            </li>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                <i v-if="!requestingNewPageContacts" class="mdi mdi-window-close icons-action" @click="hideSearchContact"></i>
+                                <i v-if="requestingNewPageContacts" class="fa fa-circle-o-notch fa-spin fa-fw icons-action"></i>
                             </li>
                         </ul>
                     </div>
-                </div> -->
+                </div>
 
-                <v-scroll :height="Height(170)"  color="#ccc" class="position:relative; margin-left:-100px" style="background-color:white" bar-width="8px" ref="contact_scroller" :seeSrolling="'true'" @onbottom="onBottomContacts">
+                <v-scroll :height="Height(130)"  color="#ccc" flag="1" bar-width="8px" ref="contact_scroller" :seeSrolling="'true'" @onbottom="onBottomContacts">
                     <ul>
-                        <li v-for="(contact,index) in contacts" class="chat_block" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
+                        <li v-for="(contact,index) in contacts" class="chat_block contact_item" :id="'contact_item_'+index" :key="index" @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
                             <div class="">
                                 <div class="row pt-3 pb-3">
-                                    <div class="col-2 pointer-hover text-left" @click.prevent="getContactChat(contact,index)">
+                                    <div class="col-2 pointer-hover" style="left:6px" @click.prevent="getContactChat(contact,index)">
                                         <img v-if="contact.json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
                                         <img v-else-if="contact.json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contact.id" class="contact-picture"  @error="markAsBrokenUrl(contact,index)">
                                         <div v-else class="contact-non-picture" 
@@ -137,7 +119,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-7 d-flex" style="background-color:1green;" @click.prevent="getContactChat(contact,index)">
+                                    <div class="col-7 d-flex" @click.prevent="getContactChat(contact,index)">
                                         <div class="d-flex flex-column pointer-hover ml-2 mt-2">
                                             <!-- Contact name -->
                                             <div class="row">
@@ -186,8 +168,9 @@
                                                 <div v-show="contact.count_unread_messagess>0" class="badge badge-primary badge-pill amount-unreaded-messages cl-blue" style="margin-top: 7px; margin-left:5px"  :title='contact.count_unread_messagess + " mensagens novas"'>{{contact.count_unread_messagess}}</div>
                                                 <span v-show="contact.count_unread_messagess==0" class="zero-unreaded-messages"> </span>
                                             </div>
+
                                             <div :id="'contact_'+contact.id" class="contact-hout m-0">
-                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="m1argin-top:13px"  right="">
+                                                <b-dropdown class="dropdown hidden-xs-down btn-group text-muted" variant="link" toggle-class="text-decoration-none" style="margin-top:0px"  right="">
                                                     <template v-slot:button-content>
                                                         <i class="fa fa-angle-down text-muted fa-1_5x font-weight-bold" title="Ações sobre contato" @click.prevent="copyContact(contact)"></i>
                                                     </template>
@@ -739,7 +722,7 @@
                             </ul>
 
                             <div v-show="isEditingContact">
-                                <button class="btn btn-success text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                <button class="btn btn-success text-white pl-5 pr-5 pt-1 pb-1 mt-4 mb-1" @click.prevent="updateContact">
                                     <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
                                 </button>
                             </div>
@@ -769,7 +752,7 @@
                                         style="word-break: break-word; text-align:justify; width:100%; resize: none;  border: 2px solid #39a063; border-radius: 13px;margin-top: 0.6rem; outline: none"></textarea>
                             </div>
                             <div v-show="isEditingContactSummary">
-                                <button class="btn btn-success text-white pl-5 pr-5 mt-2 mb-1" @click.prevent="updateContact">
+                                <button class="btn btn-success text-white pl-5 pr-5 pt-1 pb-1 mt-2 mb-1" @click.prevent="updateContact">
                                     <i v-show="isUpdatingContact==true" class="fa fa-spinner fa-spin" style="color:white" ></i> Atualizar
                                 </button>
                             </div>
@@ -864,7 +847,7 @@
                         </div> -->
 
                     </div>
-                </v-scroll>primary
+                </v-scroll>
             </div>
         </div>
 
@@ -881,18 +864,19 @@
                 </div>
             </div>
 
-            <div class="col-lg-12 sect_header sect_header_color search-message">
+            <div class="col-lg-12 pt-3 pb-3" style="background-color:#; border-bottom: 1px solid #e9e9e9">
                 <div class="container-fluid">
-                    <ul class='row flex-baseline ' style="margin-left:1rem">
+                    <ul class='row' style="margin-left:1rem">
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                             <i class="mdi mdi-magnify icons-action mt-2" v-if="!searchMessageFocus" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i>
                             <i class="mdi mdi-arrow-left-thick icons-action mt-2" v-if="searchMessageFocus" @click="searchMessageByStringInput='';messagesWhereLike=[]; displayChatFindMessage()"></i>
                         </li>
                         <li class='col-9 col-md-9 col-lg-9 col-xl-9'>
-                            <input class="form-control search-input border-0 mt-3"  type="text" @focus="searchMessageFocus = true" @blur="seeSearchMessageFocus" v-model="searchMessageByStringInput" @keyup.prevent="getContactChatWhereLike" ref="searchMessageByStringInputref" placeholder="Buscar mensagens ..." >    
+                            <input class="form-control search-input border-0"  type="text" @focus="searchMessageFocus = true" @blur="seeSearchMessageFocus" v-model="searchMessageByStringInput" ref="searchMessageByStringInputref" placeholder="Buscar mensagens" >    
                         </li>
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                             <i class="mdi mdi-window-close icons-action mt-2" @click="searchMessageByStringInput='';messagesWhereLike=[];"></i>
+                            <!-- <i v-if="requestingNewPageContacts" class="fa fa-circle-o-notch fa-spin fa-fw icons-action"></i> -->
                         </li>
                     </ul>
                 </div>
@@ -1141,6 +1125,9 @@
                 isMuteNotifications: null,
 
                 scrollHeights:[],
+
+                last_selected_contact_ref: '',
+                selected_contact_ref: ''
             }
         },
         
@@ -1477,6 +1464,13 @@
             getContactChat: function(contact,index) {   
                 this.reloadContactPicUrl(contact);
                 this.selectedContactIndex = -2;
+                document.getElementById('contact_item_'+index).classList.add("selected_contact_item");
+                if(document.getElementById(this.last_selected_contact_ref)){
+                    document.getElementById(this.last_selected_contact_ref).classList.remove("selected_contact_item");
+                }
+                this.last_selected_contact_ref = 'contact_item_'+index;
+                if(this.showChatRightSide) this.displayChatRightSide();
+                if(this.showChatFindMessages) this.displayChatFindMessage();
                 setTimeout(()=>{
                     this.pageNumber = -1;
                     this.messages = [];
@@ -1486,11 +1480,10 @@
                     this.requestingNewPage=false;                
 
                     this.selectedContactIndex = contact.index;
-                    if(this.showChatRightSide) this.displayChatRightSide();
-                    if(this.showChatFindMessages) this.displayChatFindMessage();
+                    
                     document.getElementById("chat-center-side").classList.add("chat-center-side-open");
                     this.getChat();
-                },1000)
+                },700);
                 
             },
 
@@ -1609,25 +1602,6 @@
                     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
                     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
                 return !!pattern.test(str);
-            },
-
-            getContactChatWhereLike: function(cont) {
-                this.searchMessageByStringInput = this.searchMessageByStringInput.trim();
-                if (this.searchMessageByStringInput.length > 1){
-                    ApiService.get(this.chat_url,{
-                        'contact_id': this.contacts[this.selectedContactIndex].id,
-                        'searchMessageByStringInput': this.searchMessageByStringInput,
-                        'page': 1
-                    })
-                    .then(response => {
-                        this.messagesWhereLike = response.data;
-                    })
-                    .catch(error => {
-                        this.processMessageError(error, this.chat_url,"get");
-                    });
-                } else{
-                    this.messagesWhereLike = [];
-                }
             },
 
             scrollAroundMessageId: function(message){
@@ -2467,8 +2441,29 @@
                 // if(value.trim().length > 2){
                     this.selectedContactIndex = -1;
                     this.contacts = [];
+                    if(this.showChatRightSide) this.displayChatRightSide();
+                    if(this.showChatFindMessages) this.displayChatFindMessage();
                     this.getContacts();
                 // }
+            },
+
+            searchMessageByStringInput: function(value) {
+                value = value.trim();
+                if (value.length > 1){
+                    ApiService.get(this.chat_url,{
+                        'contact_id': this.contacts[this.selectedContactIndex].id,
+                        'searchMessageByStringInput': value,
+                        'page': 0
+                    })
+                    .then(response => {
+                        this.messagesWhereLike = response.data;
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.chat_url,"get");
+                    });
+                } else{
+                    this.messagesWhereLike = [];
+                }
             },
 
             isSendingNewMessage: function(value){
@@ -2761,12 +2756,18 @@
         visibility:hidden;
     }
     .contact-hover{
-        display: block;
+        // display: block;
         visibility:visible;
-    }
+    }    
     .contact-hout{
-        display: none;
+        // display: none;
         visibility:hidden;
+    }
+    .selected_contact_item{
+        background-color:#f5f5f0;
+    }
+    .contact_item:hover{
+        background-color:#f5f5f5;
     }
     .message-options-style{
         position: relative;
@@ -2777,8 +2778,7 @@
     }
     .text-message{
         word-break: break-word; 
-    }
-    
+    }    
     .document_sent{
         width: 50px;
         height: 50px;
