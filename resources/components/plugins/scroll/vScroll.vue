@@ -1,7 +1,7 @@
 <template>
     <div ref="vscroll" :style="{ 'height': height,'min-height':minHeight,'max-height':maxHeight }" class="ss-container">
-        <div class="ss-wrapper" ref="wrapper">
-            <div class="ss-content" :id="vid" ref="content" @scroll="moveBar" @mouseenter="moveBar">
+        <div :class=" !flag ? 'ss-wrapper': 'ss-wrapper2'" ref="wrapper">
+            <div :class=" !flag ? 'ss-content': 'ss-content2'" :id="vid" ref="content" @scroll="moveBar" @mouseenter="moveBar">
                 <slot></slot>
             </div>
         </div>
@@ -17,7 +17,7 @@ export default {
         color: null,
         barWidth: null,
         alwaysvisible: Boolean,
-
+        flag:0,
         seeSrolling:false,
         vid:'',
         percent:0,        
@@ -126,8 +126,27 @@ export default {
         float: left;
         left: -10px;
     }
+    .ss-wrapper2 {
+        overflow: hidden;
+        width: 110%;
+        height: 100%;
+        position: relative;
+        z-index: 1;
+        float: left;
+        left: -18px;
+    }
 
     .ss-content {
+        height: 100%;
+        width: 100%;
+        padding: 0 18px 0 0;
+        position: relative;
+        right: -18px;
+        overflow: auto;
+        box-sizing: border-box;
+        overflow-x: inherit;
+    }
+    .ss-content2 {
         height: 100%;
         width: 100%;
         padding: 0 18px 0 0;
