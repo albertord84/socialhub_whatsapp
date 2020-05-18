@@ -154,7 +154,6 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         //Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
         // Barryvdh\Cors\ServiceProvider::class,  //ECR
-        Studio\Totem\Providers\TotemServiceProvider::class,
 
         /*
          * Application Service Providers...
