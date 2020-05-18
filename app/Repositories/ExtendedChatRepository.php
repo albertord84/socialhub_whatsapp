@@ -32,7 +32,7 @@ class ExtendedChatRepository extends ChatRepository
 
             $ContactChats = $ContactChats->unique('id')->sortBy('created_at');
             // $ContactChats = $ContactChats->unique('id')->sortBy('updated_at');
-
+            
             $Collection = new Collection();
             $page_length = env('APP_PAGE_LENGTH', 10);
 

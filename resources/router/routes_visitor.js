@@ -7,13 +7,6 @@ const layout = [
             title: "Dashboard",
         }
     }, {
-        path: '/visitor/chat',
-        component: resolve => require(['pages/socialhub/attendantChatLarge'], resolve),
-        // component: resolve => require(['pages/socialhub/attendantChat'], resolve),
-        meta: {
-            title: "Chat",
-        }
-    }, {
         path: '/visitor/user_profile',
         component: resolve => require(['pages/socialhub/user_profile'], resolve),
         meta: {

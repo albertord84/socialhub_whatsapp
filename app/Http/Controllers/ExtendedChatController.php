@@ -79,10 +79,9 @@ class ExtendedChatController extends ChatController
         $User = Auth::check() ? Auth::user() : session('logged_user');
         $contact_id = (int) $request['contact_id'];
         $set_as_readed = (int) $request['set_as_readed'];
-
         $page = (int) $request['page'];
         $searchMessageByStringInput = $request['searchMessageByStringInput'] ?? '';
-
+        
         $ContactChats = $this->chatRepository->contactChatAllAttendants($contact_id, $page, $searchMessageByStringInput, $set_as_readed);
 
         $this->checkProfilePicture($contact_id);
