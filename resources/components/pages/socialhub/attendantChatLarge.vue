@@ -1,7 +1,8 @@
 <template>
     <div class="row chat p-0" style="background-color:#fefefe !important">
         <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @insertContactAsFirtInList="insertContactAsFirtInList" @reloadContacts='reloadContacts'></left-side-bar>
-        <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio>
+        <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.mp3" type="audio/ogg"></audio>
+        <!-- <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio> -->
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->

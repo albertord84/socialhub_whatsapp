@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUsersAttendantRequest;
 use App\Http\Requests\UpdateUsersAttendantRequest;
 use App\Mail\EmailSigninAttendant;
+use App\Models\AttendantsContact;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -124,6 +125,8 @@ class ExtendedUsersAttendantController extends UsersAttendantController
             
             return redirect(route('usersAttendants.index'));
         }
+
+        AttendantsContact::where('attendant_id', $id)->delete();
         
         $this->usersAttendantRepository->delete($id);
         
