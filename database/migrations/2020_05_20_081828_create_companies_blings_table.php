@@ -17,6 +17,7 @@ class CreateCompaniesBlingsTable extends Migration
             $table->increments('id');
             
             $table->integer('company_id')->nullable()->index('fk_companies_companies_blings');
+            $table->string('bling_name', 500)->nullable();
             $table->string('bling_apikey', 500)->nullable();
             $table->string('bling_token', 500)->nullable();
             $table->string('bling_message', 1000)->nullable();
