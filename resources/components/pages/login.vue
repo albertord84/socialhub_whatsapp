@@ -122,8 +122,10 @@
                 }
             }
         },
+        beforeMount: function () {
+        },
+
         mounted: function () {
-            
         },
         destroyed: function () {
 
