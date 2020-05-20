@@ -141,3 +141,6 @@ Route::resource('status', 'StatusController');
 Route::get('apis', 'ApiController@store');
 Route::post('apis', 'ApiController@store');
 // Route::get('create_company_api_jobs', 'ApiController@create_company_api_jobs');
+
+
+Route::resource('companiesBlings', 'CompaniesBlingsController');
