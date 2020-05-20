@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model as Model;
 /**
  * Class CompaniesBlings
  * @package App\Models
- * @version May 20, 2020, 8:29 am -03
+ * @version May 20, 2020, 10:56 am -03
  *
  * @property \App\Models\Company company
  * @property integer company_id
+ * @property string bling_username
  * @property string bling_apikey
- * @property string bling_token
  * @property string bling_message
  * @property integer bling_contrated
  */
@@ -29,9 +29,8 @@ class CompaniesBlings extends Model
 
     public $fillable = [
         'company_id',
-        'bling_name',
+        'bling_username',
         'bling_apikey',
-        'bling_token',
         'bling_message',
         'bling_contrated'
     ];
@@ -44,9 +43,8 @@ class CompaniesBlings extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'bling_name' => 'string',
+        'bling_username' => 'string',
         'bling_apikey' => 'string',
-        'bling_token' => 'string',
         'bling_message' => 'string',
         'bling_contrated' => 'integer'
     ];

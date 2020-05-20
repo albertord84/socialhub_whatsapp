@@ -3,8 +3,8 @@
         <thead>
             <tr>
                 <th>Company Id</th>
+        <th>Bling Username</th>
         <th>Bling Apikey</th>
-        <th>Bling Token</th>
         <th>Bling Message</th>
         <th>Bling Contrated</th>
                 <th colspan="3">Action</th>
@@ -14,8 +14,8 @@
         @foreach($companiesBlings as $companiesBlings)
             <tr>
                 <td>{{ $companiesBlings->company_id }}</td>
+            <td>{{ $companiesBlings->bling_username }}</td>
             <td>{{ $companiesBlings->bling_apikey }}</td>
-            <td>{{ $companiesBlings->bling_token }}</td>
             <td>{{ $companiesBlings->bling_message }}</td>
             <td>{{ $companiesBlings->bling_contrated }}</td>
                 <td>

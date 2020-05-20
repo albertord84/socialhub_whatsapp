@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class CompaniesBlingsRepository
  * @package App\Repositories
- * @version May 20, 2020, 8:29 am -03
+ * @version May 20, 2020, 10:56 am -03
  *
  * @method CompaniesBlings findWithoutFail($id, $columns = ['*'])
  * @method CompaniesBlings find($id, $columns = ['*'])
@@ -21,8 +21,8 @@ class CompaniesBlingsRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'company_id',
+        'bling_username',
         'bling_apikey',
-        'bling_token',
         'bling_message',
         'bling_contrated'
     ];

@@ -22,7 +22,7 @@
         "inIndex": true
     },
     {
-        "name": "bling_apikey",
+        "name": "bling_username",
         "dbType": "string,500:nullable",
         "htmlType": "text",
         "validations": null,
@@ -33,7 +33,7 @@
         "inIndex": true
     },
     {
-        "name": "bling_token",
+        "name": "bling_apikey",
         "dbType": "string,500:nullable",
         "htmlType": "text",
         "validations": null,

@@ -10,16 +10,16 @@
     <p>{{ $companiesBlings->company_id }}</p>
 </div>
 
+<!-- Bling Username Field -->
+<div class="form-group">
+    {!! Form::label('bling_username', 'Bling Username:') !!}
+    <p>{{ $companiesBlings->bling_username }}</p>
+</div>
+
 <!-- Bling Apikey Field -->
 <div class="form-group">
     {!! Form::label('bling_apikey', 'Bling Apikey:') !!}
     <p>{{ $companiesBlings->bling_apikey }}</p>
-</div>
-
-<!-- Bling Token Field -->
-<div class="form-group">
-    {!! Form::label('bling_token', 'Bling Token:') !!}
-    <p>{{ $companiesBlings->bling_token }}</p>
 </div>
 
 <!-- Bling Message Field -->

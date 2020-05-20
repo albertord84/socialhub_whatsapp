@@ -4,16 +4,16 @@
     {!! Form::number('company_id', null, ['class' => 'form-control']) !!}
 </div>
 
+<!-- Bling Username Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('bling_username', 'Bling Username:') !!}
+    {!! Form::text('bling_username', null, ['class' => 'form-control']) !!}
+</div>
+
 <!-- Bling Apikey Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('bling_apikey', 'Bling Apikey:') !!}
     {!! Form::text('bling_apikey', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Bling Token Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('bling_token', 'Bling Token:') !!}
-    {!! Form::text('bling_token', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Bling Message Field -->
