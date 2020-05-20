@@ -15,17 +15,20 @@
                             como Sistema integrado de gestão empresarial (ERP, Enterprise Resource Planning).
                             <br><br>
                             A integração de SocialHUB com o Bling lhe permite enviar mensagens com layouts personalisados através 
-                            de Whatsapp aos seus clientes logo depois que o Bling registrar cada pedido de venda feito nos seus e-commerces.                            
+                            de Whatsapp aos seus clientes logo depois que o Bling registrar cada pedido de venda feito nos seus e-commerces. 
+
+                            <br><br>
+                            Você pode integrar uma ou várias contas Bling com a SocialHub.
                         </p>
                     </div>
                     <div class="pt-4 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Pré-requisitos para a integração</h4>
                         <p class="text-justify pl-4">
-                            - Ter uma conta no <a href="https://www.bling.com.br" target="_blank" rel="noopener noreferrer">Bling</a> que gerencie as suas vendas realizadas através dos e-commerces.
+                            - Ter uma (ou várias) conta(s) no <a href="https://www.bling.com.br" target="_blank" rel="noopener noreferrer">Bling</a> que gerencie as suas vendas realizadas através dos e-commerces.
                             <br><br>
-                            - Ter feito a integração da sua conta Bling com algum dos e-commerces.
-                            <!-- <br><br>
-                            - Ter feito a <a href="https://manuais.bling.com.br/manual/?item=homologacao-parceiro-api" target="_blank" rel="noopener noreferrer">Homologação</a> da API de pedidos de vendas do Bling. -->
+                            - Ter integrado sua (suas) contas Bling com algum dos e-commerces.
+                            <br><br>
+                            - Ter ativado a importação automática dos seus pedidos dentro do Bling para cada uma das contas que deseja integrar.
                         </p>
                     </div>
                 <hr>
@@ -35,11 +38,11 @@
                 <hr>
                     <div class="pt-3 pl-5 pr-5 pb-3">
                         <h4 style="color:#34AD70">Configuração da Integração Automática do Bling</h4>
-                        <p class="pt-2">Antes de integrar o bling na SocialHub é necessário ativar a importação automática dos seus pedidos dentro do bling. Para isso, acesse o menu:</p>
+                        <p class="pt-2">Antes de integrar uma conta Bling na SocialHub é necessário ativar a importação automática dos seus pedidos dentro do Bling. Para isso realize os seguintes passos:</p>
                         <ul class="pl-4">
                             <li class="mb-4"> 1) Acesse em  <a href="https://www.bling.com.br/configuracoes.integracoes.lojas.virtuais.php#list" target="_blank" rel="noopener noreferrer">Preferências ( <i class="fa fa-cog" style="color: #9e9e9e"> </i>) > Integrações >  Configurações de integração com lojas virtuais e Marketplaces</a>.</li>
                             <li class="mb-4"> 2) Clique na integração que deseja <b>ativar</b>  a <b>importação automática</b> de pedidos.</li>
-                            <li class="mb-2"> 3) No menu lateral, clique em <b>Integração Automática</b> </li>
+                            <li class="mb-4"> 3) No menu lateral, clique em <b>Integração Automática</b> </li>
                             <li class="mb-2"> 4) Ative o <b>Status do pulling</b> <br>
                                 <img src="~img/socialhub/pulling_status.jpeg" alt="" >
                             </li>
@@ -59,10 +62,14 @@
                             <li class="mb-4"> 2) Na sessão <b>Informações da conta</b> preencha os campos <b>Nome</b> e <b>Email</b> do usuário API.</li>
                             <li class="mb-2"> 3) Na sessão <b>API key</b> gere a API key. Seguido copie e cole a API key aqui:</li>
                             <li class="ml-4 mb-4">
-                                <input type="text" class="w-400" v-model="apikey" placeholder="Adicione sua API key aqui">
+                                <div class="container-fluid">
+                                    <input type="text" class="w-200" v-model="username" placeholder="Adicione seu nome de usuário Bling aqui">
+                                    <input type="text" class="w-400" v-model="apikey" placeholder="Adicione sua API key aqui">
+                                </div>
                             </li>
                             <li class="mb-4"> 4) Selecione a aba <b>Vendas</b> na sessão <b>Permissões</b> e marque todos os item da sub-sessão <b>Pedidos de Venda</b>.</li>
                             <li class="mb-4"> 5) Pressionar o botão <b>Salvar</b> para finalizar a <i>Criação do Usuário API e da API key</i>.</li>
+                            <li class="mb-4"> 6) ATENÇÃO: Para adicionar outras contas Bling, você deve realizar todos os passos anterios, mas cada novo usuário e apikey devem ser informado para nossa equipe comercial.</li>
                         </ul>
                     </div>
                 <hr>
@@ -199,10 +206,12 @@
                 userLogged:{},
                 companies_url:"companies",
                 sales_url:"companies",
-                bling_url:"blings",
+                // bling_url:"blings",
+                bling_url:"companiesBlings",
                 message:"",
                 defaultMessage:"",
                 apikey:"",
+                username:"",
             }
         },
 
@@ -216,12 +225,16 @@
             },
 
             steepAPIKEY(){
+                if(this.username.trim().length==0){                    
+                    miniToastr.warn("Atenção", "Deve inserir o nome de usuário da sua conta Bling");  
+                    return false;
+                }
                 if(this.apikey.trim().length==0){                    
                     miniToastr.warn("Atenção", "Deve inserir uma API key para continuar");  
                     return false;
-                }else{
-                    return true;
                 }
+                return true;
+                
             },
 
             steepCallback(){},
@@ -234,10 +247,11 @@
                     reject(false);
                     return false;
                 }else{
-                    return new Promise((resolve, reject) => {                    
+                    return new Promise((resolve, reject) => {
                         //update company and create the respective sales table
                         ApiService.post(this.bling_url, {
                             "company_id":this.userLogged.company_id,
+                            "bling_username":this.username,
                             "bling_apikey":this.apikey,
                             "bling_message":this.message,
                             // "blingtoken":'',
@@ -320,6 +334,12 @@
 <style scoped>
     .w-400{
         width: 40rem;
+    }
+    .w-300{
+        width: 30rem;
+    }
+    .w-200{
+        width: 20rem;
     }
     .header{        
         background-color: #fafaff;

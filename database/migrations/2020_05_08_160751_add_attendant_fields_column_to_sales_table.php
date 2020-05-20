@@ -14,11 +14,10 @@ class AddAttendantFieldsColumnToSalesTable extends Migration
     public function up()
     {
         Schema::connection('socialhub_mvp.sales')->table('sales', function (Blueprint $table) {
-            $table->integer('has_attendant')->nullable()->default(0);
-            $table->integer('attendant_id')->nullable();
-            $table->integer('chat_id')->nullable();
-            $table->integer('status_id')->nullable();
-        
+            // $table->integer('has_attendant')->nullable()->default(0);
+            // $table->integer('attendant_id')->nullable();
+            // $table->integer('chat_id')->nullable();
+            // $table->integer('status_id')->nullable();        
         });
     }
     

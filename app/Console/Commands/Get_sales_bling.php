@@ -43,7 +43,7 @@ class Get_sales_bling extends Command
         try {
             $BlingBussines = new BlingBusiness();
             
-            $Sales = $BlingBussines->getBlingSales();
+            $Sales = $BlingBussines->getBlingSales(true);
             
             Log::debug('Bling Sales', [$Sales]);
 

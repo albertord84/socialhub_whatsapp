@@ -148,6 +148,16 @@ class PostofficeBusiness extends Business
         return $data;
     }
 
+    public function trackingImportantEventListSended() : array
+    {
+        $Events = [
+            ['DO',	'1'],	'Objeto encaminhado',
+            ['DO',	'2'],	'Objeto encaminhado',
+            ['RO',	'1'],	'Objeto encaminhado'
+        ];
+        return $Events;
+    }
+
     public function trackingImportantEventList() : array
     {
         $Events = [
@@ -354,6 +364,16 @@ class PostofficeBusiness extends Business
             ['BDR', '29'], 'Objeto não localizado	',
             ['BDR', '35'], 'Coleta ou entrega de objeto não efetuada	Será realizada nova tentativa de coleta ou entrega',
             ['CO',  '13'], 'Objeto não coletado	',
+            
+            //adicionados por Jose R 20/05/2020 - 01:00 [me cago en mi madre cojone :-(  ]
+            ['FC',  '4'], 'Endereço incorreto - Entrega não realizada',
+            ['BDI',  '45'], 'Objeto recebido na unidade de distribuição',
+            ['LDI', '11'],    'Objeto encaminhado para retirada no endereço indicado    Para retirá-lo, é preciso informar o código do objeto.',
+            ['LDI', '13'],    'Objeto encaminhado para retirada no endereço indicado    Para retirá-lo, é preciso informar o código do objeto.',
+            ['LDI', '14'],    'Objeto encaminhado para retirada no endereço indicado    Para retirá-lo, é preciso informar o código do objeto.',
+            ['BDI',  '34'], 'A entrega não pode ser efetuada - Logradouro com numeração irregular',
+            ['BDR',  '34'], 'A entrega não pode ser efetuada - Logradouro com numeração irregular',
+
         ];
 
         return $Events;

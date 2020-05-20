@@ -17,7 +17,7 @@ class BlingBusiness extends Business
         $this->repo = new BlingRepository(app());
     }
 
-    public function getBlingSales(): Collection
+    public function getBlingSales(bool $yesterday = false): Collection
     {
         $Sales = new Collection();
         try {
@@ -27,7 +27,7 @@ class BlingBusiness extends Business
 
             $SalesBussines = new SalesBusiness();
             foreach ($Companies as $key => $Company) {
-                $Sales = $this->getBlingCompanySales($Company);
+                $Sales = $this->getBlingCompanySales($Company, $yesterday);
 
                 // dd($Sales);
 
@@ -42,7 +42,7 @@ class BlingBusiness extends Business
         return $Sales;
     }
 
-    public function getBlingCompanySales(Company $Company): Collection
+    public function getBlingCompanySales(Company $Company, bool $yesterday = false): Collection
     {
         $Sales = new Collection();
         try {
@@ -51,13 +51,13 @@ class BlingBusiness extends Business
             $url = env('URL_BLING_SALES', 'https://bling.com.br/Api/v2/pedidos/json/');
 
             // $yesterday = Carbon::yesterday()->subDays(3)->format('d/m/Y');
-            $yesterday = Carbon::yesterday()->format('d/m/Y');
             $today = Carbon::now()->format('d/m/Y');
+            $yesterday = $yesterday ? Carbon::yesterday()->format('d/m/Y') : $today;
 
             $response = $client->request('GET', $url, [
                 'query' => [
                     'apikey' => $Company->bling_apikey,
-                    'filters' => "dataEmissao[$today TO $today]",
+                    'filters' => "dataEmissao[$yesterday TO $today]",
                 ],
             ]);
 
@@ -81,13 +81,13 @@ class BlingBusiness extends Business
 
             $url = env('URL_BLING_SALES', 'https://bling.com.br/Api/v2/pedidos/json/');
 
-            //$yesterday = Carbon::yesterday()->format('dc/m/Y');
+            $yesterday = Carbon::yesterday()->format('d/m/Y');
             $today = Carbon::now()->format('d/m/Y');
 
             $response = $client->request('GET', $url, [
                 'query' => [
                     'apikey' => $bling_apikey,
-                    'filters' => "dataEmissao[$today TO $today]",
+                    'filters' => "dataEmissao[$yesterday TO $today]",
                 ],
             ]);
 
