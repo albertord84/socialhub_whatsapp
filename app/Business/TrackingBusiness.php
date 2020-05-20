@@ -14,6 +14,7 @@ use App\Repositories\TrackingRepository;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use stdClass;
+use Illuminate\Support\Carbon;
 
 class TrackingBusiness extends Business
 {
@@ -145,7 +146,13 @@ class TrackingBusiness extends Business
 
                 // Check whether last even need action
                 $POB = new \App\Business\PostofficeBusiness();
-                if (count($eventList) && in_array([$newTrackingList[0]->tipo, $newTrackingList[0]->status], $POB->trackingImportantEventList())) {
+                if (count($eventList) && (
+                            // se esta na lista de codigos de erros
+                            in_array([$newTrackingList[0]->tipo, $newTrackingList[0]->status], $POB->trackingImportantEventList())
+                            // ou se está como encaminhado mas com mais de 10 dias 
+                        ||  (  in_array([$newTrackingList[0]->tipo, $newTrackingList[0]->status], $POB->trackingImportantEventListSended()) 
+                            && Carbon::parse($newTrackingList[0]->dataHora)->format('d M Y , H:m:s')->addDays(10) <  Carbon::now())
+                    )) {
                     Log::debug("processTrackingObject TRACKING_PROBLEM", [$Tracking]);
                     $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
                     $Tracking->save();
