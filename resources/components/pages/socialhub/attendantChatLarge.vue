@@ -1255,6 +1255,10 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
+                console.log('--------------------------------------------------');
+                console.log(typeof(this.contacts));
+                console.log(this.contacts);
+                console.log(this.contacts.length);
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': (this.searchContactByString.trim() !== '') ? this.searchContactByString.trim() : '',
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,

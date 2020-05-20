@@ -44,7 +44,7 @@ class ExtendedContactRepository extends ContactRepository
             $chatModel = new ExtendedChat();
             $chatModel->table = (string) $attendant_id;
 
-            $last_contact_idx = $last_contact_idx >= 0 ? $last_contact_idx : 0;  
+            $last_contact_idx = $last_contact_idx >= 0 ? $last_contact_idx : 0;
 
             $Contacts = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
                 ->whereHas('latestAttendantContact', function ($query) use ($attendant_id) {
