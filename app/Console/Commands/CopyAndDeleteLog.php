@@ -42,7 +42,7 @@ class CopyAndDeleteLog extends Command
     {        
         $today = Carbon::now()->format('d-m-Y');
         $pathlog = storage_path('logs/laravel.log');
-        $newpath = public_path('logs/'.$today.'.log');
+        $newpath = public_path('storage/logs/'.$today.'.log');
 
         File::copy($pathlog, $newpath);
         
