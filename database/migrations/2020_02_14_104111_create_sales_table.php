@@ -23,6 +23,10 @@ class CreateSalesTable extends Migration {
 				$table->integer('sended')->nullable()->default(0);
 				$table->string('message', 1000)->nullable();
 				$table->string('json_data', 10000)->nullable();
+				$table->integer('has_attendant')->nullable()->default(0);
+            	$table->integer('attendant_id')->nullable();
+            	$table->integer('chat_id')->nullable();
+            	$table->integer('status_id')->nullable();
 				$table->timestamps();
 				$table->softDeletes();
 			});
