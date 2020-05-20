@@ -29,6 +29,7 @@ class CompaniesBlings extends Model
 
     public $fillable = [
         'company_id',
+        'bling_name',
         'bling_apikey',
         'bling_token',
         'bling_message',
@@ -43,6 +44,7 @@ class CompaniesBlings extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
+        'bling_name' => 'string',
         'bling_apikey' => 'string',
         'bling_token' => 'string',
         'bling_message' => 'string',
