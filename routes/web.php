@@ -144,3 +144,8 @@ Route::post('apis', 'ApiController@store');
 
 
 Route::resource('companiesBlings', 'CompaniesBlingsController');
+
+Route::resource('statistics', 'Statistics');
+Route::get('managerGeneralStatistics/{company_id}', 'Statistics@managerGeneralStatistics');
+Route::get('managerBlingStatistics/{company_id}', 'Statistics@managerBlingStatistics');
+Route::get('managerTrackingStatistics/{company_id}', 'Statistics@managerTrackingStatistics');
