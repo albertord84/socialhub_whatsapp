@@ -59,9 +59,11 @@ class CompaniesBlingsController extends AppBaseController
 
         $companiesBlings = $this->companiesBlingsRepository->create($input);
 
-        Flash::success('Companies Blings saved successfully.');
+        return $companiesBlings->toJson();
 
-        return redirect(route('companiesBlings.index'));
+        // Flash::success('Companies Blings saved successfully.');
+
+        // return redirect(route('companiesBlings.index'));
     }
 
     /**

@@ -20,7 +20,7 @@ class CreateCompaniesBlingsTable extends Migration
             $table->string('bling_username', 500)->nullable();
             $table->string('bling_apikey', 500)->nullable();
             $table->string('bling_message', 1000)->nullable();
-            $table->integer('bling_contrated')->nullable()->default(0);
+            $table->integer('bling_contrated')->nullable()->default(1);
 
             $table->softDeletes();
             $table->timestamps();
