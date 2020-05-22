@@ -101,7 +101,7 @@
                                     <div class="col-2 pointer-hover" style="left:6px" @click.prevent="getContactChat(contact,index)">
                                         <img v-if="contact.json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
                                         <img v-else-if="contact.json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contact.id" class="contact-picture"  @error="markAsBrokenUrl(contact,index)">
-                                        <div v-else class="contact-non-picture" 
+                                        <div v-else class="contact-non-picture"
                                             :class="[
                                                 { bg0: contact.whatsapp_id.slice(-1)=='0' },
                                                 { bg1: contact.whatsapp_id.slice(-1)=='1' },
@@ -376,12 +376,12 @@
                                                             <br>
                                                         </span>
 
-                                                        <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:black"></span>
-                                                        <span v-else> </span> -->
+                                                        <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:black"></span>
+                                                        <span v-else> </span>
                                                         
-                                                        <span v-if="message.message && message.message !=''" class="text-message" style="color:black">
+                                                        <!-- <span v-if="message.message && message.message !=''" class="text-message" style="color:black">
                                                             {{ message.message ? message.message.richText : "" }}
-                                                        </span>
+                                                        </span> -->
                                                         <br>
                                                         
                                                     </p>                                                 
@@ -466,11 +466,11 @@
                                                     </a>
                                                     <br>                                      
                                                 </span>
-                                                <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color: white"></span>
-                                                <span v-else> </span> -->
-                                                <span v-if="message.message && message.message !=''" class="text-message" style="color:#000">
+                                                <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:#000"></span>
+                                                <span v-else> </span>
+                                                <!-- <span v-if="message.message && message.message !=''" class="text-message" style="color:#000">
                                                     {{ message.message ? message.message.richText : "" }}
-                                                </span>
+                                                </span> -->
                                                 <br>
                                                 <span class="pt-2" style="float:right; font-size:1.3rem">
                                                     <span v-if="message.status_id==4" class="mdi mdi-check " title="Encaminhado"></span>
@@ -1530,6 +1530,7 @@
                             } catch (error) {
                             }
                         });
+                        console.log(messages_copy);
                         this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
@@ -1563,7 +1564,7 @@
             transformToRichText: function(message, source) {
                 return {
                     'firstLink': '',
-                    'richText': message,
+                    'richText': message.replace(/\r\n/g, '<br>'),
                     'isLink': false
                 };
             },

@@ -11,10 +11,10 @@
                     <div class="form-group mt-3">
                         <div class="col-lg-12 input-group">
                             
-                            <input type="search" id="search-input" style="width:220px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput">
+                            <input type="search" id="search-input" style="width:220px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" @keyup.enter="findSearchInput">
                             
                             <div class="input-group-append ml-3">
-                                <select id="example-select" name="example-select" v-model="tackingStatus" class="form-control" size="1" style="width:180px">
+                                <select id="example-select" name="example-select" v-model="tackingStatus" class="form-control" size="1" style="width:180px" @keyup.enter="findSearchInput">
                                     <option value="0">
                                         Status dos envios
                                     </option>
@@ -26,7 +26,7 @@
                                 <input type="date" v-model="dateInit" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
                             </div>
                             <div class="input-group-append ml-3" title="Data fim">
-                                <input type="date" v-model="dateEnd" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                                <input type="date" v-model="dateEnd" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true" @keyup.enter="findSearchInput">
                             </div>
 
                             <div class="input-group-append ml-3" title="Filtrar pedidos">
@@ -53,7 +53,7 @@
                         </a> -->
                     </div>
                 </label>
-            </div>  
+            </div>             
             <div style="display:flex; align-items: center; justify-content: center;">
                 <label>
                     <div style="">

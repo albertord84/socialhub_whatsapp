@@ -213,6 +213,41 @@ class ExtendedChatRepository extends ChatRepository
         return $chatModel->save($attributes);
     }
 
+    public function transformToRichText($message, $source) {
+        /* 
+            Obs1: $source:  0 se mensagem é de saída (enviada por um atendente), e 
+                            1 se a mensagem é de entrada (enviada por um contato para a SH)
+
+            Obs2:   essa função deveria ser usada para armazenar cada mensagem no banco de dados, 
+                    assim poderiamos ter links clicáveis no frontend, e o site-preview
+        */
+        $arr = explode(" ",$message);
+        $str = '';
+        $firstLink = '';
+        $styleColor = (!$source) ? 'color: white !important; text-decoration: none !important' : 'color: black !important; text-decoration: none !important';
+        foreach ($arr as $i => $item) {
+            $link = '';
+            if(filter_var($item, FILTER_VALIDATE_URL)){
+                if(strpos($item, 'http://')>=0  || strpos($item, 'https://')>=0) {
+                    $link = '<u><a style=\''+$styleColor+'\' target=\'_blank\' href=\'' +$item+ '\'>' +$item+ '</u></b>';
+                }else { 
+                    $link = '<u><a style=\''+$styleColor+'\' target=\'_blank\' href=\'http://' +$item+ '\'>' +$item+ '</u></b>';
+                }
+                $str += ' ' + $link+ ' ';
+                if($firstLink == '')
+                    $firstLink = $link;
+            } else {
+                $str += $item + ' ';
+            }
+        }
+        return array(
+            'firstLink' => $firstLink,
+            'richText' => $str,
+            'planeText' => $message,
+            'isLink' => ($firstLink != '')? true : false
+        );
+    }
+
     /**
      * Configure the Model
      **/

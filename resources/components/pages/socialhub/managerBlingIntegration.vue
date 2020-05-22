@@ -247,6 +247,18 @@
                     reject(false);
                     return false;
                 }else{
+                    //1. Guardar na tabela de companies 
+                    ApiService.put(this.companies_url + '/' + this.userLogged.company_id, {
+                        "bling_apikey": this.apikey,
+                        "bling_message": this.message,
+                        "bling_token": this.username,
+                        "bling_contrated": 1,
+                    })
+                    .then(response => {                            
+                    })
+                    .catch(error => {
+                    });
+
                     return new Promise((resolve, reject) => {
                         //update company and create the respective sales table
                         ApiService.post(this.bling_url, {
@@ -254,10 +266,10 @@
                             "bling_username":this.username,
                             "bling_apikey":this.apikey,
                             "bling_message":this.message,
-                            // "blingtoken":'',
+                            "bling_contrated": 1,
                         })
                         .then(response => {
-                                resolve(true);
+                            resolve(true);
                         })
                         .catch(error => {
                             this.processMessageError(error, this.bling_url, "add");

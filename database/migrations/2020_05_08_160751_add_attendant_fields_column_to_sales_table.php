@@ -17,7 +17,11 @@ class AddAttendantFieldsColumnToSalesTable extends Migration
             // $table->integer('has_attendant')->nullable()->default(0);
             // $table->integer('attendant_id')->nullable();
             // $table->integer('chat_id')->nullable();
-            // $table->integer('status_id')->nullable();        
+            // $table->integer('status_id')->nullable();
+            
+            $table->string('bling_username')->nullable();
+            
+
         });
     }
     

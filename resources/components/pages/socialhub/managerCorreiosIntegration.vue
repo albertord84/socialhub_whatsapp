@@ -72,7 +72,11 @@
                             pela informação contida no pedido de venda. 
                         </p>
                     </div>
-                    <div class="row pl-5 pr-5 pb-3">
+                    <div class="pt-3 pl-5 pr-5 pb-3">
+                        <input type="checkbox" id="vehicle1" checked v-model="model.tracking_send_messages">
+                        <label for="vehicle1"> Desejo enviar mensagens automáticas</label><br>
+                    </div>
+                    <div v-show="model.tracking_send_messages" class="row pl-5 pr-5 pb-3">
                         <div class="col-8">
                             <b-card  header="Personalize a mensagem" header-tag="h4" class="bg-default-card no-shadows">
                                 <template v-slot:header>
@@ -167,6 +171,7 @@
                     tracking_pass:'',
                     tracking_message:"",
                     tracking_contrated: 1,
+                    tracking_send_messages: true,
                     action: 'tracking'
                 },
                 defaultMessage:"",                
@@ -192,7 +197,13 @@
             steepLayoutMessage(){
                 let textarea = this.$refs.text_message;
                 this.model.tracking_message = textarea.value;
-                return new Promise((resolve, reject) => {                    
+                return new Promise((resolve, reject) => {   
+                    if(this.model.tracking_send_messages){
+                        this.model.tracking_send_messages = 1;
+                    } else {
+                        this.model.tracking_send_messages = 0;
+                        this.model.tracking_message = '';
+                    }
                     ApiService.put(this.pmail_accounts_url+'/'+this.userLogged.company_id, this.model)
                     .then(response => {
                         resolve(true);
