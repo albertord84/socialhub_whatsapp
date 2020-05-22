@@ -584,11 +584,13 @@
                 .then(response => {  
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
-                        console.log()
-                        this.trackingStatusOptions.push(  {
-                            'name': item.name,
-                            'code': item.id
-                        });
+                        console.log(item);
+                        if(item.model == 'App\\Models\\Tracking') {
+                            this.trackingStatusOptions.push(  {
+                                'name': item.name,
+                                'code': item.id
+                            });
+                        }
                     });
                     this.trackingStatusOptions = Object.values(this.trackingStatusOptions); 
                 })
