@@ -89,9 +89,11 @@ class SendWhatsAppMsgApi implements ShouldQueue
         $responseJson = json_decode($response);
         if (isset($responseJson->MsgID)) {
             Log::debug('\n\r SendedTextMessage to Contact contact_Jid from Job SendWhatsAppMsgBling handled: ', [$this->Contact->whatsapp_id, $this->ApiMessage]);
-            $this->ApiMessage->status_id = ApiController::SENDED;
+            $this->ApiMessage->status_id = Api::find(9);
+            // $this->ApiMessage->status_id = ApiController::SENDED;
         } else {
             $this->ApiMessage->status_id = ApiController::PROBLEM;
+            // $this->ApiMessage->status_id = ApiController::PROBLEM;
             // throw new Exception("Erro enviando mensagem, verifique conectividade!", 1);
         }
         

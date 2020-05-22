@@ -114,11 +114,19 @@ class Tracking extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
     public function status()
     {
-        return $this->belongsTo(\App\Models\Status::class, 'status_id');
+        return $this->hasOne(\App\Models\Status::class, 'status_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     **/
+    public function statuses()
+    {
+        return $this->morphMany(\App\Models\Status::class, 'statusable');
     }
 
     /**
