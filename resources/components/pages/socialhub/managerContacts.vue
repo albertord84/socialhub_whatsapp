@@ -9,7 +9,7 @@
                 <label>
                     <div style="" class="form-group has-seasrch">
                         <div class="col-lg-12 input-group">
-                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar contato">
+                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar contato" @keyup.enter="getContacts(0)">
                             <div class="input-group-append" title="Buscar">
                                 <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="getContacts(0)">
                                     <i v-if="!isFilteringBySearchInput" class="fa fa fa-search "></i>

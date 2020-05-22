@@ -12,17 +12,17 @@
                     <div class="form-group mt-3">
                         <div class="col-lg-12 input-group">
                             
-                            <input type="search" id="search-input" style="width:220px" class="form-control" placeholder="Digite sua busca ..." v-model="stringFilter" title="Buscar venda">
+                            <input type="search" id="search-input" style="width:220px" class="form-control" placeholder="Digite sua busca ..." v-model="stringFilter" title="Buscar venda" @keyup.enter="getSales(0)">
                             
                             <div class="input-group-append ml-3" title="Data início">
-                                <input type="date" v-model="dateInit" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                                <input type="date" v-model="dateInit" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true" @keyup.enter="getSales(0)">
                             </div>
                             <div class="input-group-append ml-3" title="Data fim">
-                                <input type="date" v-model="dateEnd" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true">
+                                <input type="date" v-model="dateEnd" class="form-control" value="yyyy-mm-dd" style="width:160px" aria-selected="true" @keyup.enter="getSales(0)">
                             </div>
 
                             <div class="input-group-append ml-3" title="Filtrar pedidos">
-                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 px-5" @click.prevent="getSales(0)">
+                                <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 px-5" @click.prevent="getSales(0)" >
                                     <span v-if="!isFilteringBySearchInput" class="fa fa fa-search"></span>
                                     <span v-if="isFilteringBySearchInput" class="fa fa-spinner fa-spin "></span>
                                 </button>
