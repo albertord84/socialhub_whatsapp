@@ -1509,9 +1509,11 @@
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = '';
                         let messages_copy=new Array();
+
                         response.data.forEach((item, i)=>{
                             try {
                                 item.time = this.getMessageTime(item.created_at);
+
                                 if(item.time.date != this.messageTimeDelimeter){
                                     messages_copy.push({
                                         'type_id': 'date_separator',
@@ -1519,11 +1521,13 @@
                                     });
                                     this.messageTimeDelimeter = item.time.date;
                                 }
+
                                 if(item.data != "" && item.data != null && item.data.length>0) {
                                     item.data = JSON.parse(item.data);
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
+
                                 item.lifePreview = false;
                                 item.message = this.transformToRichText(item.message,item.source);                                
                                 messages_copy.push(item);
@@ -1562,9 +1566,12 @@
             },
 
             transformToRichText: function(message, source) {
+                if(message && message != '') {
+                    message = message.replace(/\r\n/g, '<br>');
+                }
                 return {
                     'firstLink': '',
-                    'richText': message.replace(/\r\n/g, '<br>'),
+                    'richText': message,
                     'isLink': false
                 };
             },
