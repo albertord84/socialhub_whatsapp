@@ -1529,12 +1529,16 @@
                                 }
 
                                 item.lifePreview = false;
-                                item.message = this.transformToRichText(item.message,item.source);                                
+                                if(item.id == 16932)
+                                    console.log(item);
+                                item.message = this.transformToRichText(item.message, item.source);
+                                if(item.id == 16932)
+                                    console.log(item);
                                 messages_copy.push(item);
                             } catch (error) {
                             }
                         });
-                        console.log(messages_copy);
+                        // console.log(messages_copy);
                         this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
