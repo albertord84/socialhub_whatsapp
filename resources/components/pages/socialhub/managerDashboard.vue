@@ -6,11 +6,14 @@
             <div class="col-lg-3  col-sm-6 mb-3">
                 <div class="text-center p-3 widget_social_icons box_shadow">
                     <div class="widget_social_inner1">
-                        <i class="fa fa-whatsapp fb_text"  style="color:#25d366"></i>
+                        <i v-if="isLoggued" class="fa fa-whatsapp fb_text"  style="color:#25d366"></i>
+                        <i v-if="!isLoggued" class="fa fa-whatsapp fb_text text-danger" ></i>
                     </div>
                     <div class="text-ash no-shadows">
-                        <h3 class="mt-2 ">{{staticsModel.whatsappNumber}}</h3>
-                        <p class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
+                        <h3 v-if="isLoggued" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <h3 v-if="!isLoggued" class="mt-2 text-danger">Whatsapp Offline</h3>
+                        <p v-if="isLoggued" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
+                        <p v-if="!isLoggued" class="mb-1 mt-2 text-danger" title="Número cadastrado">Escanee o QRCode</p>
                     </div>
                 </div>
             </div>
@@ -64,6 +67,16 @@
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <b-card class="no-shadows">
                     <h5 class="ml-3 head_color">Histórico de contatos por atendente</h5>
+                    <div style="display: flex; align-items: baseline; ">
+                        <form action="">
+                            <input type="radio" name="contactDayli" id="contactDayli">
+                            <label for="contactDayli">Diário</label>
+                            <input type="radio" name="contactWeek" id="contactWeek" class="ml-2">
+                            <label for="contactWeek">Semanal</label>
+                            <input type="radio" name="contactMonth" id="contactMonth" class="ml-2">
+                            <label for="contactMonth">Mensal</label>
+                        </form>
+                    </div>
                     <div style="height: 265px;" class="mt-2">
                         <IEcharts :option="ajaxbar_chartContacts" :loading="ajaxloading" @ready="onReady" ref="ajaxbar_chart"></IEcharts>
                     </div>
@@ -127,20 +140,39 @@
             return {
                 userLogged:{},
                 instances: [],
+                isLoggued: false,
                 staticsModel: {
                     whatsappNumber: '00000000000',
                     totalContacts: 0,
                     totalAttendants: 0,
                     totalSendMessages: 0,
                     totalReceivedMessages: 0,
-                    whatsappStatus: 0,
+                    attendants: 0,
                     frequencySendedMessages: [],
                     frequencyReceivedMessages: [],
                 },
+                colorsList: ['#ef5350', '#6eb09c', '#6ebabe', '#78bbbf', '#83b3a4'],
 
                 loading: false,
                 ajaxloading: false,
                 
+                pieContacts: {
+                    tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
+                    legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
+                    series: [{
+                            name: 'Source', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
+                            data: [
+                                // { value: 335, name: 'Attendant 1', itemStyle : {normal : {color :'#ef5350'}}},
+                                // { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#6eb09c'}}}, 
+                                // { value: 234, name: 'Attendant 3', itemStyle : {normal : {color :'#6ebabe'}}}, 
+                                // { value: 135, name: 'D', itemStyle : {normal : {color :'#78bbbf'}}}, 
+                                // { value: 1548,name: 'E', itemStyle : {normal : {color :'#83b3a4'}}}
+                            ],
+                            itemStyle: { emphasis: {shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)'}}
+                        }
+                    ]
+                },
+
                 ajaxbar_chartContacts: {
                     tooltip: {trigger: 'axis'},
                     grid: {bottom: '10%', right: '1%',},
@@ -172,32 +204,15 @@
                     ]
                 },
 
-                pieContacts: {
-                    tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
-                    legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
-                    series: [{
-                            name: 'Source', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
-                            data: [
-                                { value: 335, name: 'Attendant 1', itemStyle : {normal : {color :'#ef5350'}}},
-                                { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#6eb09c'}}}, 
-                                { value: 234, name: 'Attendant 3', itemStyle : {normal : {color :'#6ebabe'}}}, 
-                                // { value: 135, name: 'D', itemStyle : {normal : {color :'#78bbbf'}}}, 
-                                // { value: 1548,name: 'E', itemStyle : {normal : {color :'#83b3a4'}}}
-                            ],
-                            itemStyle: { emphasis: {shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)'}}
-                        }
-                    ]
-                },
-
                 pieMessages: {
                     tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
                     legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
                     series: [{
                             name: 'Source', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
                             data: [
-                                { value: 200, name: 'Attendant 1', itemStyle : {normal : {color :'#bdbdbd'}}},
-                                { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#ff8a65'}}}, 
-                                { value: 2304, name: 'Attendant 3', itemStyle : {normal : {color :'#2962ff'}}}, 
+                                // { value: 200, name: 'Attendant 1', itemStyle : {normal : {color :'#bdbdbd'}}},
+                                // { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#ff8a65'}}}, 
+                                // { value: 2304, name: 'Attendant 3', itemStyle : {normal : {color :'#2962ff'}}}, 
                                 // { value: 135, name: 'D', itemStyle : {normal : {color :'#78bbbf'}}}, 
                                 // { value: 1548,name: 'E', itemStyle : {normal : {color :'#83b3a4'}}}
                             ],
@@ -214,6 +229,16 @@
             managerGeneralStatistics: function () {
                 ApiService.get('managerGeneralStatistics/' + this.userLogged.company_id)
                 .then(response => {
+                    response.data.attendants.some((item, i) => {
+                        this.pieContacts.series[0].data.push({ 
+                            value: item.contactsAmmount, 
+                            name: item.email.split('@')[0], 
+                            itemStyle : {normal : {color :this.colorsList[i]}}});
+                        this.pieMessages.series[0].data.push({ 
+                            value: item.sendedMessageAmmount, 
+                            name: item.email.split('@')[0], 
+                            itemStyle : {normal : {color :this.colorsList[i]}}});
+                    });
                     this.staticsModel = response.data;
                 })
                 .catch(error => {
@@ -222,6 +247,28 @@
                 .finally(() => {                        
                     
                 });
+            },
+
+            getNewQRCode() {                
+                ApiService.get('rpis')
+                    .then(response => {
+                        this.rpi = response.data;
+                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.status && this.rpi.QRCode.MsgID=='Already connected'){
+                            this.isLoggued = true;
+                        }else
+                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
+                            this.isLoggued = true;
+                        }else
+                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.qrcodebase64){
+                            this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
+                        }else{
+                            this.isLoggued = false;
+                        }
+                    })
+                    .catch(error => {
+                    })
+                    .finally(() => {                        
+                    });
             },
 
             onReady(instance) {
@@ -235,6 +282,7 @@
         beforeMount() {
             this.userLogged = JSON.parse(window.localStorage.getItem('user'));
 
+            this.getNewQRCode();
             this.managerGeneralStatistics();
         }        
     }
