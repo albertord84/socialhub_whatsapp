@@ -584,7 +584,6 @@
                 .then(response => {  
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
-                        console.log(item);
                         if(item.model == 'App\\Models\\Tracking') {
                             this.trackingStatusOptions.push(  {
                                 'name': item.name,

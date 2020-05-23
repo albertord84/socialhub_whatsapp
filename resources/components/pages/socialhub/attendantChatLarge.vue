@@ -11,11 +11,14 @@
                 <div class="sect_header sect_header_color">
                     <div v-show="isSearchContact==false" class="container-fluid">
                         <ul class='row flex-baseline'>
-                            <li class='col-10 col-md-10 col-lg-8 col-xl-9'>
+
+                            <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
                                     <img :src="userLogged.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
+
+
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 mt-3'>
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
                                     <i class="mdi mdi-message-processing-outline icons-action" title="Adherir novo contato"></i>
@@ -23,6 +26,7 @@
                                     <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
+
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
@@ -71,6 +75,12 @@
                                     </b-dropdown-item> -->
                                 </b-dropdown>
                             </li>
+
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                    <!-- <i class="" id="selector-headwayapp"> </i> -->
+                                    <div id="selector-headwayapp">  </div>
+                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -3152,6 +3162,8 @@
         .badge-success{
             background-color: #5AD856 !important;
         }
+
+        
     }
     
 </style>
