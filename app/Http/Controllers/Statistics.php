@@ -9,6 +9,8 @@ use App\Models\AttendantsContact;
 use App\Http\Controllers\ExtendedContactsStatusController;
 use App\Models\ExtendedChat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use stdClass;
 
 class Statistics extends Controller
 {
@@ -21,45 +23,128 @@ class Statistics extends Controller
         // 6) mensagem nao lida por atentende
     }
     
-    public function managerGeneralStatistics($company_id) {
-        // Total de contatos
+    public function managerGeneralStatistics(Request $request) {
+        $company_id = $request['company_id'];
+
+        // whatsapp Number
         $whatsappNumber = Contact::find($company_id)->whatsapp_id;
 
         // Total de contatos
         $totalContacts = Contact::where('company_id',$company_id)->get()->count();
-        
-        // Total de atendentes
-        $Attendants = User::where('company_id',$company_id)->where('role_id', ExtendedContactsStatusController::ATTENDANT)->get();
-        $totalAttendants = $Attendants->count();
 
-        // Total mensagens enviados e recebidos, e Quantidade de mensagens enviadas por cada atendente
+        $Attendants = User::where('company_id',$company_id)->where('role_id', ExtendedContactsStatusController::ATTENDANT)->get();
+
+        // Total mensagens enviados e recebidos da empresa segundo os atendentes (incluir bling e correios depois)
         $totalSendMessages = 0;
         $totalReceivedMessages = 0;
         $ExtendedChat = new ExtendedChat();
         foreach ($Attendants as $i => $Attendant) {
             $ExtendedChat->table = $Attendant->id;
             $tmp = $ExtendedChat->where('source','0')->get()->count();
+            //total de mensagens enviados
             $totalSendMessages += $tmp;
+            //total de mensagens enviados deste atendente
             $Attendants[$i]->sendedMessageAmmount = $tmp;
+            
+            //total de mensagens recebidos
             $totalReceivedMessages += $ExtendedChat->where('source','1')->get()->count();            
         }
-
-        // Quantidade de contatos atribuidos para cada atendente
+                
+        // Contatos  por atendente        
         $AttendantsContact = new AttendantsContact();
         foreach ($Attendants as $i => $Attendant) {
-            $Attendants[$i]->contactsAmmount = $AttendantsContact->where('attendant_id', $Attendant->id)->get()->count();            
+            $Attendants[$i]->contactsAmmount = $AttendantsContact->where('attendant_id', $Attendant->id)->get()->count();
         }
         
-        $statistics = array(
+        return array(
             'whatsappNumber' => $whatsappNumber,
             'totalContacts' => $totalContacts,
-            'totalAttendants' => $totalAttendants,
             'totalSendMessages' => $totalSendMessages,
             'totalReceivedMessages' => $totalReceivedMessages,
             'attendants' => $Attendants,
         );
+    }
 
-        return $statistics;
+    public function frequencyOfContactByAttendant(Request $request) {
+        $company_id = $request['company_id'];
+        $contactFrequency = $request['contactFrequency'] ?? 'Y-m';
+        // frequencia de contatos por atendente
+        $Attendants = User::where('company_id',$company_id)->where('role_id', ExtendedContactsStatusController::ATTENDANT)->get();
+        $AttendantsContact = new AttendantsContact();
+
+        foreach ($Attendants as $i => $Attendant) {
+            //frequencia
+            $Attendants[$i]->contactsAmmountFrequency = $AttendantsContact
+                ->select('created_at')
+                ->where('attendant_id', $Attendant->id)
+                ->orderBy('created_at')
+                ->get()                
+                ->groupBy(function ($val) use ($contactFrequency) {
+                    return Carbon::parse($val->created_at)->format($contactFrequency);
+                });
+        }
+
+        $names = [];
+        foreach ($Attendants as $i => $Attendant) {
+            array_push($names, explode('@', $Attendant->email)[0]);
+        }
+
+        $arr = [];
+        foreach ($Attendants as $i => $Attendant) {
+            foreach($Attendant->contactsAmmountFrequency as $key => $val){
+                foreach($names as $name){
+                    $arr[$name][$key] = 0;
+                }
+                
+            }
+        }
+        foreach ($Attendants as $i => $Attendant) {
+            foreach($Attendant->contactsAmmountFrequency as $key => $val){
+                    $arr[explode('@', $Attendant->email)[0]][$key] = count($val);
+            }
+        } 
+        return $arr;
+
+    }
+
+    public function frequencyOfMessageByAttendant(Request $request) {
+        $company_id = $request['company_id'];
+        $messageFrequency = $request['messageFrequency'] ?? 'Y-m';
+        // frequencia de mensagens enviadas por atendente
+        $Attendants = User::where('company_id',$company_id)->where('role_id', ExtendedContactsStatusController::ATTENDANT)->get();
+        $ExtendedChat = new ExtendedChat();
+        foreach ($Attendants as $i => $Attendant) {
+            //frequencia
+            $ExtendedChat->table = $Attendant->id;
+            $Attendants[$i]->contactsMessageFrequency = $ExtendedChat
+                ->select('created_at')
+                ->where('source','0')
+                ->orderBy('created_at')
+                ->get()                
+                ->groupBy(function ($val) use ($messageFrequency) {
+                    return Carbon::parse($val->created_at)->format($messageFrequency);
+                });
+        }
+        $names = [];
+        foreach ($Attendants as $i => $Attendant) {
+            array_push($names, explode('@', $Attendant->email)[0]);
+        }
+
+        $arr = [];
+        foreach ($Attendants as $i => $Attendant) {
+            foreach($Attendant->contactsMessageFrequency as $key => $val){
+                foreach($names as $name){
+                    $arr[$name][$key] = 0;
+                }
+                
+            }
+        }
+        foreach ($Attendants as $i => $Attendant) {
+            foreach($Attendant->contactsMessageFrequency as $key => $val){
+                    $arr[explode('@', $Attendant->email)[0]][$key] = count($val);
+            }
+        } 
+        return $arr;
     }
 
     public function managerBlingStatistics($company_id) {

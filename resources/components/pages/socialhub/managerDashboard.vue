@@ -69,12 +69,12 @@
                     <h5 class="ml-3 head_color">Histórico de contatos por atendente</h5>
                     <div style="display: flex; align-items: baseline; ">
                         <form action="">
-                            <input type="radio" name="contactDayli" id="contactDayli">
-                            <label for="contactDayli">Diário</label>
-                            <input type="radio" name="contactWeek" id="contactWeek" class="ml-2">
-                            <label for="contactWeek">Semanal</label>
-                            <input type="radio" name="contactMonth" id="contactMonth" class="ml-2">
-                            <label for="contactMonth">Mensal</label>
+                            <input type="radio" name="contactHistory" value="Y-m-d" v-model="contactFrequency" id="contactHistoryDaily">
+                            <label for="contactHistoryDaily">Diário</label>
+                            <input type="radio" name="contactHistory" value="Y-m" v-model="contactFrequency" id="contactHistoryWeek" class="ml-2">
+                            <label for="contactHistoryWeek">Mensal</label>
+                            <input type="radio" name="contactHistory" value="Y" v-model="contactFrequency" id="contactHistoryMonth" class="ml-2">
+                            <label for="contactHistoryMonth">Anual</label>
                         </form>
                     </div>
                     <div style="height: 265px;" class="mt-2">
@@ -84,12 +84,11 @@
             </div>
         </div>
 
-
         <!--========================Mensagens===========================-->
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <b-card class="no-shadows">
-                    <h5 class="ml-3 head_color">Mensagens enviadas por atendente</h5>
+                    <h5 class="ml-3 head_color">Mensagens enviadas por atendente</h5>                    
                     <div style="height: 265px;" class="mt-2">
                         <IEcharts :option="pieMessages" :loading="loading" @ready="onReady"></IEcharts>
                     </div>
@@ -97,7 +96,17 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <b-card class="no-shadows">
-                    <h5 class="ml-3 head_color">Histórico de mensagens por atendente</h5>
+                    <h5 class="ml-3 head_color">Histórico de mensagens enviadas por atendente</h5>
+                    <div style="display: flex; align-items: baseline; ">
+                        <form action="">
+                            <input type="radio" name="messageHistory" value="Y-m-d" v-model="messageFrequency" id="messageHistoryDaily">
+                            <label for="messageHistoryDaily">Diário</label>
+                            <input type="radio" name="messageHistory" value="Y-m" v-model="messageFrequency" id="messageHistoryWeek" class="ml-2">
+                            <label for="messageHistoryWeek">Mensal</label>
+                            <input type="radio" name="messageHistory" value="Y" v-model="messageFrequency" id="messageHistoryMonth" class="ml-2">
+                            <label for="messageHistoryMonth">Anual</label>
+                        </form>
+                    </div>
                     <div style="height: 265px;" class="mt-2">
                         <IEcharts :option="ajaxbar_chartMessage" :loading="ajaxloading" @ready="onReady" ref="ajaxbar_chart"></IEcharts>
                     </div>
@@ -148,13 +157,16 @@
                     totalSendMessages: 0,
                     totalReceivedMessages: 0,
                     attendants: 0,
-                    frequencySendedMessages: [],
-                    frequencyReceivedMessages: [],
                 },
+                frequencySendedMessages: [],
+                frequencyReceivedMessages: [],
                 colorsList: ['#ef5350', '#6eb09c', '#6ebabe', '#78bbbf', '#83b3a4'],
 
                 loading: false,
                 ajaxloading: false,
+
+                contactFrequency: 'Y-m',
+                messageFrequency: 'Y-m',
                 
                 pieContacts: {
                     tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
@@ -180,12 +192,15 @@
                     calculable: true,
                     legend: {data: ['Attendant 1', 'Attendant 2', 'Attendant 3']},
                     color: ['#ef5350', '#6eb09c', '#6ebabe'],
-                    xAxis: [{type: 'category', name: 'YEAR', data: ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016', '2017']}],
+                    xAxis: [{
+                        type: 'category', 
+                        name: 'YEAR', 
+                        data: ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016', '2017']}],
                     yAxis: [{type: 'value', name: '%', axisLabel: { formatter: '{value} '}}, {type: 'value', axisLabel: {formatter: '{value} '}}],
                     series: [
-                        {name: 'Attendant 1', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
-                        {name: 'Attendant 2', type: 'bar', data: [2.0, 4.9, 9.0, 21.2, 20.6, 66.7, 115.6, 122.2, 32.6, 20.0, 6.4, 3.3]},
-                        {name: 'Attendant 3', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'Attendant 1', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'Attendant 2', type: 'bar', data: [2.0, 4.9, 9.0, 21.2, 20.6, 66.7, 115.6, 122.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'Attendant 3', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
                     ]
                 },
 
@@ -227,7 +242,9 @@
 
         methods: {
             managerGeneralStatistics: function () {
-                ApiService.get('managerGeneralStatistics/' + this.userLogged.company_id)
+                ApiService.post('managerGeneralStatistics',{
+                    'company_id': this.userLogged.company_id,
+                })
                 .then(response => {
                     response.data.attendants.some((item, i) => {
                         this.pieContacts.series[0].data.push({ 
@@ -240,6 +257,98 @@
                             itemStyle : {normal : {color :this.colorsList[i]}}});
                     });
                     this.staticsModel = response.data;
+                })
+                .catch(error => {
+                    
+                })
+                .finally(() => {                        
+                    
+                });
+            },
+            
+            frequencyOfContactByAttendant: function () {
+                ApiService.post('frequencyOfContactByAttendant',{
+                    'company_id': this.userLogged.company_id,
+                    'contactFrequency': this.contactFrequency,
+                })
+                .then(response => {
+                    //nome do eixo X
+                    if(this.contactFrequency == 'Y-m-a') this.ajaxbar_chartContacts.xAxis[0].name = 'Dias';
+                    if(this.contactFrequency == 'Y-m') this.ajaxbar_chartContacts.xAxis[0].name = 'Meses';
+                    if(this.contactFrequency == 'Y') this.ajaxbar_chartContacts.xAxis[0].name = 'Anos';
+
+                    //nomes dos atendentes
+                    this.ajaxbar_chartContacts.legend.data = [];
+                    this.ajaxbar_chartContacts.legend.data = Object.keys(response.data);
+
+                     //valores para os nomes do eixo X 
+                    this.ajaxbar_chartContacts.xAxis[0].data =[];
+                    this.ajaxbar_chartContacts.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartContacts.legend.data[0]]);
+                    
+                    //cores
+                    this.ajaxbar_chartContacts.color = [];
+                    this.ajaxbar_chartContacts.color = this.colorsList.slice(0, this.ajaxbar_chartContacts.legend.data.length);
+
+                    this.ajaxbar_chartContacts.series =[];
+                    this.ajaxbar_chartContacts.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartContacts.series.push({
+                            name: item,
+                            type: 'bar',
+                            data: []
+                        });
+                    });
+
+                    this.ajaxbar_chartContacts.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartContacts.xAxis[0].data.some((item2,j)=>{
+                            this.ajaxbar_chartContacts.series[i].data.push(response.data[item][item2]);
+                        });
+                    });                
+                })
+                .catch(error => {
+                    
+                })
+                .finally(() => {                        
+                    
+                });
+            },
+
+            frequencyOfMessageByAttendant: function () {
+                ApiService.post('frequencyOfMessageByAttendant',{
+                    'company_id': this.userLogged.company_id,
+                    'messageFrequency': this.messageFrequency
+                })
+                .then(response => {
+                    //nome do eixo X
+                    if(this.contactFrequency == 'Y-m-a') this.ajaxbar_chartMessage.xAxis[0].name = 'Dias';
+                    if(this.contactFrequency == 'Y-m') this.ajaxbar_chartMessage.xAxis[0].name = 'Meses';
+                    if(this.contactFrequency == 'Y') this.ajaxbar_chartMessage.xAxis[0].name = 'Anos';
+
+                    //nomes dos atendentes
+                    this.ajaxbar_chartMessage.legend.data = [];
+                    this.ajaxbar_chartMessage.legend.data = Object.keys(response.data);
+
+                     //valores para os nomes do eixo X 
+                    this.ajaxbar_chartMessage.xAxis[0].data =[];
+                    this.ajaxbar_chartMessage.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartMessage.legend.data[0]]);
+                    
+                    //cores
+                    this.ajaxbar_chartMessage.color = [];
+                    this.ajaxbar_chartMessage.color = this.colorsList.slice(0, this.ajaxbar_chartMessage.legend.data.length);
+
+                    this.ajaxbar_chartMessage.series =[];
+                    this.ajaxbar_chartMessage.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartMessage.series.push({
+                            name: item,
+                            type: 'bar',
+                            data: []
+                        });
+                    });
+
+                    this.ajaxbar_chartMessage.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartMessage.xAxis[0].data.some((item2,j)=>{
+                            this.ajaxbar_chartMessage.series[i].data.push(response.data[item][item2]);
+                        });
+                    });  
                 })
                 .catch(error => {
                     
@@ -273,7 +382,7 @@
 
             onReady(instance) {
                 this.instances.push(instance)
-            },
+            }
         },
 
         mounted: function () {
@@ -284,7 +393,19 @@
 
             this.getNewQRCode();
             this.managerGeneralStatistics();
-        }        
+            this.frequencyOfContactByAttendant();
+            this.frequencyOfMessageByAttendant();
+        },
+
+        watch: {
+            contactFrequency: function(){
+                this.frequencyOfContactByAttendant();
+            },
+
+            messageFrequency: function(){
+                this.frequencyOfMessageByAttendant();
+            }
+        }
     }
 </script>
 
