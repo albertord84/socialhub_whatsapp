@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use App\Models\User;
 use App\Models\AttendantsContact;
+use App\Models\Company;
 
 use App\Http\Controllers\ExtendedContactsStatusController;
 use App\Models\ExtendedChat;
@@ -27,7 +28,7 @@ class Statistics extends Controller
         $company_id = $request['company_id'];
 
         // whatsapp Number
-        $whatsappNumber = Contact::find($company_id)->whatsapp;
+        $whatsappNumber = Company::find($company_id)->whatsapp;
 
         // Total de contatos
         $totalContacts = Contact::where('company_id',$company_id)->get()->count();

@@ -10,10 +10,14 @@
                         <i v-if="!isLoggued" class="fa fa-whatsapp fb_text text-danger" ></i>
                     </div>
                     <div class="text-ash no-shadows">
-                        <h3 v-if="isLoggued" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
-                        <h3 v-if="!isLoggued" class="mt-2 text-danger">Whatsapp Offline</h3>
-                        <p v-if="isLoggued" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
-                        <p v-if="!isLoggued" class="mb-1 mt-2 text-danger" title="Número cadastrado">Escanee o QRCode</p>
+                        <h3 v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <h3 v-if="!isLoggued && !isLoadingManagerGeneralStatistics" :title="staticsModel.whatsappNumber" class="mt-2 text-danger">Whatsapp Offline</h3>
+                        
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
+                        <p v-if="isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Conferindo Whatsapp ...</p>
+
+                        <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
+                        <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link>
                     </div>
                 </div>
             </div>
@@ -23,7 +27,8 @@
                         <i class="fa fa-users fb_text text-dark"></i>
                     </div>
                     <div class="text-ash no-shadows">
-                        <h4 class="mt-2 text_size">{{staticsModel.totalContacts}}</h4>
+                        <h4 v-if="!isLoadingManagerGeneralStatistics" class="mt-2 text_size">{{staticsModel.totalContacts}}</h4>
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-fw mt-2 text_size"></span>
                         <p class="m-0 mt-2">Total de contatos</p>
                     </div>
                 </div>
@@ -34,7 +39,8 @@
                         <i class="fa fa-paper-plane fb_text text-success" ></i>
                     </div>
                     <div class="text-ash">
-                        <h4 class="mb-0 mt-2 text_size">{{staticsModel.totalSendMessages}}</h4>
+                        <h4 v-if="!isLoadingManagerGeneralStatistics" class="mb-0 mt-2 text_size">{{staticsModel.totalSendMessages}}</h4>
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-fw mt-2 text_size"></span>
                         <p class="m-0 mt-2">Mensagens enviadas</p>
                     </div>
                 </div>
@@ -46,7 +52,8 @@
                         <!-- <i class="fa  fb_text"></i> -->
                     </div>
                     <div class="text-ash">
-                        <h4 class="mb-0 mt-2 text_size">{{staticsModel.totalReceivedMessages}}</h4>
+                        <h4 v-if="!isLoadingManagerGeneralStatistics" class="mb-0 mt-2 text_size">{{staticsModel.totalReceivedMessages}}</h4>
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-fw mt-2 text_size"></span>
                         <p class="m-0 mt-2">Mensagens recebidas</p>
                     </div>
                 </div>
@@ -151,7 +158,7 @@
                 instances: [],
                 isLoggued: false,
                 staticsModel: {
-                    whatsappNumber: '00000000000',
+                    whatsappNumber: '------------- ',
                     totalContacts: 0,
                     totalAttendants: 0,
                     totalSendMessages: 0,
@@ -160,7 +167,7 @@
                 },
                 frequencySendedMessages: [],
                 frequencyReceivedMessages: [],
-                colorsList: ['#ef5350', '#6eb09c', '#03a9f4', '#6ebabe', '#78bbbf', '#83b3a4', '#f8bbd0', '#d81b60', '#8bc34a', '#ff9800', '#a1887f', '#b0bec5'],
+                colorsList: ['#ef5350', '#03a9f4', '#6ebabe', '#ff0000', '#00000f', '#83b3a4', '#a1887f',  '#f8bbd0', '#d81b60', '#8bc34a', '#ff9800', '#b0bec5', '#6eb09c'],
 
                 loading: false,
                 ajaxloading: false,
@@ -172,7 +179,7 @@
                     tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
                     legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
                     series: [{
-                            name: 'Source', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
+                            name: 'Atendente', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
                             data: [
                                 // { value: 335, name: 'Attendant 1', itemStyle : {normal : {color :'#ef5350'}}},
                                 // { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#6eb09c'}}}, 
@@ -214,8 +221,8 @@
                     xAxis: [{type: 'category', name: 'YEAR', data: ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016', '2017']}],
                     yAxis: [{type: 'value', name: '%', axisLabel: { formatter: '{value} '}}, {type: 'value', axisLabel: {formatter: '{value} '}}],
                     series: [
-                        {name: 'ENVIADAS', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
-                        {name: 'RECEVIDAS', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'ENVIADAS', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'RECEVIDAS', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
                     ]
                 },
 
@@ -223,7 +230,7 @@
                     tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
                     legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
                     series: [{
-                            name: 'Source', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
+                            name: 'Atendente', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
                             data: [
                                 // { value: 200, name: 'Attendant 1', itemStyle : {normal : {color :'#bdbdbd'}}},
                                 // { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#ff8a65'}}}, 
@@ -236,12 +243,15 @@
                     ]
                 },
                 
-                tableData: [],
+                isLoadingManagerGeneralStatistics: false,
+                isLoadingfrequencyOfContactByAttendant: false,
+                isLoadingfrequencyOfMessageByAttendant: false
             }
         },
 
         methods: {
-            managerGeneralStatistics: function () {
+            managerGeneralStatistics: function () {                
+                this.isLoadingManagerGeneralStatistics = true;
                 ApiService.post('managerGeneralStatistics',{
                     'company_id': this.userLogged.company_id,
                 })
@@ -259,14 +269,15 @@
                     this.staticsModel = response.data;
                 })
                 .catch(error => {
-                    
+                    console.log(error);
                 })
                 .finally(() => {                        
-                    
+                    this.isLoadingManagerGeneralStatistics = false;                    
                 });
             },
             
             frequencyOfContactByAttendant: function () {
+                this.isLoadingfrequencyOfContactByAttendant = true;
                 ApiService.post('frequencyOfContactByAttendant',{
                     'company_id': this.userLogged.company_id,
                     'contactFrequency': this.contactFrequency,
@@ -302,17 +313,18 @@
                         this.ajaxbar_chartContacts.xAxis[0].data.some((item2,j)=>{
                             this.ajaxbar_chartContacts.series[i].data.push(response.data[item][item2]);
                         });
-                    });                
+                    });
                 })
                 .catch(error => {
-                    
+                    console.log(error);
                 })
                 .finally(() => {                        
-                    
+                    this.isLoadingfrequencyOfContactByAttendant = false;                    
                 });
             },
 
             frequencyOfMessageByAttendant: function () {
+                this.isLoadingfrequencyOfMessageByAttendant = true;
                 ApiService.post('frequencyOfMessageByAttendant',{
                     'company_id': this.userLogged.company_id,
                     'messageFrequency': this.messageFrequency
@@ -351,14 +363,14 @@
                     });  
                 })
                 .catch(error => {
-                    
+                    console.log(error);
                 })
                 .finally(() => {                        
-                    
+                    this.isLoadingfrequencyOfMessageByAttendant = false;
                 });
             },
 
-            getNewQRCode() {                
+            getNewQRCode() {              
                 ApiService.get('rpis')
                     .then(response => {
                         this.rpi = response.data;
