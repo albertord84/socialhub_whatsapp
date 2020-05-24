@@ -105,6 +105,9 @@
                 ApiService.get(This.url)
                     .then(response => {
                         This.rpi = response.data;
+                        if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.status && This.rpi.QRCode.MsgID=='Already connected'){
+                            This.isLoggued = true;
+                        }else
                         if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
                             This.isLoggued = true;
                         }else
