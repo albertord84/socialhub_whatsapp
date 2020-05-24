@@ -248,8 +248,7 @@
                     return false;
                 }else{
                     //1. Guardar na tabela de companies 
-                    ApiService.post(this.companies_url, {
-                        "company_id": this.userLogged.company_id,
+                    ApiService.put(this.companies_url + '/' + this.userLogged.company_id, {
                         "bling_apikey": this.apikey,
                         "bling_message": this.message,
                         "bling_token": this.username,

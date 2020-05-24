@@ -11,11 +11,14 @@
                 <div class="sect_header sect_header_color">
                     <div v-show="isSearchContact==false" class="container-fluid">
                         <ul class='row flex-baseline'>
-                            <li class='col-10 col-md-10 col-lg-8 col-xl-9'>
+
+                            <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
                                     <img :src="userLogged.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
+
+
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 mt-3'>
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
                                     <i class="mdi mdi-message-processing-outline icons-action" title="Adherir novo contato"></i>
@@ -23,6 +26,7 @@
                                     <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
+
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
@@ -71,6 +75,12 @@
                                     </b-dropdown-item> -->
                                 </b-dropdown>
                             </li>
+
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                    <!-- <i class="" id="selector-headwayapp"> </i> -->
+                                    <div id="selector-headwayapp">  </div>
+                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -101,7 +111,7 @@
                                     <div class="col-2 pointer-hover" style="left:6px" @click.prevent="getContactChat(contact,index)">
                                         <img v-if="contact.json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contact.json_data).picurl" :ref="'contactPicurl'+contact.id" @error="markAsBrokenUrl(contact,index)" class="contact-picture">
                                         <img v-else-if="contact.json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" :ref="'contactPicurl'+contact.id" class="contact-picture"  @error="markAsBrokenUrl(contact,index)">
-                                        <div v-else class="contact-non-picture" 
+                                        <div v-else class="contact-non-picture"
                                             :class="[
                                                 { bg0: contact.whatsapp_id.slice(-1)=='0' },
                                                 { bg1: contact.whatsapp_id.slice(-1)=='1' },
@@ -376,12 +386,12 @@
                                                             <br>
                                                         </span>
 
-                                                        <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:black"></span>
-                                                        <span v-else> </span> -->
+                                                        <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:black"></span>
+                                                        <span v-else> </span>
                                                         
-                                                        <span v-if="message.message && message.message !=''" class="text-message" style="color:black">
+                                                        <!-- <span v-if="message.message && message.message !=''" class="text-message" style="color:black">
                                                             {{ message.message ? message.message.richText : "" }}
-                                                        </span>
+                                                        </span> -->
                                                         <br>
                                                         
                                                     </p>                                                 
@@ -466,11 +476,11 @@
                                                     </a>
                                                     <br>                                      
                                                 </span>
-                                                <!-- <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color: white"></span>
-                                                <span v-else> </span> -->
-                                                <span v-if="message.message && message.message !=''" class="text-message" style="color:#000">
+                                                <span v-if="message.message && message.message !=''" v-html="message.message.richText" class="text-message" style="color:#000"></span>
+                                                <span v-else> </span>
+                                                <!-- <span v-if="message.message && message.message !=''" class="text-message" style="color:#000">
                                                     {{ message.message ? message.message.richText : "" }}
-                                                </span>
+                                                </span> -->
                                                 <br>
                                                 <span class="pt-2" style="float:right; font-size:1.3rem">
                                                     <span v-if="message.status_id==4" class="mdi mdi-check " title="Encaminhado"></span>
@@ -1255,10 +1265,6 @@
             getContacts: function() { //R
                 if(this.requestingNewPageContacts) return;
                 this.requestingNewPageContacts = true;
-                console.log('--------------------------------------------------');
-                console.log(typeof(this.contacts));
-                console.log(this.contacts);
-                console.log(this.contacts.length);
                 ApiService.get(this.contacts_url,{
                     'filterContactToken': (this.searchContactByString.trim() !== '') ? this.searchContactByString.trim() : '',
                     'last_contact_id': (this.contacts.length)? this.contacts[this.contacts.length-1].id : 0,
@@ -1513,9 +1519,11 @@
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = '';
                         let messages_copy=new Array();
+
                         response.data.forEach((item, i)=>{
                             try {
                                 item.time = this.getMessageTime(item.created_at);
+
                                 if(item.time.date != this.messageTimeDelimeter){
                                     messages_copy.push({
                                         'type_id': 'date_separator',
@@ -1523,17 +1531,24 @@
                                     });
                                     this.messageTimeDelimeter = item.time.date;
                                 }
+
                                 if(item.data != "" && item.data != null && item.data.length>0) {
                                     item.data = JSON.parse(item.data);
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
+
                                 item.lifePreview = false;
-                                item.message = this.transformToRichText(item.message,item.source);                                
+                                if(item.id == 16932)
+                                    console.log(item);
+                                item.message = this.transformToRichText(item.message, item.source);
+                                if(item.id == 16932)
+                                    console.log(item);
                                 messages_copy.push(item);
                             } catch (error) {
                             }
                         });
+                        // console.log(messages_copy);
                         this.messages = messages_copy.concat(this.messages);
                     }else{
                         this.hasMorePageMessage =false;
@@ -1565,6 +1580,9 @@
             },
 
             transformToRichText: function(message, source) {
+                if(message && message != '') {
+                    message = message.replace(/\r\n/g, '<br>');
+                }
                 return {
                     'firstLink': '',
                     'richText': message,
@@ -3144,6 +3162,8 @@
         .badge-success{
             background-color: #5AD856 !important;
         }
+
+        
     }
     
 </style>

@@ -9,7 +9,7 @@
                 <label>
                     <div style="" class="form-group has-seasrch">
                         <div class="col-lg-12 input-group">
-                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar contato">
+                            <input type="search" id="search-input" style="width:250px" class="form-control" placeholder="Digite sua busca ..." v-model="searchInput" title="Buscar contato" @keyup.enter="getContacts(0)">
                             <div class="input-group-append" title="Buscar">
                                 <button class="btn btn-info input-group-text text-muted border-right-0 pt-2 outline" @click.prevent="getContacts(0)">
                                     <i v-if="!isFilteringBySearchInput" class="fa fa fa-search "></i>
@@ -68,10 +68,9 @@
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
                         <template v-for="(column,index) in columns">
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">
-                                {{ collect(row,column.field) }}
-                            </td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html && column.field != 'email'" :key="index">{{ collect(row,column.field) }}</td>
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.field == 'email'" :title="collect(row,column.field)" :key="index">{{ collect(row,column.field).lenght > 21 ? collect(row,column.field).substr(0,20) : collect(row,column.field) }}</td>
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html && column.field != 'email'" :key="index">
                                 <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
                                 <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
                                 <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>
@@ -434,7 +433,7 @@
                             case 4:
                                 item.origin_name = 'BLING';
                                 break;
-                            case 4:
+                            case 5:
                                 item.origin_name = 'CORREIOS';
                                 break;
                             case 6:
