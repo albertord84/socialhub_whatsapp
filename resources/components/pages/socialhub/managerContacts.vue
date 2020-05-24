@@ -68,9 +68,9 @@
                 <tbody>
                     <tr v-for="(row, index) in paginated" @click="click(row, index)" :key="index">
                         <template v-for="(column,index) in columns">
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html && column.field != 'email'" :key="index">{{ collect(row,column.field) }}</td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.field == 'email'" :title="collect(row,column.field)" :key="index">{{ collect(row,column.field).lenght > 21 ? collect(row,column.field).substr(0,20) : collect(row,column.field) }}</td>
-                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html && column.field != 'email'" :key="index">
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="!column.html" :key="index">{{ collect(row,column.field) }}</td>
+                            <!-- <td :class="column.numeric ? 'numeric' : ''" v-if="column.field == 'email'" :title="collect(row,column.field)" :key="index">{{ collect(row,column.field) && collect(row,column.field).lenght > 21 ? collect(row,column.field).substr(0,20) : collect(row,column.field) }}</td> -->
+                            <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
                                 <!-- <a class="text-18" href="javascript:void(0)" @click.prevent="actionSeeContact(row)"><i class='fa fa-comments-o text-info mr-3'></i></a> -->
                                 <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditContact(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
                                 <a class="text-18" href="javascript:void(0)" title="Eliminar contato" @click.prevent="actionDeleteContact(row)"><i class='fa fa-trash text-danger'  ></i> </a>

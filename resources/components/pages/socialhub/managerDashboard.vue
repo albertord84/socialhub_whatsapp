@@ -160,7 +160,7 @@
                 },
                 frequencySendedMessages: [],
                 frequencyReceivedMessages: [],
-                colorsList: ['#ef5350', '#6eb09c', '#6ebabe', '#78bbbf', '#83b3a4'],
+                colorsList: ['#ef5350', '#6eb09c', '#03a9f4', '#6ebabe', '#78bbbf', '#83b3a4', '#f8bbd0', '#d81b60', '#8bc34a', '#ff9800', '#a1887f', '#b0bec5'],
 
                 loading: false,
                 ajaxloading: false,
