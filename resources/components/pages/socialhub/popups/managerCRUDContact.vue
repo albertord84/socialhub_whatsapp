@@ -164,7 +164,6 @@
 
         methods:{
             addContact: function() { //C
-
                 this.isSendingInsert = true;
 
                 // Validando dados
