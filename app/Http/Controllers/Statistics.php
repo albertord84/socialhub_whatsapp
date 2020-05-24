@@ -27,7 +27,7 @@ class Statistics extends Controller
         $company_id = $request['company_id'];
 
         // whatsapp Number
-        $whatsappNumber = Contact::find($company_id)->whatsapp_id;
+        $whatsappNumber = Contact::find($company_id)->whatsapp;
 
         // Total de contatos
         $totalContacts = Contact::where('company_id',$company_id)->get()->count();
