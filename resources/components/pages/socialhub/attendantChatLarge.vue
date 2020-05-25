@@ -27,6 +27,11 @@
                                 </a>
                             </li>
 
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                    <span class="mdi mdi-bell icons-action ml-2"></span>                                    
+                                    <div class="selector-headwayapp" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; position: absolute; top: -13px; left: 3px;">  </div>
+                            </li>
+
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
@@ -76,10 +81,7 @@
                                 </b-dropdown>
                             </li>
 
-                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
-                                    <!-- <i class="" id="selector-headwayapp"> </i> -->
-                                    <div id="selector-headwayapp">  </div>
-                            </li>
+                            
 
                         </ul>
                     </div>
