@@ -1,97 +1,142 @@
 <template>
-    <div >
+    <div class="card p-3 no-shadows">
         
         <!--========================Dados gerais===========================-->
-        <div class="row ">
+        <div class="row no-shadows">
             <div class="col-lg-3  col-sm-6 mb-3">
                 <div class="text-center p-3 widget_social_icons box_shadow">
                     <div class="widget_social_inner1">
-                        <i class="fa fa-address-book-o fb_text"></i>
+                        <i v-if="isLoggued" class="fa fa-whatsapp fb_text"  style="color:#25d366"></i>
+                        <i v-if="!isLoggued" class="fa fa-whatsapp fb_text text-danger" ></i>
                     </div>
-                    <div class="text-ash">
-                        <h4 class="mt-2 text_size">7465</h4>
-                        <p class="m-0 mt-2">Total Contatos</p>
+                    <div class="text-ash no-shadows">
+                        <h3 v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <h3 v-if="!isLoggued && !isLoadingManagerGeneralStatistics" :title="staticsModel.whatsappNumber" class="mt-2 text-danger">Whatsapp Offline</h3>
+                        
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
+                        <p v-if="isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Conferindo Whatsapp ...</p>
+
+                        <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
+                        <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3  col-md-6 mb-3">
                 <div class="text-center p-3 widget_social_icons box_shadow">
-                    <div class=" widget_social_inner1">
-                        <i class="fa fa-address-book-o fb_text"></i>
+                    <div class="widget_social_inner1">
+                        <i class="fa fa-users fb_text text-dark"></i>
                     </div>
-                    <div class="text-ash">
-                        <h4 class="mb-0 mt-2 text_size">46</h4>
-                        <p class="m-0 mt-2">Mais Recentes</p>
+                    <div class="text-ash no-shadows">
+                        <h4 v-if="!isLoadingManagerGeneralStatistics" class="mt-2 text_size">{{staticsModel.totalContacts}}</h4>
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-fw mt-2 text_size"></span>
+                        <p class="m-0 mt-2">Total de contatos</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-3">
                 <div class="text-center p-3 widget_social_icons box_shadow">
                     <div class=" widget_social_inner1">
-                        <i class="fa fa-comments-o fb_text"></i>
+                        <i class="fa fa-paper-plane fb_text text-success" ></i>
                     </div>
                     <div class="text-ash">
-                        <h4 class="mb-0 mt-2 text_size">74200+</h4>
-                        <p class="m-0 mt-2">Mensagens</p>
+                        <h4 v-if="!isLoadingManagerGeneralStatistics" class="mb-0 mt-2 text_size">{{staticsModel.totalSendMessages}}</h4>
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-fw mt-2 text_size"></span>
+                        <p class="m-0 mt-2">Mensagens enviadas</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3  col-sm-6 mb-3">
                 <div class="text-center p-3 widget_social_icons box_shadow ">
                     <div class="widget_social_inner1">
-                        <i class="fa fa-headphones fb_text"></i>
+                        <i class="fa fa-paper-plane-o fb_text fa-rotate-180"></i>
+                        <!-- <i class="fa  fb_text"></i> -->
                     </div>
                     <div class="text-ash">
-                        <h4 class="mb-0 mt-2 text_size">6</h4>
-                        <p class="m-0 mt-2">Atendentes</p>
+                        <h4 v-if="!isLoadingManagerGeneralStatistics" class="mb-0 mt-2 text_size">{{staticsModel.totalReceivedMessages}}</h4>
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-fw mt-2 text_size"></span>
+                        <p class="m-0 mt-2">Mensagens recebidas</p>
                     </div>
                 </div>
             </div>
             
         </div>
 
-        <!--========================Redes Socias===========================-->
+        <!--========================Contatos e atendentes===========================-->
         <div class="row">
-            <div class="col-lg-12 col-xl-12">
-                <b-card>
-                    <h5 class="ml-3 head_color">Estatísticas Anuais</h5>
-                    <div style="height: 305px;">
-                        <IEcharts :option="ajaxbar_chart" :loading="ajaxloading" @ready="onReady"
-                                  ref="ajaxbar_chart"></IEcharts>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <b-card class="no-shadows">
+                    <h5 class="ml-3 head_color">Contatos por atendente</h5>
+                    <div style="height: 265px;" class="mt-2">
+                        <IEcharts :option="pieContacts" :loading="loading" @ready="onReady"></IEcharts>
                     </div>
                 </b-card>
             </div>
-
-            <!--======================Monthly Sales========================-->
-            <div class="col-lg-12 col-xl-4">
-                <div class="row">
-                    <!-- <div class="col-lg-6 col-xl-12 col-md-6">
-                        <b-card>
-                            <h5 class="ml-3 mb-4 head_color">Redes Socias</h5>
-                            <div style="height: 150px;" class="mt-2">
-                                <IEcharts :option="doughnut" :loading="loading" @ready="onReady"></IEcharts>
-                            </div>
-                        </b-card>
-                    </div> -->
-                </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <b-card class="no-shadows">
+                    <h5 class="ml-3 head_color">Histórico de contatos por atendente</h5>
+                    <div style="display: flex; align-items: baseline; ">
+                        <form action="">
+                            <input type="radio" name="contactHistory" value="Y-m-d" v-model="contactFrequency" id="contactHistoryDaily">
+                            <label for="contactHistoryDaily">Diário</label>
+                            <input type="radio" name="contactHistory" value="Y-m" v-model="contactFrequency" id="contactHistoryWeek" class="ml-2">
+                            <label for="contactHistoryWeek">Mensal</label>
+                            <input type="radio" name="contactHistory" value="Y" v-model="contactFrequency" id="contactHistoryMonth" class="ml-2">
+                            <label for="contactHistoryMonth">Anual</label>
+                        </form>
+                    </div>
+                    <div style="height: 265px;" class="mt-2">
+                        <IEcharts :option="ajaxbar_chartContacts" :loading="ajaxloading" @ready="onReady" ref="ajaxbar_chart"></IEcharts>
+                    </div>
+                </b-card>
             </div>
         </div>
+
+        <!--========================Mensagens===========================-->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <b-card class="no-shadows">
+                    <h5 class="ml-3 head_color">Mensagens enviadas por atendente</h5>                    
+                    <div style="height: 265px;" class="mt-2">
+                        <IEcharts :option="pieMessages" :loading="loading" @ready="onReady"></IEcharts>
+                    </div>
+                </b-card>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <b-card class="no-shadows">
+                    <h5 class="ml-3 head_color">Histórico de mensagens enviadas por atendente</h5>
+                    <div style="display: flex; align-items: baseline; ">
+                        <form action="">
+                            <input type="radio" name="messageHistory" value="Y-m-d" v-model="messageFrequency" id="messageHistoryDaily">
+                            <label for="messageHistoryDaily">Diário</label>
+                            <input type="radio" name="messageHistory" value="Y-m" v-model="messageFrequency" id="messageHistoryWeek" class="ml-2">
+                            <label for="messageHistoryWeek">Mensal</label>
+                            <input type="radio" name="messageHistory" value="Y" v-model="messageFrequency" id="messageHistoryMonth" class="ml-2">
+                            <label for="messageHistoryMonth">Anual</label>
+                        </form>
+                    </div>
+                    <div style="height: 265px;" class="mt-2">
+                        <IEcharts :option="ajaxbar_chartMessage" :loading="ajaxloading" @ready="onReady" ref="ajaxbar_chart"></IEcharts>
+                    </div>
+                </b-card>
+            </div>
+        </div>
+
     </div>
 </template>
 <script>
     import Vue from 'vue';
-
-    import IEcharts from 'vue-echarts-v3/src/full.js';
-    import 'zrender/lib/vml/vml';
-
-    require('swiper/dist/css/swiper.css')
+    import ApiService from "../../../common/api.service";
     import VueAwesomeSwiper from 'vue-awesome-swiper';
-    import countTo from 'vue-count-to';
+    import IEcharts from 'vue-echarts-v3/src/full.js';
     import datatable from "components/plugins/DataTable/DataTable.vue";
+    import countTo from 'vue-count-to';
     import vScroll from "components/plugins/scroll/vScroll.vue";
     import portfolio from "components/widgets/portfolio/portfolio.vue"
+    import 'zrender/lib/vml/vml';
+    require('swiper/dist/css/swiper.css')
     import VueChartist from 'v-chartist'
-    import ApiService from "../../../common/api.service";
+    import 'echarts/lib/chart/pie';
+
 
 
     Vue.use(VueAwesomeSwiper);
@@ -106,285 +151,277 @@
             portfolio,
             VueChartist
         },
+
         data() {
             return {
                 userLogged:{},
-                serverdata: [],
                 instances: [],
+                isLoggued: false,
+                staticsModel: {
+                    whatsappNumber: '------------- ',
+                    totalContacts: 0,
+                    totalAttendants: 0,
+                    totalSendMessages: 0,
+                    totalReceivedMessages: 0,
+                    attendants: 0,
+                },
+                frequencySendedMessages: [],
+                frequencyReceivedMessages: [],
+                colorsList: ['#ef5350', '#03a9f4', '#6ebabe', '#ff0000', '#00000f', '#83b3a4', '#a1887f',  '#f8bbd0', '#d81b60', '#8bc34a', '#ff9800', '#b0bec5', '#6eb09c'],
+
                 loading: false,
                 ajaxloading: false,
+
+                contactFrequency: 'Y-m',
+                messageFrequency: 'Y-m',
                 
-                //==========Doughnut chart data start=====
-                doughnut: {
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b}: {c} ({d}%)"
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        x: 'left',
-                        data: ['Whatsapp', 'Facebook', 'Instagram', 'LinkedIn']
-
-                    },
+                pieContacts: {
+                    tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
+                    legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
                     series: [{
-                        name: 'Sales',
-                        type: 'pie',
-                        radius: ['50%', '70%'],
-                        avoidLabelOverlap: false,
-                        color: ['#137cbc', '#279fc9', '#4cb6e5', '#98d4f9', '#afebf9'],
-                        label: {
-                            normal: {
-                                show: false,
-                                position: 'center',
-
-                            },
-
-                            emphasis: {
-                                show: true,
-                                textStyle: {
-                                    fontSize: '30',
-                                    fontWeight: 'bold'
-                                }
-                            }
-                        },
-                        labelLine: {
-                            normal: {
-                                show: false
-                            }
-                        },
-                        data: [{
-                            value: 455,
-                            name: 'Whatsapp',
-
-                        }, {
-                            value: 310,
-                            name: 'Facebook'
-                        }, {
-                            value: 234,
-                            name: 'Instagram'
-                        }, {
-                            value: 135,
-                            name: 'LinkedIn'
-                        }/*, {
-                            value: 148,
-                            name: 'Dec'
-                        }*/]
-                    }]
-                },
-                //==========Doughnut chart data end=====
-                // ======donut chart start=======
-                donut: {
-                    data: {
-                        labels: ['C', 'IE', 'F'],
-                        series: [50, 20, 30],
-
-                    },
-                    options: {
-
-                        donut: true,
-                        donutWidth: 42,
-                        labelInterpolationFnc: function (value) {
-                            return value[0]
+                            name: 'Atendente', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
+                            data: [
+                                // { value: 335, name: 'Attendant 1', itemStyle : {normal : {color :'#ef5350'}}},
+                                // { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#6eb09c'}}}, 
+                                // { value: 234, name: 'Attendant 3', itemStyle : {normal : {color :'#6ebabe'}}}, 
+                                // { value: 135, name: 'D', itemStyle : {normal : {color :'#78bbbf'}}}, 
+                                // { value: 1548,name: 'E', itemStyle : {normal : {color :'#83b3a4'}}}
+                            ],
+                            itemStyle: { emphasis: {shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)'}}
                         }
-                    },
-                    responsiveoptions: [
-                        ['screen and (min-width: 640px)', {
-                            chartPadding: 30,
-                            labelOffset: 40,
-                            labelDirection: 'explode',
-                            labelInterpolationFnc: function (value) {
-                                return value;
-                            }
-                        }],
-                        ['screen and (min-width: 1024px)', {
-                            labelOffset: 50,
-                            chartPadding: 40
-                        }]
                     ]
                 },
-                // ======donut chart end================
 
-                //==========swipper=========
-
-                swiperOption: {
-                    pagination: '.swiper-pagination',
-                    paginationClickable: true,
-                    spaceBetween: 55,
-                    effect: 'flip',
-                    centeredSlides: true,
-                    autoplay: 2500,
-                    autoplayDisableOnInteraction: false,
-                    loop: false,
-                    nextButton: '.swiper-button-next',
-                    prevButton: '.swiper-button-prev'
-                },
-                //=============progress bar============
-                progress2counter1: 20,
-                progress2counter4: 50,
-                progress2counter5: 30,
-
-
-                //===========AJAX chart data start=========
-                ajaxbar_chart: {
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    grid: {
-                        bottom: '10%',
-                        right: '1%',
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            //
-                        }
-                    },
+                ajaxbar_chartContacts: {
+                    tooltip: {trigger: 'axis'},
+                    grid: {bottom: '10%', right: '1%',},
+                    toolbox: {show: true, feature: {}},
                     calculable: true,
-                    legend: {
-                        data: ['PROJECTS', 'SALES']
-                    },
-                    color: ['#a0bce5', '#baf2e1'],
+                    legend: {data: ['Attendant 1', 'Attendant 2', 'Attendant 3']},
+                    color: ['#ef5350', '#6eb09c', '#6ebabe'],
                     xAxis: [{
-                        type: 'category',
-                        name: 'YEAR',
-                        data: ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015',
-                            '2016', '2017'
-                        ]
-                    }],
-                    yAxis: [{
-                        type: 'value',
-                        name: '%',
-                        axisLabel: {
-                            formatter: '{value} '
-                        }
-                    },
-                        {
-                            type: 'value',
-
-                            axisLabel: {
-                                formatter: '{value} '
-                            }
-                        }
-                    ],
-                    series: [{
-                        name: 'PROJECTS',
-                        type: 'bar',
-                        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-                    },
-                        {
-                            name: 'SALES',
-                            type: 'bar',
-                            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-                        },
-
+                        type: 'category', 
+                        name: 'YEAR', 
+                        data: ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016', '2017']}],
+                    yAxis: [{type: 'value', name: '%', axisLabel: { formatter: '{value} '}}, {type: 'value', axisLabel: {formatter: '{value} '}}],
+                    series: [
+                        // {name: 'Attendant 1', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'Attendant 2', type: 'bar', data: [2.0, 4.9, 9.0, 21.2, 20.6, 66.7, 115.6, 122.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'Attendant 3', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
                     ]
                 },
-                //===========AJAX chart data end=========\
-                // ===tabledata
-                tableData: [],
-                columndata: [{
-                    label: 'ID',
-                    field: 'id',
-                    numeric: true,
-                    html: false,
-                }, {
-                    label: 'Name',
-                    field: 'name',
-                    numeric: false,
-                    html: false,
-                }, {
-                    label: 'Email',
-                    field: 'email',
-                    numeric: false,
-                    html: false,
-                }, {
-                    label: 'Actions',
-                    field: 'action',
-                    numeric: false,
-                    html: true,
-                }]
 
+                ajaxbar_chartMessage: {
+                    tooltip: {trigger: 'axis'},
+                    grid: {bottom: '10%', right: '1%',},
+                    toolbox: {show: true, feature: {}},
+                    calculable: true,
+                    legend: {data: ['ENVIADAS', 'RECEVIDAS']},
+                    color: ['#a0bce5', '#baf2e1'],
+                    xAxis: [{type: 'category', name: 'YEAR', data: ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016', '2017']}],
+                    yAxis: [{type: 'value', name: '%', axisLabel: { formatter: '{value} '}}, {type: 'value', axisLabel: {formatter: '{value} '}}],
+                    series: [
+                        // {name: 'ENVIADAS', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                        // {name: 'RECEVIDAS', type: 'bar', data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]},
+                    ]
+                },
+
+                pieMessages: {
+                    tooltip: { trigger: 'item',  formatter: "{a} <br/>{b} : {c} ({d}%)"},
+                    legend: { orient: 'vertical', left: 'left', data: ['A', 'B', 'C', 'D', 'E']},                
+                    series: [{
+                            name: 'Atendente', type: 'pie', radius: '80%', center: ['50%', '50%'],                        
+                            data: [
+                                // { value: 200, name: 'Attendant 1', itemStyle : {normal : {color :'#bdbdbd'}}},
+                                // { value: 310, name: 'Attendant 2', itemStyle : {normal : {color :'#ff8a65'}}}, 
+                                // { value: 2304, name: 'Attendant 3', itemStyle : {normal : {color :'#2962ff'}}}, 
+                                // { value: 135, name: 'D', itemStyle : {normal : {color :'#78bbbf'}}}, 
+                                // { value: 1548,name: 'E', itemStyle : {normal : {color :'#83b3a4'}}}
+                            ],
+                            itemStyle: { emphasis: {shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)'}}
+                        }
+                    ]
+                },
+                
+                isLoadingManagerGeneralStatistics: false,
+                isLoadingfrequencyOfContactByAttendant: false,
+                isLoadingfrequencyOfMessageByAttendant: false
             }
-        },
-        mounted: function () {
-            if(this.userLogged.role_id > 3){
-                this.$router.push({name: "login"});
-            }
-            
-            unsub = this.$store.subscribe((mutation, state) => {
-                if (mutation.type == "left_menu") {
-                    this.instances.forEach(function (item, index) {
-                        setTimeout(function () {
-                            item.resize();
-                        });
-                    });
-                    setTimeout(() => {
-                        this.$refs.swiper.swiper.update();
-                    });
-                }
-            });
-            ApiService.get('auth/user_list').then(response => {
-                this.tableData = response.data.users;
-                this.tableData.forEach((item, index) => {
-                    this.$set(item, "action",
-                        "<a class='btn btn-info clickable' href='#/edit_user_dashboard/" + item.id + "'>Edit</a> " +
-                        "<a class='btn btn-warning clickable' href='#/view_user_dashboard/" + item.id + "'>View</a>");
-                });
-            })
-                .catch(error => {
-                    this.processMessageError(error, 'auth/user_list', "get");
-                });
-
-            axios.get("http://www.filltext.com/?rows=1&chartdata={numberArray|12,100}").then(response => {
-                this.ajaxbar_chart.series[0].data = response.data[0].chartdata;
-                this.ajaxloading = false;
-            })
-                .catch(error => {
-                });
-
-        },
-        beforeMount() {
-            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
-        },
-        beforeRouteLeave(to, from, next) {
-            unsub();
-            next();
         },
 
         methods: {
+            managerGeneralStatistics: function () {                
+                this.isLoadingManagerGeneralStatistics = true;
+                ApiService.post('managerGeneralStatistics',{
+                    'company_id': this.userLogged.company_id,
+                })
+                .then(response => {
+                    response.data.attendants.some((item, i) => {
+                        this.pieContacts.series[0].data.push({ 
+                            value: item.contactsAmmount, 
+                            name: item.email.split('@')[0], 
+                            itemStyle : {normal : {color :this.colorsList[i]}}});
+                        this.pieMessages.series[0].data.push({ 
+                            value: item.sendedMessageAmmount, 
+                            name: item.email.split('@')[0], 
+                            itemStyle : {normal : {color :this.colorsList[i]}}});
+                    });
+                    this.staticsModel = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {                        
+                    this.isLoadingManagerGeneralStatistics = false;                    
+                });
+            },
+            
+            frequencyOfContactByAttendant: function () {
+                this.isLoadingfrequencyOfContactByAttendant = true;
+                ApiService.post('frequencyOfContactByAttendant',{
+                    'company_id': this.userLogged.company_id,
+                    'contactFrequency': this.contactFrequency,
+                })
+                .then(response => {
+                    //nome do eixo X
+                    if(this.contactFrequency == 'Y-m-a') this.ajaxbar_chartContacts.xAxis[0].name = 'Dias';
+                    if(this.contactFrequency == 'Y-m') this.ajaxbar_chartContacts.xAxis[0].name = 'Meses';
+                    if(this.contactFrequency == 'Y') this.ajaxbar_chartContacts.xAxis[0].name = 'Anos';
+
+                    //nomes dos atendentes
+                    this.ajaxbar_chartContacts.legend.data = [];
+                    this.ajaxbar_chartContacts.legend.data = Object.keys(response.data);
+
+                     //valores para os nomes do eixo X 
+                    this.ajaxbar_chartContacts.xAxis[0].data =[];
+                    this.ajaxbar_chartContacts.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartContacts.legend.data[0]]);
+                    
+                    //cores
+                    this.ajaxbar_chartContacts.color = [];
+                    this.ajaxbar_chartContacts.color = this.colorsList.slice(0, this.ajaxbar_chartContacts.legend.data.length);
+
+                    this.ajaxbar_chartContacts.series =[];
+                    this.ajaxbar_chartContacts.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartContacts.series.push({
+                            name: item,
+                            type: 'bar',
+                            data: []
+                        });
+                    });
+
+                    this.ajaxbar_chartContacts.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartContacts.xAxis[0].data.some((item2,j)=>{
+                            this.ajaxbar_chartContacts.series[i].data.push(response.data[item][item2]);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {                        
+                    this.isLoadingfrequencyOfContactByAttendant = false;                    
+                });
+            },
+
+            frequencyOfMessageByAttendant: function () {
+                this.isLoadingfrequencyOfMessageByAttendant = true;
+                ApiService.post('frequencyOfMessageByAttendant',{
+                    'company_id': this.userLogged.company_id,
+                    'messageFrequency': this.messageFrequency
+                })
+                .then(response => {
+                    //nome do eixo X
+                    if(this.contactFrequency == 'Y-m-a') this.ajaxbar_chartMessage.xAxis[0].name = 'Dias';
+                    if(this.contactFrequency == 'Y-m') this.ajaxbar_chartMessage.xAxis[0].name = 'Meses';
+                    if(this.contactFrequency == 'Y') this.ajaxbar_chartMessage.xAxis[0].name = 'Anos';
+
+                    //nomes dos atendentes
+                    this.ajaxbar_chartMessage.legend.data = [];
+                    this.ajaxbar_chartMessage.legend.data = Object.keys(response.data);
+
+                     //valores para os nomes do eixo X 
+                    this.ajaxbar_chartMessage.xAxis[0].data =[];
+                    this.ajaxbar_chartMessage.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartMessage.legend.data[0]]);
+                    
+                    //cores
+                    this.ajaxbar_chartMessage.color = [];
+                    this.ajaxbar_chartMessage.color = this.colorsList.slice(0, this.ajaxbar_chartMessage.legend.data.length);
+
+                    this.ajaxbar_chartMessage.series =[];
+                    this.ajaxbar_chartMessage.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartMessage.series.push({
+                            name: item,
+                            type: 'bar',
+                            data: []
+                        });
+                    });
+
+                    this.ajaxbar_chartMessage.legend.data.some((item,i)=>{
+                        this.ajaxbar_chartMessage.xAxis[0].data.some((item2,j)=>{
+                            this.ajaxbar_chartMessage.series[i].data.push(response.data[item][item2]);
+                        });
+                    });  
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {                        
+                    this.isLoadingfrequencyOfMessageByAttendant = false;
+                });
+            },
+
+            getNewQRCode() {              
+                ApiService.get('rpis')
+                    .then(response => {
+                        this.rpi = response.data;
+                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.status && this.rpi.QRCode.MsgID=='Already connected'){
+                            this.isLoggued = true;
+                        }else
+                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
+                            this.isLoggued = true;
+                        }else
+                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.qrcodebase64){
+                            this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
+                        }else{
+                            this.isLoggued = false;
+                        }
+                    })
+                    .catch(error => {
+                    })
+                    .finally(() => {                        
+                    });
+            },
+
             onReady(instance) {
                 this.instances.push(instance)
-            },
-            // ===chart animation===
-            update_chart() {
-                setInterval(() => {
-                    for (var i = 0; i < this.ajaxbar_chart.series.length; i++) {
-                        this.ajaxbar_chart.series[i].data.shift();
-                        this.ajaxbar_chart.series[i].data.push(Math.floor((Math.random() * (1000 - 90) + 90) +
-                            1));
-                    }
-                }, 4000);
+            }
+        },
+
+        mounted: function () {
+        },
+
+        beforeMount() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+
+            this.getNewQRCode();
+            this.managerGeneralStatistics();
+            this.frequencyOfContactByAttendant();
+            this.frequencyOfMessageByAttendant();
+        },
+
+        watch: {
+            contactFrequency: function(){
+                this.frequencyOfContactByAttendant();
             },
 
-            //------ Specific exceptions methods------------
-            processMessageError: function(error, url, action) {
-                var info = ApiService.process_request_error(error, url, action);
-                if(info.typeException == "expiredSection"){
-                    miniToastr.warn(info.message,"Atenção");
-                    this.$router.push({name:'login'});
-                    window.location.reload(false);
-                }else if(info.typeMessage == "warn"){
-                    miniToastr.warn(info.message,"Atenção");
-                }else{
-                    miniToastr.error(info.erro, info.message); 
-                }
-            },
-
+            messageFrequency: function(){
+                this.frequencyOfMessageByAttendant();
+            }
         }
     }
 </script>
-<!-- styles -->
-<!-- adding scoped attribute will apply the css to this component only -->
+
+
 <style src="../../../css/widgets.css" scoped></style>
 <style scoped>
     .swiper-pagination {
@@ -399,6 +436,27 @@
 
     .swiper-container {
         margin-top: 0px !important;
+    }
+    .fa-rotate-45 {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+    .fa-rotate-90 {
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+    .fa-rotate-180 {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
     }
 </style>
 <style type="text/css" lang="scss">
@@ -731,6 +789,9 @@
 
     .chat-conversation {
         width: 100%;
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 </style>
 <style src="chartist/dist/chartist.css"></style>

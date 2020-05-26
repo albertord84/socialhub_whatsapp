@@ -584,10 +584,17 @@
                 .then(response => {  
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
-                        console.log(item);
                         if(item.model == 'App\\Models\\Tracking') {
+                            var name = '';
+                            if(item.name == 'POSTED') name = 'POSTADO';
+                            if(item.name == 'MOVING') name = 'EM MOVIMENTO';
+                            if(item.name == 'STOPPED') name = 'DETIDO';
+                            if(item.name == 'RECEIVED') name = 'RECEBIDO';
+                            if(item.name == 'ARRIVED') name = 'ENTREGUE';
+                            if(item.name == 'PROBLEM') name = 'COM PROBLEMAS';
+
                             this.trackingStatusOptions.push(  {
-                                'name': item.name,
+                                'name': name,
                                 'code': item.id
                             });
                         }
