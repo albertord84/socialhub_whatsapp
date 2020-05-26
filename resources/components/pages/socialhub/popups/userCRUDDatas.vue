@@ -2,7 +2,7 @@
     <div >
         <div class="card tweet-profile" style="box-shadow:none">
             <div class="card-header text-center">
-                <i class="fa fa-pencil icons-action" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i>
+                <!-- <i class="fa fa-pencil icons-action" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i> -->
                 <h4>{{userLogged.name}}</h4>
                 <p>{{userLogged.email}}</p>
             </div>
@@ -30,7 +30,7 @@
                     <div class="col-12 ml-3">
                         <p class="text-muted font-weight-bold">INFORMAÇÃO PESSOAL</p>
                     </div>
-                    <div class="col-12 ml-3 mt-0">
+                    <!-- <div class="col-12 ml-3 mt-0">
                         <ul class="list-inline">
                             <li class="list-inline-item"><i class="fa fa-address-card-o text-muted" aria-hidden="false"></i></li>
                             <li class="list-inline-item"><span class="font-weight-bold">CPF</span></li>
@@ -101,10 +101,10 @@
                                 </li>
                             </ul>
                         </ul>                                               
-                    </div>
+                    </div> -->
 
                     <div class="col-12 ml-3 mt-0">
-                        <ul v-show="editMode" class="list-inline">
+                        <ul  class="list-inline">
                             <li class="list-inline-item"><i class="fa fa-key text-muted" aria-hidden="false"></i></li>
                             <li class="list-inline-item"><span class="font-weight-bold">Senha</span></li>
                             <ul style="float:right; margin-right:40px">
@@ -116,7 +116,7 @@
                         </ul>                                               
                     </div>
                     <div class="col-12 ml-3 mt-0">
-                        <ul v-show="editMode" class="list-inline">
+                        <ul class="list-inline">
                             <li class="list-inline-item"><i class="fa fa-key text-muted" aria-hidden="false"></i></li>
                             <li class="list-inline-item"><span class="font-weight-bold">Repetir senha</span></li>
                             <ul style="float:right; margin-right:40px">
@@ -268,7 +268,7 @@
                 if(this.editMode == false){
                     this.model = Object.assign({}, this.userLogged);
                     this.repeat_password = this.password = '';
-                    this.$refs.CPF.focus();
+                    // this.$refs.CPF.focus();
                     this.editMode = true;
                 }else{
                     var This =this;
@@ -295,59 +295,59 @@
                 // Validação dos dados do manager
                 var check;
 
-                if(this.model.CPF && this.model.CPF !=''){
-                    check = validation.validate_cpf('cpf', this.model.CPF)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.model.CPF && this.model.CPF !=''){
+                //     check = validation.validate_cpf('cpf', this.model.CPF)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.model.phone && this.model.phone !=''){
-                    check = validation.check('phone', this.model.phone)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
+                // if(this.model.phone && this.model.phone !=''){
+                //     check = validation.check('phone', this.model.phone)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
 
-                if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
-                    check = validation.check('whatsapp', this.model.whatsapp_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }else{
-                    miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
-                    this.flagReference = false;
-                }
+                // if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                //     check = validation.check('whatsapp', this.model.whatsapp_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
 
-                if(this.model.facebook_id && this.model.facebook_id !=''){
-                    check = validation.check('facebook_profile', this.model.facebook_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
+                // if(this.model.facebook_id && this.model.facebook_id !=''){
+                //     check = validation.check('facebook_profile', this.model.facebook_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
 
-                if(this.model.instagram_id && this.model.instagram_id !=''){
-                    check = validation.check('instagram_profile', this.model.instagram_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
+                // if(this.model.instagram_id && this.model.instagram_id !=''){
+                //     check = validation.check('instagram_profile', this.model.instagram_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
                 
-                if(this.model.linkedin_id && this.model.linkedin_id !=''){
-                    check = validation.check('linkedin_profile', this.model.linkedin_id)
-                    if(check.success==false){
-                        miniToastr.error("Erro", check.error );
-                        this.flagReference = false;
-                    }
-                }
+                // if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                //     check = validation.check('linkedin_profile', this.model.linkedin_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
 
                 if(this.password && this.password !=''){
                     check = validation.check('password', this.password)
@@ -383,7 +383,8 @@
         },
 
         beforeMount(){
-            this.userLogged = JSON.parse(window.localStorage.getItem('user'));            
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+            this.editUser();
         },
 
         created() {

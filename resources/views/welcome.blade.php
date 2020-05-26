@@ -122,7 +122,7 @@
         // @see https://docs.headwayapp.co/widget for more configuration options.
         var HW_config = {
             // selector: ".CHANGE_THIS", // CSS selector where to inject the badge
-            selector: "#selector-headwayapp", // CSS selector where to inject the badge
+            selector: ".selector-headwayapp", // CSS selector where to inject the badge
             account:  "JVYOA7",
             translations: {
                 title: "Notificações",
@@ -135,7 +135,7 @@
                 footer: "SocialHub"
             },
         }
-        </script>
+    </script>
     <script async src="https://cdn.headwayapp.co/widget.js"></script>
     
 
