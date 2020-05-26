@@ -9,8 +9,10 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\CreateApiRequest;
 use App\Http\Requests\UpdateApiRequest;
 use App\Jobs\SendWhatsAppMsgApi;
+use App\Models\Api;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Status;
 use App\Models\User;
 use App\Repositories\ApiRepository;
 use Flash;
@@ -134,8 +136,8 @@ class ApiController extends AppBaseController
 
         $input['contact_id'] = $Contact->id;
         //
-
-        $input['status_id'] = ApiController::RECEIVED;
+        $api_status = Status::find(8);
+        $input['status_id'] = $api_status->id;
 
         // Create Api message model
         $this->apiRepository->model->setTable($User->company_id);

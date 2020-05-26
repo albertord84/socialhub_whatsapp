@@ -63,5 +63,21 @@ class Api extends Model
         
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     **/
+    public function status()
+    {
+        return $this->morphOne(\App\Models\Status::class, 'statusable');
+    }
+
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+    //  **/
+    // public function statuses()
+    // {
+    //     return $this->morphMany(\App\Models\Status::class, 'statusable');
+    // }
+
     
 }
