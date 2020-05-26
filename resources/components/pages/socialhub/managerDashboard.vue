@@ -10,14 +10,19 @@
                         <i v-if="!isLoggued" class="fa fa-whatsapp fb_text text-danger" ></i>
                     </div>
                     <div class="text-ash no-shadows">
-                        <h3 v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <!-- <h3 v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
                         <h3 v-if="!isLoggued && !isLoadingManagerGeneralStatistics" :title="staticsModel.whatsappNumber" class="mt-2 text-danger">Whatsapp Offline</h3>
                         
                         <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
                         <p v-if="isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Conferindo Whatsapp ...</p>
 
                         <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
-                        <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link>
+                        <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link> -->
+                        
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
+                        <h3 v-if="!isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <p class="mb-1 mt-2" title="Número cadastrado">Whatsapp em SocialHub</p>
+
                     </div>
                 </div>
             </div>
