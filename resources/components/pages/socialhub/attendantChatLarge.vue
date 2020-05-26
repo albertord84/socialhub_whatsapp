@@ -2,7 +2,6 @@
     <div class="row chat p-0" style="background-color:#fefefe !important">
         <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @insertContactAsFirtInList="insertContactAsFirtInList" @reloadContacts='reloadContacts'></left-side-bar>
         <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.mp3" type="audio/ogg"></audio>
-        <!-- <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio> -->
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
@@ -597,11 +596,11 @@
         <div id="chat-right-side" v-show="showChatRightSide==true" class="width-25 p-0">
             <div class="sect_header sect_header_color">
                 <div class="container-fluid">
-                    <ul class='row ' style="margin-top:0.7rem; margin-left:1rem; text-transform: uppercase;">
+                    <ul class='row ' style="margin-top:0.7rem; margin-left:1rem;">
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                             <i class="mdi mdi-window-close icons-action mt-2" @click.prevent="displayChatRightSide()" aria-hidden="true"></i>
                         </li>
-                        <li class='col-9 col-md-9 col-lg-9 col-xl-9' style="padding-top: 0.4rem;">
+                        <li class='col-9 col-md-9 col-lg-9 col-xl-9' style="padding-top: 0.4rem; text-transform: uppercase;">
                             <strong style="font-size:1em;">Detalhes</strong>
                         </li>
                         <li class="col-1 col-md-1 col-lg-1 col-xl-1">
@@ -663,7 +662,7 @@
                         <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063;  text-transform: uppercase;">
                             <div class="container-fluid">
                                 <div class="row flex-baseline" >
-                                    <div class="col-10 pt-2 pb-2" style="text-align:left">
+                                    <div class="col-10 pt-2 pb-2" style="text-align:left; text-transform: uppercase;">
                                         <span class="" style="font-size:1.1rem; font-weight: 600;color: #39a063 !important;">Informação</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
@@ -742,10 +741,10 @@
                         </div>
 
                         <!-- Nota resumo -->
-                        <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063;  text-transform: uppercase;">
+                        <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063; ">
                             <div class="container-fluid">
                                 <div class="row flex-baseline">
-                                    <div class="col-10 pt-2 pb-2" style="text-align:left">
+                                    <div class="col-10 pt-2 pb-2" style="text-align:left; text-transform: uppercase;">
                                         <span class="" style="font-size:1.1rem; font-weight: 600;color: #39a063 !important;">Nota resumo</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
@@ -1860,8 +1859,7 @@
                         return;
                     }
                 });
-            },
-            
+            },            
 
             //-------------------Secundary functions----------------------
             textTruncate: function(str, length, ending) {
