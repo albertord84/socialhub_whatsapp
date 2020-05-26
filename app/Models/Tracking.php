@@ -90,7 +90,9 @@ class Tracking extends Model
         // $Tracking->post_date =  (new Carbon($objTracking->envioData))->toFormattedDateString('Y-m-d H:i:s');
         $Tracking->tracking_code = $objTracking->envioRastreamento;
         $Tracking->json_csv_data = json_encode($objTracking);
-        $Tracking->status_id = TrackingController::TRACKING_POSTED;
+        $tracking_status = Status::find(1);
+        $Tracking->status_id = $tracking_status->id;
+        // $Tracking->status_id = TrackingController::TRACKING_POSTED;
 
         return $Tracking;
     }
@@ -114,20 +116,20 @@ class Tracking extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      **/
     public function status()
     {
-        return $this->hasOne(\App\Models\Status::class, 'status_id');
+        return $this->morphOne(\App\Models\Status::class, 'statusable');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     **/
-    public function statuses()
-    {
-        return $this->morphMany(\App\Models\Status::class, 'statusable');
-    }
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+    //  **/
+    // public function statuses()
+    // {
+    //     return $this->morphMany(\App\Models\Status::class, 'statusable');
+    // }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
