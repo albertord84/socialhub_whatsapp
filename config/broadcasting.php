@@ -42,12 +42,12 @@ return [
                 'host' => env('APP_HOST'),
 
                 // No SSL
-                'scheme' => 'http',       
+                // 'scheme' => 'http',       
                 'encrypted' => false,
                 'useTLS' => false,
 
                 // SSL
-                // 'scheme' => 'https',       
+                'scheme' => 'https',       
                 // 'encrypted' => true,
                 // 'useTLS' => true,
 
