@@ -68,10 +68,22 @@ class ExtendedCompanyController extends CompanyController
     public function update($id, Request $request)
     {
         $company = $this->companyRepository->findWithoutFail($id);
-        
-        if(isset($request['action']) && $request['action']== 'tracking' && strlen($company->tracking_user) ==0){
-            $this->companyRepository->createTrackingTable((int) $company->id);
-            unset($request['action']);
+        try {
+            if(isset($request['action']) && $request['action']== 'tracking' && strlen($company->tracking_user) ==0){
+                $this->companyRepository->createTrackingTable((int) $company->id);
+                unset($request['action']);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+        try {
+            if(isset($request['action']) && $request['action']== 'bling' && strlen($company->bling_apikey) ==0){
+                $this->companyRepository->createBlingTable((int) $company->id);
+                unset($request['action']);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
 
         if (empty($company)) {

@@ -253,6 +253,7 @@
                         "bling_message": this.message,
                         "bling_token": this.username,
                         "bling_contrated": 1,
+                        "action": 'bling'
                     })
                     .then(response => {                            
                     })
