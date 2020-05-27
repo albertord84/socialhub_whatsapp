@@ -16,7 +16,8 @@
                         <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
                         <p v-if="isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Conferindo Whatsapp ...</p>
 
-                        <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
+                        <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Whatsapp em SocialHub</p>
+                        <!-- <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p> -->
                         <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link>
                     </div>
                 </div>
@@ -156,7 +157,7 @@
             return {
                 userLogged:{},
                 instances: [],
-                isLoggued: false,
+                isLoggued: true,
                 staticsModel: {
                     whatsappNumber: '------------- ',
                     totalContacts: 0,
@@ -370,26 +371,27 @@
                 });
             },
 
-            getNewQRCode() {              
-                ApiService.get('rpis')
-                    .then(response => {
-                        this.rpi = response.data;
-                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.status && this.rpi.QRCode.MsgID=='Already connected'){
-                            this.isLoggued = true;
-                        }else
-                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
-                            this.isLoggued = true;
-                        }else
-                        if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.qrcodebase64){
-                            this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
-                        }else{
-                            this.isLoggued = false;
-                        }
-                    })
-                    .catch(error => {
-                    })
-                    .finally(() => {                        
-                    });
+            getNewQRCode() { 
+                this.isLoggued = true;             
+                // ApiService.get('rpis')
+                //     .then(response => {
+                //         this.rpi = response.data;
+                //         if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.status && this.rpi.QRCode.MsgID=='Already connected'){
+                //             this.isLoggued = true;
+                //         }else
+                //         if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.message && this.rpi.QRCode.message=='Ja logado'){
+                //             this.isLoggued = true;
+                //         }else
+                //         if(this.rpi && this.rpi.QRCode && this.rpi.QRCode.qrcodebase64){
+                //             this.qrcodebase64 = this.rpi.QRCode.qrcodebase64;
+                //         }else{
+                //             this.isLoggued = false;
+                //         }
+                //     })
+                //     .catch(error => {
+                //     })
+                //     .finally(() => {                        
+                //     });
             },
 
             onReady(instance) {
