@@ -2232,21 +2232,23 @@
 
 
                     // No SSL
-                    wsHost: process.env.MIX_APP_HOST,
-                    wsPort: 6001,
-                    enabledTransports: ['ws'],
-                    encrypted: false,
-                    forceTLS: false,
+                    // wsHost: process.env.MIX_APP_HOST,
+                    // wsPort: 6001,
+                    // enabledTransports: ['ws'],
+                    // encrypted: false,
+                    // forceTLS: false,
 
                     // SSL
-                    // wssHost: process.env.MIX_APP_HOST,
-                    // wssPort: 6001,
-                    // enabledTransports: ['ws', 'wss'],
-                    // encrypted: true,
-                    // forceTLS: true,
+                    wssHost: process.env.MIX_APP_HOST,
+                    wssPort: 6001,
+                    enabledTransports: ['ws', 'wss'],
+                    encrypted: true,
+                    forceTLS: true,
 
                     disableStats: false,
                 });
+
+                console.log(process.env);
             },
 
             wsMessageToAttendant: function(){
