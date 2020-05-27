@@ -48,7 +48,6 @@ class TestController extends AppBaseController
         $this->repository = $repository;
     }
 
-<<<<<<< HEAD
     public function index(Request $request, stdClass $Sale, Company $Company)
     {
 
@@ -165,10 +164,6 @@ class TestController extends AppBaseController
         // var_dump(env('APP_NAME'));
         // var_dump(env('APP_ENV'));
 
-=======
-    public function index(Request $request)
-    { 
->>>>>>> 57144fe98e780ed3ee22e7aa5d9fdc64b8c2b7ca
         //testing emails from laravel -Jose R
         // $Company = Company::find(1);
         // $Seller = User::find(2);
