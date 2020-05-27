@@ -32,8 +32,10 @@ class CompaniesBlingsController extends AppBaseController
         $this->companiesBlingsRepository->pushCriteria(new RequestCriteria($request));
         $companiesBlings = $this->companiesBlingsRepository->all();
 
-        return view('companies_blings.index')
-            ->with('companiesBlings', $companiesBlings);
+        return $companiesBlings->toJson();
+
+        // return view('companies_blings.index')
+        //     ->with('companiesBlings', $companiesBlings);
     }
 
     /**
@@ -126,9 +128,11 @@ class CompaniesBlingsController extends AppBaseController
 
         $companiesBlings = $this->companiesBlingsRepository->update($request->all(), $id);
 
-        Flash::success('Companies Blings updated successfully.');
+        return $companiesBlings->toJson();
 
-        return redirect(route('companiesBlings.index'));
+        // Flash::success('Companies Blings updated successfully.');
+
+        // return redirect(route('companiesBlings.index'));
     }
 
     /**
@@ -150,8 +154,8 @@ class CompaniesBlingsController extends AppBaseController
 
         $this->companiesBlingsRepository->delete($id);
 
-        Flash::success('Companies Blings deleted successfully.');
+        // Flash::success('Companies Blings deleted successfully.');
 
-        return redirect(route('companiesBlings.index'));
+        // return redirect(route('companiesBlings.index'));
     }
 }

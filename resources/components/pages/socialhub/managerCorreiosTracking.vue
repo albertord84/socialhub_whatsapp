@@ -568,6 +568,7 @@
                     'betweenDates': JSON.stringify(Array(this.dateInit,this.dateEnd))
                 })
                 .then(response => {   
+                    console.log(response.data);
                     this.rows = response.data;
                 })
                 .catch(error => {
@@ -584,7 +585,7 @@
                 .then(response => {  
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
-                        if(item.model == 'App\\Models\\Tracking') {
+                        if(item.statusable_type == 'App\\Models\\Tracking') {
                             var name = '';
                             if(item.name == 'POSTED') name = 'POSTADO';
                             if(item.name == 'MOVING') name = 'EM MOVIMENTO';
@@ -778,7 +779,7 @@
                 var result = obj;
                 const splitter = selector.split('.');
                 for (let i = 0; i < splitter.length; i++)
-                    if (typeof (result) === 'undefined')
+                    if (!result || typeof (result) === 'undefined')
                         return undefined;
                     else
                         result = result[splitter[i]];

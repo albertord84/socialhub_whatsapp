@@ -58,6 +58,19 @@ class ExtendedCompanyRepository extends CompanyRepository
         }
     }
 
+    public function createBlingTable(int $company_id)
+    {
+        try {
+            $migrationsDir = __DIR__.'/../../database/migrations/2020_02_14_104111_create_sales_table.php';
+            require_once($migrationsDir);
+
+            $table = new CreateSalesTable();
+            $table->up((string)$company_id);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
 
 
     /**

@@ -10,15 +10,19 @@
                         <i v-if="!isLoggued" class="fa fa-whatsapp fb_text text-danger" ></i>
                     </div>
                     <div class="text-ash no-shadows">
-                        <h3 v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <!-- <h3 v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
                         <h3 v-if="!isLoggued && !isLoadingManagerGeneralStatistics" :title="staticsModel.whatsappNumber" class="mt-2 text-danger">Whatsapp Offline</h3>
                         
                         <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
                         <p v-if="isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Conferindo Whatsapp ...</p>
 
-                        <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Whatsapp em SocialHub</p>
-                        <!-- <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p> -->
-                        <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link>
+                        <p v-if="isLoggued && !isLoadingManagerGeneralStatistics" class="mb-1 mt-2" title="Número cadastrado">Logado em SocialHub</p>
+                        <router-link v-if="!isLoggued && !isLoadingManagerGeneralStatistics" to="manager/qrcode" class="mb-1 mt-2 text-danger" >Escanee o QRCode</router-link> -->
+                        
+                        <span v-if="isLoadingManagerGeneralStatistics" style="color:gray" class="fa fa-circle-o-notch fa-spin fa-2x mt-2 fa-fw"></span>
+                        <h3 v-if="!isLoadingManagerGeneralStatistics" class="mt-2">{{staticsModel.whatsappNumber}}</h3>
+                        <p class="mb-1 mt-2" title="Número cadastrado">Whatsapp em SocialHub</p>
+
                     </div>
                 </div>
             </div>
@@ -293,9 +297,10 @@
                     this.ajaxbar_chartContacts.legend.data = [];
                     this.ajaxbar_chartContacts.legend.data = Object.keys(response.data);
 
-                     //valores para os nomes do eixo X 
+                     //valores para os nomes do eixo X
                     this.ajaxbar_chartContacts.xAxis[0].data =[];
-                    this.ajaxbar_chartContacts.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartContacts.legend.data[0]]);
+                    if(typeof(response.data[this.ajaxbar_chartContacts.legend.data[0]]) != 'undefined')
+                        this.ajaxbar_chartContacts.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartContacts.legend.data[0]]);
                     
                     //cores
                     this.ajaxbar_chartContacts.color = [];
@@ -342,6 +347,7 @@
 
                      //valores para os nomes do eixo X 
                     this.ajaxbar_chartMessage.xAxis[0].data =[];
+                    if (typeof(response.data[this.ajaxbar_chartMessage.legend.data[0]]) != 'undefined')
                     this.ajaxbar_chartMessage.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartMessage.legend.data[0]]);
                     
                     //cores
