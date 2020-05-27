@@ -38,7 +38,7 @@ class ExtendedContactController extends ContactController
     public function index(Request $request)
     {
         try {
-            $request->last_contact_idx = $request->last_contact_idx ?? 0;
+            $request->last_contact_idx = (int) $request->last_contact_idx ?? 0;
             $User = Auth::check() ? Auth::user() : session('logged_user');
             if($User){
                 // $Contacts = $this->contactRepository->all();

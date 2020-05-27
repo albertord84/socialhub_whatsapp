@@ -24,10 +24,14 @@ use Response;
 
 class ApiController extends AppBaseController
 {
-    const RECEIVED = 8;
-    const SENDED = 9;
-    const STOPPED = 10;
-    const PROBLEM = 11;
+    const RECEIVED = 1;
+    const SENDED = 2;
+    const STOPPED = 3;
+    const PROBLEM = 4;
+    // const RECEIVED = 8;
+    // const SENDED = 9;
+    // const STOPPED = 10;
+    // const PROBLEM = 11;
 
     /** @var  ApiRepository */
     private $apiRepository;
@@ -135,9 +139,8 @@ class ApiController extends AppBaseController
         }
 
         $input['contact_id'] = $Contact->id;
-        //
-        $api_status = Status::find(8);
-        $input['status_id'] = $api_status->id;
+        
+        $input['status_id'] = ApiController::RECEIVED;
 
         // Create Api message model
         $this->apiRepository->model->setTable($User->company_id);
