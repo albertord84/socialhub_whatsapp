@@ -297,9 +297,10 @@
                     this.ajaxbar_chartContacts.legend.data = [];
                     this.ajaxbar_chartContacts.legend.data = Object.keys(response.data);
 
-                     //valores para os nomes do eixo X 
+                     //valores para os nomes do eixo X
                     this.ajaxbar_chartContacts.xAxis[0].data =[];
-                    this.ajaxbar_chartContacts.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartContacts.legend.data[0]]);
+                    if(typeof(response.data[this.ajaxbar_chartContacts.legend.data[0]]) != 'undefined')
+                        this.ajaxbar_chartContacts.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartContacts.legend.data[0]]);
                     
                     //cores
                     this.ajaxbar_chartContacts.color = [];
@@ -346,6 +347,7 @@
 
                      //valores para os nomes do eixo X 
                     this.ajaxbar_chartMessage.xAxis[0].data =[];
+                    if (typeof(response.data[this.ajaxbar_chartMessage.legend.data[0]]) != 'undefined')
                     this.ajaxbar_chartMessage.xAxis[0].data = Object.keys(response.data[this.ajaxbar_chartMessage.legend.data[0]]);
                     
                     //cores
