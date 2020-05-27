@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Repositories\ExtendedContactRepository;
 use Illuminate\Support\Carbon;
 
+use App\Models\AttendantsContact;
+
 class JoseTestController extends Controller
 {
     private $repository;
@@ -19,6 +21,6 @@ class JoseTestController extends Controller
     }
 
     public function index(Request $request) {
-        var_dump(Carbon::now()->diffInDays(Carbon::parse('2020-05-09 07:44')) );
+        $contactsGrabriel = AttendantsContact::where('attendant_id', 102)->get();
     }
 }
