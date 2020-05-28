@@ -144,6 +144,7 @@ Route::post('apis', 'ApiController@store');
 
 
 Route::resource('companiesBlings', 'CompaniesBlingsController');
+Route::post('saveCompanyBling', 'CompaniesBlingsController@saveCompanyBling');
 
 Route::resource('statistics', 'Statistics');
 Route::post('managerGeneralStatistics', 'Statistics@managerGeneralStatistics');

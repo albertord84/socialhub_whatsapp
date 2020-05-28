@@ -37,7 +37,8 @@ class EmailSigninAttendant extends Mailable
         // return $this->view('view.name');
 
         return $this
-            ->from('system@socialhub.pro') //pegar desde o .env  env("MAIL_USERNAME")
+            ->from('system@socialhub.pro', 'SocialHub') //pegar desde o .env  env("MAIL_USERNAME")
+            ->subject('Cadastro de usuário em SocialHub')
             ->view('mails.SigninAttendant', ['Manager' => $this->Manager,'User' => $this->User]);
     }
 }

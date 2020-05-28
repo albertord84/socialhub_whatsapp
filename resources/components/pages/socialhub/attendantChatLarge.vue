@@ -247,10 +247,10 @@
                                 <span id="btn-back" class="mdi mdi-arrow-left btn-back icons-action" @click.prevent="chatCenterSideBack" style="position:relative; top:-18px"></span>
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
-                                <div @click.prevent="displayChatRightSide()" class="pointer-hover" style="display: flex; align-items: center">
-                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" class="profile-picture">
-                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" class="profile-picture">
-                                    <div v-else style="width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
+                                <div class="" style="display: flex; align-items: center;">
+                                    <img @click.prevent="displayChatRightSide()" v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" class="profile-picture pointer-hover">
+                                    <img @click.prevent="displayChatRightSide()" v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" class="profile-picture pointer-hover">
+                                    <div @click.prevent="displayChatRightSide()" v-else style="width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
                                         :class="[
                                             { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
                                             { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
@@ -262,12 +262,12 @@
                                             { bg7: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='7' },
                                             { bg8: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='8' },
                                             { bg9: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='9' },
-                                        ]">
+                                        ]" class="pointer-hover">
                                         <b style="color:white; font-size: 1.1rem; text-transform: uppercase;">
                                             {{ (contacts[selectedContactIndex].first_name)? contacts[selectedContactIndex].first_name.slice(0,1) : contacts[selectedContactIndex].whatsapp_id.slice(-1)}}
                                         </b>
                                     </div>
-                                    <b style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
+                                    <b @click.prevent="displayChatRightSide()" class="pointer-hover" style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
                                 </div>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
@@ -277,6 +277,15 @@
                                 <i v-else
                                     title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:5px">
                                 </i>
+
+                                <i v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" 
+                                    title="Buscar mensagens" @click.prevent="displayChatRightSide()" class="mdi mdi-dots-vertical icons-action ml-1" style="position:relative; top:-10px">
+                                </i>
+                                <i v-else
+                                    title="Buscar mensagens" @click.prevent="displayChatRightSide()" class="mdi mdi-dots-vertical icons-action ml-1" style="position:relative; top:5px">
+                                </i>
+                            </li>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                             </li>
                             <!-- <li> -->
                                 <!-- <form action="">
