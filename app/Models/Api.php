@@ -66,28 +66,12 @@ class Api extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      **/
-    public function statuses()
+    public function status()
     {
         return $this->morphOne(\App\Models\Status::class, 'statusable', 'statusable_type', 'statusable_id', 'status_id');
     }
 
     /**
-<<<<<<< HEAD
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     **/
-    public function status()
-    {
-        return $this->hasOne(\App\Models\Status::class, 'statusable_id', 'status_id');
-    }
-    
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-    //  **/
-    // public function statuses()
-    // {
-    //     return $this->morphMany(\App\Models\Status::class, 'statusable');
-    // }
-=======
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      **/
     public static function statuses()
@@ -96,7 +80,6 @@ class Api extends Model
         return Status::where(['statusable_type' => Api::class])->get();
 
     }
->>>>>>> 59336f4e77735e115af20b88b097413762d8652e
 
     
 }
