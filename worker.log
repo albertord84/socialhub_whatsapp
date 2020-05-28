@@ -9106,3 +9106,923 @@
       /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
 
   Please use the argument -v to see more details.
+
+
+   InvalidArgumentException  : No connector for []
+
+   InvalidArgumentException  : No connector for []
+
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+
+
+   InvalidArgumentException  : No connector for []
+   InvalidArgumentException  : No connector for []
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+
+  Exception trace:
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+
+  Please use the argument -v to see more details.
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+
+   InvalidArgumentException  : No connector for []
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+
+   InvalidArgumentException  : No connector for []
+   InvalidArgumentException  : No connector for []
+
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
+
+   InvalidArgumentException  : No connector for []
+
+  at /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:172
+    168|      */
+    169|     protected function getConnector($driver)
+    170|     {
+    171|         if (! isset($this->connectors[$driver])) {
+  > 172|             throw new InvalidArgumentException("No connector for [$driver]");
+    173|         }
+    174| 
+    175|         return call_user_func($this->connectors[$driver]);
+    176|     }
+
+  Exception trace:
+
+  1   Illuminate\Queue\QueueManager::getConnector()
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:156
+
+  2   Illuminate\Queue\QueueManager::resolve("blingsales")
+      /var/www/html/app.socialhub.local/vendor/laravel/framework/src/Illuminate/Queue/QueueManager.php:138
+
+  Please use the argument -v to see more details.
