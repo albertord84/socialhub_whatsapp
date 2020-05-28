@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Business\FileUtils;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\ExtendedUserRepository;
 use App\User;
+use Auth;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laracasts\Flash\Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
-use Auth;
 
 // use App\Models\User;
 
 class ExtendedUserController extends UserController
 {
 
-    const ADMIN = 1; 
-    const SELLER = 2; 
-    const MANAGER = 3; 
-    const ATTENDANT = 4; 
-    const VISITOR = 5; 
-    
+    const ADMIN = 1;
+    const SELLER = 2;
+    const MANAGER = 3;
+    const ATTENDANT = 4;
+    const VISITOR = 5;
+
     public function __construct(ExtendedUserRepository $userRepository)
     {
         parent::__construct($userRepository);
         $this->userRepository = $userRepository;
-        
+
         $this->APP_FILE_PATH = env('APP_FILE_PATH');
     }
 
@@ -41,11 +42,15 @@ class ExtendedUserController extends UserController
      */
     public function index(Request $request)
     {
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+        if (!$User || $User->role_id > 3) {
+            throw new Exception("Method not allowed to user", 1);
+        }
+
         $this->userRepository->pushCriteria(new RequestCriteria($request));
         $users = $this->userRepository->all();
 
-        return view('users.index')
-            ->with('users', $users);
+        return $users->toJson();
     }
 
     /**
@@ -68,8 +73,6 @@ class ExtendedUserController extends UserController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
-
-        $input['password'] = bcrypt('123456');
 
         $user = $this->userRepository->create($input);
 
@@ -128,19 +131,21 @@ class ExtendedUserController extends UserController
      */
     public function update($id, UpdateUserRequest $request)
     {
-        if(isset($request['password']))
+        if (isset($request['password'])) {
             $request['password'] = bcrypt($request['password']);
-        else 
+        } else {
             unset($request['password']);
+        }
+
         $user = $this->userRepository->findWithoutFail($id);
         if (empty($user)) {
             Flash::error('User not found');
-            
+
             return redirect(route('users.index'));
         }
-        
+
         $user = $this->userRepository->update($request->all(), $id);
-        
+
         Flash::success('User updated successfully.');
 
         return $user->toJson();
@@ -170,7 +175,7 @@ class ExtendedUserController extends UserController
 
         // return redirect(route('users.index'));
     }
-    
+
     public function update_image($id, Request $request)
     {
         try {
@@ -182,11 +187,11 @@ class ExtendedUserController extends UserController
 
                 $image_path = "companies/$company_id/users/$User->id/profile/";
                 $image_name = "$User->id";
-                
+
                 $json_data = FileUtils::SavePostFile($request->file, $image_path, $image_name);
                 if ($json_data) {
                     // TODO : coger assi -> env('APP_FILE_PATH', 'external_files')
-                    $User->image_path = 'external_files/companies/'."$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
+                    $User->image_path = 'external_files/companies/' . "$company_id/users/$User->id/profile/" . $image_name . "." . $file->getClientOriginalExtension();
                     // $User->image_path = env('APP_FILE_PATH', 'external_files').'/companies/'."$company_id/users/$User->id/profile/".$image_name.".".$file->getClientOriginalExtension();
                     $User->save();
                     return $User->image_path;
@@ -198,9 +203,5 @@ class ExtendedUserController extends UserController
             throw $th;
         }
     }
-
-    
-
-
 
 }

@@ -135,6 +135,7 @@
         name: "attendantEditContact",
         data() {
             return {
+                userLogged:{},
                 formstate: {},
                 isSending:false,
                 model: {
@@ -191,11 +192,31 @@
             toggle_right() {
                this.$store.commit('rightside_bar', "toggle");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+        },
+        beforeMount: function () {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         mounted: function () {
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
         },
-        destroyed: function () {
 
+        destroyed: function () {
         }
     }
 </script>

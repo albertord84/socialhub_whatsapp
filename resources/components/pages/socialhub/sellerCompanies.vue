@@ -1,5 +1,5 @@
 <template>
-    <div class="card p-3">
+    <div class="card p-3 no-shadows">
         <!-- Companies DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
@@ -14,17 +14,18 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar empresas">
-                        <i class="fa fa-download"></i>
+                        <i class="mdi mdi-file-export fa-lg"  ></i>
+                        <!-- <i class="fa fa-download"></i> -->
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
+                    <a href="javascript:undefined" id="addCompany" class="btn btn-info text-white" @click.prevent="modalAddCompanies = !modalAddCompanies" title="Nova empresa">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" id="tableCompanies">
             <table ref="table" class="table">
                 <thead>
                     <tr> <th class="text-left" v-for="(column, index) in columns"  @click="sort(index)" :class="(sortable ? 'sortable' : '') + (sortColumn === index ? (sortType === 'desc' ? ' sorting-desc' : ' sorting-asc') : '')" :style="{width: column.width ? column.width : 'auto'}" :key="index"> {{column.label}} <i class="fa float-right" :class="(sortColumn === index ? (sortType === 'desc' ? ' fa fa-angle-down' : ' fa fa-angle-up') : '')"> </i> </th> <slot name="thead-tr"></slot> </tr>
@@ -36,8 +37,8 @@
                                 {{ collect(row, column.field) }}
                             </td>
                             <td :class="column.numeric ? 'numeric' : ''" v-if="column.html" :key="index">
-                                <a class="text-18" href="javascript:void(0)" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
-                                <a class="text-18" href="javascript:void(0)" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="editCompany" title="Editar dados" @click.prevent="actionEditCompanies(row)"> <i class='fa fa-pencil text-success mr-3' ></i> </a>
+                                <a class="text-18" href="javascript:void(0)" id="deleteCompany" title="Cancelar contrato" @click.prevent="actionDeleteCompanies(row)"><i class='fa fa-trash text-danger'  ></i> </a>
                             </td>
                         </template>
                         <slot name="tbody-tr" :row="row"></slot>
@@ -98,6 +99,7 @@
     import ApiService from "../../../common/api.service";
     import sellerCRUDCompanies from "./popups/sellerCRUDCompanies";
     // import sellerCRUDCompanies from "./popups/sellerCRUDCompaniesWizzard";
+    
 
     export default {
         props: {
@@ -131,6 +133,7 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                userLogged:{},
                 companies_url:'companies',  //route to controller
                 users_url:'users',  //route to controller
                 usersManager_url:'usersManagers',  //route to controller
@@ -157,6 +160,11 @@
                 rows:[],
                 columns: [
                     {
+                        label: 'Id', 
+                        field: 'id', 
+                        numeric: false, 
+                        html: false, 
+                    },{
                         label: 'Nome', 
                         field: 'name', 
                         numeric: false, 
@@ -210,13 +218,13 @@
                             // var name = "";
                             // item.contact_atendant_id = 0;
                             // if(item.latestAttendant){
-                            //     item.attendant_name = item.latestAttendant.user.name;
+                                //     item.attendant_name = item.latestAttendant.user.name;
                             //     item.contact_atendant_id = item.latestAttendant.user.id;
                             // }
                         });
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando as empresas");   
+                    .catch(error => {
+                        this.processMessageError(error, this.companies_url,"get");
                     });
             }, 
 
@@ -240,7 +248,7 @@
                 this.companies_id = value.id;
                 this.rpi_id = value.rpi_id;
                 this.model_rpi={};
-                
+
                 //manager data
                 ApiService.post(this.usersManager_url+'/'+this.companies_id+'/'+'getManager')
                     .then(response => {
@@ -253,27 +261,26 @@
                             
                             //rpi datas
                             if(this.rpi_id){
+
                                 ApiService.get(this.rpi_url+'/'+this.rpi_id)
                                 .then(response => {
                                     this.model_rpi = response.data;
                                     this.modalEditCompanies = !this.modalEditCompanies;    
                                 })
-                                .catch(function(error) {
-                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                .catch(error => {
+                                    this.processMessageError(error, this.rpi_url, "get");   
                                 });
 
                             }else{
                                 this.modalEditCompanies = !this.modalEditCompanies;
                             }
-
-
                             
                         } catch (error) {
                             console.log(error);
                         }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                    .catch(error => {
+                        this.processMessageError(error, this.usersManager_url, "get");
                     });
             },
 
@@ -301,25 +308,22 @@
                                     this.model_rpi = response.data;
                                     this.modalDeleteCompanies = !this.modalDeleteCompanies;    
                                 })
-                                .catch(function(error) {
-                                    miniToastr.error(error, "Erro obtendo canal de comunicação");   
+                                .catch(error => {
+                                    this.processMessageError(error, this.rpi_url, "get");
                                 });
 
                             }else{
                                 this.modalDeleteCompanies = !this.modalDeleteCompanies;
                             }
-
-
                             
                         } catch (error) {
                             console.log(error);
                         }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro obtendo Manager");   
+                    .catch(error => {
+                        this.processMessageError(error, this.usersManager_url, "get");
                     });
             },
-
 
 
             //------ Specific DataTable methods------------
@@ -417,9 +421,30 @@
             mycheck(){
                 alert("hi");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('user');
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.$router.push({name: "login"});
+
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
+
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getCompanies();
         },
 
@@ -521,5 +546,8 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 </style>

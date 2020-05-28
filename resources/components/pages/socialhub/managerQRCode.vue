@@ -1,10 +1,10 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <div class="card" id="printableArea">
+            <div class="card no-shadows" id="printableArea">
                 <div class="card-block">
                     <div class="row">
-                        <div class="col-8 col-md-8 invoice_address">
+                        <div class="col-8 col-md-8">
                             <h4><Strong>Para usar WhatsApp em SocialHub:</Strong></h4>
                             <ol class="terms_conditions_ol">
                                 <li>Abra WhatsApp no seu telefone</li>
@@ -29,44 +29,32 @@
                             </div>
                         </div>
 
-                        <div class="col-3 col-md-3 text-right invoice_address text-center">
-                            <a href="javascript:void()" @click.prevent="logoutWhatsapp" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar</a>
-                            
-                            <!-- State 1 - beforeRequest -->
-                            <h4 v-if="beforeRequest" title="Solicitar código QR" class="mouse-hover" @click.prevent="getNewQRCode">
-                                <div  ref="imgQRCode" class="qrcode-spinner">
-                                    <i class="mdi mdi-reload fa-2x"></i>
+                        <div class="col-3 col-md-3">
+                            <div class="col-12 text-left">
+                                <a href="javascript:void()" @click.prevent="logoutWhatsapp" class="mb-2" title="Encerra qualquer sessão aberta e volta ao estado inicial">Deslogar do WhatsApp</a>
+                                <!-- State 1 - beforeRequest -->
+                                <div v-if="beforeRequest" @click.prevent="getNewQRCode" class="no-img">
+                                    <i class="mdi mdi-reload fa-2x" ></i>    
                                 </div>
-                            </h4>
-                            <!-- State 2 - duringRequest -->
-                            <h4 v-if="duringRequest">
-                                <div  ref="imgQRCode" class="qrcode-spinner">
+                                <!-- State 2 - duringRequest -->
+                                <div v-if="duringRequest" class="no-img">
                                     <i class="fa fa-spinner fa-spin fa-2x"></i>
                                 </div>
-                            </h4>
-                            <!-- State 3 - qrcodebase64 OK (show image) -->
-                            <h4 v-if="qrcodebase64!=''">
-                                <img :src="qrcodebase64" ref="imgQRCode" class="qrcode" alt="invoice QR Code"/>
-                            </h4>
-
-                            <!-- State 4 - isLoggued -->
-                            <h4 v-if="isLoggued">
-                                <div  ref="imgQRCode" class="qrcode-spinner">
+                                <!-- State 3 - qrcodebase64 OK (show image) -->
+                                <div v-if="qrcodebase64!=''" class="qrcode">
+                                    <img :src="qrcodebase64" width="100%" alt="invoice QR Code"/>
+                                </div>
+                                <!-- State 4 - isLoggued -->
+                                <div v-if="isLoggued" class="no-img">
                                     <i class="mdi mdi-emoticon-happy-outline fa-2x"></i>
                                 </div>
-                            </h4>
-
-                            <!-- State 5 - isError -->
-                            <h4 v-if="isError">
-                                <div  ref="imgQRCode" class="qrcode-spinner">
+                                <!-- State 5 - isError -->
+                                <div v-if="isError" class="no-img">
                                     <i class="mdi mdi-emoticon-sad-outline fa-2x"></i>
                                 </div>
-                            </h4>
-                            
-                            <h6>{{statusMessage}}</h6>
-
+                                <h6 class="mt-3">{{statusMessage}}</h6>
+                            </div>
                         </div>
-                        <div class="col-3 col-md-3 text-right invoice_address"></div>
                     </div>
                 </div>
             </div>
@@ -87,7 +75,7 @@
 
         data() {
             return {
-                logguedManager:{},
+                userLogged:{},
                 url:'rpis',
                 rpi:{},
 
@@ -116,9 +104,10 @@
                 var This = this;
                 ApiService.get(This.url)
                     .then(response => {
-                        console.log(response.data);
                         This.rpi = response.data;
-                        console.log(This.rpi);
+                        if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.status && This.rpi.QRCode.MsgID=='Already connected'){
+                            This.isLoggued = true;
+                        }else
                         if(This.rpi && This.rpi.QRCode && This.rpi.QRCode.message && This.rpi.QRCode.message=='Ja logado'){
                             This.isLoggued = true;
                         }else
@@ -128,26 +117,10 @@
                             This.isError=true;
                         }
                     })
-                    .catch(function(error) {
+                    .catch(error => {
                         This.duringRequest=false;
                         This.isError=true;
-                        if (error.response) {
-                            // console.log('error.response');
-                            // console.log(error.response.data);
-                            // console.log(error.response.data.message);
-                            // console.log(error.response.status);
-                            // console.log(error.response.headers);
-                            miniToastr.warn(error.response.data.message, "Atenção"); 
-                        } else
-                        if (error.request) {
-                            // console.log('error.request');
-                            // console.log(error.request);
-                        } else{
-                            // console.log('some another error');
-                            // console.log(error.message);
-                        }
-                        // console.log('error config');
-                        // console.log(error.config);
+                        this.processMessageError(error, This.url,"get");
                     })
                     .finally(() => {                        
                         if(This.handleTimerCounter == null && !This.isLoggued){
@@ -159,7 +132,8 @@
 
             timer(){
                 if(this.timeCounter<=0 && (!this.isLoggued || !this.qrcodebase64)){
-                    this.getNewQRCode();
+                    // this.getNewQRCode();
+                    this.beforeRequest = true;
                 }
                 else{
                     this.timeCounter-=1000;
@@ -167,23 +141,45 @@
             },
 
             logoutWhatsapp(){
-                ApiService.get('RPI/logout')
+                ApiService.post('RPI/logout')
                     .then(response => {
-                        this.beforeRequest=true;
-                        this.duringRequest=false;
-                        this.qrcodebase64=false;
-                        this.isLoggued=false;
-                        this.isError=false;
-                        this.erroMessage='';
+                        if(typeof(response.data !="undefined") 
+                            && typeof(response.data.message) != 'undefined'
+                            && (response.data.message == "Logout feito") || response.data.message=="Sessao deletada"){
+                                miniToastr.success("Sucesso", "Operação realizada com sucesso");   
+                                this.beforeRequest=true;
+                                this.duringRequest=false;
+                                this.qrcodebase64=false;
+                                this.isLoggued=false;
+                                this.isError=false;
+                                this.erroMessage='';
+                        } else{
+                            miniToastr.error("Error", response.data);   
+                        }
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Erro adicionando o contato");   
+                    .catch(error => {
+                        this.processMessageError(error, "RPI","logout");
                     });
             },
+
+            
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         beforeMount: function() {
-            this.logguedManager = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         created: function() {
@@ -198,6 +194,10 @@
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+
             this.beforeRequest = true;
 
             window.Echo = new Echo({
@@ -215,7 +215,7 @@
                 disableStats: false
             });
 
-            window.Echo.channel('sh.whatsapp-logged.' + this.logguedManager.id)
+            window.Echo.channel('sh.whatsapp-logged.' + this.userLogged.id)
                 .listen('WhatsappLoggedIn', (e) => {                    
                     this.isLoggued=true;
             });
@@ -229,7 +229,7 @@
                     this.qrcodebase64 = false;
                     this.isLoggued = false;
                     this.isError = false;
-                    this.statusMessage='QRCode';
+                    this.statusMessage='Solicitar QRCode';
                 }
             },
             duringRequest: function(value){
@@ -297,53 +297,6 @@
         padding: 25px;
     }
 
-    .card-header span {
-        margin-top: -33px;
-        font-size: 18px;
-    }
-
-    .invoice_address {
-        margin: 10px 0;
-    }
-
-    .table {
-        table-layout: fixed;
-        border: 1px solid #ccc;
-    }
-
-    .table tbody > tr {
-        height: 50px;
-    }
-
-    td,
-    th {
-        word-wrap: break-word;
-    }
-
-    .terms_conditions {
-        list-style: initial;
-        padding-left: 25px;
-    }
-    .terms_conditions_ol {
-        padding-left: 25px;
-    }
-
-    .table thead > tr > th {
-        padding: 10px 8px;
-        width: 80px;
-        background-color: #ccc;
-    }
-
-    .table thead > tr > th:nth-child(2) {
-        max-width: 180px;
-    }
-
-    .table-responsive > .table > tbody > tr > td,
-    .table-responsive > .table > tfoot > tr > td {
-        padding: 15px 8px;
-        white-space: normal;
-    }
-
     @media screen and (min-width: 768px) {
         .invoice_address {
             margin: 20px 0;
@@ -368,20 +321,25 @@
     }
 
     .qrcode{
-        width: 10em;
-        height: 10em;
+        width: 10rem;
+        height: 10rem;
     }
 
-    .qrcode-spinner{
-        width: 10em;
-        height: 10em;
-        position: relative;
-        padding: 4em 4em 4em 4em;
-        border: 3px solid silver;
+    .no-img{
+        /* margin-left:25%; */
+        width: 10rem;
+        height: 10rem;
+        padding-top:4rem;
+        padding-bottom:6rem;
+        border: 2px solid silver;
+        text-align: center;
     }
 
     .mouse-hover:hover{
         cursor: pointer;
     }
 
+    .no-shadows{
+        box-shadow: none !important;
+    }
 </style>

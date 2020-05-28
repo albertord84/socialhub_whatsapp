@@ -134,6 +134,7 @@
 
         data() {
             return {
+                userLogged:{},
                 //---------General properties-----------------------------
                 first_url:'users',  //route to controller
                 url:'usersSellers',  //route to controller
@@ -205,8 +206,8 @@
                         console.log(response.data);
                         this.rows = response.data;                       
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os vendedores");   
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "get");
                     });
             }, 
 
@@ -331,13 +332,32 @@
             mycheck(){
                 alert("hi");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getSellers();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 1){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 

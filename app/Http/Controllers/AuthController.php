@@ -66,7 +66,6 @@ class AuthController extends Controller
      */
     public function login()
     {        
-        Log::info('login');
         $credentials = request(['email', 'password']);
         $remember = true;
         $token = Auth::attempt($credentials, $remember);
@@ -85,7 +84,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', request(['email']))->first();
         if (is_null($user)) {
-            return response()->json(['error' => 'No user exists'], 401);
+            return response()->json(['error' => 'O usuário não existe'], 401);
         }
         $token = str_random(16);
         DB::table('password_resets')->insert(['token' => $token, 'email' => $user->email]);
@@ -126,7 +125,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth('api')->user());
+        return response()->json(auth()->user());
     }
 
     /**
@@ -136,8 +135,11 @@ class AuthController extends Controller
      */
     public function logout()
     {        
-        Log::info('logout');
-        auth('api')->logout();
+        try {
+            auth()->logout();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         return response()->json(['message' => 'Successfully logged out']);
     }   
 
@@ -159,7 +161,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        return $this->respondWithToken(auth()->refresh());
     }
 
     /**

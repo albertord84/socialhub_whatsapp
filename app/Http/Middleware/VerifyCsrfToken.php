@@ -20,5 +20,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'RPI/*',
+        'testsalesbling',
+        'apis',
+        // 'companies',
+        // 'companies/*',
     ];
 }

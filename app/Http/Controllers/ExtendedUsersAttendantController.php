@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateUsersAttendantRequest;
 use App\Http\Requests\UpdateUsersAttendantRequest;
 use App\Mail\EmailSigninAttendant;
+use App\Models\AttendantsContact;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -14,6 +15,7 @@ use Auth;
 use App\User;
 
 use App\Repositories\ExtendedUsersAttendantRepository;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ExtendedUsersAttendantController extends UsersAttendantController
@@ -49,7 +51,7 @@ class ExtendedUsersAttendantController extends UsersAttendantController
         
         // $usersAttendants = $this->usersAttendantRepository->Attendants_User((int)$User->id);
         
-        return $usersAttendants->toJson();
+        return ($usersAttendants)? $usersAttendants->toJson() : null;
     }
 
     /**
@@ -93,6 +95,7 @@ class ExtendedUsersAttendantController extends UsersAttendantController
 
         //enviar email de cadastro de atendente
         $Manager = Auth::check()? Auth::user():session('logged_user');
+        $User = new User();
         $User = User::find($request['user_id']);
         $User->password = rand(100000,999999);
         Mail::to($User->email)
@@ -102,6 +105,8 @@ class ExtendedUsersAttendantController extends UsersAttendantController
 
         $input = $request->all();
         $this->usersAttendantRepository->createAttendantChatTable($input['user_id']);
+
+        return ($User)? $User->toJson() : null;
     }
 
     /**
@@ -120,6 +125,8 @@ class ExtendedUsersAttendantController extends UsersAttendantController
             
             return redirect(route('usersAttendants.index'));
         }
+
+        AttendantsContact::where('attendant_id', $id)->delete();
         
         $this->usersAttendantRepository->delete($id);
         

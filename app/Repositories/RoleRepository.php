@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Role;
+use Illuminate\Database\Eloquent\Collection;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
@@ -30,5 +31,14 @@ class RoleRepository extends BaseRepository
     public function model()
     {
         return Role::class;
+    }
+
+    function rolesWithUsers(int $role_id) : Collection
+    {
+        $Collection = new Collection;
+
+        $Collection = Role::with('users')->where('id', $role_id)->get();
+
+        return $Collection;
     }
 }

@@ -31,9 +31,15 @@ class RoleController extends AppBaseController
     {
         $this->roleRepository->pushCriteria(new RequestCriteria($request));
         $roles = $this->roleRepository->all();
+        // $role = $this->roleRepository->rolesWithUsers($request->id);
 
-        return view('roles.index')
-            ->with('roles', $roles);
+
+        // dd($role);
+        // return $role->toJson();
+        return $roles->toJson();
+
+        // return view('roles.index')
+        //     ->with('roles', $roles);
     }
 
     /**
@@ -61,7 +67,7 @@ class RoleController extends AppBaseController
 
         Flash::success('Role saved successfully.');
 
-        return redirect(route('roles.index'));
+        // return redirect(route('roles.index'));
     }
 
     /**
@@ -73,7 +79,8 @@ class RoleController extends AppBaseController
      */
     public function show($id)
     {
-        $role = $this->roleRepository->findWithoutFail($id);
+        // $role = $this->roleRepository->findWithoutFail($id);
+        $role = $this->roleRepository->rolesWithUsers($id);
 
         if (empty($role)) {
             Flash::error('Role not found');
@@ -81,7 +88,8 @@ class RoleController extends AppBaseController
             return redirect(route('roles.index'));
         }
 
-        return view('roles.show')->with('role', $role);
+        return $role->toJson();
+        // return view('roles.show')->with('role', $role);
     }
 
     /**

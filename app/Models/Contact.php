@@ -32,7 +32,9 @@ class Contact extends Model
 
     public $table = 'contacts';
 
-    public $timestamps = false;
+    public $connection = "socialhub_mvp";
+
+    public $timestamps = true;
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';    
@@ -53,6 +55,15 @@ class Contact extends Model
         'linkedin_id',
         'json_data',
         'status_id',
+        'origin',
+
+        'cidade',
+        'estado',
+        'categoria1',
+        'categoria2',
+
+        // 'last_message',
+
     ];
 
     /**
@@ -77,6 +88,12 @@ class Contact extends Model
         'json_data' => 'string',
         'status_id' => 'integer',
         'updated_at' => 'string',
+        'origin' => 'integer',
+        
+        'cidade' => 'string',
+        'estado' => 'string',
+        'categoria1' => 'string',
+        'categoria2' => 'string',
     ];
 
     /**
@@ -110,6 +127,14 @@ class Contact extends Model
     public function attendantsContacts()
     {
         return $this->hasMany(\App\Models\AttendantsContact::class, 'contact_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function sales()
+    {
+        return $this->hasMany(\App\Models\Sales::class, 'contact_id');
     }
 
     /**

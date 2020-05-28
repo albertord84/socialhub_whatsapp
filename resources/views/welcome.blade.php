@@ -80,7 +80,7 @@
         @keyframes sk-bounce {
             0%,
             100% {
-                transform: scale(0.0);
+                transform: scale(0.0);omineo
                 -webkit-transform: scale(0.0);
             }
             50% {
@@ -93,10 +93,19 @@
         window.onload=function () {
             document.querySelector('#preloader').remove()
         }
-    </script>
+    </script>    
 </head>
 
 <body>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128166624-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-128166624-4');
+    </script>
+
     <div id="preloader">
         <div class="spinner">
             <div class="dot1"></div>
@@ -105,9 +114,30 @@
     </div>
     <div id="app"></div>
 
-    <script type="text/javascript" src="{{ url(mix('manifest.js'))}}"></script>
-    <script type="text/javascript" src="{{ url(mix('vendor.js'))}}"></script>
-    <script type="text/javascript" src="{{ url(mix('main.js'))}}"></script>
+    <script type="text/javascript" src="{{ url(mix('manifest.js')).'?'.env('APP_VERSION') }}"></script>
+    <script type="text/javascript" src="{{ url(mix('vendor.js')).'?'.env('APP_VERSION') }}"></script>
+    <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP_VERSION') }}"></script>
+    
+    <script>
+        // @see https://docs.headwayapp.co/widget for more configuration options.
+        var HW_config = {
+            // selector: ".CHANGE_THIS", // CSS selector where to inject the badge
+            selector: ".selector-headwayapp", // CSS selector where to inject the badge
+            account:  "JVYOA7",
+            translations: {
+                title: "Notificações",
+                readMore: "Ler mais",
+                labels: {
+                    "new": "Notícias",
+                    "improvement": "Ataulizações",
+                    "fix": "Fixos"
+                    },
+                footer: "SocialHub"
+            },
+        }
+    </script>
+    <script async src="https://cdn.headwayapp.co/widget.js"></script>
+    
 
 </body>
 

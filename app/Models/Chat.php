@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Chat
@@ -22,12 +22,11 @@ class Chat extends Model
 {
 
     public $table = 'chats';
+
+    public $connection = "socialhub_mvp.chats";
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-
-
-    public $connection = "socialhub_mvp.chats";
 
     public $fillable = [
         'contact_id',
@@ -69,5 +68,21 @@ class Chat extends Model
         'attendant_id' => 'required'
     ];
 
-    
+    /**
+     * Class constructor.
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->connection = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? "socialhub_mvp.chats.test" : "socialhub_mvp.chats";
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function contact()
+    {
+        return $this->belongsTo(\App\Models\Contact::class, 'contact_id');
+    }
 }

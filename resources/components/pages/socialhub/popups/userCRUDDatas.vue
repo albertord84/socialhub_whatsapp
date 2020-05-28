@@ -2,13 +2,13 @@
     <div >
         <div class="card tweet-profile" style="box-shadow:none">
             <div class="card-header text-center">
-                <i class="fa fa-pencil icons-action" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i>
-                <h4>{{user.name}}</h4>
-                <p>{{user.email}}</p>
+                <!-- <i class="fa fa-pencil icons-action" title="Editar perfil" style="position:relative; float:right" @click.prevent="editUser"></i> -->
+                <h4>{{userLogged.name}}</h4>
+                <p>{{userLogged.email}}</p>
             </div>
             <span class="profile-img text-center">
                 <input id="fileUserPhoto" ref="fileUserPhoto" style="display:none"   type="file" @change.prevent="handleFileUserPhoto" accept="image/*"/>
-                <img :src="user.image_path" alt="profile image" class="img-fluid">
+                <img :src="userLogged.image_path" alt="profile image" class="img-fluid">
                 <i class="fa fa-camera icons-action" @click.prevent="trigger()" title="Trocar imagem" style="position:relative; top:-40px; left:-30px"></i>
             </span>
             <div class="card-block mt-1">
@@ -30,14 +30,14 @@
                     <div class="col-12 ml-3">
                         <p class="text-muted font-weight-bold">INFORMAÇÃO PESSOAL</p>
                     </div>
-                    <div class="col-12 ml-3 mt-0">
+                    <!-- <div class="col-12 ml-3 mt-0">
                         <ul class="list-inline">
                             <li class="list-inline-item"><i class="fa fa-address-card-o text-muted" aria-hidden="false"></i></li>
                             <li class="list-inline-item"><span class="font-weight-bold">CPF</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <span v-show="!editMode" class="text-muted" >{{user.CPF}}</span>
-                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <span v-show="!editMode" class="text-muted" >{{userLogged.CPF}}</span>
+                                    <input ref="CPF" v-show="editMode" type="text" v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" placeholder="CPF (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -48,8 +48,8 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Telefone</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <span v-show="!editMode" class="text-muted" >{{user.phone}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.phone" class="border border-top-0 border-left-0 border-right-0  font-italic">
+                                    <span v-show="!editMode" class="text-muted" >{{userLogged.phone}}</span>
+                                    <input v-show="editMode" type="text" v-model="model.phone" v-mask="'###############'" title="Ex: 551188888888" placeholder="Telefone fixo" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -60,8 +60,8 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Whatsapp</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <span v-show="!editMode" class="text-muted" >{{user.whatsapp_id}}</span>
-                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
+                                    <span v-show="!editMode" class="text-muted" >{{userLogged.whatsapp_id}}</span>
+                                    <input v-show="editMode" type="text" v-model="model.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" placeholder="whatsapp (*)" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
@@ -72,7 +72,7 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Facebook</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <span v-show="!editMode" class="text-muted" >{{user.facebook_id}}</span>
+                                    <span v-show="!editMode" class="text-muted" >{{userLogged.facebook_id}}</span>
                                     <input v-show="editMode" type="text" v-model="model.facebook_id" class="border border-top-0 border-left-0 border-right-0  font-italic">
                                 </li>
                             </ul>
@@ -84,7 +84,7 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Instagram</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <span v-show="!editMode" class="text-muted" >{{user.instagram_id}}</span>
+                                    <span v-show="!editMode" class="text-muted" >{{userLogged.instagram_id}}</span>
                                     <input v-show="editMode" type="text" v-model="model.instagram_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
@@ -96,15 +96,15 @@
                             <li class="list-inline-item"><span class="font-weight-bold">Linkedin</span></li>
                             <ul style="float:right; margin-right:40px">
                                 <li class="list-inline-item">
-                                    <span v-show="!editMode" class="text-muted" >{{user.linkedin_id}}</span>
+                                    <span v-show="!editMode" class="text-muted" >{{userLogged.linkedin_id}}</span>
                                     <input v-show="editMode" type="text" v-model="model.linkedin_id" class="border border-top-0 border-left-0 border-right-0 font-italic">
                                 </li>
                             </ul>
                         </ul>                                               
-                    </div>
+                    </div> -->
 
                     <div class="col-12 ml-3 mt-0">
-                        <ul v-show="editMode" class="list-inline">
+                        <ul  class="list-inline">
                             <li class="list-inline-item"><i class="fa fa-key text-muted" aria-hidden="false"></i></li>
                             <li class="list-inline-item"><span class="font-weight-bold">Senha</span></li>
                             <ul style="float:right; margin-right:40px">
@@ -116,7 +116,7 @@
                         </ul>                                               
                     </div>
                     <div class="col-12 ml-3 mt-0">
-                        <ul v-show="editMode" class="list-inline">
+                        <ul class="list-inline">
                             <li class="list-inline-item"><i class="fa fa-key text-muted" aria-hidden="false"></i></li>
                             <li class="list-inline-item"><span class="font-weight-bold">Repetir senha</span></li>
                             <ul style="float:right; margin-right:40px">
@@ -145,9 +145,10 @@
     import vScroll from "components/plugins/scroll/vScroll.vue"
     import ApiService from "resources/common/api.service";    
     import miniToastr from "mini-toastr";
+    import validation from "src/common/validation.service";
     miniToastr.init();
 
-     export default {
+    export default {
         name: "userCRUDDatas",
 
         props:{
@@ -161,7 +162,7 @@
         data() {
             return {
                 url:'users',
-                user:{},
+                userLogged:{},
                 model: {},
                 editMode:false,
                 isSending:false,
@@ -171,6 +172,8 @@
                 repeat_password:'',
                 watchPassword:false,
                 watchRepeatPassword:false,
+
+                flagReference: true,
             }
         },
 
@@ -189,17 +192,35 @@
                     this.model.password = this.password;
                 }
                 this.isSending = true;
-                ApiService.put(this.url+'/'+this.model.id, this.model)
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSending = false;
+                    this.flagReference = true;
+                    return;
+                }
+
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');            //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');            //ECR
+                }
+                
+                ApiService.put(this.url+'/'+this.model.id, model_cpy)               //ECR
                 .then(response => {
                     // window.location.reload(false);
-                    this.user = response.data;
+                    this.userLogged = response.data;
                     window.localStorage.setItem('user', JSON.stringify(response.data));                        
                     miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
                     this.editMode = false;
                 })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro atualizando perfil");  
+                .catch(error => {
+                    this.processMessageError(error, this.url, "update");
                 })
                 .finally(() => this.isSending = false);
                 
@@ -213,21 +234,18 @@
                     formData.append("file",This.file);
 
                     ApiService.post(
-                        This.url+'/'+This.user.id+'/update_image',
+                        This.url+'/'+This.userLogged.id+'/update_image',
                         formData,
                         {headers: { "Content-Type": "multipart/form-data" }}
                     )
                     .then(response => {
-                        This.user.image_path = response.data;
-                        window.localStorage.setItem('user', JSON.stringify(This.user));
-                        
+                        This.userLogged.image_path = response.data;
+                        window.localStorage.setItem('user', JSON.stringify(This.userLogged));
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
-
                         window.location.reload(false);
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando a foto do perfil");  
+                    .catch(error => {
+                        this.processMessageError(error, This.url, "update_image");
                     });
                 }
             },
@@ -248,9 +266,9 @@
 
             editUser(){
                 if(this.editMode == false){
-                    this.model = Object.assign({}, this.user);
+                    this.model = Object.assign({}, this.userLogged);
                     this.repeat_password = this.password = '';
-                    this.$refs.CPF.focus();
+                    // this.$refs.CPF.focus();
                     this.editMode = true;
                 }else{
                     var This =this;
@@ -260,10 +278,113 @@
                     This.editMode = false;
                 }
             },
+
+            trimDataModel: function(){
+                if(this.model.CPF) this.model.CPF = this.model.CPF.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+
+                this.password= this.password.trim();
+                this.repeat_password = this.repeat_password.trim();
+            },
+
+            validateData: function(){
+                // Validação dos dados do manager
+                var check;
+
+                // if(this.model.CPF && this.model.CPF !=''){
+                //     check = validation.validate_cpf('cpf', this.model.CPF)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
+                // if(this.model.phone && this.model.phone !=''){
+                //     check = validation.check('phone', this.model.phone)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
+
+                // if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                //     check = validation.check('whatsapp', this.model.whatsapp_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
+                // if(this.model.facebook_id && this.model.facebook_id !=''){
+                //     check = validation.check('facebook_profile', this.model.facebook_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
+
+                // if(this.model.instagram_id && this.model.instagram_id !=''){
+                //     check = validation.check('instagram_profile', this.model.instagram_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
+                
+                // if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                //     check = validation.check('linkedin_profile', this.model.linkedin_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }
+
+                if(this.password && this.password !=''){
+                    check = validation.check('password', this.password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.repeat_password && this.repeat_password !=''){
+                    check = validation.check('password', this.repeat_password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
+
         },
 
         beforeMount(){
-            this.user = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+            this.editUser();
         },
 
         created() {
@@ -296,13 +417,7 @@
 
         }
 
-       
-
-
-     }
-
-
-
+    }
 
 </script>
 

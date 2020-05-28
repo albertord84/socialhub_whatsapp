@@ -1,5 +1,5 @@
 <template>
-    <div class="card p-3">
+    <div class="card p-3 no-shadows">
         <!-- Attendant DataTable -->
         <div class="table-header">
             <h4 class="table-title text-center mt-3">{{title}}</h4>
@@ -14,11 +14,12 @@
                 </label>
                 <div class="actions float-right pr-4 mb-3">
                     <a href="javascript:undefined" class="btn btn-info text-white" v-if="this.exportable" @click="exportExcel" title="Exportar atendentes">
+                        <!-- <i class="mdi mdi-file-export fa-lg"  ></i> -->
                         <i class="fa fa-download"></i>
                     </a>
                 </div>
                 <div class="actions float-right pr-4 mb-3">
-                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="modalAddAttendant = !modalAddAttendant" title="Novo atendente">
+                    <a href="javascript:undefined" class="btn btn-info text-white" @click.prevent="handleAddAttendant" title="Novo atendente">
                         <i class="fa fa-user-plus"></i>
                     </a>
                 </div>
@@ -92,12 +93,14 @@
 
     </div>
 </template>
+
 <script>
     import Fuse from 'fuse.js';
     import miniToastr from "mini-toastr";
     miniToastr.init();
     import ApiService from "../../../common/api.service";
     import managerCRUDAttendant from "./popups/managerCRUDAttendant";
+    
 
     export default {
         props: {
@@ -131,14 +134,18 @@
         data() {
             return {
                 //---------General properties-----------------------------
+                userLogged:{},
                 attendant_contact_url: 'attendantsContacts', // attendantsContacts controller url 
                 first_url:'users',  //route to controller
                 url:'usersAttendants',  //route to controller
+
+                company_url:'companies',  //route to controller
                 
                 // model:{},
                 //---------Specific properties-----------------------------
                 attendant_id: "",
                 model:{},
+                modelCompany:{},
                 //---------New record properties-----------------------------
                 
                 //---------Edit record properties-----------------------------
@@ -161,11 +168,11 @@
                         width: "90px",
                         html: false,
                     },{
-                        label: 'Login', 
-                        field: 'login', 
-                        numeric: false, 
-                        html: false, 
-                    },{
+                    //     label: 'Login', 
+                    //     field: 'login', 
+                    //     numeric: false, 
+                    //     html: false, 
+                    // },{
                         label: 'Nome completo', 
                         field: 'name', 
                         numeric: false, 
@@ -181,11 +188,11 @@
                         numeric: false,
                         html: false,
                     }, {
-                        label: 'CPF',
-                        field: 'CPF',
-                        numeric: false,
-                        html: false,
-                    }, {
+                    //     label: 'CPF',
+                    //     field: 'CPF',
+                    //     numeric: false,
+                    //     html: false,
+                    // }, {
                         label: 'Ações',
                         field: 'button',
                         numeric: false,
@@ -215,10 +222,28 @@
                             //TODO-JR: adicionar o nome do status a cada registro
                         });
                     })
-                    .catch(function(error) {
-                        miniToastr.error(error, "Error carregando os atendentes");   
+                    .catch(error => {
+                        this.processMessageError(error, this.url,"get");
                     });
             }, 
+
+            getCompanyOFManager(){ //TODO-Egberto
+                ApiService.get(this.company_url)
+                    .then(response => {
+                        this.modelCompany = response.data[0];
+                    })
+                    .catch(error => {
+                        this.processMessageError(error, this.company_url,"get");
+                    });
+            }, 
+
+            handleAddAttendant(){ //TODO-Egberto (OK)
+                if(this.modelCompany.amount_attendants > this.rows.length){
+                    this.modalAddAttendant = !this.modalAddAttendant;
+                }else{
+                    miniToastr.warn("Para inserir mais atentendente você deve contatar nossa equipe atendimento", "Atenção"); 
+                }
+            },
 
             reloadDatas(){
                 this.getAttendants();
@@ -341,13 +366,33 @@
             mycheck(){
                 alert("hi");
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
+            this.getCompanyOFManager();
         },
 
         mounted() {
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.sort(0);
         },        
 
@@ -445,5 +490,8 @@
     }
     .text-18{
         font-size: 18px
+    }
+    .no-shadows{
+        box-shadow: none !important;
     }
 </style>

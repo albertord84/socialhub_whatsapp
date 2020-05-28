@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string name
  * @property string phone
  * @property string email
+ * @property string rpi_id
  * @property string description
  */
 class Company extends Model
@@ -37,7 +38,26 @@ class Company extends Model
         'email',
         'whatsapp',
         'description',
-        'user_seller_id'
+        'user_seller_id',
+
+        'CEP',
+        'cidade',
+        'estado',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+        'amount_attendants',
+
+        'bling_apikey',
+        'bling_token',
+        'bling_message',
+        'bling_contrated',
+
+        'tracking_user',
+        'tracking_pass',
+        'tracking_message',
+        'tracking_contrated'
     ];
 
     /**
@@ -55,6 +75,28 @@ class Company extends Model
         'whatsapp'=> 'string',
         'description' => 'string',
         'user_seller_id' => 'integer',
+
+        'CEP'=> 'string',
+        'estado'=> 'string',
+        'cidade'=> 'string',
+        'rua'=> 'string',
+        'numero'=> 'string',
+        'complemento'=> 'string',
+        'bairro'=> 'string',
+        
+        'amount_attendants'=> 'string',
+
+        'bling_apikey'=> 'string',
+        'bling_token'=> 'string',
+        'bling_message'=> 'string',
+        'bling_contrated'=> 'integer',
+
+        'tracking_user'=> 'string',
+        'tracking_pass'=> 'string',
+        'tracking_message'=> 'string',
+        'tracking_contrated'=> 'integer',
+
+        'api_contrated' => 'intenger',
     ];
 
     /**
@@ -88,6 +130,22 @@ class Company extends Model
     public function rpi()
     {
         return $this->hasOne(\App\Models\Rpi::class, 'id', 'rpi_id');
+        // return $this->hasOne(\App\Models\Rpi::class, 'rpi_id');
+    } 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function manager()
+    {
+        $this->manager = User::where([
+            'company_id' => $this->id, 
+            'role_id' => 3,
+            'status_id' => 1
+        ])->first();
+
+        return $this;
+        // return $this->hasOne(\App\Models\User::class, 'company_id', 'id');
         // return $this->hasOne(\App\Models\Rpi::class, 'rpi_id');
     } 
 

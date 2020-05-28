@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});*/
 
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('register', 'AuthController@register');
@@ -30,4 +31,10 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('get_user/{user_id}', 'AuthController@getUser');
     Route::post('edit_user', 'AuthController@editUser');
     Route::get('delete_user/{user_id}', 'AuthController@deleteUser');
+});
+
+// Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function ($router) {
+Route::group(['prefix' => 'v1'], function ($router) {
+    // Route::resource('messages', 'ApiController');
+    Route::post('messages', 'ApiController@store');
 });

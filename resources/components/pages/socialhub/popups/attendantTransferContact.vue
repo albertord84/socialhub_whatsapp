@@ -39,6 +39,7 @@
 
         data() {
             return {
+                userLogged:{},
                 attendantsContactsUrl:'attendantsContacts',  //route to controller
                 newAtendantContactId: null,
                 isSendingNwwAtendantContact: false,
@@ -57,9 +58,8 @@
                         this.reload();
                         this.formCancel();
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando o contato"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "delete");
                     });  
             },            
             
@@ -74,10 +74,31 @@
             editclose() {                
                this.$emit('onclose');
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
         },
 
         beforeMount(){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
             this.getAttendants();
+        },
+
+        mounted(){
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
         },
 
         created() {

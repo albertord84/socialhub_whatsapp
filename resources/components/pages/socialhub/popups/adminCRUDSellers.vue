@@ -88,6 +88,7 @@
 
         data(){
             return{
+                userLogged:{},
                 attendant_id: "",
                 model:{
                     name: "",
@@ -122,14 +123,12 @@
                             this.reload();
                             this.closeModals();
                         })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando Atendente");  
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "add");
                     });
                 })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
+                .catch(error => {
+                    this.processMessageError(error, this.first_url, "add"); 
                 });
             },
             
@@ -144,15 +143,14 @@
                 delete model_cpy.created_at;
                 delete model_cpy.updated_at;
                 delete model_cpy.deleted_at;
-                ApiService.post(this.first_url+'/'+this.attendant_id, model_cpy)
+                ApiService.put(this.first_url+'/'+this.attendant_id, model_cpy)
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");
                             this.reload();
                             this.closeModals();
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando Atendente"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.first_url, "update"); 
                     });
             },
 
@@ -166,14 +164,12 @@
                                 this.reload();
                                 this.closeModals();
                             // })
-                            // .catch(function(error) {
-                            //     ApiService.process_request_error(error);  
-                            //     miniToastr.error(error, "Erro eliminando Atendente"); 
+                            // .catch(error => {
+                                // this.processMessageError(error, this.first_url, "delete");
                             // });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Atendente"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "delete"); 
                     });
             },
 
@@ -199,9 +195,30 @@
                 this.$emit('onreloaddatas');
             }, 
 
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
+        },
+
+        beforeMount: function() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         mounted(){
+            if(this.userLogged.role_id > 1){
+                this.$router.push({name: "login"});
+            }
             this.editAttendant();
         },
 

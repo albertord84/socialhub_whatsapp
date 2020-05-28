@@ -4,45 +4,79 @@ namespace App\Repositories;
 
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\AttendantsContact;
-use App\Models\Chat;
+use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
+use App\Models\Sales;
+use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class ExtendedChatRepository extends ChatRepository
-{    
+{
 
-    public function contactChatAllAttendants(int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
+    public function contactChatAllAttendants(int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed = 1): Collection
+    {
         $ContactChats = new Collection();
         try {
-            $extAttContRepo = new ExtendedContactRepository(app()); 
+            $extAttContRepo = new ExtendedContactRepository(app());
 
             $Attendants = $extAttContRepo->getAttendants($contact_id);
 
             foreach ($Attendants as $key => $Attendant) {
-                $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput);
+                $contactAttChats = $this->contactChat($Attendant->attendant_id, $contact_id, $page, $searchMessageByStringInput, $set_as_readed);
+
                 $ContactChats = $ContactChats->concat($contactAttChats);
             }
+
+            $ContactChats = $ContactChats->unique('id')->sortBy('created_at');
+            // $ContactChats = $ContactChats->unique('id')->sortBy('updated_at');
             
+            $Collection = new Collection();
+            $page_length = env('APP_PAGE_LENGTH', 10);
+
+            $msgCount = Count($ContactChats);
+            $start = $msgCount - $page_length * $page - $page_length;
+            if ($start < 0) { // Validating last page
+                if ($start + $page_length <= 0) // if after last page return empty collection
+                {
+                    return $Collection;
+                }
+
+                // Needed in case the last page not to be a full page
+                $page_length = $start + $page_length;
+                $start = 0;
+            }
+
+            $Slice = $ContactChats->slice($start, $page_length)->all();
+            foreach ($Slice as $key => $value) {
+                $Collection->add($value);
+            }
+
         } catch (\Throwable $th) {
             throw $th;
         }
 
-        return $ContactChats;
+        // return $ContactChats;
+        return $Collection;
     }
 
-    public function getBagContact(int $attendant_id): Contact{
+    public function getBagContact(int $attendant_id): ?Contact
+    {
         try {
             // First message from Bag
-            $ChastMessages = $this->first();
-            
+            $attendantUser = User::find($attendant_id);
+            $ChastMessages = $this->model()::where('company_id', $attendantUser->company_id)->first();
+
             $Contact = null;
+
             if ($ChastMessages) {
                 // Get Logged User
                 $User = Auth::check() ? Auth::user() : session('logged_user');
+
+                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])
+                    ->where(['id' => $ChastMessages->contact_id])->first();
 
                 // Get contact From Bag by Contact Id
                 // $Contact = Contact::find($ChastMessages->contact_id);
@@ -53,82 +87,116 @@ class ExtendedChatRepository extends ChatRepository
                 // $Contact->save();
 
                 // Associate contact to attendant $attendant_id
-                $AttendantsContact = new AttendantsContact();
-                $AttendantsContact->contact_id = $ChastMessages->contact_id;
-                $AttendantsContact->attendant_id = $attendant_id;
-                $AttendantsContact->save();
+                if ($Contact) {
+                    $AttendantsContact = new AttendantsContact();
+                    $AttendantsContact->contact_id = $ChastMessages->contact_id;
+                    $AttendantsContact->attendant_id = $attendant_id;
+                    $AttendantsContact->save();
+                }
+
+                $Company = Company::find($User->company_id);
                 
+                // Move from Sales table to Attendant Table
+                if ($Company->bling_contrated) {
+                    $Sales = new Sales();
+                    $Sales->table = "$attendantUser->company_id";
+                    $Sales = $Sales->where('contact_id', $ChastMessages->contact_id)->get();
+
+                    foreach ($Sales as $key => $Sale) {
+                        $newChat = new ExtendedChat();
+                        $newChat->table = (string) $attendant_id;
+                        $newChat->message = $Sale->message;
+                        $newChat->attendant_id = $attendant_id;
+                        $newChat->contact_id = $ChastMessages->contact_id;
+                        $newChat->type_id = 1;
+                        $newChat->status_id = $Sale->sended ? MessagesStatusController::SENDED : MessagesStatusController::ROUTED;
+                        $newChat->source = 0;
+                        $newChat->save();
+                    }
+                }
+
                 // Move from Chats table to Attendant Table
-                $Chats = $this->findWhere(['contact_id' => $ChastMessages->contact_id])->all();
+                $Chats = $this->findWhere([
+                    'company_id' => $attendantUser->company_id,
+                    'contact_id' => $ChastMessages->contact_id,
+                ])->all();
                 foreach ($Chats as $key => $Chat) {
                     $newChat = $Chat->replicate();
-                    $newChat->table = (string)$attendant_id;
+                    $newChat->table = (string) $attendant_id;
                     $newChat->attendant_id = $attendant_id;
                     $newChat->contact_id = $ChastMessages->contact_id;
                     $newChat->save();
-        
+
                     $Chat->delete();
                 }
 
-                
                 // Construct Contact with full data that chat need
-                $Contact = Contact::with(['Status', 'latestAttendantContact', 'latestAttendant'])->where(['id' => $ChastMessages->contact_id])->first();
-                if ($Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
+                if ($Contact && $Contact->latestAttendant && $Contact->latestAttendant->attendant_id == $attendant_id) {
                     // Get Contact Status
                     $Contact['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
-                    
+
                     // Last Chat Message
-                        // Create chat model of $attendant_id to 
-                        $chatModel = new $this->model();
-                        $chatModel->table = (string) $attendant_id;
+                    // Create chat model of $attendant_id to
+                    $chatModel = new $this->model();
+                    $chatModel->table = (string) $attendant_id;
                     $lastMesssage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
                     $Contact['last_message'] = $lastMesssage;
-                    
+
                     // Unreaded Messages Count
                     $countUnreadMessages = $chatModel
                         ->where('contact_id', $Contact->id)
-                        ->where('status_id', 6) //UNREADED message for me
+                        ->where('status_id', MessagesStatusController::UNREADED) // UNREADED message for me
                         ->count();
 
                     $Contact['count_unread_messagess'] = $countUnreadMessages;
                 }
 
             }
-            
+
             return $Contact; //atrelar el last message igual que es atrelado en getContacts
         } catch (\Throwable $th) {
             throw $th;
         }
     }
 
-    // 
-    public function getBagContactsCount(): int{
-        $count = $this->model()::select('contact_id')->distinct()->get();
+    //
+    public function getBagContactsCount(int $company_id): int
+    {
+        $count = $this->model()::where('company_id', $company_id)->select('contact_id')->distinct()->get();
 
         return $count->count();
     }
 
-    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null): Collection{
+    public function contactChat(int $attendant_id, int $contact_id, int $page = null, string $searchMessageByStringInput = null, $set_as_readed = 1): Collection
+    {
         $chatModel = new $this->model();
-        $chatModel->table = (string)$attendant_id;
-        
+        $chatModel->table = isset($_SESSION['TESTING']) && $_SESSION['TESTING'] ? 'chats' : (string) $attendant_id;
+
+        // Mark all messages read
+        if ($set_as_readed) {
+            $chatModel
+                ->where('contact_id', $contact_id)
+                ->where('status_id', MessagesStatusController::UNREADED)
+                ->update(['status_id' => MessagesStatusController::READED]);
+        }
+
         if (!$searchMessageByStringInput) {
             $ChastMessages = $chatModel->where('contact_id', $contact_id)->get();
         } else {
-            $ChastMessages = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%'.$searchMessageByStringInput.'%')->get();//simplePaginate($page);
+            $ChastMessages = $chatModel->where('contact_id', $contact_id)->where('message', 'LIKE', '%' . $searchMessageByStringInput . '%')->get(); //simplePaginate($page);
         }
 
         return $ChastMessages;
     }
 
     public function createMessage(array $attributes)
-    {   
+    {
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
-        $chatModel->table = (string)$attendant_id;
+        $chatModel->table = (string) $attendant_id;
 
         //updating contact
-        $contact_id = (int)$attributes['contact_id'];
+        $contact_id = (int) $attributes['contact_id'];
         $Contact = Contact::find($contact_id);
         $Contact->updated_at = Carbon::now();
         $Contact->save();
@@ -137,12 +205,47 @@ class ExtendedChatRepository extends ChatRepository
     }
 
     public function updateMessage(array $attributes, int $id)
-    {   
+    {
         $attendant_id = $attributes['attendant_id'];
         $chatModel = new $this->model();
-        $chatModel->table = (string)$attendant_id;
+        $chatModel->table = (string) $attendant_id;
         $chatModel->findOrFail($id);
         return $chatModel->save($attributes);
+    }
+
+    public function transformToRichText($message, $source) {
+        /* 
+            Obs1: $source:  0 se mensagem é de saída (enviada por um atendente), e 
+                            1 se a mensagem é de entrada (enviada por um contato para a SH)
+
+            Obs2:   essa função deveria ser usada para armazenar cada mensagem no banco de dados, 
+                    assim poderiamos ter links clicáveis no frontend, e o site-preview
+        */
+        $arr = explode(" ",$message);
+        $str = '';
+        $firstLink = '';
+        $styleColor = (!$source) ? 'color: white !important; text-decoration: none !important' : 'color: black !important; text-decoration: none !important';
+        foreach ($arr as $i => $item) {
+            $link = '';
+            if(filter_var($item, FILTER_VALIDATE_URL)){
+                if(strpos($item, 'http://')>=0  || strpos($item, 'https://')>=0) {
+                    $link = '<u><a style=\''+$styleColor+'\' target=\'_blank\' href=\'' +$item+ '\'>' +$item+ '</u></b>';
+                }else { 
+                    $link = '<u><a style=\''+$styleColor+'\' target=\'_blank\' href=\'http://' +$item+ '\'>' +$item+ '</u></b>';
+                }
+                $str += ' ' + $link+ ' ';
+                if($firstLink == '')
+                    $firstLink = $link;
+            } else {
+                $str += $item + ' ';
+            }
+        }
+        return array(
+            'firstLink' => $firstLink,
+            'richText' => $str,
+            'planeText' => $message,
+            'isLink' => ($firstLink != '')? true : false
+        );
     }
 
     /**

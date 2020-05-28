@@ -415,6 +415,7 @@
         },
         data() {
             return {
+                userLogged:{},
                 serverdata: [],
                 instances: [],
                 loading: false,
@@ -612,6 +613,10 @@
             }
         },
         mounted: function () {
+            if(this.userLogged.role_id > 4){
+                this.$router.push({name: "login"});
+            }
+            
             unsub = this.$store.subscribe((mutation, state) => {
                 if (mutation.type == "left_menu") {
                     this.instances.forEach(function (item, index) {
@@ -632,17 +637,21 @@
                         "<a class='btn btn-warning clickable' href='#/view_user_dashboard/" + item.id + "'>View</a>");
                 });
             })
-                .catch(function (error) {
+                .catch(error => {
+                    this.processMessageError(error, 'auth/user_list', "get");
                 });
 
             axios.get("http://www.filltext.com/?rows=1&chartdata={numberArray|12,100}").then(response => {
                 this.ajaxbar_chart.series[0].data = response.data[0].chartdata;
                 this.ajaxloading = false;
             })
-                .catch(function (error) {
+                .catch(error => {
 
                 });
 
+        },
+        beforeMount() {
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
         beforeRouteLeave(to, from, next) {
             unsub();
@@ -663,7 +672,20 @@
                     }
                 }, 4000);
             },
-            // ===chart animation===
+
+                //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
         }
     }
 </script>

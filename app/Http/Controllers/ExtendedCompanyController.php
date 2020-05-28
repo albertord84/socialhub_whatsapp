@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCompanyRequest;
-use App\Http\Requests\UpdateCompanyRequest;
 use App\Repositories\ExtendedCompanyRepository;
-use App\Http\Controllers\AppBaseController;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laracasts\Flash\Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
@@ -37,44 +36,63 @@ class ExtendedCompanyController extends CompanyController
         if($User->role_id==ExtendedContactsStatusController::SELLER){
             $companies = $this->companyRepository->allBySeller($User->id);
         }
-        else if ($User->role_id==ExtendedContactsStatusController::ADMIN) {
+        else if ($User->role_id==ExtendedContactsStatusController::ADMIN){
             $companies = $this->companyRepository->all();
         }
+        else if($User->role_id==ExtendedContactsStatusController::MANAGER){
+            $companies = $this->companyRepository->getCompany($User->company_id);
+        }
+        // return $companies->toJson();
 
-        return $companies->toJson();
+        return ($companies instanceof Collection) ? $companies->toJson() : null;
         
         // return view('companies.index')
         //     ->with('companies', $companies);
     }
 
-    public function store(CreateCompanyRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
-
         
         $company = $this->companyRepository->create($input);
-
+        
         Flash::success('Company saved successfully.');
+
+        //JR: creating Queue table
+        //$this->companyRepository->createCompanyQueueTable($company->id);
 
         return $company->toJson();
         // return redirect(route('companies.index'));
     }
 
-    public function update($id, UpdateCompanyRequest $request)
+    public function update($id, Request $request)
     {
         $company = $this->companyRepository->findWithoutFail($id);
+        try {
+            if(isset($request['action']) && $request['action']== 'tracking' && strlen($company->tracking_user) ==0){
+                $this->companyRepository->createTrackingTable((int) $company->id);
+                unset($request['action']);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+        try {
+            if(isset($request['action']) && $request['action']== 'bling' ){
+                $this->companyRepository->createBlingTable((int) $company->id);
+                unset($request['action']);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
         if (empty($company)) {
-            // Flash::error('Company not found');
-
             return redirect(route('companies.index'));
         }
 
         $company = $this->companyRepository->update($request->all(), $id);
 
-        // Flash::success('Company updated successfully.');
-
-        // return redirect(route('companies.index'));
+        return $company->toJson();
     }
 
 
@@ -95,5 +113,4 @@ class ExtendedCompanyController extends CompanyController
         // return redirect(route('companies.index'));
     }
 
-
-}
+ }

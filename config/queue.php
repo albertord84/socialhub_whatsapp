@@ -38,7 +38,7 @@ return [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',
-            'retry_after' => 90,
+            'retry_after' => env('QUEUE_RETRY_EVERY', 20),
         ],
 
         'beanstalkd' => [
@@ -63,6 +63,7 @@ return [
             'queue' => 'default',
             'retry_after' => 90,
             'block_for' => null,
+            
         ],
 
     ],

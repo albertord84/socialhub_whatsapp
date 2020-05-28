@@ -16,11 +16,13 @@
 
 <style lang="scss" scoped>
     .right-aside {
-        padding: 0 20px 0px 20px;
+        padding: 0 0px 0px 0px;
         width: 100%;
-        max-width: 100%;
+        // max-width: 100%;        
+        // margin-left: 0px;
+        max-width: 1440px;
+        margin: 0 auto;
         height: calc(100vh-100px);
-        margin-left: 0px;
         
         .content-header > h1 {
             margin: 2px;

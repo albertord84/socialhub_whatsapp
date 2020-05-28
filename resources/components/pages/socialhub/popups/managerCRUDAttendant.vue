@@ -6,9 +6,13 @@
                     {{model.user_id}}
                 </div>    
                 <div class="row">
-                    <div class="col-lg-6 form-group has-search">
+                    <!-- <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-user form-control-feedback"></span>
                         <input v-model="model.login" title="Ex: Login do Atendente" name="login" id="login" type="text" required placeholder="Login (*)" class="form-control"/>
+                    </div> -->
+                    <div  class="col-lg-6 form-group has-search">
+                        <span class="fa fa-user form-control-feedback"></span>
+                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
                     </div>
                     <div  class="col-lg-6 form-group has-search">
                         <span class="fa fa-envelope form-control-feedback"></span>
@@ -16,29 +20,27 @@
                     </div>                                                      
                 </div>
                 <div class="row">
-                    <div  class="col-lg-6 form-group has-search">
-                        <span class="fa fa-user form-control-feedback"></span>
-                        <input v-model="model.name" title="Ex: Nome do Atendente" id="name" name="name" type="text" required autofocus placeholder="Nome completo (*)" class="form-control"/>
-                    </div>
-                    <div class="col-lg-3 form-group has-search">
+                    <!-- <div class="col-lg-3 form-group has-search">
                         <span class="fa fa-id-card form-control-feedback"></span>
-                        <input v-model="model.CPF" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
-                    </div>
-                    <div class="col-lg-3 form-group has-search">
-                        <span class="fa fa-phone form-control-feedback"></span>
-                        <input v-model="model.phone" title="Ex: 55(21)559-6918" id="phone" name="phone" type="text" required placeholder="Telefone (*)" class="form-control"/>
-                    </div>  
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 form-group has-search">
+                        <input v-model="model.CPF" v-mask="'###.###.###-##'" title="Ex: 000.000.008-00" name="CPF" id="CPF" type="text" required placeholder="CPF (*)" class="form-control"/>
+                    </div> -->
+
+                    <!-- <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-whatsapp form-control-feedback"></span>
-                        <input v-model="model.whatsapp_id" title="Ex: 963525397" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp (*)" class="form-control"/>
+                        <input v-model="model.whatsapp_id" v-mask="'###############'" title="Ex: 5511988888888" id="whatsapp" name="whatsapp" type="text" required placeholder="WhatsApp" class="form-control"/>
+                    </div> -->
+
+                    <div class="col-lg-6 form-group has-search">
+                        <span class="fa fa-phone form-control-feedback"></span>
+                        <input v-model="model.phone" v-mask="'###############'" title="Ex: 551188888888" id="phone" name="phone" type="text" required placeholder="Telefone" class="form-control"/>
                     </div>
                     <div class="col-lg-6 form-group has-search">
                         <span class="fa fa-facebook form-control-feedback"></span>
                         <input v-model="model.facebook_id" title="Ex: facebook_id" id="facebook" name="facebook" type="text" placeholder="Facebook" class="form-control"/>
                     </div>
+
                 </div>
+               
                 <div class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-instagram form-control-feedback"></span>
@@ -49,6 +51,7 @@
                         <input v-model="model.linkedin_id" title="Ex: linkedin_id" id="linkedin" name="linkedin" type="text" placeholder="LinkedIn" class="form-control"/>
                     </div>
                 </div>
+
                 <div v-if="action=='edit'" class="row">
                     <div class="col-lg-6 form-group has-search">
                             <span class="fa fa-key form-control-feedback"></span>
@@ -90,6 +93,7 @@
     import ApiService from "../../../../common/api.service";
     import miniToastr from "mini-toastr";
     miniToastr.init();
+    import validation from "src/common/validation.service";
     
     export default {
         name: 'managerCRUDAttendant',
@@ -107,6 +111,7 @@
 
         data(){
             return{
+                userLogged:{},
                 attendant_id: "",
                 model:{
                     name: "",
@@ -129,6 +134,9 @@
                 isSendingInsert: false,
                 isSendingUpdate: false,
                 isSendingDelete: false,
+
+                flagReference: true,
+
             }
         },
 
@@ -138,32 +146,52 @@
                 this.model.role_id=4;
                 this.model.password='';
                 this.model.image_path = "images/user.jpg";
-                this.model.company_id = this.logguedAttendant.company_id;
+                this.model.company_id = this.userLogged.company_id;
                 this.isSendingInsert = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingInsert = false;
+                    this.flagReference = true;
+                    return;
+                }
+
+                var model_cpy = Object.assign({}, this.model);                      //ECR: Para eliminar espaços e traços
+                if(model_cpy.whatsapp_id){
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                }
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');    //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');    //ECR
+                }
+
                 //isert user
-                ApiService.post(this.first_url, this.model)
-                .then(response => {
-                    //isert userAttendant
-                    ApiService.post(this.url, { 
-                        'user_id':response.data.id,
-                        'user_manager_id':JSON.parse(localStorage.user).id
+                ApiService.post(this.first_url, model_cpy)
+                    .then(response => {
+                        //isert userAttendant
+                        ApiService.post(this.url, { 
+                            'user_id':response.data.id,
+                            'user_manager_id':JSON.parse(localStorage.user).id
+                            })
+                            .then(response => {
+                                miniToastr.success("Atendente adicionado com sucesso","Sucesso");
+                                this.formReset();
+                                this.reload();
+                                this.closeModals();
+                            })
+                        .catch(error => {
+                            this.processMessageError(error, this.url,"add");
                         })
-                        .then(response => {
-                            miniToastr.success("Atendente adicionado com sucesso","Sucesso");
-                            this.formReset();
-                            this.reload();
-                            this.closeModals();
-                        })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro adicionando Atendente");  
+                        .finally(() => this.isSendingInsert = false);
                     })
-                    .finally(() => this.isSendingInsert = false);
-                })
-                .catch(function(error) {
-                    ApiService.process_request_error(error); 
-                    miniToastr.error(error, "Erro adicionando usuáio");  
-                });
+                    .catch(error => {
+                        this.processMessageError(error, this.first_url,"add");
+                        this.isSendingInsert = false;
+                    });
             },
             
             editAttendant: function() { //U
@@ -174,10 +202,23 @@
             },
 
             updateAttendant: function() { //U
+                
                 if(this.model.password.trim()!='' && this.model.password!=this.model.repeat_password){
-                     miniToastr.error('Erro', "As senha não coincidem"); return;
-                }                
+                        miniToastr.error('Erro', "As senha não coincidem"); return;
+                }
+                
                 this.isSendingUpdate = true;
+
+                // Validando dados
+                this.trimDataModel();
+                this.validateData();
+                if (this.flagReference == false){
+                    miniToastr.error("Erro", 'Por favor, confira os dados inseridos' );
+                    this.isSendingUpdate = false;
+                    this.flagReference = true;
+                    return;
+                }
+                
                 var model_cpy = JSON.parse(JSON.stringify(this.model));
                 delete model_cpy.created_at;
                 delete model_cpy.updated_at;
@@ -186,15 +227,23 @@
                     delete model_cpy.password;
                     delete model_cpy.repeat_password;
                 }
+                
+                if(model_cpy.whatsapp_id){
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/ /g, '');    //ECR
+                    model_cpy.whatsapp_id = model_cpy.whatsapp_id.replace(/-/i, '');    //ECR
+                }
+                if(model_cpy.phone){
+                    model_cpy.phone = model_cpy.phone.replace(/ /g, '');                //ECR
+                    model_cpy.phone = model_cpy.phone.replace(/-/i, '');                //ECR
+                }
                 ApiService.put(this.first_url+'/'+this.attendant_id, model_cpy)
                     .then(response => {
                         miniToastr.success("Atendente atualizado com sucesso","Sucesso");
                             this.reload();
                             this.closeModals();
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro atualizando Atendente"); 
+                    .catch(error => {
+                        this.processMessageError(error, this.first_url,"update");
                     })
                     .finally(() => this.isSendingUpdate = false);
             },
@@ -211,21 +260,20 @@
                                         this.reload();
                                         this.closeModals();
                                     })
-                                    .catch(function(error) {
-                                        ApiService.process_request_error(error);  
-                                        miniToastr.error(error, "Erro eliminando Atendente"); 
-                                    });
+                                    .catch(error => {
+                                        this.processMessageError(error, this.first_url, "delete");
+                                    })
+                                    .finally(() => this.isSendingDelete = false);
                             })
-                            .catch(function(error) {
-                                ApiService.process_request_error(error);  
-                                miniToastr.error(error, "Erro eliminando Atendente"); 
+                            .catch(error => {
+                                this.processMessageError(error, this.url, "delete");
+                                this.isSendingDelete = false;
                             });
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error);  
-                        miniToastr.error(error, "Erro eliminando Atendente"); 
-                    })
-                    .finally(() => this.isSendingDelete = false);
+                    .catch(error => {
+                        this.processMessageError(error, this.url, "delete");
+                        this.isSendingDelete = false;
+                    });
             },
 
             formReset:function(){
@@ -250,13 +298,150 @@
                 this.$emit('onreloaddatas');
             }, 
 
+            trimDataModel: function(){
+                if(this.model.login) this.model.login = this.model.login.trim();
+                if(this.model.email) this.model.email = this.model.email.trim();
+                if(this.model.name) this.model.name = this.model.name.trim();
+                if(this.model.CPF) this.model.CPF = this.model.CPF.trim();
+                if(this.model.phone) this.model.phone = this.model.phone.trim();
+                if(this.model.whatsapp_id) this.model.whatsapp_id = this.model.whatsapp_id.trim();
+                if(this.model.facebook_id) this.model.facebook_id = this.model.facebook_id.trim();
+                if(this.model.instagram_id) this.model.instagram_id = this.model.instagram_id.trim();
+                if(this.model.linkedin_id) this.model.linkedin_id = this.model.linkedin_id.trim();
+                if(this.model.password) this.model.password = this.model.password.trim();
+                if(this.model.repeat_password) this.model.repeat_password = this.model.repeat_password.trim();
+
+            },
+
+            validateData: function(){
+                // Validação dos dados do atendente
+                var check;
+                // if(this.model.login && this.model.login !=''){
+                //     check = validation.check('user', this.model.login)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O login do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
+                if(this.model.email && this.model.email !=''){
+                    check = validation.check('email', this.model.email)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O email do usuário é obrigatório" );
+                    this.flagReference = false;
+                }
+                if(this.model.name && this.model.name !=''){
+                    check = validation.check('complete_name', this.model.name)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }else{
+                    miniToastr.error("Erro", "O nome do usuário é obrigatório" );
+                    this.flagReference = false;
+                }
+
+                // if(this.model.CPF && this.model.CPF !=''){
+                //     check = validation.validate_cpf('cpf', this.model.CPF)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O CPF do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+                
+                if(this.model.phone && this.model.phone !=''){
+                    check = validation.check('phone', this.model.phone)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                // if(this.model.whatsapp_id && this.model.whatsapp_id !=''){
+                //     check = validation.check('whatsapp', this.model.whatsapp_id)
+                //     if(check.success==false){
+                //         miniToastr.error("Erro", check.error );
+                //         this.flagReference = false;
+                //     }
+                // }else{
+                //     miniToastr.error("Erro", "O whatsapp do usuário é obrigatório" );
+                //     this.flagReference = false;
+                // }
+
+                if(this.model.facebook_id && this.model.facebook_id !=''){
+                    check = validation.check('facebook_profile', this.model.facebook_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.instagram_id && this.model.instagram_id !=''){
+                    check = validation.check('instagram_profile', this.model.instagram_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.linkedin_id && this.model.linkedin_id !=''){
+                    check = validation.check('linkedin_profile', this.model.linkedin_id)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+
+                if(this.model.password && this.model.password !=''){
+                    check = validation.check('password', this.model.password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+                if(this.model.repeat_password && this.model.repeat_password !=''){
+                    check = validation.check('password', this.model.repeat_password)
+                    if(check.success==false){
+                        miniToastr.error("Erro", check.error );
+                        this.flagReference = false;
+                    }
+                }
+            },
+
+            
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            }
+
         },
 
         beforeMount(){
-            this.logguedAttendant = JSON.parse(window.localStorage.getItem('user'));
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
         },
 
         mounted(){
+            if(this.userLogged.role_id > 3){
+                this.$router.push({name: "login"});
+            }
+            
             this.editAttendant();
         },
 

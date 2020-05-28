@@ -7,16 +7,16 @@
                     <h3>Meu perfil</h3><br>
                     <input id="fileUserPhoto" ref="fileUserPhoto" style="display:none"   type="file" @change.prevent="handleFileUserPhoto" accept="image/*"/>
                     <div class="container">
-                        <a href="javascript:void()" @click.prevent="trigger()" style="outline:none !important;" alt="User Image">
-                            <img :src="user.image_path" alt="Image profile" class="rounded-circle img-fluid profile-thumb">
+                        <a href="javascript:void()" @click.prevent="trigger()" style="outline:none !important;" alt="userLogged Image">
+                            <img :src="userLogged.image_path" alt="Image profile" class="rounded-circle img-fluid profile-thumb">
                             <div class="overlay">                                
                                 <div class="text"><i class="fa fa-camera" aria-hidden="true"></i><br>Click para atualizar</div>
                             </div>
                         </a>
                     </div>
 
-                    <h4 class="text-gray">{{user.name}}</h4>
-                    <p>{{user.role_name}}</p>                    
+                    <h4 class="text-gray">{{userLogged.name}}</h4>
+                    <p>{{userLogged.role_name}}</p>                    
                 </div>
                 <div class="profile_details">
                     <div class="row">
@@ -27,33 +27,33 @@
                                         <hr>
                                         <div class="row">
                                             <div class="col-4 text-right mt-2">Email:</div>
-                                            <div class="col-8 mt-2">{{user.email}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.email}}</div>
 
                                             <div class="col-4 text-right mt-2">Telefone:</div>
-                                            <div class="col-8 mt-2">{{user.phone}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.phone}}</div>
 
                                             <div class="col-4 text-right mt-2">C.P.F:</div>
-                                            <div class="col-8 mt-2">{{user.CPF}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.CPF}}</div>
                                             
                                             <div class="col-4 text-right mt-2">Whatsapp:</div>
-                                            <div class="col-8 mt-2">{{user.whatsapp_id}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.whatsapp_id}}</div>
                                             
                                             <div class="col-4 text-right mt-2">Facebook:</div>
-                                            <div class="col-8 mt-2">{{user.facebook_id}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.facebook_id}}</div>
                                             
                                             <div class="col-4 text-right mt-2">Instagram:</div>
-                                            <div class="col-8 mt-2">{{user.instagram_id}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.instagram_id}}</div>
                                             
                                             <div class="col-4 text-right mt-2">Linkedin:</div>
-                                            <div class="col-8 mt-2">{{user.linkedin}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.linkedin}}</div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                             <div class="col-4 text-right mt-2">Criado em:</div>
-                                            <div class="col-8 mt-2">{{user.created_at}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.created_at}}</div>
                                             
                                             <div class="col-4 text-right mt-2">Atualizado em:</div>
-                                            <div class="col-8 mt-2">{{user.updated_at}}</div>
+                                            <div class="col-8 mt-2">{{userLogged.updated_at}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -157,8 +157,8 @@
 
         data() {
             return {
+                userLogged: {},
                 url:'users',
-                user: null,
                 user_edit: null,
                 isSending:false,
                 file:null,
@@ -177,21 +177,20 @@
                         delete this.user_edit.password;
                     this.isSending = true;
                     ApiService.put(this.url+'/'+this.user_edit.id, this.user_edit)
-                    .then(response => {
-                        // window.location.reload(false);
-                        this.user = response.data;
-                        window.localStorage.setItem('user', JSON.stringify(this.user));
-                        
-                        this.user_edit = Object.assign({}, this.user);
-                        this.user_edit.repeat_password = this.user_edit.password = '';
-                        miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
-                        this.isSending = false;
-                    })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando perfil");  
-                        this.isSending = false;
-                    });
+                        .then(response => {
+                            // window.location.reload(false);
+                            this.userLogged = response.data;
+                            window.localStorage.setItem('user', JSON.stringify(this.userLogged));
+                            
+                            this.user_edit = Object.assign({}, this.userLogged);
+                            this.user_edit.repeat_password = this.user_edit.password = '';
+                            miniToastr.success("Perfil atualizado com sucesso.","Sucesso");
+                            this.isSending = false;
+                        })
+                        .catch(error => {
+                            this.processMessageError(error, this.url, "update");
+                            this.isSending = false;
+                        });
                 }
             },
 
@@ -208,18 +207,17 @@
                         {headers: { "Content-Type": "multipart/form-data" }}
                     )
                     .then(response => {
-                        This.user.image_path = response.data;
-                        window.localStorage.setItem('user', JSON.stringify(This.user));
+                        This.userLogged.image_path = response.data;
+                        window.localStorage.setItem('user', JSON.stringify(This.userLogged));
                         
-                        This.user_edit = Object.assign({}, This.user);
+                        This.user_edit = Object.assign({}, This.userLogged);
                         This.user_edit.repeat_password = This.user_edit.password = '';
                         miniToastr.success("Foto atualizada com sucesso.","Sucesso");
 
                         window.location.reload(false);
                     })
-                    .catch(function(error) {
-                        ApiService.process_request_error(error); 
-                        miniToastr.error(error, "Erro atualizando a foto do perfil");  
+                    .catch(error => {
+                        this.processMessageError(error, This.url, "update_image");
                     });
                 }
             },
@@ -237,31 +235,46 @@
                     miniToastr.error("A imagem deve ter tamanho inferior a 4MB", "Erro"); 
                 }
             },
+
+            //------ Specific exceptions methods------------
+            processMessageError: function(error, url, action) {
+                var info = ApiService.process_request_error(error, url, action);
+                if(info.typeException == "expiredSection"){
+                    miniToastr.warn(info.message,"Atenção");
+                    this.$router.push({name:'login'});
+                    window.location.reload(false);
+                }else if(info.typeMessage == "warn"){
+                    miniToastr.warn(info.message,"Atenção");
+                }else{
+                    miniToastr.error(info.erro, info.message); 
+                }
+            },
+
         },
 
 
         beforeMount: function () {
-            this.user = JSON.parse(window.localStorage.getItem('user'));
-            switch(this.user.role_id){
+            this.userLogged = JSON.parse(window.localStorage.getItem('user'));
+            switch(this.userLogged.role_id){
                 case 1:
-                    this.user.role_name = "Administrador de SocialHub";
+                    this.userLogged.role_name = "Administrador de SocialHub";
                     break;
                 case 2:
-                    this.user.role_name = "Funcionário de SocialHub";
+                    this.userLogged.role_name = "Funcionário de SocialHub";
                     break;
                 case 3:
-                    this.user.role_name = "Gerente de empresa";
+                    this.userLogged.role_name = "Gerente de empresa";
                     break;
                 case 4:
-                    this.user.role_name = "Funcionário Atendente";
+                    this.userLogged.role_name = "Funcionário Atendente";
                     break;
                 case 5:
-                    this.user.role_name = "Convidado";
+                    this.userLogged.role_name = "Convidado";
                     break;
             }
-            this.user_edit = Object.assign({}, this.user);
+            this.user_edit = Object.assign({}, this.userLogged);
             this.user_edit.repeat_password = this.user_edit.password = '';
-            console.log( this.user);
+            console.log( this.userLogged);
         },
 
         created() {

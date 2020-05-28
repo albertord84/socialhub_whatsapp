@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Laravel development server started: <http://127.0.0.1:8000>
 [Thu Oct 31 09:33:03 2019] 127.0.0.1:56234 [200]: /manifest.js
 [Thu Oct 31 09:33:03 2019] 127.0.0.1:56236 [200]: /vendor.js
@@ -818,3 +819,63 @@ Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so
     Laravel development server started: <http://127.0.0.1:8000>
     Laravel development server started: <http://127.0.0.1:8000>
     Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>
+PHP Warning:  Use of undefined constant CURLOPT_SSL_VERIFYHOST - assumed 'CURLOPT_SSL_VERIFYHOST' (this will throw an Error in a future version of PHP) in /var/www/html/socialhub/config/broadcasting.php on line 49
+PHP Stack trace:
+PHP   1. {main}() /var/www/html/socialhub/artisan:0
+PHP   2. App\Console\Kernel->handle() /var/www/html/socialhub/artisan:37
+PHP   3. App\Console\Kernel->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:120
+PHP   4. Illuminate\Foundation\Application->bootstrapWith() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:297
+PHP   5. Illuminate\Foundation\Bootstrap\LoadConfiguration->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:211
+PHP   6. Illuminate\Foundation\Bootstrap\LoadConfiguration->loadConfigurationFiles() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:39
+PHP   7. require() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:72
+PHP Warning:  Use of undefined constant CURLOPT_SSL_VERIFYPEER - assumed 'CURLOPT_SSL_VERIFYPEER' (this will throw an Error in a future version of PHP) in /var/www/html/socialhub/config/broadcasting.php on line 50
+PHP Stack trace:
+PHP   1. {main}() /var/www/html/socialhub/artisan:0
+PHP   2. App\Console\Kernel->handle() /var/www/html/socialhub/artisan:37
+PHP   3. App\Console\Kernel->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:120
+PHP   4. Illuminate\Foundation\Application->bootstrapWith() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:297
+PHP   5. Illuminate\Foundation\Bootstrap\LoadConfiguration->bootstrap() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:211
+PHP   6. Illuminate\Foundation\Bootstrap\LoadConfiguration->loadConfigurationFiles() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:39
+PHP   7. require() /var/www/html/socialhub/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php:72
+    
+In Pusher.php line 235:
+                                                                               
+  The Pusher library requires the PHP cURL module. Please ensure it is instal  
+  led                                                                          
+                                                                               
+
+    Laravel development server started: <http://127.0.0.1:8000>
+    Laravel development server started: <http://127.0.0.1:8000>
+Laravel development server started: <http://127.0.0.1:8000>
+=======
+>>>>>>> develop
+2020-03-23T22:30:42.034453Z mysqld_safe Logging to syslog.
+2020-03-23T22:30:42.090200Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:30:42.098477Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+2020-03-23T22:31:17.401754Z mysqld_safe Logging to syslog.
+2020-03-23T22:31:17.410378Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:31:17.415873Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+2020-03-23T22:31:28.874216Z mysqld_safe Logging to syslog.
+2020-03-23T22:31:28.884856Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:31:28.894040Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+2020-03-23T22:36:53.700259Z mysqld_safe Logging to syslog.
+2020-03-23T22:36:53.757842Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:36:54.138450Z mysqld_safe A mysqld process already exists
+2020-03-23T22:47:53.789869Z mysqld_safe Logging to syslog.
+2020-03-23T22:47:53.797803Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:47:53.852765Z mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql
+2020-03-23T22:47:54.091273Z mysqld_safe mysqld from pid file /var/run/mysqld/mysqld.pid ended
+2020-03-23T22:49:27.259078Z mysqld_safe Logging to syslog.
+2020-03-23T22:49:27.305513Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2020-03-23T22:49:27.327725Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.
+Failed loading /usr/lib/php/20151012/xdebug.so:  /usr/lib/php/20151012/xdebug.so: undefined symbol: vspprintf
+    
+In DuskServiceProvider.php line 44:
+                                           
+  It is unsafe to run Dusk in production.  
+                                           
+

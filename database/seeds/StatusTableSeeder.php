@@ -2,7 +2,10 @@
 use App\Models\UsersStatus;
 use App\Models\ContactsStatus;
 use App\Models\MessagesStatus;
+use App\Models\Status;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
 class StatusTableSeeder extends Seeder
 {
     /**
@@ -17,11 +20,15 @@ class StatusTableSeeder extends Seeder
         DB::table('users_status')->truncate();
         DB::table('contacts_status')->truncate();
         DB::table('messages_status')->truncate();
+        DB::table('status')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->CreateUsersStatus();
         $this->CreateContactsStatus();
         $this->CreateMessagesStatus();
+
+        $this->CreateTrackingStatus();
+        $this->CreateApiStatus();
     }
 
     function CreateMessagesStatus() {
@@ -42,7 +49,7 @@ class StatusTableSeeder extends Seeder
         $this->command->info('Messages Status SENDED');
         MessagesStatus::create([
             'id' => '3',
-            'name' => 'RECEVEIVED',
+            'name' => 'RECEIVED',
             'description' => 'Message was received by contact',
         ]);
         $this->command->info('Messages Status RECEVEIVED');
@@ -65,6 +72,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'Message not readed by me, i.e., new incomming messages',
         ]);
         $this->command->info('MessagesStatus UNREADED');
+
+        MessagesStatus::create([
+            'id' => '7',
+            'name' => 'FAIL',
+            'description' => 'Message fail sending through rpi',
+        ]);
+        $this->command->info('MessagesStatus FAIL');
     }
 
     function CreateContactsStatus() {
@@ -101,6 +115,13 @@ class StatusTableSeeder extends Seeder
             'description' => 'Conversation wit this contact was classed and is archived. The contact will be not appear in the contact list',
         ]);
         $this->command->info('Contacts Status ARCHIVED');
+
+        ContactsStatus::create([
+            'id' => '6',
+            'name' => 'SILENCED',
+            'description' => 'Contact without Notifications',
+        ]);
+        $this->command->info('Contacts Status SILENCED');
     }
 
     function CreateUsersStatus() {
@@ -150,5 +171,89 @@ class StatusTableSeeder extends Seeder
         $this->command->info('UsersStatus PAUSED');    
     }
 
+    function CreateTrackingStatus() {
+        $this->command->info('Creating Status TrackingStatus:');
+        Status::create([
+            'id' => '1',
+            'name' => 'POSTED',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '1',
+            'description' => 'Tracking Status POSTED',
+        ]);
+        Status::create([
+            'id' => '2',
+            'name' => 'MOVING',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '2',
+            'description' => 'Tracking Status MOVING',
+        ]);
+        Status::create([
+            'id' => '3',
+            'name' => 'STOPPED',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '3',
+            'description' => 'Tracking Status STOPPED',
+        ]);
+        Status::create([
+            'id' => '4',
+            'name' => 'RECEIVED',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '4',
+            'description' => 'Tracking Status RECEIVED',
+        ]);
+        Status::create([
+            'id' => '5',
+            'name' => 'ARRIVED',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '5',
+            'description' => 'Tracking Status ARRIVED',
+        ]);
+        Status::create([
+            'id' => '7',
+            'name' => 'PROBLEM',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '7',
+            'description' => 'Tracking Status PROBLEM',
+        ]);
+        Status::create([
+            'id' => '8',
+            'name' => 'PI',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '8',
+            'description' => 'Tracking Status PI'
+        ]);
+    }
+
+    function CreateApiStatus() {
+        $this->command->info('Creating Status Api:');
+        Status::create([
+            'id' => '9',
+            'name' => 'RECEIVED',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '1',
+            'description' => 'Api Status RECEIVED',
+        ]);
+        Status::create([
+            'id' => '10',
+            'name' => 'SENDED',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '2',
+            'description' => 'Api Status SENDED',
+        ]);
+        Status::create([
+            'id' => '11',
+            'name' => 'STOPPED',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '3',
+            'description' => 'Api Status STOPPED',
+        ]);
+        Status::create([
+            'id' => '12',
+            'name' => 'FAIL',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '4',
+            'description' => 'Api Status FAIL',
+        ]);
+    }
     
 }

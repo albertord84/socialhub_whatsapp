@@ -68,7 +68,12 @@
         overflow-x: hidden;
         width: 100%;
         max-width: 100%;
-        table-layout: fixed
+        table-layout: fixed;
+
+        background: #d3dbdd;
+        background-image: url('~img/socialhub/fundo_verde2.jpeg');
+        // background-image: url('http://wp.socialhub.local/images/fundo_verde2.jpeg');
+        background-repeat: repeat-x;
     }
 
     .right-aside,

@@ -32,8 +32,10 @@ class AttendantsContactController extends AppBaseController
         $this->attendantsContactRepository->pushCriteria(new RequestCriteria($request));
         $attendantsContacts = $this->attendantsContactRepository->all();
 
-        return view('attendants_contacts.index')
-            ->with('attendantsContacts', $attendantsContacts);
+        // return view('attendants_contacts.index')
+        //     ->with('attendantsContacts', $attendantsContacts);
+
+        return $attendantsContacts->toJson();
     }
 
     /**
@@ -126,7 +128,7 @@ class AttendantsContactController extends AppBaseController
 
         Flash::success('Attendants Contact updated successfully.');
 
-        return redirect(route('attendantsContacts.index'));
+        return $attendantsContact->toJson();
     }
 
     /**
@@ -150,6 +152,5 @@ class AttendantsContactController extends AppBaseController
 
         Flash::success('Attendants Contact deleted successfully.');
 
-        return redirect(route('attendantsContacts.index'));
     }
 }

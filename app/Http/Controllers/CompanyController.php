@@ -55,7 +55,7 @@ class CompanyController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateCompanyRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -115,7 +115,7 @@ class CompanyController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCompanyRequest $request)
+    public function update($id, Request $request)
     {
         $company = $this->companyRepository->findWithoutFail($id);
 

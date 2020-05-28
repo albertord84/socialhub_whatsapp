@@ -1,7 +1,7 @@
 <template>
     <div ref="vscroll" :style="{ 'height': height,'min-height':minHeight,'max-height':maxHeight }" class="ss-container">
-        <div class="ss-wrapper" ref="wrapper">
-            <div class="ss-content" ref="content" @scroll="moveBar" @mouseenter="moveBar">
+        <div :class=" !flag ? 'ss-wrapper': 'ss-wrapper2'" ref="wrapper">
+            <div :class=" !flag ? 'ss-content': 'ss-content2'" :id="vid" ref="content" @scroll="moveBar" @mouseenter="moveBar">
                 <slot></slot>
             </div>
         </div>
@@ -17,19 +17,26 @@ export default {
         color: null,
         barWidth: null,
         alwaysvisible: Boolean,
-
+        flag:0,
         seeSrolling:false,
+        vid:'',
+        percent:0,        
+    },
+    data() {
+        return {
+            scrollRatio: 0,
+            grabbed: false,
+            
+            scrollHeight:0,
+        }
     },
     mounted() {
         this.dragDealer();
         this.moveBar();
     },
-    data() {
-        return {
-            scrollRatio: 0,
-            grabbed: false
-        }
-    },
+    updated(){
+        this.scrollHeight = this.$refs.content.scrollHeight;
+    },    
     methods: {
         // Mouse drag handler
         dragDealer() {
@@ -70,8 +77,13 @@ export default {
                 bar.classList.add('ss-hidden');
             } else {
                 if(this.seeSrolling){
-                    var value = parseInt((content.scrollTop / totalHeight) * 100);
-                    this.$emit('onscrolling',value);
+                    var value = parseInt((content.scrollTop / totalHeight) * 100);                    
+                    // this.$emit('onscrolling',value);
+                    if(value === 0)
+                        this.$emit('ontop',content.scrollTop, totalHeight);                    
+                    if(content.scrollTop + content.clientHeight >= content.scrollHeight) {
+                        this.$emit('onbottom');
+                    }
                 }
                 bar.classList.remove('ss-hidden');
                 bar.style.cssText = 'height:' + (this.scrollRatio) * 100 + '%; top:' + (content.scrollTop / totalHeight) * 100 + '%;right:-' + (this.$refs.vscroll.clientWidth - bar.clientWidth) + 'px;background-color:' + this.color + ';width:' + this.barWidth;
@@ -84,17 +96,22 @@ export default {
 
         scrolltopercent(percent) {
             this.$refs.content.scrollTop = ((this.$refs.content.scrollHeight * percent)/100)-200;
-            console.log('percent');
-            console.log(percent);
-            console.log('new scrollTop');
-            console.log(this.$refs.content.scrollTop);
-            console.log('scrollHeight');
-            console.log(this.$refs.content.scrollHeight);
         },
 
         scrolltobottom() {
             this.$refs.content.scrollTop = this.$refs.content.scrollHeight;
         }
+    },
+    watch:{
+        percent:function(value){
+            this.scrolltopercent(value);
+        },
+        scrollHeight:function(value){
+            if(this.seeSrolling){
+                this.$emit('oncontentresize',value);
+            }
+        },
+        
     }
 }
 </script>
@@ -109,8 +126,27 @@ export default {
         float: left;
         left: -10px;
     }
+    .ss-wrapper2 {
+        overflow: hidden;
+        width: 110%;
+        height: 100%;
+        position: relative;
+        z-index: 1;
+        float: left;
+        left: -18px;
+    }
 
     .ss-content {
+        height: 100%;
+        width: 100%;
+        padding: 0 18px 0 0;
+        position: relative;
+        right: -18px;
+        overflow: auto;
+        box-sizing: border-box;
+        overflow-x: inherit;
+    }
+    .ss-content2 {
         height: 100%;
         width: 100%;
         padding: 0 18px 0 0;

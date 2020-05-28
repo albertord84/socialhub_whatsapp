@@ -10,7 +10,7 @@
                 <img src="~img/socialhub/Logo branca.png" alt="logo"/>
             </router-link> -->
 
-             <!-- Sidebar toggle button-->
+            <!-- Sidebar toggle button-->
             <div class="float-left">
                 <a href="javascript:void(0)" class="sidebar-toggle" @click="toggle_menu">
                     <i class="fa fa-bars text-white"></i>
@@ -139,7 +139,7 @@
                 window.localStorage.removeItem('token');
                 window.localStorage.removeItem('user');
                 delete axios.defaults.headers.common['Authorization'];
-                this.$router.push({name: "login"});          
+                this.$router.push({name: "login"});
             },
 
             urlIMG: function(){

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Events\NewTransferredContact;
+use App\Models\ExtendedChat;
 use App\Repositories\ExtendedAttendantsContactRepository;
 use Illuminate\Support\Facades\Auth;
 use Laracasts\Flash\Flash;
@@ -33,7 +34,7 @@ class ExtendedAttendantsContactController extends AttendantsContactController
     public function store(Request $request)
     {
         $input = $request->all();
-
+        
         $attendantsContact = $this->attendantsContactRepository->create($input);
 
         Flash::success('Attendants Contact saved successfully.');
@@ -42,13 +43,17 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $Contact->updated_at = time();
         $Contact->save();
 
-        if(isset($input->transfering) || isset($input['transfering'])){
+        if(isset($request->transfering) || isset($input['transfering'])){
             $User = Auth::check()? Auth::user():session('logged_user');
-            //TODO-Alberto: enviar el last_message y el last_attendant al igual que la funcion que me da los contactos
+            //TODO-Alberto: enviar el last_message al igual que la funcion que me da los contactos
+            $chatModel = new ExtendedChat();
+            $chatModel->table = (string) $request->attendant_id;
+            $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+            $Contact->last_message = $lastMessage;
             broadcast(new NewTransferredContact((int) $request->attendant_id, $Contact));
         }
 
-        // return redirect(route('attendantsContacts.index'));
+        return $attendantsContact->toJson();
     }
 
 }

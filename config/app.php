@@ -79,7 +79,7 @@ return [
     |
      */
 
-    'locale' => 'en',
+    'locale' => 'pt-BR',
 
     /*
     |--------------------------------------------------------------------------
@@ -153,6 +153,8 @@ return [
          */
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         //Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+        // Barryvdh\Cors\ServiceProvider::class,  //ECR
+
         /*
          * Application Service Providers...
          */
@@ -160,6 +162,8 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         /**
@@ -167,6 +171,7 @@ return [
          */
         Way\Generators\GeneratorsServiceProvider::class,
         Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
+        // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
