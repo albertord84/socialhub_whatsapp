@@ -480,7 +480,11 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
-            return $response->getBody()->getContents();
+            $content = $response->getBody()->getContents();
+            
+            Log::debug("ExternalRPIController sendTextMessage", [$content]);
+
+            return $content;
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }

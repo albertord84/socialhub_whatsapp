@@ -158,4 +158,13 @@ class CompaniesBlingsController extends AppBaseController
 
         // return redirect(route('companiesBlings.index'));
     }
+
+    public function saveCompanyBling(Request $request)
+    {
+        $input = $request->all();
+
+        $companiesBlings = $this->companiesBlingsRepository->saveCompanyBling($input);
+
+        return $companiesBlings->toJson();
+    }
 }

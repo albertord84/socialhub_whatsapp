@@ -3,7 +3,7 @@
         <article class="login_box radius">
             <div style="display: flex; align-items: center; justify-content:center" class="text-center">
                 <a href="javascript:void()" @click.prevent="goToHome">
-                    <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt="">
+                    <!-- <img src="~img/socialhub/sh.jpeg" style="height:4rem; width:4.4rem; border-radius:50%" alt=""> -->
                 </a>
                 <h1 class="hl ml-2">Senha</h1>
             </div>
