@@ -39,7 +39,8 @@ class EmailSigninCompany extends Mailable
     public function build()
     {
         return $this
-            ->from('system@socialhub.pro') //pegar desde o .env  env("MAIL_USERNAME")
+            ->from('system@socialhub.pro', 'SocialHub') //pegar desde o .env  env("MAIL_USERNAME")
+            ->subject('Cadastro de empresa em SocialHub')
             ->view('mails.SigninCompany', ['Seller' => $this->Seller,'User' => $this->User, 'Company' => $this->Company]);
     }
 }
