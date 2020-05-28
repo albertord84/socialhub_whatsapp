@@ -18,6 +18,7 @@ class CreateStatusTable extends Migration {
 			$table->string('name', 45)->nullable();
 			$table->string('model', 45)->nullable();
 			$table->string('description', 300)->nullable();
+			$table->morphs('statusable');
 			$table->timestamps();
 		});
 	}

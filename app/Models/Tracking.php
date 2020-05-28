@@ -37,6 +37,7 @@ class Tracking extends Model
     public $fillable = [
         'id',
         'contact_id',
+        'comentario',
         'post_card',
         'post_date',
         'service_code',
@@ -55,6 +56,7 @@ class Tracking extends Model
     protected $casts = [
         'id' => 'string',
         'contact_id' => 'string',
+        'comentario' => 'string',
         'post_card' => 'string',
         'post_date' => 'datetime',
         'service_code' => 'string',
@@ -120,10 +122,11 @@ class Tracking extends Model
      **/
     public function statuses()
     {
-        return $this->morphOne(\App\Models\Status::class, 'statusable');
+        return $this->morphOne(\App\Models\Status::class, 'statusable', 'statusable_type', 'statusable_id', 'status_id');
     }
 
     /**
+<<<<<<< HEAD
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
     public function status()
@@ -138,6 +141,15 @@ class Tracking extends Model
     // {
     //     return $this->morphMany(\App\Models\Status::class, 'statusable');
     // }
+=======
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     **/
+    public static function statuses()
+    {
+        // return $this->morphMany(\App\Models\Status::class, 'statusable', 'statusable_type', 'App\Models\Tracking');
+        return Status::where(['statusable_type' => Tracking::class])->get();
+    }
+>>>>>>> 59336f4e77735e115af20b88b097413762d8652e
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
