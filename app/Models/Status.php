@@ -28,7 +28,7 @@ class Status extends Model
 
     public $fillable = [
         'name',
-        'model',
+        // 'model',
         'statusable_type',
         'statusable_id',
         'description'
@@ -42,7 +42,9 @@ class Status extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'model' => 'string',
+        // 'model' => 'string',
+        'statusable_type' => 'string',
+        'statusable_id' => 'integer',
         'description' => 'string'
     ];
 

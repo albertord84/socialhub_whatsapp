@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTrackingTable extends Migration {
 
@@ -21,6 +22,7 @@ class CreateTrackingTable extends Migration {
 				$table->integer('contact_id')->nullable();
 				$table->integer('sended')->nullable()->default(0);
 				$table->string('message_list', 5000)->nullable();
+				$table->string('comentario', 5000)->nullable();
 				$table->string('post_card', 45)->nullable();
 				$table->dateTime('post_date')->nullable();
 				$table->dateTime('end_date')->nullable();

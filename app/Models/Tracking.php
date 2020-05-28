@@ -37,6 +37,7 @@ class Tracking extends Model
     public $fillable = [
         'id',
         'contact_id',
+        'comentario',
         'post_card',
         'post_date',
         'service_code',
@@ -55,6 +56,7 @@ class Tracking extends Model
     protected $casts = [
         'id' => 'string',
         'contact_id' => 'string',
+        'comentario' => 'string',
         'post_card' => 'string',
         'post_date' => 'datetime',
         'service_code' => 'string',
