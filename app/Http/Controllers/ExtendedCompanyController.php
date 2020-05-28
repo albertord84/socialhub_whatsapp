@@ -78,7 +78,7 @@ class ExtendedCompanyController extends CompanyController
         }
 
         try {
-            if(isset($request['action']) && $request['action']== 'bling' && strlen($company->bling_apikey) ==0){
+            if(isset($request['action']) && $request['action']== 'bling' ){
                 $this->companyRepository->createBlingTable((int) $company->id);
                 unset($request['action']);
             }

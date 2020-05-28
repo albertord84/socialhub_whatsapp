@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Company;
 use CreateTrackingTable;
+use CreateSalesTable;
 
 /**
  * Class CompanyRepository
