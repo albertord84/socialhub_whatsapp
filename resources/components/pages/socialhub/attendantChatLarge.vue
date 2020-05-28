@@ -2234,7 +2234,7 @@
                     // No SSL
                     wsHost: process.env.MIX_APP_HOST,
                     wsPort: 6001,
-                    enabledTransports: ['ws'],
+                    enabledTransports: ['ws', 'wss'],
                     encrypted: false,
                     forceTLS: false,
 
