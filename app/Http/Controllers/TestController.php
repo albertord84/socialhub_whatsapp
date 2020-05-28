@@ -20,6 +20,7 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
+use App\Events\NewContactMessage;
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Chat;
@@ -51,7 +52,9 @@ class TestController extends AppBaseController
     public function index(Request $request, stdClass $Sale, Company $Company)
     {
 
+        $bc = broadcast(new NewContactMessage(3, 10));
 
+        dd($bc);
 
 
 
@@ -225,7 +228,7 @@ class TestController extends AppBaseController
         // BROAD CAST TESTS
         // try {
         //     //code...
-        //     $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
+            // $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
         //     var_dump($pendingBC);
         // } catch (\Throwable $th) {
         //     var_dump($th);

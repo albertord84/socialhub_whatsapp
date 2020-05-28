@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class NewContactMessage implements ShouldBroadcast
 {
@@ -15,6 +16,8 @@ class NewContactMessage implements ShouldBroadcast
     public $message;
 
     public $channel;
+
+    public $socket;
 
     /**
      * Create a new event instance.
@@ -25,6 +28,10 @@ class NewContactMessage implements ShouldBroadcast
     {
         $this->message = $new_contacts_count;
         $this->channel = "sh.contact-to-bag.$company_id";
+
+        // $this->event = "NewContactMessage";
+
+        // $this->socket = "sh.contact-to-bag.$company_id";
     }
 
     /**
@@ -34,6 +41,19 @@ class NewContactMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel($this->channel);
+        // return new Channel($this->channel);
+        Log::debug('NewContactMessage broadcastOn', [$this]);
+        return [$this->channel];
+    }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        Log::debug('NewContactMessage broadcastAs', [$this]);
+        return 'NewContactMessage';
     }
 }

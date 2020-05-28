@@ -2259,7 +2259,7 @@
 
                 // 
 
-                var pusher = new Pusher('0453e49e6ff2a71bcac2', {
+                var pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
                     cluster: 'us2'
                 });
 
@@ -2356,6 +2356,7 @@
                 // .listen('NewContactMessage', (e) => {
                 window.Echo.subscribe('sh.contact-to-bag.' + this.userLogged.company_id)
                 .bind('NewContactMessage', (e) => {
+                    console.log('Sacola:' + e);
                     if(this.amountContactsInBag<e.message && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
                     this.amountContactsInBag = e.message;
