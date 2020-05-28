@@ -2224,34 +2224,45 @@
 
             //---------------Websockets---------------------
             wsCriateTunnel: function(){
-                window.Echo = new Echo({
-                    broadcaster: 'pusher',
-                    key: process.env.MIX_PUSHER_APP_KEY,
-                    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                    host: process.env.MIX_APP_HOST,  
+                // window.Echo = new Echo({
+                //     broadcaster: 'pusher',
+                //     key: process.env.MIX_PUSHER_APP_KEY,
+                //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                //     host: process.env.MIX_APP_HOST,  
 
 
-                    // No SSL
-                    // wsHost: process.env.MIX_APP_HOST,
-                    // wsPort: 6001,
-                    // enabledTransports: ['ws'],
-                    encrypted: false,
-                    forceTLS: false,
+                //     // No SSL
+                //     // wsHost: process.env.MIX_APP_HOST,
+                //     // wsPort: 6001,
+                //     // enabledTransports: ['ws'],
+                //     // encrypted: false,
+                //     // forceTLS: false,
 
-                    // SSL
-                    wssHost: process.env.MIX_APP_HOST,
-                    wssPort: 6001,
-                    enabledTransports: ['ws', 'wss'],
-                    // encrypted: true,
-                    // forceTLS: true,
+                //     // SSL
+                //     wssHost: process.env.MIX_APP_HOST,
+                //     wssPort: 6001,
+                //     enabledTransports: ['ws', 'wss'],
+                //     // encrypted: true,
+                //     // forceTLS: true,
 
-                    disableStats: false,
+                //     disableStats: false,
+                // });
+
+                // 
+
+                var pusher = new Pusher('0453e49e6ff2a71bcac2', {
+                    cluster: 'us2'
                 });
+
+                window.Echo = pusher;
             },
 
             wsMessageToAttendant: function(){
-                window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
-                .listen('MessageToAttendant', (e) => {  
+                // window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
+                // .listen('MessageToAttendant', (e) => {  
+                window.Echo.subscribe('sh.message-to-attendant.' + this.userLogged.id)
+                .bind('MessageToAttendant', (e) => {  
+                    console.log(e);
                     var message = JSON.parse(e.message);
                     var subjacentContact = null;       
     
@@ -2332,8 +2343,10 @@
             },
 
             wsContactToBag: function(){
-                window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
-                .listen('NewContactMessage', (e) => {
+                // window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
+                // .listen('NewContactMessage', (e) => {
+                window.Echo.subscribe('sh.contact-to-bag.' + this.userLogged.company_id)
+                .bind('NewContactMessage', (e) => {
                     if(this.amountContactsInBag<e.message && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
                     this.amountContactsInBag = e.message;
@@ -2341,8 +2354,10 @@
             },
 
             wsTransferredContact: function(){
-                window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
-                .listen('NewTransferredContact', (e) => {
+                // window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
+                // .listen('NewTransferredContact', (e) => {
+                window.Echo.subscribe('sh.transferred-contact.' + this.userLogged.id)
+                .bind('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
                     //------------prepare message datas to be displayed------------------------
                     // var message = newContact.message;

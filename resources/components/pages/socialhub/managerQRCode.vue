@@ -217,6 +217,8 @@
 
             window.Echo.channel('sh.whatsapp-logged.' + this.userLogged.id)
                 .listen('WhatsappLoggedIn', (e) => {                    
+            // window.Echo.subscribe('sh.whatsapp-logged.' + this.userLogged.id)
+            //     .bind('WhatsappLoggedIn', (e) => {                    
                     this.isLoggued=true;
             });
         },

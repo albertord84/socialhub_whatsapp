@@ -43,8 +43,8 @@ return [
 
                 // No SSL
                 // 'scheme' => 'http',       
-                'encrypted' => false,
-                'useTLS' => false,
+                // 'encrypted' => false,
+                // 'useTLS' => false,
 
                 // SSL
                 'scheme' => 'https',       
