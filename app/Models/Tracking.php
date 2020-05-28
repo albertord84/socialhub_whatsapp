@@ -120,16 +120,17 @@ class Tracking extends Model
      **/
     public function status()
     {
-        return $this->morphOne(\App\Models\Status::class, 'statusable');
+        return $this->morphOne(\App\Models\Status::class, 'statusable', 'statusable_type', 'statusable_id', 'status_id');
     }
 
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-    //  **/
-    // public function statuses()
-    // {
-    //     return $this->morphMany(\App\Models\Status::class, 'statusable');
-    // }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     **/
+    public static function statuses()
+    {
+        // return $this->morphMany(\App\Models\Status::class, 'statusable', 'statusable_type', 'App\Models\Tracking');
+        return Status::where(['statusable_type' => Tracking::class])->get();
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

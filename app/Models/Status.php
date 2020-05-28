@@ -29,6 +29,8 @@ class Status extends Model
     public $fillable = [
         'name',
         'model',
+        'statusable_type',
+        'statusable_id',
         'description'
     ];
 
