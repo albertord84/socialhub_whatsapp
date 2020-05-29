@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Business\ApiBusiness;
 use App\Business\FileUtils;
+use App\Business\MyException;
 use App\Business\MyResponse;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\CreateApiRequest;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 use Response;
 
 class ApiController extends AppBaseController
@@ -258,5 +260,26 @@ class ApiController extends AppBaseController
         Flash::success('Api deleted successfully.');
 
         return redirect(route('apis.index'));
+    }
+
+    public function generateApiToken(){
+
+        try{
+        $User = Auth::check() ? Auth::user() : session('logged_user');
+
+            if($User->api_token == null){
+        
+                $apiKey = Str::random(32);
+                $User->api_token = $apiKey;
+                $User->save();
+            }
+                //dd($User);
+
+        }catch (\Throwable $tr) {
+            throw $tr;
+        }
+        
+
+
     }
 }
