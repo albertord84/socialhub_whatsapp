@@ -220,21 +220,21 @@ class StatusTableSeeder extends Seeder
             'name' => 'PI Aberta',
             'statusable_type' => 'App\Models\Tracking',
             'statusable_id' => '8',
-            'description' => 'Tracking Status PI'
+            'description' => 'Tracking Status PI Aberta'
         ]);
         Status::create([
             'id' => '9',
             'name' => 'PI Indenizada',
             'statusable_type' => 'App\Models\Tracking',
             'statusable_id' => '9',
-            'description' => 'Tracking Status PI'
+            'description' => 'Tracking Status PI Indenizada'
         ]);
         Status::create([
             'id' => '10',
             'name' => 'PI Não Indenizada',
             'statusable_type' => 'App\Models\Tracking',
             'statusable_id' => '10',
-            'description' => 'Tracking Status PI'
+            'description' => 'Tracking Status PI Não Indenizada'
         ]);
     }
 
