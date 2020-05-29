@@ -54,8 +54,8 @@ class TestController extends AppBaseController
     {
 
         // $event = event(new MyEvent('hello world'));
-        $event = broadcast(new MyEvent('test'));
-        // $event = broadcast(new NewContactMessage(3, 77));
+        // $event = broadcast(new MyEvent('test'));
+        $event = broadcast(new NewContactMessage(3, 7));
         dd($event);
 
 
