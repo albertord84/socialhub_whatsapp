@@ -85,9 +85,6 @@ const layout = [
             title: "Estatísticas",
         }
     }
-    
-
-
 ]
     
     export default layout
