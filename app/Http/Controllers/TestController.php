@@ -21,6 +21,7 @@ use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
 use App\Events\MyEvent;
+use App\Events\NewContactMessage;
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Chat;
@@ -53,7 +54,8 @@ class TestController extends AppBaseController
     {
 
         // $event = event(new MyEvent('hello world'));
-        $event = broadcast(new MyEvent('hello world 2'));
+        $event = broadcast(new MyEvent('test'));
+        // $event = broadcast(new NewContactMessage(3, 77));
         dd($event);
 
 
