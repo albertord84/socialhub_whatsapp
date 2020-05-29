@@ -155,3 +155,5 @@ Route::get('managerTrackingStatistics', 'Statistics@managerTrackingStatistics');
 
 
 Route::resource('rapidMessages', 'RapidMessagesController');
+
+// Route::get('generateApiToken', 'ApiController@generateApiToken');

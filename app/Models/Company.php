@@ -57,7 +57,9 @@ class Company extends Model
         'tracking_user',
         'tracking_pass',
         'tracking_message',
-        'tracking_contrated'
+        'tracking_contrated',
+
+        'api_token'
     ];
 
     /**
@@ -97,6 +99,7 @@ class Company extends Model
         'tracking_contrated'=> 'integer',
 
         'api_contrated' => 'intenger',
+        'api_token' => 'string'
     ];
 
     /**
