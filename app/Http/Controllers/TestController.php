@@ -20,6 +20,7 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
+use App\Events\MyEvent;
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Chat;
@@ -51,7 +52,9 @@ class TestController extends AppBaseController
     public function index(Request $request, stdClass $Sale, Company $Company)
     {
 
-
+        // $event = event(new MyEvent('hello world'));
+        $event = broadcast(new MyEvent('hello world 2'));
+        dd($event);
 
 
 
