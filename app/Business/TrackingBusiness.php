@@ -44,8 +44,7 @@ class TrackingBusiness extends Business
                 $Tracking->tracking_list = json_encode($newTrackingList);
 
                 if (in_array($newTrackingList[0]->tipo, ['EST', 'LDI', 'BLQ', 'BDE', 'BDI', 'BDR'])) {
-                    $tracking_status = Status::find(4);
-                    $Tracking->status_id = $tracking_status->id;
+                    $Tracking->status_id = TrackingController::TRACKING_RECEIVED;
                 }
             }
 
@@ -157,8 +156,8 @@ class TrackingBusiness extends Business
                             )
                     )) {
                     Log::debug("processTrackingObject TRACKING_PROBLEM", [$Tracking]);
-                    $tracking_status = Status::find(7);
-                    $Tracking->status_id = $tracking_status->id;
+                    
+                    $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
                     $Tracking->save();
                 }
             }
