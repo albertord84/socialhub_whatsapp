@@ -28,7 +28,7 @@
 
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                                     <span class="mdi mdi-bell icons-action ml-2"></span>                                    
-                                    <div class="selector-headwayapp" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; position: absolute; top: -13px; left: 3px;">  </div>
+                                    <div  class="selector-headwayapp" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; position: absolute; top: -13px; left: 3px;">  </div>
                             </li>
 
                             <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">
@@ -530,7 +530,7 @@
                                 <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
-                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
+                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""
                             class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
                         </textarea>
                         <div v-if="file!=null" class="input-group-prepend">
@@ -1018,9 +1018,9 @@
         <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">
             <v-scroll :height="Height(330)"  color="#ccc" bar-width="8px" ref="contact_scroller"  @onbottom="onBottomContacts">
                 <ul>
-                    <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block contact_item" :id="'contact_item_'+indexRM" :key="indexRM"  @mouseover="mouseOverContact('contact_'+contact.id)" @mouseleave="mouseLeaveContact('contact_'+contact.id)">
+                    <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block rapidMessage_item" :key="indexRM" >
                         <div class="row pt-2 pb-2">
-                            <div class="col-11 pointer-hover " @click.prevent="newMessage.message = rapidMessage.message, modalShowRapidMessages=false">
+                            <div class="col-11 pointer-hover " @click.prevent="selectedRapidMessage(rapidMessage)">
                                 <div class="ml-2 mt-2">
                                     <div class="row">
                                         <a class="text-dark text-justify" style="font-size:1rem" href="javascript:void(0)">
@@ -1618,6 +1618,7 @@
                         });
                         // console.log(messages_copy);
                         this.messages = messages_copy.concat(this.messages);
+                        // console.log(this.messages)
                     }else{
                         this.hasMorePageMessage =false;
                     }
@@ -2481,6 +2482,16 @@
                 .finally(()=>{});
             },
 
+            selectedRapidMessage: function (rapidMessage) {
+                this.newMessage.message = rapidMessage.message + ' ';
+                this.modalShowRapidMessages=false;
+                let textarea = this.$refs.inputTextAreaMessage;
+                textarea.selectionStart = this.newMessage.message.length;
+                setTimeout(()=>{
+                    this.$refs.inputTextAreaMessage.focus();
+                },400);
+            },
+
             //---------------Exceptions---------------------
             processMessageError: function(error, url, action) {
                 var info = ApiService.process_request_error(error, url, action);
@@ -2910,6 +2921,9 @@
         background-color:#f5f5f0;
     }
     .contact_item:hover{
+        background-color:#f5f5f5;
+    }
+    .rapidMessage_item:hover{
         background-color:#f5f5f5;
     }
     .message-options-style{
