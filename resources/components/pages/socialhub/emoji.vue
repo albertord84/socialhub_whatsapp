@@ -3,15 +3,15 @@
         <!-- <picker set="emojione"/> -->
         <!-- <picker @select="addEmoji"/> -->
         <!-- <picker title="Pick your emoji…" emoji="point_up" /> -->
-        <!-- <picker :style="{ position: 'absolute', bottom: '20px', right: '20px' }" /> -->
-        <!-- <picker :i18n="{ search: 'Recherche', categories: { search: 'Résultats de recherche', recent: 'Récents' } }" /> -->
+        <!-- <picker :style="{ position: 'absolute', bottom: '20px', right: '20px' }" />
+        <picker :i18n="{ search: 'Recherche', categories: { search: 'Résultats de recherche', recent: 'Récents' } }" /> -->
 
-        <picker 
+        <picker
                 set="emojione" 
                 @select="addEmoji" 
                 title="" 
                 emoji=""
-                :style="{ position: 'absolute', bottom: '20px', right: '20px'}"
+                :style="{ position: 'absolute', bottom: '20px', right: '20px', width: '360px', height: '360px' }"
                 :i18n="{ 
                     search: 'Pesquisar', 
                     categories: { 
@@ -28,11 +28,14 @@
                         custom: 'Personalizados',
                     }
                 }"
-                :perLine="15"                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                :perLine="5"                                                                                                                                                                                                                                                                                                                                                                                                                                              
                 :showPreview="false"
                 :showSearch="false"
         />
-        <p>Slected emoji is:<emoji :emoji="{ id: 'santa', skin: 3 }" :size="16" /> and id unified code is </p>
+        <p>Slected emoji is:<emoji :emoji="emoji" :size="16" /> and id unified code is </p>
+        <!-- <p>Slected emoji is:<emoji :emoji="{ id: 'santa', skin: 3 }" :size="16" /> and id unified code is </p> -->
+
+
     </div>
 </template>
 
@@ -57,12 +60,13 @@
 
         data() {
             return {
-                emoji:null
+                emoji:{ id: 'santa', skin: null }
             }
         },
 
         methods: {  
             addEmoji: function(emoji) {
+                console.log(emoji)
                 this.emoji = emoji;
             }
         },
