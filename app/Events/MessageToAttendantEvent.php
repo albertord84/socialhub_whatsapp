@@ -18,7 +18,11 @@ class MessageToAttendantEvent extends PusherEvent
         
         Log::debug('MessageToAttendant $this->message: ', [$this->message]);
 
-        parent::__construct($Chat->toJson(), "sh.message-to-attendant.$Chat->attendant_id");
+        parent::__construct(
+            $Chat->toJson(), 
+            "sh.message-to-attendant.$Chat->attendant_id", 
+            "MessageToAttendantEvent"
+        );
     }
 
 }
