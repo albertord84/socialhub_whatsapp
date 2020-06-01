@@ -200,24 +200,33 @@
 
             this.beforeRequest = true;
 
-            window.Echo = new Echo({
-                broadcaster: 'pusher',
-                key: process.env.MIX_PUSHER_APP_KEY,
-                cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                wsHost: process.env.MIX_APP_HOST,
-                // wsHost: window.location.hostname,
-                wsPort: 6001,
-                wssPort: 6001,
-                // enabledTransports: ['ws'],
-                enabledTransports: ['ws', 'wss'],
-                // encrypted: true,
-                encrypted: false,
-                disableStats: false
+            // window.Echo = new Echo({
+            //     broadcaster: 'pusher',
+            //     key: process.env.MIX_PUSHER_APP_KEY,
+            //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+            //     wsHost: process.env.MIX_APP_HOST,
+            //     // wsHost: window.location.hostname,
+            //     wsPort: 6001,
+            //     wssPort: 6001,
+            //     // enabledTransports: ['ws'],
+            //     enabledTransports: ['ws', 'wss'],
+            //     // encrypted: true,
+            //     encrypted: false,
+            //     disableStats: false
+            // });
+
+            // window.Echo.channel('sh.whatsapp-logged.' + this.userLogged.id)
+            //     .listen('WhatsappLoggedIn', (e) => {                    
+            //         this.isLoggued=true;
+            // });
+
+            var pusher = new Pusher(env.process.MIX_PUSHER_APP_KEY, {
+                cluster: env.process.MIX_PUSHER_APP_CLUSTER
             });
 
-            window.Echo.channel('sh.whatsapp-logged.' + this.userLogged.id)
-                .listen('WhatsappLoggedIn', (e) => {                    
-                    this.isLoggued=true;
+            var channel = pusher.subscribe('sh.whatsapp-logged.' + this.userLogged.id);
+            channel.bind('WhatsappLoggedInEvent', (data) => {
+                this.isLoggued=true;
             });
         },
 

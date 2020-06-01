@@ -2292,6 +2292,121 @@
 
             //---------------Websockets---------------------
             wsCriateTunnel: function(){
+                var pusher = new Pusher(env.process.MIX_PUSHER_APP_KEY, {
+                    cluster: env.process.MIX_PUSHER_APP_CLUSTER
+                });
+            },
+
+            wsMessageToAttendant: function(){
+                var channel = pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
+                channel.bind('MessageToAttendantEvent', (data) => {                    
+                    var message = JSON.parse(data);
+                    var subjacentContact = null;       
+    
+                    if(message.source == 0){ //message to update the message_status to 2 or 7
+                        if(this.selectedContactIndex>-1 && message.contact_id == this.contacts[this.selectedContactIndex].id){
+                            this.messages.some((item,i)=>{
+                                if(message.id == item.id){
+                                    item.status_id = message.status_id;
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                    else if(message.source == 1){ //message from contact                        
+                        //analyse if the contact is in this.contacts list or not
+                        if(typeof(message.Contact)!='undefined'){
+                            subjacentContact = Object.assign({},message.Contact);
+                            delete message.Contact;
+                        }
+                        
+                        //------------prepare message datas to be displayed------------------------
+                        message.time = this.getMessageTime(message.created_at);
+                        try {
+                            if(message.data != "" && message.data != null && message.data.length>0) {
+                                message.data = JSON.parse(message.data);
+                                if(message.type_id > 1)
+                                    message.path = message.data.FullPath;
+                            }
+                        } catch (error) {
+                        }
+                        
+                        let targetIndex = -1; 
+                        var isSelectedContact = false;
+                        //------show the recived message if the target contact is selected----------
+                        if(this.selectedContactIndex > -1 && this.contacts[this.selectedContactIndex].id == message.contact_id){
+                            this.contacts[this.selectedContactIndex].last_message = message;
+                            message = Object.assign({}, message);
+                            message.message = this.transformToRichText(message.message,1);
+                            this.messages.push(message);
+                            if(this.$refs.message_scroller)
+                                this.$refs.message_scroller.scrolltobottom();
+                            targetIndex = this.contacts[this.selectedContactIndex].index;
+                            isSelectedContact = true;
+                        }else{
+                            //-------find contact and update count_unread_messagess and last_message-------
+                            this.contacts.some((item, i) => {
+                                if(item.id == message.contact_id){
+                                    item.count_unread_messagess = item.count_unread_messagess + 1;
+                                    item.last_message = message;
+                                    targetIndex = i;                                    
+                                    return;
+                                }
+                            });
+                        }
+
+                        if(targetIndex > -1){ // set the target contact as firt if is in contacts list
+                            this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
+                            if(this.contacts[targetIndex].status_id != 6)
+                                this.$refs.newMessageSound.play();
+                        }else{ //insert the target contact in contacts list if isnt
+                            subjacentContact.count_unread_messagess = 1;
+                            subjacentContact.last_message = message;
+                            this.contacts.unshift(subjacentContact);
+                            
+                            this.contacts.some((item, i)=>{
+                                this.contacts[i].index = i;
+                            });
+                            
+                            if(this.selectedContactIndex > -1){
+                                this.selectedContactIndex ++;
+                            }
+                            if(subjacentContact.status_id != 6)                            
+                                this.$refs.newMessageSound.play();
+                        }                       
+
+                    }
+                });
+            },
+
+            wsContactToBag: function(){
+                var channel = pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
+                channel.bind('NewContactMessageEvent', (data) => {
+                    data = JSON.parse(data);
+                    if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
+                        this.$refs.newContactInBag.play();
+                    this.amountContactsInBag = data;
+                });
+            },
+
+            wsTransferredContact: function(){
+                var channel = pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
+                channel.bind('NewTransferredContactEvent', (data) => {
+                    var newContact = JSON.parse(e.message);                   
+
+                    this.contacts.unshift(newContact);
+                    var a = 0;
+                    this.contacts.some((item, i)=>{
+                        this.contacts[i].index = a++;
+                    });
+                    if(this.selectedContactIndex >=0){
+                        this.selectedContactIndex ++;
+                    }
+                    miniToastr.success("Sucesso", "Contato transferido com sucesso");   
+                });
+            },
+
+            /*wsCriateTunnel: function(){
                 window.Echo = new Echo({
                     broadcaster: 'pusher',
                     key: process.env.MIX_PUSHER_APP_KEY,
@@ -2300,21 +2415,23 @@
 
 
                     // No SSL
-                    wsHost: process.env.MIX_APP_HOST,
-                    wsPort: 6001,
-                    enabledTransports: ['ws', 'wss'],
-                    encrypted: false,
-                    forceTLS: false,
+                    // wsHost: process.env.MIX_APP_HOST,
+                    // wsPort: 6001,
+                    // enabledTransports: ['ws'],
+                    // encrypted: false,
+                    // forceTLS: false,
 
                     // SSL
                     wssHost: process.env.MIX_APP_HOST,
                     wssPort: 6001,
-                    // enabledTransports: ['ws', 'wss'],
-                    // encrypted: true,
-                    // forceTLS: true,
+                    enabledTransports: ['ws', 'wss'],
+                    encrypted: true,
+                    forceTLS: true,
 
                     disableStats: false,
                 });
+
+                console.log(process.env);
             },
 
             wsMessageToAttendant: function(){
@@ -2434,7 +2551,7 @@
                     }
                     miniToastr.success("Sucesso", "Contato transferido com sucesso");   
                 });
-            },
+            },*/
 
             //---------------CRUD Rapid Messages---------------------
             getRapidMessages: function() {
