@@ -1206,7 +1206,8 @@
                 modalShowRapidMessages: false,
                 textNewRapidMessage: '',
                 RapidMessages: [],
-                isCreatingNewRapidMessage: false
+                isCreatingNewRapidMessage: false,
+                pusher: null
             }
         },
         
@@ -2292,13 +2293,13 @@
 
             //---------------Websockets---------------------
             wsCriateTunnel: function(){
-                var pusher = new Pusher(env.process.MIX_PUSHER_APP_KEY, {
-                    cluster: env.process.MIX_PUSHER_APP_CLUSTER
+                this.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+                    cluster: process.env.MIX_PUSHER_APP_CLUSTER
                 });
             },
 
             wsMessageToAttendant: function(){
-                var channel = pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
+                var channel = this.pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
                 channel.bind('MessageToAttendantEvent', (data) => {                    
                     var message = JSON.parse(data);
                     var subjacentContact = null;       
@@ -2380,7 +2381,7 @@
             },
 
             wsContactToBag: function(){
-                var channel = pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
+                var channel = this.pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
                 channel.bind('NewContactMessageEvent', (data) => {
                     data = JSON.parse(data);
                     if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
@@ -2390,7 +2391,7 @@
             },
 
             wsTransferredContact: function(){
-                var channel = pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
+                var channel = this.pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
                 channel.bind('NewTransferredContactEvent', (data) => {
                     var newContact = JSON.parse(e.message);                   
 
