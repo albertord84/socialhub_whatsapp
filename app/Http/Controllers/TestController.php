@@ -63,17 +63,17 @@ class TestController extends AppBaseController
         // $Seller = User::find(2);
         // $event = event(new MyEvent($Seller->toJson()));
 
-        $company_id = '49';
-        $TrackingModel = new Tracking();
-        $TrackingModel->table = "$company_id";
-        $Tracking = $TrackingModel->find('701-0002365-2406656');
-        // dd($Tracking);
-        $event = event(new MyEvent($Tracking->toJson()));
+        // $company_id = '49';
+        // $TrackingModel = new Tracking();
+        // $TrackingModel->table = "$company_id";
+        // $Tracking = $TrackingModel->find('701-0002365-2406656');
+        // // dd($Tracking);
+        // $event = event(new MyEvent($Tracking->toJson()));
 
 
         // $event = broadcast(new MyEvent('test'));
         // $event = broadcast(new NewContactMessage(3, 7));
-        dd($event);
+        // dd($event);
 
 
 
@@ -83,14 +83,14 @@ class TestController extends AppBaseController
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
 
-        $TrackingBusiness = new TrackingBusiness();
+        // $TrackingBusiness = new TrackingBusiness();
 
         // $company_id = '1';
-        $company_id = '49';
-        $TrackingModel = new Tracking();
-        $TrackingModel->table = "$company_id";
+        // $company_id = '49';
+        // $TrackingModel = new Tracking();
+        // $TrackingModel->table = "$company_id";
 
-        $Tracking = $TrackingModel->find('701-0002365-2406656');
+        // $Tracking = $TrackingModel->find('701-0002365-2406656');
 
         // $Tracking = (object)$Tracking;
 
@@ -101,15 +101,15 @@ class TestController extends AppBaseController
         // $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
         // $trackingJob->handle();
 
-        $tracking_code = $Tracking->tracking_code;
+        // $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
-        $Company = Company::find($company_id);
+        // $Company = Company::find($company_id);
 
         // dd($Company);
 
-        $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
+        // $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
 
-        dd($trackingList);
+        // dd($trackingList);
         // dd((object) $trackingList[0]->toArray());
         // dd(json_encode($trackingList));
 
@@ -278,7 +278,7 @@ class TestController extends AppBaseController
         // $this->testJobsQueue();
         // $this->testJobsQueue();
 
-        $this->testCorreiosProblems($request);
+        // $this->testCorreiosProblems($request);
         // $this->testBlingJob($request);
     }
 
