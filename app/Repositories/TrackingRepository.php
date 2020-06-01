@@ -44,6 +44,7 @@ class TrackingRepository extends BaseRepository
             betweenDates --> puede ser un array (ex: betweenDates[0]='2020-04-29' y betweenDates[1]='2020-05-01']), o null
         */
         $Trackings = $Tracking
+
             ->where(function($query) use ($searchInput){
                 if ($searchInput != '') {
                     $query
@@ -61,6 +62,7 @@ class TrackingRepository extends BaseRepository
                         ->where('updated_at', '>=', $betweenDates[0].' 00:00:00')
                         ->where('updated_at', '<=', $betweenDates[1].' 00:00:00');
                 }})
+            ->orderBy('updated_at','desc')
             ->get()
             ->slice($start, $page_length)
             ->each(function(Tracking $tracking) {

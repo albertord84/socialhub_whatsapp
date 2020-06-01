@@ -93,7 +93,7 @@
         window.onload=function () {
             document.querySelector('#preloader').remove()
         }
-    </script>
+    </script>    
 </head>
 
 <body>
@@ -117,7 +117,26 @@
     <script type="text/javascript" src="{{ url(mix('manifest.js')).'?'.env('APP_VERSION') }}"></script>
     <script type="text/javascript" src="{{ url(mix('vendor.js')).'?'.env('APP_VERSION') }}"></script>
     <script type="text/javascript" src="{{ url(mix('main.js')).'?'.env('APP_VERSION') }}"></script>
-
+    
+    <script>
+        // @see https://docs.headwayapp.co/widget for more configuration options.
+        var HW_config = {
+            // selector: ".CHANGE_THIS", // CSS selector where to inject the badge
+            selector: ".selector-headwayapp", // CSS selector where to inject the badge
+            account:  "JVYOA7",
+            translations: {
+                title: "Notificações",
+                readMore: "Ler mais",
+                labels: {
+                    "new": "Notícias",
+                    "improvement": "Ataulizações",
+                    "fix": "Fixos"
+                    },
+                footer: "SocialHub"
+            },
+        }
+    </script>
+    <script async src="https://cdn.headwayapp.co/widget.js"></script>
     
 
 </body>

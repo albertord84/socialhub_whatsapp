@@ -2,7 +2,6 @@
     <div class="row chat p-0" style="background-color:#fefefe !important">
         <left-side-bar  :left_layout ="leftLayout" style="top:0px !important" :item='{}' @insertContactAsFirtInList="insertContactAsFirtInList" @reloadContacts='reloadContacts'></left-side-bar>
         <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.mp3" type="audio/ogg"></audio>
-        <!-- <audio ref="newMessageSound"  controls style="display:none" ><source src="audio/newMessage.ogg#t=1" type="audio/ogg"></audio> -->
         <audio ref="newContactInBag"  controls style="display:none" ><source src="audio/newContactInBag.ogg" type="audio/ogg"></audio>
 
         <!-- Left side of chat-->
@@ -11,11 +10,14 @@
                 <div class="sect_header sect_header_color">
                     <div v-show="isSearchContact==false" class="container-fluid">
                         <ul class='row flex-baseline'>
-                            <li class='col-10 col-md-10 col-lg-8 col-xl-9'>
+
+                            <li class='col-9 col-md-9 col-lg-7 col-xl-8'>
                                 <a href="javascript:void()" @click.prevent="modalUserCRUDDatas=!modalUserCRUDDatas" title="Meu perfil" style="padding:0 !important">
                                     <img :src="userLogged.image_path" width="50px" height="50px" class="profile-picture" alt="Foto">
                                 </a>
                             </li>
+
+
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1 mt-3'>
                                 <a href="javascript:void()" @click.prevent="(amountContactsInBag>0)?modalNewContactFromBag=!modalNewContactFromBag:true">
                                     <i class="mdi mdi-message-processing-outline icons-action" title="Adherir novo contato"></i>
@@ -23,18 +25,30 @@
                                     <span v-if="amountContactsInBag>0" :title="amountContactsInBag + ' contatos novos disponíveis'" class="badge badge-success badge-pill amount-contacts-in-bag" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px">{{amountContactsInBag}}</span>
                                 </a>
                             </li>
-                            <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
+
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
+                                    <span class="mdi mdi-bell icons-action ml-2"></span>                                    
+                                    <div  class="selector-headwayapp" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; position: absolute; top: -13px; left: 3px;">  </div>
+                            </li>
+
+                            <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
                                         <i class="mdi mdi-dots-horizontal icons-action" style="top:-50px" title="Opções"  aria-hidden="false"></i>
                                     </template>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
                                         <a href='javascript:void(0)' class="drpodowtext text-muted" @click="toggleLeft('toggle-add-contact')">
                                             <i class="fa fa-user-plus fa-xs " ></i> 
                                             Inserir contato
                                         </a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
+                                        <a href='javascript:void(0)' class="drpodowtext text-muted" @click="modalShowRapidMessages=true">
+                                            <i class="mdi mdi-file-document-box-multiple-outline fa-xs " ></i> 
+                                            Mensagens rápidas
+                                        </a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
                                         <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotificationsOfAttendant">
                                             <span v-if="userLogged.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
                                             <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
@@ -71,6 +85,9 @@
                                     </b-dropdown-item> -->
                                 </b-dropdown>
                             </li>
+
+                            
+
                         </ul>
                     </div>
                 </div>
@@ -236,10 +253,10 @@
                                 <span id="btn-back" class="mdi mdi-arrow-left btn-back icons-action" @click.prevent="chatCenterSideBack" style="position:relative; top:-18px"></span>
                             </li>
                             <li class='col-9 col-sm-9 col-md-11 col-lg-11 col-xl-11'>
-                                <div @click.prevent="displayChatRightSide()" class="pointer-hover" style="display: flex; align-items: center">
-                                    <img v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" class="profile-picture">
-                                    <img v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" class="profile-picture">
-                                    <div v-else style="width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
+                                <div class="" style="display: flex; align-items: center;">
+                                    <img @click.prevent="displayChatRightSide()" v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" :src="JSON.parse(contacts[selectedContactIndex].json_data).picurl" class="profile-picture pointer-hover">
+                                    <img @click.prevent="displayChatRightSide()" v-else-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('images/contacts/default_error.png')" :src="'images/contacts/default_error.png'" class="profile-picture pointer-hover">
+                                    <div @click.prevent="displayChatRightSide()" v-else style="width:50px !important; height:50px !important; border-radius:50% !important; margin-right:0px !important; display: flex; align-items: center; justify-content:center;" 
                                         :class="[
                                             { bg0: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='0' },
                                             { bg1: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='1' },
@@ -251,12 +268,12 @@
                                             { bg7: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='7' },
                                             { bg8: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='8' },
                                             { bg9: contacts[selectedContactIndex].whatsapp_id.slice(-1)=='9' },
-                                        ]">
+                                        ]" class="pointer-hover">
                                         <b style="color:white; font-size: 1.1rem; text-transform: uppercase;">
                                             {{ (contacts[selectedContactIndex].first_name)? contacts[selectedContactIndex].first_name.slice(0,1) : contacts[selectedContactIndex].whatsapp_id.slice(-1)}}
                                         </b>
                                     </div>
-                                    <b style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
+                                    <b @click.prevent="displayChatRightSide()" class="pointer-hover" style="font-size:1.1rem; margin-left:2rem">{{ contacts[selectedContactIndex].first_name }}</b>
                                 </div>
                             </li>
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
@@ -266,6 +283,15 @@
                                 <i v-else
                                     title="Buscar mensagens" @click.prevent="displayChatFindMessage()" class="mdi mdi-magnify icons-action" style="position:relative; top:5px">
                                 </i>
+
+                                <i v-if="selectedContactIndex>-1 && contacts[selectedContactIndex].json_data && contacts[selectedContactIndex].json_data.includes('https://pps.whatsapp.net')" 
+                                    title="Buscar mensagens" @click.prevent="displayChatRightSide()" class="mdi mdi-dots-vertical icons-action ml-1" style="position:relative; top:-10px">
+                                </i>
+                                <i v-else
+                                    title="Buscar mensagens" @click.prevent="displayChatRightSide()" class="mdi mdi-dots-vertical icons-action ml-1" style="position:relative; top:5px">
+                                </i>
+                            </li>
+                            <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                             </li>
                             <!-- <li> -->
                                 <!-- <form action="">
@@ -504,7 +530,7 @@
                                 <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
-                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
+                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""
                             class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
                         </textarea>
                         <div v-if="file!=null" class="input-group-prepend">
@@ -525,6 +551,9 @@
                         <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
+                        <div class="input-group-prepend">
+                            <i @click.prevent="modalShowRapidMessages=true" class="input-group-text mdi mdi-file-document-box-multiple-outline pr-4 fa-1_5x text-muted border border-left-0 border-right-0 container-icons-action-message pointer-hover" title="Mensagem rápida" ></i>
+                        </div> 
 
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
                             <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
@@ -585,11 +614,11 @@
         <div id="chat-right-side" v-show="showChatRightSide==true" class="width-25 p-0">
             <div class="sect_header sect_header_color">
                 <div class="container-fluid">
-                    <ul class='row ' style="margin-top:0.7rem; margin-left:1rem; text-transform: uppercase;">
+                    <ul class='row ' style="margin-top:0.7rem; margin-left:1rem;">
                         <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                             <i class="mdi mdi-window-close icons-action mt-2" @click.prevent="displayChatRightSide()" aria-hidden="true"></i>
                         </li>
-                        <li class='col-9 col-md-9 col-lg-9 col-xl-9' style="padding-top: 0.4rem;">
+                        <li class='col-9 col-md-9 col-lg-9 col-xl-9' style="padding-top: 0.4rem; text-transform: uppercase;">
                             <strong style="font-size:1em;">Detalhes</strong>
                         </li>
                         <li class="col-1 col-md-1 col-lg-1 col-xl-1">
@@ -651,7 +680,7 @@
                         <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063;  text-transform: uppercase;">
                             <div class="container-fluid">
                                 <div class="row flex-baseline" >
-                                    <div class="col-10 pt-2 pb-2" style="text-align:left">
+                                    <div class="col-10 pt-2 pb-2" style="text-align:left; text-transform: uppercase;">
                                         <span class="" style="font-size:1.1rem; font-weight: 600;color: #39a063 !important;">Informação</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
@@ -730,10 +759,10 @@
                         </div>
 
                         <!-- Nota resumo -->
-                        <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063;  text-transform: uppercase;">
+                        <div class="mt-3 p-1 mr-2" style="background-color: rgba(250, 250, 250, 0); border-bottom: 7px solid #39a063; ">
                             <div class="container-fluid">
                                 <div class="row flex-baseline">
-                                    <div class="col-10 pt-2 pb-2" style="text-align:left">
+                                    <div class="col-10 pt-2 pb-2" style="text-align:left; text-transform: uppercase;">
                                         <span class="" style="font-size:1.1rem; font-weight: 600;color: #39a063 !important;">Nota resumo</span>
                                     </div>
                                     <div class="col-1 pt-2 pb-2" >
@@ -984,6 +1013,50 @@
         <b-modal v-model="showModalCRUDTags" :hide-footer="true" size="sm" title="Gerenciar etiquetas">
             <attendantCRUDTags :userLogged="userLogged" @onclosemodal='closemodal'></attendantCRUDTags>
         </b-modal>
+
+        <!-- Modal to show personalized messages-->
+        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">
+            <v-scroll :height="Height(330)"  color="#ccc" bar-width="8px" ref="contact_scroller"  @onbottom="onBottomContacts">
+                <ul>
+                    <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block rapidMessage_item" :key="indexRM" >
+                        <div class="row pt-2 pb-2">
+                            <div class="col-11 pointer-hover " @click.prevent="selectedRapidMessage(rapidMessage)">
+                                <div class="ml-2 mt-2">
+                                    <div class="row">
+                                        <a class="text-dark text-justify" style="font-size:1rem" href="javascript:void(0)">
+                                            {{rapidMessage.message}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 text-right">
+                                <button class="btn btn-link" @click.prevent="deleteRapidMessage(rapidMessage)">
+                                    <span class="mdi mdi-window-close text-muted mr-2"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </v-scroll>
+
+            <div style="height:40px">
+                <div class="container-fluid">
+                    <ul class='row' style="">
+                        <li class='col-10 col-md-10 col-lg-10 col-xl-10'>
+                            <input class="form-control search-input p-4" type="text" v-model="textNewRapidMessage" @keyup.enter.exact="criateRapidMessage" placeholder="Nova mensagem rápida">
+                        </li>
+                        <li class='col-2 col-md-2 col-lg-2 col-xl-2'>
+                            <button v-show="!isCreatingNewRapidMessage" class="btn btn-success p-2 pl-5 pr-5" style="height:3.2rem" @click.prevent="criateRapidMessage">
+                                Adicionar
+                            </button>
+                            <button v-show="isCreatingNewRapidMessage" class="btn btn-success p-2 pl-4 pr-4" style="height:3.2rem" @click.prevent="criateRapidMessage">
+                                <i class="fa fa-spinner fa-spin ml-3"></i> Adicionar
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -1128,7 +1201,12 @@
                 scrollHeights:[],
 
                 last_selected_contact_ref: '',
-                selected_contact_ref: ''
+                selected_contact_ref: '',
+
+                modalShowRapidMessages: false,
+                textNewRapidMessage: '',
+                RapidMessages: [],
+                isCreatingNewRapidMessage: false
             }
         },
         
@@ -1509,9 +1587,11 @@
                         this.messagesWhereLike = [];
                         this.searchMessageByStringInput = '';
                         let messages_copy=new Array();
+
                         response.data.forEach((item, i)=>{
                             try {
                                 item.time = this.getMessageTime(item.created_at);
+
                                 if(item.time.date != this.messageTimeDelimeter){
                                     messages_copy.push({
                                         'type_id': 'date_separator',
@@ -1519,19 +1599,26 @@
                                     });
                                     this.messageTimeDelimeter = item.time.date;
                                 }
+
                                 if(item.data != "" && item.data != null && item.data.length>0) {
                                     item.data = JSON.parse(item.data);
                                     if (item.type_id > 1)
                                         item.path = item.data.FullPath;
                                 }
+
                                 item.lifePreview = false;
-                                item.message = this.transformToRichText(item.message,item.source);                                
+                                if(item.id == 16932)
+                                    console.log(item);
+                                item.message = this.transformToRichText(item.message, item.source);
+                                if(item.id == 16932)
+                                    console.log(item);
                                 messages_copy.push(item);
                             } catch (error) {
                             }
                         });
-                        console.log(messages_copy);
+                        // console.log(messages_copy);
                         this.messages = messages_copy.concat(this.messages);
+                        // console.log(this.messages)
                     }else{
                         this.hasMorePageMessage =false;
                     }
@@ -1562,9 +1649,12 @@
             },
 
             transformToRichText: function(message, source) {
+                if(message && message != '') {
+                    message = message.replace(/\r\n/g, '<br>');
+                }
                 return {
                     'firstLink': '',
-                    'richText': message.replace(/\r\n/g, '<br>'),
+                    'richText': message,
                     'isLink': false
                 };
             },
@@ -1837,8 +1927,7 @@
                         return;
                     }
                 });
-            },
-            
+            },            
 
             //-------------------Secundary functions----------------------
             textTruncate: function(str, length, ending) {
@@ -2213,13 +2302,13 @@
                     // No SSL
                     wsHost: process.env.MIX_APP_HOST,
                     wsPort: 6001,
-                    enabledTransports: ['ws'],
+                    enabledTransports: ['ws', 'wss'],
                     encrypted: false,
                     forceTLS: false,
 
                     // SSL
-                    // wssHost: process.env.MIX_APP_HOST,
-                    // wssPort: 6001,
+                    wssHost: process.env.MIX_APP_HOST,
+                    wssPort: 6001,
                     // enabledTransports: ['ws', 'wss'],
                     // encrypted: true,
                     // forceTLS: true,
@@ -2347,6 +2436,62 @@
                 });
             },
 
+            //---------------CRUD Rapid Messages---------------------
+            getRapidMessages: function() {
+                ApiService.get('rapidMessages',{
+                    'attendant_id': this.userLogged.id
+                })
+                .then(response => {
+                    this.RapidMessages = response.data;
+                })
+                .catch(error => {
+                    
+                })
+                .finally(()=>{});
+            },
+
+            criateRapidMessage: function() {
+                if (this.textNewRapidMessage.trim() === '') return;
+                this.isCreatingNewRapidMessage = true;
+                ApiService.post('rapidMessages',{
+                    'user_id': this.userLogged.id,
+                    'message': this.textNewRapidMessage,
+                })
+                .then(response => {
+                    miniToastr.success("Sucesso", 'Mensagem rápida adicionada com sucesso.');
+                    this.RapidMessages.push(response.data);
+                    this.textNewRapidMessage = '';
+                })
+                .catch(error => {
+                    miniToastr.error("Erro", 'Erro adicionando mensagem rápida.');
+                })
+                .finally(()=>{
+                    this.isCreatingNewRapidMessage = false;
+                });
+            },
+            
+            deleteRapidMessage: function(rapidMessage) {
+                ApiService.delete('rapidMessages/'+ rapidMessage.id)
+                .then(response => {
+                    miniToastr.success("Sucesso", 'Mensagem rápida eliminada com sucesso.');
+                    this.getRapidMessages();
+                })
+                .catch(error => {
+                    miniToastr.error("Erro", 'Erro eliminando mensagem rápida.');
+                })
+                .finally(()=>{});
+            },
+
+            selectedRapidMessage: function (rapidMessage) {
+                this.newMessage.message = rapidMessage.message + ' ';
+                this.modalShowRapidMessages=false;
+                let textarea = this.$refs.inputTextAreaMessage;
+                textarea.selectionStart = this.newMessage.message.length;
+                setTimeout(()=>{
+                    this.$refs.inputTextAreaMessage.focus();
+                },400);
+            },
+
             //---------------Exceptions---------------------
             processMessageError: function(error, url, action) {
                 var info = ApiService.process_request_error(error, url, action);
@@ -2387,6 +2532,7 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
+            this.getRapidMessages();
         },
 
         mounted(){
@@ -2777,6 +2923,9 @@
     .contact_item:hover{
         background-color:#f5f5f5;
     }
+    .rapidMessage_item:hover{
+        background-color:#f5f5f5;
+    }
     .message-options-style{
         position: relative;
         top: 0px;
@@ -3141,6 +3290,8 @@
         .badge-success{
             background-color: #5AD856 !important;
         }
+
+        
     }
     
 </style>

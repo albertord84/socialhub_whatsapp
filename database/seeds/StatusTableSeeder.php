@@ -176,65 +176,96 @@ class StatusTableSeeder extends Seeder
         Status::create([
             'id' => '1',
             'name' => 'POSTED',
-            'model' => 'App\Models\Tracking',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '1',
             'description' => 'Tracking Status POSTED',
         ]);
         Status::create([
             'id' => '2',
             'name' => 'MOVING',
-            'model' => 'App\Models\Tracking',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '2',
             'description' => 'Tracking Status MOVING',
         ]);
         Status::create([
             'id' => '3',
             'name' => 'STOPPED',
-            'model' => 'App\Models\Tracking',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '3',
             'description' => 'Tracking Status STOPPED',
         ]);
         Status::create([
             'id' => '4',
             'name' => 'RECEIVED',
-            'model' => 'App\Models\Tracking',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '4',
             'description' => 'Tracking Status RECEIVED',
         ]);
         Status::create([
             'id' => '5',
             'name' => 'ARRIVED',
-            'model' => 'App\Models\Tracking',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '5',
             'description' => 'Tracking Status ARRIVED',
         ]);
         Status::create([
             'id' => '7',
             'name' => 'PROBLEM',
-            'model' => 'App\Models\Tracking',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '7',
             'description' => 'Tracking Status PROBLEM',
+        ]);
+        Status::create([
+            'id' => '8',
+            'name' => 'PI ABERTA',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '8',
+            'description' => 'Tracking Status PI ABERTA'
+        ]);
+        Status::create([
+            'id' => '9',
+            'name' => 'PI INDENIZADA',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '9',
+            'description' => 'Tracking Status PI INDENIZADA'
+        ]);
+        Status::create([
+            'id' => '10',
+            'name' => 'PI NÃO INDENIZADA',
+            'statusable_type' => 'App\Models\Tracking',
+            'statusable_id' => '10',
+            'description' => 'Tracking Status PI NÃO INDENIZADA'
         ]);
     }
 
     function CreateApiStatus() {
         $this->command->info('Creating Status Api:');
         Status::create([
-            'id' => '8',
+            'id' => '11',
             'name' => 'RECEIVED',
-            'model' => 'App\Models\Api',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '1',
             'description' => 'Api Status RECEIVED',
         ]);
         Status::create([
-            'id' => '9',
+            'id' => '12',
             'name' => 'SENDED',
-            'model' => 'App\Models\Api',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '2',
             'description' => 'Api Status SENDED',
         ]);
         Status::create([
-            'id' => '10',
+            'id' => '13',
             'name' => 'STOPPED',
-            'model' => 'App\Models\Api',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '3',
             'description' => 'Api Status STOPPED',
         ]);
         Status::create([
-            'id' => '11',
+            'id' => '14',
             'name' => 'FAIL',
-            'model' => 'App\Models\Api',
+            'statusable_type' => 'App\Models\Api',
+            'statusable_id' => '4',
             'description' => 'Api Status FAIL',
         ]);
     }

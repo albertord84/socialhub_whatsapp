@@ -9,6 +9,7 @@ use App\Http\Controllers\TrackingController;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Status;
 use App\Models\Tracking;
 use App\Repositories\TrackingRepository;
 use Exception;
@@ -155,6 +156,7 @@ class TrackingBusiness extends Business
                             )
                     )) {
                     Log::debug("processTrackingObject TRACKING_PROBLEM", [$Tracking]);
+                    
                     $Tracking->status_id = TrackingController::TRACKING_PROBLEM;
                     $Tracking->save();
                 }

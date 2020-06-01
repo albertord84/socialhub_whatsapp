@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Company;
 use CreateTrackingTable;
+use CreateSalesTable;
 
 /**
  * Class CompanyRepository
@@ -52,6 +53,19 @@ class ExtendedCompanyRepository extends CompanyRepository
             require_once($migrationsDir);
 
             $table = new CreateTrackingTable();
+            $table->up((string)$company_id);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function createBlingTable(int $company_id)
+    {
+        try {
+            $migrationsDir = __DIR__.'/../../database/migrations/2020_02_14_104111_create_sales_table.php';
+            require_once($migrationsDir);
+
+            $table = new CreateSalesTable();
             $table->up((string)$company_id);
         } catch (\Throwable $th) {
             throw $th;

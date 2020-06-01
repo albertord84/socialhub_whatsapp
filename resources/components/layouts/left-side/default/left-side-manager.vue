@@ -16,6 +16,8 @@
                             <vmenu-item v-for="child in item.child" :link="child.link" :icon="child.icon" :key="child.name">{{child.name}}</vmenu-item>
                         </vsub-menu>
                         <vmenu-item v-if="item.link" :title="item.name" :link="item.link" :icon="item.icon">{{ item.name}}</vmenu-item>
+                        <hr v-if="item.separator" class="m-0 p-0">
+                        
                     </template>
                 </vmenu>
                 <!-- / .navigation -->

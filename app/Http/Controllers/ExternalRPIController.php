@@ -334,7 +334,7 @@ class ExternalRPIController extends Controller
                 throw new MyException("Error saving file message!", MyException::$ERROR_SAVING_FILE_MSG_FOUND);
             }
 
-            $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
+            // $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
             // $envFilePath = env('APP_FILE_PATH', 'external_files');
             // Log::debug('\n\rStorage Disk: ', [Storage::disk('chats_files')]);
@@ -480,7 +480,11 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
-            return $response->getBody()->getContents();
+            $content = $response->getBody()->getContents();
+            
+            Log::debug("ExternalRPIController sendTextMessage", [$content]);
+
+            return $content;
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }

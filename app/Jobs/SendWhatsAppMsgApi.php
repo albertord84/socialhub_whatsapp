@@ -7,6 +7,7 @@ use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\Api;
 use App\Models\Contact;
+use App\Models\Status;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

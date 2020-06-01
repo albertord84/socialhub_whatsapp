@@ -16,7 +16,7 @@
                 vertical-align: middle;
             }
             .text-center{
-                text-align: center;
+                text-align: center !important;
             }
             .logo{
                 font-size: 4rem;

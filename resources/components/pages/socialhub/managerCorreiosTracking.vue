@@ -568,6 +568,7 @@
                     'betweenDates': JSON.stringify(Array(this.dateInit,this.dateEnd))
                 })
                 .then(response => {   
+                    console.log(response.data);
                     this.rows = response.data;
                 })
                 .catch(error => {
@@ -584,11 +585,20 @@
                 .then(response => {  
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
-                        console.log()
-                        this.trackingStatusOptions.push(  {
-                            'name': item.name,
-                            'code': item.id
-                        });
+                        if(item.statusable_type == 'App\\Models\\Tracking') {
+                            var name = '';
+                            if(item.name == 'POSTED') name = 'POSTADO';
+                            if(item.name == 'MOVING') name = 'EM MOVIMENTO';
+                            if(item.name == 'STOPPED') name = 'DETIDO';
+                            if(item.name == 'RECEIVED') name = 'RECEBIDO';
+                            if(item.name == 'ARRIVED') name = 'ENTREGUE';
+                            if(item.name == 'PROBLEM') name = 'COM PROBLEMAS';
+
+                            this.trackingStatusOptions.push(  {
+                                'name': name,
+                                'code': item.id
+                            });
+                        }
                     });
                     this.trackingStatusOptions = Object.values(this.trackingStatusOptions); 
                 })
@@ -769,7 +779,7 @@
                 var result = obj;
                 const splitter = selector.split('.');
                 for (let i = 0; i < splitter.length; i++)
-                    if (typeof (result) === 'undefined')
+                    if (!result || typeof (result) === 'undefined')
                         return undefined;
                     else
                         result = result[splitter[i]];

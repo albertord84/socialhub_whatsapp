@@ -8,6 +8,7 @@ use App\Jobs\SendWhatsAppMsgApi;
 use App\Models\Api;
 use App\Models\Company;
 use App\Models\Contact;
+use App\Models\Status;
 use App\Repositories\ApiRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -70,7 +71,7 @@ class ApiBusiness extends Business
         try {
             $ApiModel = new Api();
             $ApiModel->table = "$Company->id";
-
+            
             $Apis = $ApiModel->where('status_id', ApiController::RECEIVED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 20));
 
             return $Apis;
