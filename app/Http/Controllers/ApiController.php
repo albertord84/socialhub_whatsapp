@@ -266,17 +266,18 @@ class ApiController extends AppBaseController
     public function generateApiToken(){
 
         try{
-        $User = Auth::check() ? Auth::user() : session('logged_user');
+            
+            $User = Auth::check() ? Auth::user() : session('logged_user');
 
-        $Company = Company::find($User->company_id);
+            $Company = Company::find($User->company_id);
 
-            if($Company->api_token == null){
+             if($Company->api_token == null){
         
-                $apiKey = Str::random(32);
-                $Company->api_token = $apiKey;
-                $Company->save();
-            }
-                //dd($Company);
+                    $apiKey = Str::random(32);
+                    $Company->api_token = $apiKey;
+                    $Company->save();
+                }
+                    //dd($Company);
 
         }catch (\Throwable $tr) {
             throw $tr;
