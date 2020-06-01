@@ -29,7 +29,6 @@ class CompaniesBlingsRepository extends BaseRepository
 
     public function saveCompanyBling($input)
     {
-
         $companiesBlings = $this->model->where('company_id', $input['company_id'])->where('bling_username',  $input['bling_username'])->get()->first();
         if(!$companiesBlings){
             $companiesBlings = $this->create($input);

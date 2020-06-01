@@ -54,6 +54,7 @@ class User extends Authenticatable implements JWTSubject
         'linkedin_id',
         'email_verified_at',
         'password',
+        'api_token',
         'remember_token',
         'login',
         'CPF',
@@ -80,6 +81,7 @@ class User extends Authenticatable implements JWTSubject
         'linkedin_id' => 'string',
         'email_verified_at' => 'datetime',
         'password' => 'string',
+        'api_token' => 'string',
         'remember_token' => 'string',
         'login' => 'string',
         'CPF' => 'string',
@@ -149,5 +151,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * A user can have many messages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }

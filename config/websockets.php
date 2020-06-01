@@ -117,7 +117,7 @@ return [
          * Path to local private key file on filesystem in case of separate files for
          * certificate (local_cert) and private key.
          */
-        'local_pk' => null,
+        // 'local_pk' => null,
         // 'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '/etc/letsencrypt/live/app.socialhub.pro/privkey.pem'),
         // 'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '/etc/letsencrypt/live/app.socialhub.pro/privkey.key'),
 

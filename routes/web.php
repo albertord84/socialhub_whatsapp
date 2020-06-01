@@ -152,3 +152,8 @@ Route::post('frequencyOfContactByAttendant', 'Statistics@frequencyOfContactByAtt
 Route::post('frequencyOfMessageByAttendant', 'Statistics@frequencyOfMessageByAttendant');
 Route::get('managerBlingStatistics', 'Statistics@managerBlingStatistics');
 Route::get('managerTrackingStatistics', 'Statistics@managerTrackingStatistics');
+
+
+Route::resource('rapidMessages', 'RapidMessagesController');
+
+// Route::get('generateApiToken', 'ApiController@generateApiToken');
