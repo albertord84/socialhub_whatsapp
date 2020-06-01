@@ -90,6 +90,7 @@
                 timeCounter:20000,
 
                 statusMessage:'',
+                push: null
             }
         },
 
@@ -220,11 +221,11 @@
             //         this.isLoggued=true;
             // });
 
-            var pusher = new Pusher(env.process.MIX_PUSHER_APP_KEY, {
+            this.pusher = new Pusher(env.process.MIX_PUSHER_APP_KEY, {
                 cluster: env.process.MIX_PUSHER_APP_CLUSTER
             });
 
-            var channel = pusher.subscribe('sh.whatsapp-logged.' + this.userLogged.id);
+            var channel = this.pusher.subscribe('sh.whatsapp-logged.' + this.userLogged.id);
             channel.bind('WhatsappLoggedInEvent', (data) => {
                 this.isLoggued=true;
             });
