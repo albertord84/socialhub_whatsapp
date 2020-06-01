@@ -97,9 +97,10 @@ class ApiController extends AppBaseController
      * @return Response
      */
     public function store(Request $request)
-    {
-        $User = User::where('api_token', $request->api_token)->first();
-        if (!$User) {
+    {     
+        $CompanyApi = Company::where('api_token', $request->api_token)->first();
+        
+        if (!$CompanyApi) {
             $erro = MyResponse::makeResponseJson('invalid api_token!', null, -1, false);
             return $erro;
         }
@@ -110,13 +111,13 @@ class ApiController extends AppBaseController
 
         // Check if the Contact already exist for this company
         $Contact = Contact::where([
-            'company_id' => $User->company_id,
+            'company_id' => $CompanyApi->id,
             'whatsapp_id' => $request->phone,
         ])->first();
 
         if (!$Contact) { // if not exist insert the contact
             $Contact = new Contact();
-            $Contact->company_id = $User->company_id;
+            $Contact->company_id = $CompanyApi->id;
             $Contact->first_name = $request->first_name ?? $request->phone;
             $Contact->whatsapp_id = $request->phone;
             $Contact->email = $request->email ?? null;
@@ -145,12 +146,12 @@ class ApiController extends AppBaseController
         $input['status_id'] = ApiController::RECEIVED;
 
         // Create Api message model
-        $this->apiRepository->model->setTable($User->company_id);
+        $this->apiRepository->model->setTable($CompanyApi->id);
         $api = $this->apiRepository->create($input);
         $input['id'] = $api->id;
         
         // Create Job
-        $Company = Company::with('rpi')->find($User->company_id);
+        $Company = Company::with('rpi')->find($CompanyApi->id);
         $ExternalRPIController = new ExternalRPIController($Company->rpi);
         unset($input['file']);
 
@@ -267,13 +268,15 @@ class ApiController extends AppBaseController
         try{
         $User = Auth::check() ? Auth::user() : session('logged_user');
 
-            if($User->api_token == null){
+        $Company = Company::find($User->company_id);
+
+            if($Company->api_token == null){
         
                 $apiKey = Str::random(32);
-                $User->api_token = $apiKey;
-                $User->save();
+                $Company->api_token = $apiKey;
+                $Company->save();
             }
-                //dd($User);
+                //dd($Company);
 
         }catch (\Throwable $tr) {
             throw $tr;
