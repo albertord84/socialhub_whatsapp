@@ -2307,14 +2307,16 @@
                     forceTLS: false,
 
                     // SSL
-                    wssHost: process.env.MIX_APP_HOST,
-                    wssPort: 6001,
+                    // wssHost: process.env.MIX_APP_HOST,
+                    // wssPort: 6001,
                     // enabledTransports: ['ws', 'wss'],
                     // encrypted: true,
                     // forceTLS: true,
 
                     disableStats: false,
                 });
+
+                console.log(process.env);
             },
 
             wsMessageToAttendant: function(){
