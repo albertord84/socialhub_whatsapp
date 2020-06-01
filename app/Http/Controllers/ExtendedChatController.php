@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Business\ChatsBusiness;
 use App\Business\FileUtils;
-use App\Events\NewContactMessage;
+use App\Events\NewContactMessageEvent;
 use App\Exceptions\MyHandler;
 use App\Http\Requests\CreateChatRequest;
 use App\Http\Requests\UpdateChatRequest;
@@ -48,7 +48,7 @@ class ExtendedChatController extends ChatController
         $Contact = $this->chatRepository->getBagContact($attendant_id);
 
         $newContactsCount = (new ChatsBusiness())->getBagContactsCount($User->company_id);
-        broadcast(new NewContactMessage($User->company_id, $newContactsCount));
+        broadcast(new NewContactMessageEvent($User->company_id, $newContactsCount));
 
         if ($Contact) {
             // Get cotact info (profile photo etc..)

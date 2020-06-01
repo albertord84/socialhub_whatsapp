@@ -14,9 +14,9 @@ class MessageToAttendantEvent extends PusherEvent
      */
     public function __construct(ExtendedChat $Chat)
     {
-        Log::debug('MessageToAttendant ExtendedChat $Chat: ', [$Chat]);
+        Log::debug('MessageToAttendantEvent ExtendedChat $Chat: ', [$Chat]);
         
-        Log::debug('MessageToAttendant $this->message: ', [$this->message]);
+        Log::debug('MessageToAttendantEvent $this->message: ', [$this->message]);
 
         parent::__construct(
             $Chat->toJson(), 

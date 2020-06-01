@@ -2530,7 +2530,7 @@
 
             wsTransferredContact: function(){
                 window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
-                .listen('NewTransferredContact', (e) => {
+                .listen('NewTransferredContactEvent', (e) => {
                     var newContact = JSON.parse(e.message);
                     //------------prepare message datas to be displayed------------------------
                     // var message = newContact.message;

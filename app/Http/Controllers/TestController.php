@@ -6,7 +6,7 @@ use App\Business\BlingBusiness;
 use App\Business\PostofficeBusiness;
 use App\Business\SalesBusiness;
 use App\Business\TrackingBusiness;
-use App\Events\MessageToAttendant;
+use App\Events\MessageToAttendantEvent;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
 use App\Jobs\SendWhatsAppMsg;
@@ -22,7 +22,6 @@ use App\User;
 use App\Business\VindiBusiness;
 use App\Events\MessageToAttendantEvent;
 use App\Events\MyEvent;
-use App\Events\NewContactMessage;
 use App\Events\NewContactMessageEvent;
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
@@ -245,11 +244,11 @@ class TestController extends AppBaseController
         // $data = (object) array(
         //     "info" => "test info"
         // );
-        // $result = $User->notify(new NewContactMessage($data));
+        // $result = $User->notify(new NewContactMessageEvent($data));
         // var_dump($result);
         // die;
         // $UsersAttendant = User::find(4);
-        // Notification::send($User, new NewContactMessage("Test New Contact Message"));
+        // Notification::send($User, new NewContactMessageEvent("Test New Contact Message"));
 
         // BROAD CAST TESTS
         // try {
@@ -264,18 +263,18 @@ class TestController extends AppBaseController
         // $ExtendedChat = new ExtendedChat();
         // $ExtendedChat->table = '4';
         // $Chat = $ExtendedChat->find(1);
-        // $pendingBC = broadcast(new MessageToAttendant($Chat));
+        // $pendingBC = broadcast(new MessageToAttendantEvent($Chat));
         // dd($pendingBC);
         //var_dump($pendingBC);
 
-        // broadcast(new NewContactMessage(1));
-        // broadcast(new NewContactMessage($User->company_id));
+        // broadcast(new NewContactMessageEvent(1));
+        // broadcast(new NewContactMessageEvent($User->company_id));
         // Bugsnag::notifyException(new RuntimeException("Test error"));
 
         // $Contact = Contact::find($request->contact_id);
         // $Contact->updated_at = time();
         // $Contact->save();
-        // broadcast(new NewTransferredContact((int) $User->id, $Contact));
+        // broadcast(new NewTransferredContactEvent((int) $User->id, $Contact));
 
         // TEST CONTROLLERS
         // $Controller = new ExtendedUsersSellerController($this->repository);
