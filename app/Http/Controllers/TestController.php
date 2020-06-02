@@ -20,9 +20,13 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
+<<<<<<< HEAD
+use App\Events\NewContactMessage;
+=======
 use App\Events\MessageToAttendantEvent;
 use App\Events\MyEvent;
 use App\Events\NewContactMessageEvent;
+>>>>>>> 6c3994a2c34481e8711c47434492c39ad81b4a10
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Chat;
@@ -54,6 +58,11 @@ class TestController extends AppBaseController
     public function index(Request $request, stdClass $Sale, Company $Company)
     {
 
+<<<<<<< HEAD
+        $bc = broadcast(new NewContactMessage(3, 10));
+
+        dd($bc);
+=======
         $attendant_id = 4;
         $ExtendedChat = new ExtendedChat();
         $ExtendedChat->table = "$attendant_id";
@@ -80,6 +89,7 @@ class TestController extends AppBaseController
         // $event = event(new NewContactMessageEvent(1, 7));
         // dd('ok');
         dd($event);
+>>>>>>> 6c3994a2c34481e8711c47434492c39ad81b4a10
 
 
 
@@ -253,7 +263,7 @@ class TestController extends AppBaseController
         // BROAD CAST TESTS
         // try {
         //     //code...
-        //     $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
+            // $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
         //     var_dump($pendingBC);
         // } catch (\Throwable $th) {
         //     var_dump($th);

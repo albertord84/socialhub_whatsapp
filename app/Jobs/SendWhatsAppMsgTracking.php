@@ -6,6 +6,7 @@ use App\Business\TrackingBusiness;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
 use App\Http\Controllers\StatusController;
+use App\Models\Company;
 use App\Models\Tracking;
 use App\Models\Contact;
 use Carbon\Carbon;
@@ -89,9 +90,10 @@ class SendWhatsAppMsgTracking implements ShouldQueue
         // dd($newMessage);
 
         if ($newMessage) {
-            // if ($this->Contact->id == 1) $response = $this->rpiController->sendTextMessage($newMessage, $this->Contact);
+            $Company = Company::find($company_id);
+            if ($Company->tracking_send_messages) $response = $this->rpiController->sendTextMessage($newMessage, $this->Contact);
             // $responseJson = json_decode($response);
-            // Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgTracking handled: ', [$this->Contact->whatsapp_id]);
+            Log::debug('\n\r SendingTextMessage to Contact contact_Jid from Job SendWhatsAppMsgTracking handled: ', [$this->Contact->whatsapp_id]);
             
 
             // if (isset($responseJson->MsgID) && $responseJson->MsgID != "") {

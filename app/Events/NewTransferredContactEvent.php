@@ -14,7 +14,8 @@ class NewTransferredContactEvent extends PusherEvent
         parent::__construct(
             $contact->toJson(), 
             "sh.transferred-contact.$attendant_id", 
-            NewTransferredContactEvent::class
+            'NewTransferredContactEvent' //JR
+            // NewTransferredContactEvent::class
         );
     }
 

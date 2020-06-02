@@ -59,6 +59,7 @@ class Company extends Model
         'tracking_message',
         'tracking_contrated',
 
+        'api_contrated',
         'api_token'
     ];
 
