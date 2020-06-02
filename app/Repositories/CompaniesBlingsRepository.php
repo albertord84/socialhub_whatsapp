@@ -27,6 +27,20 @@ class CompaniesBlingsRepository extends BaseRepository
         'bling_contrated'
     ];
 
+    public function saveCompanyBling($input)
+    {
+        $companiesBlings = $this->model->where('company_id', $input['company_id'])->where('bling_username',  $input['bling_username'])->get()->first();
+        if(!$companiesBlings){
+            $companiesBlings = $this->create($input);
+        } else{
+            $companiesBlings = $this->update($input, $companiesBlings->id);
+        }
+
+        return $companiesBlings;
+    }
+
+
+
     /**
      * Configure the Model
      **/

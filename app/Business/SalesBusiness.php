@@ -78,11 +78,11 @@ class SalesBusiness extends Business {
                         $SaleModel->save();
                     }
                     
-                    Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
+                    // Log::error('Sales Bussines createSale', [$Contact->whatsapp_id]);
                 }
             }
         } catch (\Throwable $tr) {
-            Log::debug('SalesBussines createSale', [$tr]);
+            // Log::debug('SalesBussines createSale', [$tr]);
             return false;
         }
         
@@ -124,7 +124,7 @@ class SalesBusiness extends Business {
 
             $Sales = $SalesModel->where('status_id', MessagesStatusController::ROUTED)->orderBy('updated_at', 'asc')->get()->take(env('APP_API_MESSAGES_X_MINUTE', 10));
 
-            Log::debug('SalesBusiness > getBlingCompanyNextObjects', [$Sales->count()]);
+            // Log::debug('SalesBusiness > getBlingCompanyNextObjects', [$Sales->count()]);
 
             return $Sales;
         } catch (\Throwable $th) {
@@ -149,7 +149,7 @@ class SalesBusiness extends Business {
             }
 
         } catch (\Throwable $tr) {
-            Log::debug('ApiSendWhatsAppMsgApisBussines createApiSendWhatsAppMsgApi Job', [$tr]);
+            // Log::debug('ApiSendWhatsAppMsgApisBussines createApiSendWhatsAppMsgApi Job', [$tr]);
             return false;
         }
 

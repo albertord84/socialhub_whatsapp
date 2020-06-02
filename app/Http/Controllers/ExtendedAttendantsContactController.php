@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
-use App\Events\NewTransferredContact;
+use App\Events\NewTransferredContactEvent;
 use App\Models\ExtendedChat;
 use App\Repositories\ExtendedAttendantsContactRepository;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +50,7 @@ class ExtendedAttendantsContactController extends AttendantsContactController
             $chatModel->table = (string) $request->attendant_id;
             $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
             $Contact->last_message = $lastMessage;
-            broadcast(new NewTransferredContact((int) $request->attendant_id, $Contact));
+            broadcast(new NewTransferredContactEvent((int) $request->attendant_id, $Contact));
         }
 
         return $attendantsContact->toJson();

@@ -144,6 +144,7 @@ Route::post('apis', 'ApiController@store');
 
 
 Route::resource('companiesBlings', 'CompaniesBlingsController');
+Route::post('saveCompanyBling', 'CompaniesBlingsController@saveCompanyBling');
 
 Route::resource('statistics', 'Statistics');
 Route::post('managerGeneralStatistics', 'Statistics@managerGeneralStatistics');
@@ -151,3 +152,8 @@ Route::post('frequencyOfContactByAttendant', 'Statistics@frequencyOfContactByAtt
 Route::post('frequencyOfMessageByAttendant', 'Statistics@frequencyOfMessageByAttendant');
 Route::get('managerBlingStatistics', 'Statistics@managerBlingStatistics');
 Route::get('managerTrackingStatistics', 'Statistics@managerTrackingStatistics');
+
+
+Route::resource('rapidMessages', 'RapidMessagesController');
+
+// Route::get('generateApiToken', 'ApiController@generateApiToken');

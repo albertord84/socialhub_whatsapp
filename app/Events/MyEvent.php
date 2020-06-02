@@ -2,29 +2,17 @@
 
 namespace App\Events;
 
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-
-class MyEvent implements ShouldBroadcast
+class MyEvent extends PusherEvent
 {
-  use Dispatchable, InteractsWithSockets, SerializesModels;
 
-  public $message;
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+    public function __construct(string $message)
+    {
+        parent::__construct($message, 'my-channel', 'my-event');
+    }
 
-  public function __construct($message)
-  {
-      $this->message = $message;
-  }
-
-  public function broadcastOn()
-  {
-      return ['my-channel'];
-  }
-
-  public function broadcastAs()
-  {
-      return 'my-event';
-  }
 }

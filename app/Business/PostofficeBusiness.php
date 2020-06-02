@@ -72,8 +72,7 @@ class PostofficeBusiness extends Business
         try {
             $TrackingModel = new Tracking();
             $TrackingModel->table = "$Company->id";
-            $tracking_status = Status::find(4);
-            $Objects = $TrackingModel->where('status_id', '!=', $tracking_status->id)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10));
+            $Objects = $TrackingModel->where('status_id', '!=', TrackingController::TRACKING_RECEIVED)->orderBy('updated_at', 'asc')->get()->slice(0, env('APP_TRACKING_MESSAGES_X_MINUTE', 10));
 
             return $Objects;
         } catch (\Throwable $th) {

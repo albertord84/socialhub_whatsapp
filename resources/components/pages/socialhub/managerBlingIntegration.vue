@@ -253,6 +253,7 @@
                         "bling_message": this.message,
                         "bling_token": this.username,
                         "bling_contrated": 1,
+                        "action": 'bling'
                     })
                     .then(response => {                            
                     })
@@ -261,7 +262,7 @@
 
                     return new Promise((resolve, reject) => {
                         //update company and create the respective sales table
-                        ApiService.post(this.bling_url, {
+                        ApiService.post('saveCompanyBling', {
                             "company_id":this.userLogged.company_id,
                             "bling_username":this.username,
                             "bling_apikey":this.apikey,
