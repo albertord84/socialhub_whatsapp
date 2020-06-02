@@ -6,7 +6,7 @@ use App\Business\BlingBusiness;
 use App\Business\PostofficeBusiness;
 use App\Business\SalesBusiness;
 use App\Business\TrackingBusiness;
-use App\Events\MessageToAttendant;
+use App\Events\MessageToAttendantEvent;
 use App\Events\newMessage;
 use App\Http\Controllers\AppBaseController;
 use App\Jobs\SendWhatsAppMsg;
@@ -21,7 +21,7 @@ use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
 use App\Events\MyEvent;
-use App\Events\NewContactMessage;
+use App\Events\NewContactMessageEvent;
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Chat;
@@ -53,26 +53,32 @@ class TestController extends AppBaseController
     public function index(Request $request, stdClass $Sale, Company $Company)
     {
 
-        // $attendant_id = 10;
-        // $ExtendedChat = new ExtendedChat();
-        // $ExtendedChat->table = "$attendant_id";
-        // $ExtendedChat = $ExtendedChat->find(1);
+        $attendant_id = 4;
+        $ExtendedChat = new ExtendedChat();
+        $ExtendedChat->table = "$attendant_id";
+        $ExtendedChat = $ExtendedChat->find(1);
         // var_dump($ExtendedChat);
         // $event = event(new MyEvent($ExtendedChat->toJson()));
+        $event = broadcast(new MessageToAttendantEvent($ExtendedChat));
 
         // $Seller = User::find(2);
-        // $event = event(new MyEvent($Seller->toJson()));
+        // $event = broadcast(new MyEvent($Seller->toJson()));
 
-        $company_id = '49';
-        $TrackingModel = new Tracking();
-        $TrackingModel->table = "$company_id";
-        $Tracking = $TrackingModel->find('701-0002365-2406656');
+        
+
+        // $company_id = '49';
+        // $TrackingModel = new Tracking();
+        // $TrackingModel->table = "$company_id";
+        // $Tracking = $TrackingModel->find('701-0002365-2406656');
         // dd($Tracking);
-        $event = event(new MyEvent($Tracking->toJson()));
+        // $event = event(new MyEvent($Tracking->toJson()));
 
 
+        // $event = event(new MyEvent('test'));
         // $event = broadcast(new MyEvent('test'));
-        // $event = broadcast(new NewContactMessage(3, 7));
+        // $event = broadcast(new NewContactMessageEvent(1, 77));
+        // $event = event(new NewContactMessageEvent(1, 7));
+        // dd('ok');
         dd($event);
 
 
@@ -238,11 +244,11 @@ class TestController extends AppBaseController
         // $data = (object) array(
         //     "info" => "test info"
         // );
-        // $result = $User->notify(new NewContactMessage($data));
+        // $result = $User->notify(new NewContactMessageEvent($data));
         // var_dump($result);
         // die;
         // $UsersAttendant = User::find(4);
-        // Notification::send($User, new NewContactMessage("Test New Contact Message"));
+        // Notification::send($User, new NewContactMessageEvent("Test New Contact Message"));
 
         // BROAD CAST TESTS
         // try {
@@ -257,18 +263,18 @@ class TestController extends AppBaseController
         // $ExtendedChat = new ExtendedChat();
         // $ExtendedChat->table = '4';
         // $Chat = $ExtendedChat->find(1);
-        // $pendingBC = broadcast(new MessageToAttendant($Chat));
+        // $pendingBC = broadcast(new MessageToAttendantEvent($Chat));
         // dd($pendingBC);
         //var_dump($pendingBC);
 
-        // broadcast(new NewContactMessage(1));
-        // broadcast(new NewContactMessage($User->company_id));
+        // broadcast(new NewContactMessageEvent(1));
+        // broadcast(new NewContactMessageEvent($User->company_id));
         // Bugsnag::notifyException(new RuntimeException("Test error"));
 
         // $Contact = Contact::find($request->contact_id);
         // $Contact->updated_at = time();
         // $Contact->save();
-        // broadcast(new NewTransferredContact((int) $User->id, $Contact));
+        // broadcast(new NewTransferredContactEvent((int) $User->id, $Contact));
 
         // TEST CONTROLLERS
         // $Controller = new ExtendedUsersSellerController($this->repository);

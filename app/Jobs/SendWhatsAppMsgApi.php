@@ -99,7 +99,7 @@ class SendWhatsAppMsgApi implements ShouldQueue
         $this->ApiMessage->save();
 
         // if ($this->ApiMessage->attendant_id) {
-            // broadcast(new MessageToAttendant($this->ApiMessage));
+            // broadcast(new MessageToAttendantEvent($this->ApiMessage));
         // }   
     }
 }
