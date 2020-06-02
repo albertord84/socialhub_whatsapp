@@ -7,9 +7,9 @@ use App\Business\FileUtils;
 use App\Business\MyException;
 use App\Business\MyResponse;
 use App\Business\Response;
-use App\Events\MessageToAttendant;
-use App\Events\NewContactMessage;
-use App\Events\WhatsappLoggedIn;
+use App\Events\MessageToAttendantEvent;
+use App\Events\NewContactMessageEvent;
+use App\Events\WhatsappLoggedInEvent;
 use App\Models\Company;
 use App\Models\Contact;
 use App\Models\ExtendedChat;
@@ -147,7 +147,7 @@ class ExternalRPIController extends Controller
             if ($User) {
                 $response->LoggedUser = $User;
                 if (!isset($input['Testing'])) {
-                    broadcast(new WhatsappLoggedIn($User->id));
+                    broadcast(new WhatsappLoggedInEvent($User->id));
                 }
                 // Log::debug('\n\rWhatsappLoggedIn Event to: ', [$User]);
             }
@@ -285,13 +285,13 @@ class ExternalRPIController extends Controller
                 // Send event to attendants with new chat message
                 if (!isset($input['Testing'])) {
                     $Chat->Contact = $Contact;
-                    broadcast(new MessageToAttendant($Chat));
+                    broadcast(new MessageToAttendantEvent($Chat));
                 }
             } else {
                 // Send event to all attendants with new bag contact count
                 $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
                 if (!isset($input['Testing'])) {
-                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+                    broadcast(new NewContactMessageEvent($Company->id, $bagContactsCount));
                 }
 
             }
@@ -334,7 +334,7 @@ class ExternalRPIController extends Controller
                 throw new MyException("Error saving file message!", MyException::$ERROR_SAVING_FILE_MSG_FOUND);
             }
 
-            $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
+            // $Chat->attendant_id = $Chat->attendant_id ? $Chat->attendant_id : "NULL";
 
             // $envFilePath = env('APP_FILE_PATH', 'external_files');
             // Log::debug('\n\rStorage Disk: ', [Storage::disk('chats_files')]);
@@ -353,14 +353,14 @@ class ExternalRPIController extends Controller
                 // Send event to attendants with new chat message
                 // Send event to attendants with new chat message
                 if (!isset($input['Testing'])) {
-                    broadcast(new MessageToAttendant($Chat));
+                    broadcast(new MessageToAttendantEvent($Chat));
                 }
             } else {
                 // Send event to all attendants with new contact
                 $bagContactsCount = (new ChatsBusiness())->getBagContactsCount($Company->id);
                 // Send event to attendants with new chat message
                 if (!isset($input['Testing'])) {
-                    broadcast(new NewContactMessage($Company->id, $bagContactsCount));
+                    broadcast(new NewContactMessageEvent($Company->id, $bagContactsCount));
                 }
             }
         } catch (\Throwable $th) {
@@ -480,7 +480,11 @@ class ExternalRPIController extends Controller
                 ],
             ]);
 
-            return $response->getBody()->getContents();
+            $content = $response->getBody()->getContents();
+            
+            Log::debug("ExternalRPIController sendTextMessage", [$content]);
+
+            return $content;
         } catch (\Throwable $th) {
             MyResponse::makeExceptionJson($th);
         }

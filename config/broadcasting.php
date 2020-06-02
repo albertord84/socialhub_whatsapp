@@ -43,13 +43,13 @@ return [
 
                 // No SSL
                 'scheme' => 'http',       
-                'encrypted' => false,
-                'useTLS' => false,
+                // 'encrypted' => false,
+                // 'useTLS' => false,
 
                 // SSL
                 // 'scheme' => 'https',       
-                // 'encrypted' => true,
-                // 'useTLS' => true,
+                'encrypted' => true,
+                'useTLS' => true,
 
                 'curl_options' => [
                     CURLOPT_SSL_VERIFYHOST => 0,

@@ -28,21 +28,27 @@
 
                             <li class='col-1 col-md-1 col-lg-1 col-xl-1'>
                                     <span class="mdi mdi-bell icons-action ml-2"></span>                                    
-                                    <div class="selector-headwayapp" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; position: absolute; top: -13px; left: 3px;">  </div>
+                                    <div  class="selector-headwayapp" style="padding-left:6px; padding-right:6px; padding-top:2px; padding-bottom:2px; position: absolute; top: -13px; left: 3px;">  </div>
                             </li>
 
-                            <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">                                
+                            <li class="col-1 col-md-1 col-lg-1 col-xl-1 ">
                                 <b-dropdown class="dropdown btn-group text-muted" variant="link" toggle-class="text-decoration-none" size="md"  right="">
                                     <template v-slot:button-content>
                                         <i class="mdi mdi-dots-horizontal icons-action" style="top:-50px" title="Opções"  aria-hidden="false"></i>
                                     </template>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
                                         <a href='javascript:void(0)' class="drpodowtext text-muted" @click="toggleLeft('toggle-add-contact')">
                                             <i class="fa fa-user-plus fa-xs " ></i> 
                                             Inserir contato
                                         </a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">                                        
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
+                                        <a href='javascript:void(0)' class="drpodowtext text-muted" @click="modalShowRapidMessages=true">
+                                            <i class="mdi mdi-file-document-box-multiple-outline fa-xs " ></i> 
+                                            Mensagens rápidas
+                                        </a>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item title="Inserir novo contato" class="dropdown_content">
                                         <a href='javascript:void(0)' title="Som das notificações" class="drpodowtext text-muted" @click.prevent="muteNotificationsOfAttendant">
                                             <span v-if="userLogged.mute_notifications" class="mdi mdi-volume-off"> Ativar som</span>
                                             <span v-if="!userLogged.mute_notifications" class="mdi mdi-volume-high"> Desativar som</span>
@@ -524,7 +530,7 @@
                                 <i v-if="isSendingNewMessage==true" class="fa fa-spinner fa-spin fa-cog icons-no-action" title="Enviando mensagem"></i>
                             </div>
                         </div>
-                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""                                 
+                        <textarea @keyup.enter.exact="sendMessage"  v-model="newMessage.message" placeholder=""
                             class="form-control border border-left-0 border-right-0 text-input-message srcollbar" ref="inputTextAreaMessage">
                         </textarea>
                         <div v-if="file!=null" class="input-group-prepend">
@@ -545,6 +551,9 @@
                         <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
                             <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
+                        <div class="input-group-prepend">
+                            <i @click.prevent="modalShowRapidMessages=true" class="input-group-text mdi mdi-file-document-box-multiple-outline pr-4 fa-1_5x text-muted border border-left-0 border-right-0 container-icons-action-message pointer-hover" title="Mensagem rápida" ></i>
+                        </div> 
 
                         <div class="input-group-prepend border border-left-0 border-right-message container-icons-action-message pr-3" style="margin-right:10px">
                             <b-dropdown class="dropdown btn-group text-muted pr-4" variant="link" toggle-class="text-decoration-none" size="md"  right="">
@@ -1004,6 +1013,50 @@
         <b-modal v-model="showModalCRUDTags" :hide-footer="true" size="sm" title="Gerenciar etiquetas">
             <attendantCRUDTags :userLogged="userLogged" @onclosemodal='closemodal'></attendantCRUDTags>
         </b-modal>
+
+        <!-- Modal to show personalized messages-->
+        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">
+            <v-scroll :height="Height(330)"  color="#ccc" bar-width="8px" ref="contact_scroller"  @onbottom="onBottomContacts">
+                <ul>
+                    <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block rapidMessage_item" :key="indexRM" >
+                        <div class="row pt-2 pb-2">
+                            <div class="col-11 pointer-hover " @click.prevent="selectedRapidMessage(rapidMessage)">
+                                <div class="ml-2 mt-2">
+                                    <div class="row">
+                                        <a class="text-dark text-justify" style="font-size:1rem" href="javascript:void(0)">
+                                            {{rapidMessage.message}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 text-right">
+                                <button class="btn btn-link" @click.prevent="deleteRapidMessage(rapidMessage)">
+                                    <span class="mdi mdi-window-close text-muted mr-2"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </v-scroll>
+
+            <div style="height:40px">
+                <div class="container-fluid">
+                    <ul class='row' style="">
+                        <li class='col-10 col-md-10 col-lg-10 col-xl-10'>
+                            <input class="form-control search-input p-4" type="text" v-model="textNewRapidMessage" @keyup.enter.exact="criateRapidMessage" placeholder="Nova mensagem rápida">
+                        </li>
+                        <li class='col-2 col-md-2 col-lg-2 col-xl-2'>
+                            <button v-show="!isCreatingNewRapidMessage" class="btn btn-success p-2 pl-5 pr-5" style="height:3.2rem" @click.prevent="criateRapidMessage">
+                                Adicionar
+                            </button>
+                            <button v-show="isCreatingNewRapidMessage" class="btn btn-success p-2 pl-4 pr-4" style="height:3.2rem" @click.prevent="criateRapidMessage">
+                                <i class="fa fa-spinner fa-spin ml-3"></i> Adicionar
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -1148,7 +1201,13 @@
                 scrollHeights:[],
 
                 last_selected_contact_ref: '',
-                selected_contact_ref: ''
+                selected_contact_ref: '',
+
+                modalShowRapidMessages: false,
+                textNewRapidMessage: '',
+                RapidMessages: [],
+                isCreatingNewRapidMessage: false,
+                pusher: null
             }
         },
         
@@ -1560,6 +1619,7 @@
                         });
                         // console.log(messages_copy);
                         this.messages = messages_copy.concat(this.messages);
+                        // console.log(this.messages)
                     }else{
                         this.hasMorePageMessage =false;
                     }
@@ -2233,37 +2293,148 @@
 
             //---------------Websockets---------------------
             wsCriateTunnel: function(){
-                // window.Echo = new Echo({
-                //     broadcaster: 'pusher',
-                //     key: process.env.MIX_PUSHER_APP_KEY,
-                //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                //     host: process.env.MIX_APP_HOST,  
+                this.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+                    cluster: process.env.MIX_PUSHER_APP_CLUSTER
+                });
+            },
+
+            wsMessageToAttendant: function(){
+                var channel = this.pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
+                channel.bind('MessageToAttendantEvent', (data) => {    
+                    console.log(data);                
+                    var message = JSON.parse(data);
+                    var subjacentContact = null;       
+    
+                    if(message.source == 0){ //message to update the message_status to 2 or 7
+                        if(this.selectedContactIndex>-1 && message.contact_id == this.contacts[this.selectedContactIndex].id){
+                            this.messages.some((item,i)=>{
+                                if(message.id == item.id){
+                                    item.status_id = message.status_id;
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                    else if(message.source == 1){ //message from contact                        
+                        //analyse if the contact is in this.contacts list or not
+                        if(typeof(message.Contact)!='undefined'){
+                            subjacentContact = Object.assign({},message.Contact);
+                            delete message.Contact;
+                        }
+                        
+                        //------------prepare message datas to be displayed------------------------
+                        message.time = this.getMessageTime(message.created_at);
+                        try {
+                            if(message.data != "" && message.data != null && message.data.length>0) {
+                                message.data = JSON.parse(message.data);
+                                if(message.type_id > 1)
+                                    message.path = message.data.FullPath;
+                            }
+                        } catch (error) {
+                        }
+                        
+                        let targetIndex = -1; 
+                        var isSelectedContact = false;
+                        //------show the recived message if the target contact is selected----------
+                        if(this.selectedContactIndex > -1 && this.contacts[this.selectedContactIndex].id == message.contact_id){
+                            this.contacts[this.selectedContactIndex].last_message = message;
+                            message = Object.assign({}, message);
+                            message.message = this.transformToRichText(message.message,1);
+                            this.messages.push(message);
+                            if(this.$refs.message_scroller)
+                                this.$refs.message_scroller.scrolltobottom();
+                            targetIndex = this.contacts[this.selectedContactIndex].index;
+                            isSelectedContact = true;
+                        }else{
+                            //-------find contact and update count_unread_messagess and last_message-------
+                            this.contacts.some((item, i) => {
+                                if(item.id == message.contact_id){
+                                    item.count_unread_messagess = item.count_unread_messagess + 1;
+                                    item.last_message = message;
+                                    targetIndex = i;                                    
+                                    return;
+                                }
+                            });
+                        }
+
+                        if(targetIndex > -1){ // set the target contact as firt if is in contacts list
+                            this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
+                            if(this.contacts[targetIndex].status_id != 6)
+                                this.$refs.newMessageSound.play();
+                        }else{ //insert the target contact in contacts list if isnt
+                            subjacentContact.count_unread_messagess = 1;
+                            subjacentContact.last_message = message;
+                            this.contacts.unshift(subjacentContact);
+                            
+                            this.contacts.some((item, i)=>{
+                                this.contacts[i].index = i;
+                            });
+                            
+                            if(this.selectedContactIndex > -1){
+                                this.selectedContactIndex ++;
+                            }
+                            if(subjacentContact.status_id != 6)                            
+                                this.$refs.newMessageSound.play();
+                        }                       
+
+                    }
+                });
+            },
+
+            wsContactToBag: function(){
+                var channel = this.pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
+                channel.bind("NewContactMessageEvent", (data) => {
+                    console.log(data);
+                    data = JSON.parse(data);
+                    if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
+                        this.$refs.newContactInBag.play();
+                    this.amountContactsInBag = data;
+                });
+            },
+
+            wsTransferredContact: function(){
+                var channel = this.pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
+                channel.bind('NewTransferredContactEvent', (data) => {
+                    var newContact = JSON.parse(e.message);                   
+
+                    this.contacts.unshift(newContact);
+                    var a = 0;
+                    this.contacts.some((item, i)=>{
+                        this.contacts[i].index = a++;
+                    });
+                    if(this.selectedContactIndex >=0){
+                        this.selectedContactIndex ++;
+                    }
+                    miniToastr.success("Sucesso", "Contato transferido com sucesso");   
+                });
+            },
+
+            /*wsCriateTunnel: function(){
+                window.Echo = new Echo({
+                    broadcaster: 'pusher',
+                    key: process.env.MIX_PUSHER_APP_KEY,
+                    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                    host: process.env.MIX_APP_HOST,  
 
 
-                //     // No SSL
-                //     // wsHost: process.env.MIX_APP_HOST,
-                //     // wsPort: 6001,
-                //     // enabledTransports: ['ws'],
-                //     // encrypted: false,
-                //     // forceTLS: false,
+                    // No SSL
+                    // wsHost: process.env.MIX_APP_HOST,
+                    // wsPort: 6001,
+                    // enabledTransports: ['ws'],
+                    // encrypted: false,
+                    // forceTLS: false,
 
-                //     // SSL
-                //     wssHost: process.env.MIX_APP_HOST,
-                //     wssPort: 6001,
-                //     enabledTransports: ['ws', 'wss'],
-                //     // encrypted: true,
-                //     // forceTLS: true,
+                    // SSL
+                    wssHost: process.env.MIX_APP_HOST,
+                    wssPort: 6001,
+                    enabledTransports: ['ws', 'wss'],
+                    encrypted: true,
+                    forceTLS: true,
 
-                //     disableStats: false,
-                // });
-
-                // 
-
-                var pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
-                    cluster: 'us2'
+                    disableStats: false,
                 });
 
-                window.Echo = pusher;
+                console.log(process.env);
             },
 
             wsMessageToAttendant: function(){
@@ -2391,6 +2562,62 @@
                     }
                     miniToastr.success("Sucesso", "Contato transferido com sucesso");   
                 });
+            },*/
+
+            //---------------CRUD Rapid Messages---------------------
+            getRapidMessages: function() {
+                ApiService.get('rapidMessages',{
+                    'attendant_id': this.userLogged.id
+                })
+                .then(response => {
+                    this.RapidMessages = response.data;
+                })
+                .catch(error => {
+                    
+                })
+                .finally(()=>{});
+            },
+
+            criateRapidMessage: function() {
+                if (this.textNewRapidMessage.trim() === '') return;
+                this.isCreatingNewRapidMessage = true;
+                ApiService.post('rapidMessages',{
+                    'user_id': this.userLogged.id,
+                    'message': this.textNewRapidMessage,
+                })
+                .then(response => {
+                    miniToastr.success("Sucesso", 'Mensagem rápida adicionada com sucesso.');
+                    this.RapidMessages.push(response.data);
+                    this.textNewRapidMessage = '';
+                })
+                .catch(error => {
+                    miniToastr.error("Erro", 'Erro adicionando mensagem rápida.');
+                })
+                .finally(()=>{
+                    this.isCreatingNewRapidMessage = false;
+                });
+            },
+            
+            deleteRapidMessage: function(rapidMessage) {
+                ApiService.delete('rapidMessages/'+ rapidMessage.id)
+                .then(response => {
+                    miniToastr.success("Sucesso", 'Mensagem rápida eliminada com sucesso.');
+                    this.getRapidMessages();
+                })
+                .catch(error => {
+                    miniToastr.error("Erro", 'Erro eliminando mensagem rápida.');
+                })
+                .finally(()=>{});
+            },
+
+            selectedRapidMessage: function (rapidMessage) {
+                this.newMessage.message = rapidMessage.message + ' ';
+                this.modalShowRapidMessages=false;
+                let textarea = this.$refs.inputTextAreaMessage;
+                textarea.selectionStart = this.newMessage.message.length;
+                setTimeout(()=>{
+                    this.$refs.inputTextAreaMessage.focus();
+                },400);
             },
 
             //---------------Exceptions---------------------
@@ -2433,6 +2660,7 @@
             this.getAmountContactsInBag();
             this.$store.commit('leftside_bar', "close");
             this.$store.commit('rightside_bar', "close");
+            this.getRapidMessages();
         },
 
         mounted(){
@@ -2821,6 +3049,9 @@
         background-color:#f5f5f0;
     }
     .contact_item:hover{
+        background-color:#f5f5f5;
+    }
+    .rapidMessage_item:hover{
         background-color:#f5f5f5;
     }
     .message-options-style{

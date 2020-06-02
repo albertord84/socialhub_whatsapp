@@ -44,6 +44,7 @@ class TrackingRepository extends BaseRepository
             betweenDates --> puede ser un array (ex: betweenDates[0]='2020-04-29' y betweenDates[1]='2020-05-01']), o null
         */
         $Trackings = $Tracking
+
             ->where(function($query) use ($searchInput){
                 if ($searchInput != '') {
                     $query
