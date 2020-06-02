@@ -100,7 +100,7 @@ class ApiController extends AppBaseController
     {     
         $CompanyApi = Company::where('api_token', $request->api_token)->first();
         
-        if (!$CompanyApi) {
+        if (!$request->api_token || !$CompanyApi) {
             $erro = MyResponse::makeResponseJson('invalid api_token!', null, -1, false);
             return $erro;
         }
