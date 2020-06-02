@@ -545,12 +545,13 @@
                                     <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
                                 </div>
                                 <div class="input-group-prepend" @click.prevent="stopNativeRecordVoice()">
-                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
+                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0  container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
                         </div>
                         <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
-                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
+                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 border-right-0  container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
+
                         <div class="input-group-prepend">
                             <i @click.prevent="modalShowRapidMessages=true" class="input-group-text mdi mdi-file-document-box-multiple-outline pr-4 fa-1_5x text-muted border border-left-0 border-right-0 container-icons-action-message pointer-hover" title="Mensagem rápida" ></i>
                         </div> 
@@ -1206,7 +1207,8 @@
                 modalShowRapidMessages: false,
                 textNewRapidMessage: '',
                 RapidMessages: [],
-                isCreatingNewRapidMessage: false
+                isCreatingNewRapidMessage: false,
+                pusher: null
             }
         },
         
@@ -2292,6 +2294,121 @@
 
             //---------------Websockets---------------------
             wsCriateTunnel: function(){
+                this.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+                    cluster: process.env.MIX_PUSHER_APP_CLUSTER
+                });
+            },
+
+            wsMessageToAttendant: function(){
+                var channel = this.pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
+                channel.bind('MessageToAttendantEvent', (data) => {    
+                    var message = JSON.parse(data);
+                    var subjacentContact = null;       
+    
+                    if(message.source == 0){ //message to update the message_status to 2 or 7
+                        if(this.selectedContactIndex>-1 && message.contact_id == this.contacts[this.selectedContactIndex].id){
+                            this.messages.some((item,i)=>{
+                                if(message.id == item.id){
+                                    item.status_id = message.status_id;
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                    else if(message.source == 1){ //message from contact                        
+                        //analyse if the contact is in this.contacts list or not
+                        if(typeof(message.Contact)!='undefined'){
+                            subjacentContact = Object.assign({},message.Contact);
+                            delete message.Contact;
+                        }
+                        
+                        //------------prepare message datas to be displayed------------------------
+                        message.time = this.getMessageTime(message.created_at);
+                        try {
+                            if(message.data != "" && message.data != null && message.data.length>0) {
+                                message.data = JSON.parse(message.data);
+                                if(message.type_id > 1)
+                                    message.path = message.data.FullPath;
+                            }
+                        } catch (error) {
+                        }
+                        
+                        let targetIndex = -1; 
+                        var isSelectedContact = false;
+                        //------show the recived message if the target contact is selected----------
+                        if(this.selectedContactIndex > -1 && this.contacts[this.selectedContactIndex].id == message.contact_id){
+                            this.contacts[this.selectedContactIndex].last_message = message;
+                            message = Object.assign({}, message);
+                            message.message = this.transformToRichText(message.message,1);
+                            this.messages.push(message);
+                            if(this.$refs.message_scroller)
+                                this.$refs.message_scroller.scrolltobottom();
+                            targetIndex = this.contacts[this.selectedContactIndex].index;
+                            isSelectedContact = true;
+                        }else{
+                            //-------find contact and update count_unread_messagess and last_message-------
+                            this.contacts.some((item, i) => {
+                                if(item.id == message.contact_id){
+                                    item.count_unread_messagess = item.count_unread_messagess + 1;
+                                    item.last_message = message;
+                                    targetIndex = i;                                    
+                                    return;
+                                }
+                            });
+                        }
+
+                        if(targetIndex > -1){ // set the target contact as firt if is in contacts list
+                            this.shiftContactAsFirtInList(this.contacts[targetIndex].id);
+                            if(this.contacts[targetIndex].status_id != 6)
+                                this.$refs.newMessageSound.play();
+                        }else{ //insert the target contact in contacts list if isnt
+                            subjacentContact.count_unread_messagess = 1;
+                            subjacentContact.last_message = message;
+                            this.contacts.unshift(subjacentContact);
+                            
+                            this.contacts.some((item, i)=>{
+                                this.contacts[i].index = i;
+                            });
+                            
+                            if(this.selectedContactIndex > -1){
+                                this.selectedContactIndex ++;
+                            }
+                            if(subjacentContact.status_id != 6)                            
+                                this.$refs.newMessageSound.play();
+                        }                       
+
+                    }
+                });
+            },
+
+            wsContactToBag: function(){
+                var channel = this.pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
+                channel.bind("NewContactMessageEvent", (data) => {
+                    data = JSON.parse(data);
+                    if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
+                        this.$refs.newContactInBag.play();
+                    this.amountContactsInBag = data;
+                });
+            },
+
+            wsTransferredContact: function(){
+                var channel = this.pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
+                channel.bind('NewTransferredContactEvent', (data) => {
+                    var newContact = JSON.parse(data);                   
+
+                    this.contacts.unshift(newContact);
+                    var a = 0;
+                    this.contacts.some((item, i)=>{
+                        this.contacts[i].index = a++;
+                    });
+                    if(this.selectedContactIndex >=0){
+                        this.selectedContactIndex ++;
+                    }
+                    miniToastr.success("Sucesso", "Contato transferido com sucesso");   
+                });
+            },
+
+            /*wsCriateTunnel: function(){
                 window.Echo = new Echo({
                     broadcaster: 'pusher',
                     key: process.env.MIX_PUSHER_APP_KEY,
@@ -2300,26 +2417,31 @@
 
 
                     // No SSL
-                    wsHost: process.env.MIX_APP_HOST,
-                    wsPort: 6001,
-                    enabledTransports: ['ws', 'wss'],
-                    encrypted: false,
-                    forceTLS: false,
+                    // wsHost: process.env.MIX_APP_HOST,
+                    // wsPort: 6001,
+                    // enabledTransports: ['ws'],
+                    // encrypted: false,
+                    // forceTLS: false,
 
                     // SSL
                     wssHost: process.env.MIX_APP_HOST,
                     wssPort: 6001,
-                    // enabledTransports: ['ws', 'wss'],
-                    // encrypted: true,
-                    // forceTLS: true,
+                    enabledTransports: ['ws', 'wss'],
+                    encrypted: true,
+                    forceTLS: true,
 
                     disableStats: false,
                 });
+
+                console.log(process.env);
             },
 
             wsMessageToAttendant: function(){
-                window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
-                .listen('MessageToAttendant', (e) => {  
+                // window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
+                // .listen('MessageToAttendant', (e) => {  
+                window.Echo.subscribe('sh.message-to-attendant.' + this.userLogged.id)
+                .bind('MessageToAttendant', (e) => {  
+                    console.log(e);
                     var message = JSON.parse(e.message);
                     var subjacentContact = null;       
     
@@ -2400,8 +2522,11 @@
             },
 
             wsContactToBag: function(){
-                window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
-                .listen('NewContactMessage', (e) => {
+                // window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
+                // .listen('NewContactMessage', (e) => {
+                window.Echo.subscribe('sh.contact-to-bag.' + this.userLogged.company_id)
+                .bind('NewContactMessage', (e) => {
+                    console.log('Sacola:' + e);
                     if(this.amountContactsInBag<e.message && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
                     this.amountContactsInBag = e.message;
@@ -2409,8 +2534,10 @@
             },
 
             wsTransferredContact: function(){
-                window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
-                .listen('NewTransferredContact', (e) => {
+                // window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
+                // .listen('NewTransferredContact', (e) => {
+                window.Echo.subscribe('sh.transferred-contact.' + this.userLogged.id)
+                .bind('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
                     //------------prepare message datas to be displayed------------------------
                     // var message = newContact.message;
@@ -2434,7 +2561,7 @@
                     }
                     miniToastr.success("Sucesso", "Contato transferido com sucesso");   
                 });
-            },
+            },*/
 
             //---------------CRUD Rapid Messages---------------------
             getRapidMessages: function() {

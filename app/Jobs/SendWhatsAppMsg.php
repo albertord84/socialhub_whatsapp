@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\MessageToAttendant;
+use App\Events\MessageToAttendantEvent;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;
 use App\Models\Contact;
@@ -89,7 +89,7 @@ class SendWhatsAppMsg implements ShouldQueue
         // Tell the user we're retrying for the nth time
         if ($this->attempts() > 1) {
             Log::debug('SendWhatsAppMsg Handle attempts...: ', [$this->attempts()]);
-            // broadcast(new MessageToAttendant($ExtendedChat));
+            // broadcast(new MessageToAttendantEvent($ExtendedChat));
         }
 
         if (!$this->file_name) { // Send normal message
@@ -128,7 +128,7 @@ class SendWhatsAppMsg implements ShouldQueue
         $ExtendedChat->Contact = $this->Contact;
         
         if ($ExtendedChat->attendant_id) {
-            broadcast(new MessageToAttendant($ExtendedChat));
+            broadcast(new MessageToAttendantEvent($ExtendedChat));
         }
 
     }

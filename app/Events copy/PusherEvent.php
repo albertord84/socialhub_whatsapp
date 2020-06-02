@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-// use BeyondCode\LaravelWebSockets\WebSockets\Channels\Channel;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -25,11 +24,11 @@ class PusherEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(string $message, ?string $chanel, string $event = null)
+    public function __construct(string $message, ?string $chanel, string $event = PusherEvent::class)
     {
         $this->message = $message;
         $this->channel = $chanel;
-        $this->event = $event ?? get_called_class();
+        $this->event = $event;
     }
 
     /**
