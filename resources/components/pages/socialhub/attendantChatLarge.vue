@@ -545,12 +545,13 @@
                                     <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
                                 </div>
                                 <div class="input-group-prepend" @click.prevent="stopNativeRecordVoice()">
-                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
+                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0  container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
                         </div>
                         <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
-                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
+                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 border-right-0  container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
+
                         <div class="input-group-prepend">
                             <i @click.prevent="modalShowRapidMessages=true" class="input-group-text mdi mdi-file-document-box-multiple-outline pr-4 fa-1_5x text-muted border border-left-0 border-right-0 container-icons-action-message pointer-hover" title="Mensagem rápida" ></i>
                         </div> 
@@ -2301,7 +2302,6 @@
             wsMessageToAttendant: function(){
                 var channel = this.pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
                 channel.bind('MessageToAttendantEvent', (data) => {    
-                    console.log(data);                
                     var message = JSON.parse(data);
                     var subjacentContact = null;       
     
@@ -2384,7 +2384,6 @@
             wsContactToBag: function(){
                 var channel = this.pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
                 channel.bind("NewContactMessageEvent", (data) => {
-                    console.log(data);
                     data = JSON.parse(data);
                     if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
@@ -2395,7 +2394,7 @@
             wsTransferredContact: function(){
                 var channel = this.pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
                 channel.bind('NewTransferredContactEvent', (data) => {
-                    var newContact = JSON.parse(e.message);                   
+                    var newContact = JSON.parse(data);                   
 
                     this.contacts.unshift(newContact);
                     var a = 0;

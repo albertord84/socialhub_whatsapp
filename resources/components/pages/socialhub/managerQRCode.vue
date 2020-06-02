@@ -225,17 +225,9 @@
                 cluster: env.process.MIX_PUSHER_APP_CLUSTER
             });
 
-<<<<<<< HEAD
-            window.Echo.channel('sh.whatsapp-logged.' + this.userLogged.id)
-                .listen('WhatsappLoggedIn', (e) => {                    
-            // window.Echo.subscribe('sh.whatsapp-logged.' + this.userLogged.id)
-            //     .bind('WhatsappLoggedIn', (e) => {                    
-                    this.isLoggued=true;
-=======
             var channel = this.pusher.subscribe('sh.whatsapp-logged.' + this.userLogged.id);
             channel.bind('WhatsappLoggedInEvent', (data) => {
                 this.isLoggued=true;
->>>>>>> 6c3994a2c34481e8711c47434492c39ad81b4a10
             });
         },
 
