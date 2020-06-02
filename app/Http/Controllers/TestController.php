@@ -21,9 +21,12 @@ use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
 <<<<<<< HEAD
+<<<<<<< HEAD
 use App\Events\NewContactMessage;
 =======
 use App\Events\MessageToAttendantEvent;
+=======
+>>>>>>> develop
 use App\Events\MyEvent;
 use App\Events\NewContactMessageEvent;
 >>>>>>> 6c3994a2c34481e8711c47434492c39ad81b4a10
@@ -84,6 +87,7 @@ class TestController extends AppBaseController
         // $event = event(new MyEvent($Tracking->toJson()));
 
 
+        // $event = event(new MyEvent('test'));
         // $event = broadcast(new MyEvent('test'));
         // $event = broadcast(new NewContactMessageEvent(1, 77));
         // $event = event(new NewContactMessageEvent(1, 7));
