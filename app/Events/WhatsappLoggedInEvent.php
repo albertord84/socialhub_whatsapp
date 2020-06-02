@@ -11,7 +11,11 @@ class WhatsappLoggedInEvent extends PusherEvent
      */
     public function __construct(int $manager_id)
     {
-        parent::__construct("NewWhatsappLogged", "sh.whatsapp-logged.$manager_id");
+        parent::__construct(
+            "NewWhatsappLogged", 
+            "sh.whatsapp-logged.$manager_id", 
+            "WhatsappLoggedInEvent"
+        );
     }
 
 }

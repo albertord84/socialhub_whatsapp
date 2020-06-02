@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\MessageToAttendant;
+use App\Events\MessageToAttendantEvent;
 use App\Http\Controllers\ExtendedChatController;
 use App\Http\Controllers\ExternalRPIController;
 use App\Http\Controllers\MessagesStatusController;

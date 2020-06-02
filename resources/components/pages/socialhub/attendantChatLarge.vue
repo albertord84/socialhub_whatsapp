@@ -2300,7 +2300,8 @@
 
             wsMessageToAttendant: function(){
                 var channel = this.pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
-                channel.bind('MessageToAttendantEvent', (data) => {                    
+                channel.bind('MessageToAttendantEvent', (data) => {    
+                    console.log(data);                
                     var message = JSON.parse(data);
                     var subjacentContact = null;       
     
@@ -2382,7 +2383,8 @@
 
             wsContactToBag: function(){
                 var channel = this.pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
-                channel.bind('NewContactMessageEvent', (data) => {
+                channel.bind("NewContactMessageEvent", (data) => {
+                    console.log(data);
                     data = JSON.parse(data);
                     if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
@@ -2528,7 +2530,7 @@
 
             wsTransferredContact: function(){
                 window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
-                .listen('NewTransferredContact', (e) => {
+                .listen('NewTransferredContactEvent', (e) => {
                     var newContact = JSON.parse(e.message);
                     //------------prepare message datas to be displayed------------------------
                     // var message = newContact.message;
