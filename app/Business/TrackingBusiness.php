@@ -291,10 +291,15 @@ class TrackingBusiness extends Business
             $Tracking->sku ?? '@sku',
 
             $Event->tipo ?? '@tracking_tipo',
-            $Event->local ?? '@tracking_local',
+            $Event->status ?? '@tracking_status',
             $Event->dataHora ?? '@tracking_dataHora',
             $Event->descricao ?? '@tracking_descricao',
+            $Event->recebedor ?? '@tracking_recebedor',
             $Event->detalhe ?? '@tracking_detalhe',
+            $Event->local ?? '@tracking_local',
+            $Event->codigo ?? '@tracking_codigo',
+            $Event->cidade ?? '@tracking_cidade',
+            $Event->uf ?? '@tracking_uf',
         ];
 
         $search = [
