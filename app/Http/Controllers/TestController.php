@@ -20,13 +20,8 @@ use App\Repositories\ExtendedContactRepository;
 use App\Repositories\ExtendedChatRepository;
 use App\User;
 use App\Business\VindiBusiness;
-<<<<<<< HEAD
-use App\Events\NewContactMessage;
-=======
-use App\Events\MessageToAttendantEvent;
 use App\Events\MyEvent;
 use App\Events\NewContactMessageEvent;
->>>>>>> 6c3994a2c34481e8711c47434492c39ad81b4a10
 use App\Jobs\SendWhatsAppMsgBling;
 use App\Jobs\SendWhatsAppMsgTracking;
 use App\Models\Chat;
@@ -58,11 +53,6 @@ class TestController extends AppBaseController
     public function index(Request $request, stdClass $Sale, Company $Company)
     {
 
-<<<<<<< HEAD
-        $bc = broadcast(new NewContactMessage(3, 10));
-
-        dd($bc);
-=======
         $attendant_id = 4;
         $ExtendedChat = new ExtendedChat();
         $ExtendedChat->table = "$attendant_id";
@@ -84,12 +74,12 @@ class TestController extends AppBaseController
         // $event = event(new MyEvent($Tracking->toJson()));
 
 
+        // $event = event(new MyEvent('test'));
         // $event = broadcast(new MyEvent('test'));
         // $event = broadcast(new NewContactMessageEvent(1, 77));
         // $event = event(new NewContactMessageEvent(1, 7));
         // dd('ok');
         dd($event);
->>>>>>> 6c3994a2c34481e8711c47434492c39ad81b4a10
 
 
 
@@ -99,14 +89,14 @@ class TestController extends AppBaseController
         // $Postoffice = new PostofficeBusiness();
         // $Postoffice->importCSV();
 
-        // $TrackingBusiness = new TrackingBusiness();
+        $TrackingBusiness = new TrackingBusiness();
 
         // $company_id = '1';
-        // $company_id = '49';
-        // $TrackingModel = new Tracking();
-        // $TrackingModel->table = "$company_id";
+        $company_id = '49';
+        $TrackingModel = new Tracking();
+        $TrackingModel->table = "$company_id";
 
-        // $Tracking = $TrackingModel->find('701-0002365-2406656');
+        $Tracking = $TrackingModel->find('701-0002365-2406656');
 
         // $Tracking = (object)$Tracking;
 
@@ -117,15 +107,15 @@ class TestController extends AppBaseController
         // $trackingJob = new SendWhatsAppMsgTracking($ExternalRPIController, $Contact, $Tracking, 'tracking_update');
         // $trackingJob->handle();
 
-        // $tracking_code = $Tracking->tracking_code;
+        $tracking_code = $Tracking->tracking_code;
         // $messageList = $Tracking->messages;
-        // $Company = Company::find($company_id);
+        $Company = Company::find($company_id);
 
         // dd($Company);
 
-        // $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
+        $trackingList = $TrackingBusiness->processTrackingObject($Tracking, $Company);
 
-        // dd($trackingList);
+        dd($trackingList);
         // dd((object) $trackingList[0]->toArray());
         // dd(json_encode($trackingList));
 
@@ -263,7 +253,7 @@ class TestController extends AppBaseController
         // BROAD CAST TESTS
         // try {
         //     //code...
-            // $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
+        //     $pendingBC = broadcast(new newMessage("{'message':'test 77'}"));
         //     var_dump($pendingBC);
         // } catch (\Throwable $th) {
         //     var_dump($th);
@@ -294,7 +284,7 @@ class TestController extends AppBaseController
         // $this->testJobsQueue();
         // $this->testJobsQueue();
 
-        // $this->testCorreiosProblems($request);
+        $this->testCorreiosProblems($request);
         // $this->testBlingJob($request);
     }
 
@@ -687,7 +677,6 @@ class TestController extends AppBaseController
 CNPJ : 26.897.614/0001-01
 AN8 (ERP) : 43963279
 Razão Social : COMERCIAL HORUS EIRELI
-
         $cnpjEmpresa = '26897614000101';
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
@@ -696,47 +685,28 @@ Razão Social : COMERCIAL HORUS EIRELI
 Omologation:
     User: 2689761400
     Root: H1OR;3@Y@M
-
-
 https://apps.correios.com.br/cas/login
 Usuario: horusgi18
 senha: manu1202
-
-
 Contrato Comercial Loja Horus:
-
 Contrato: 9912467470
-
 Cartão de postagem: 0074969366
-
 Acesso sigep web: Usuario: 26897614
-
 Senha: 46zili
-
- 
-
+ 
 Contrato Megaju Comercio de eletronicos
-
- 
-
+ 
 Contrato: 9912475537
-
 Cartão de postagem: 0075186390
-
 Acesso sigep web: Usuario: 34900061000127
-
 senha: 1w5r38
-
-
-
 Sigep:
-
 acesso - 19185251
-
 senha: k0L82
-
-
 Sigep Master
-
-
  */
+
+ /**
+Login - 9912464887
+Senha - 5o7cmr
+  */

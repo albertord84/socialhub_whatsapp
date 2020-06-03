@@ -44,14 +44,14 @@ class ExtendedAttendantsContactController extends AttendantsContactController
         $User = Auth::check()? Auth::user():session('logged_user');
         $oldAttendant = User::find($User->id);
 
-        $Contact = Contact::find($request->contact_id);
+        $Contact = Contact::with('latestAttendant')->find($request->contact_id);
         $Contact->updated_at = time();
         $Contact->save();
 
         if(isset($request->transfering) || isset($input['transfering'])){
             //TODO-Alberto: enviar el last_message al igual que la funcion que me da los contactos
             $chatModel = new ExtendedChat();
-            $chatModel->table = (string) $request->attendant_id;
+            $chatModel->table = (string) $Contact->attendant_id;
             $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
             $Contact->last_message = $lastMessage;
             broadcast(new NewTransferredContactEvent((int) $request->attendant_id, $Contact, $oldAttendant));

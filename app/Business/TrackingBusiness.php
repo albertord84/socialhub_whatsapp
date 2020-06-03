@@ -82,8 +82,8 @@ class TrackingBusiness extends Business
 
     public function CorreiosTrackingObject(Company $Company, string $tracking_code)
     {
-        $usuario = $Company->tracking_user;
-        $senha = $Company->tracking_pass;
+        $usuario = "2689761400"; // $Company->tracking_user;
+        $senha = "H1OR;3@Y@M"; // $Company->tracking_pass;
         $cnpjEmpresa = '26897614000101';
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
@@ -291,10 +291,15 @@ class TrackingBusiness extends Business
             $Tracking->sku ?? '@sku',
 
             $Event->tipo ?? '@tracking_tipo',
-            $Event->local ?? '@tracking_local',
+            $Event->status ?? '@tracking_status',
             $Event->dataHora ?? '@tracking_dataHora',
             $Event->descricao ?? '@tracking_descricao',
+            $Event->recebedor ?? '@tracking_recebedor',
             $Event->detalhe ?? '@tracking_detalhe',
+            $Event->local ?? '@tracking_local',
+            $Event->codigo ?? '@tracking_codigo',
+            $Event->cidade ?? '@tracking_cidade',
+            $Event->uf ?? '@tracking_uf',
         ];
 
         $search = [
