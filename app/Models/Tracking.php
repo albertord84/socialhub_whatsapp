@@ -84,7 +84,7 @@ class Tracking extends Model
         $Tracking = new Tracking();
         $Tracking->table = "$company_id";
 
-        $Tracking->id = $objTracking->pedidoID;
+        if ($objTracking->pedidoID) $Tracking->id = $objTracking->pedidoID;
         $Tracking->contact_id = $contact_id;
         $Tracking->post_date = $objTracking->pedidoData && strlen($objTracking->pedidoData) > 2 ? Carbon::createFromFormat('d/m/Y H:i', $objTracking->pedidoData)->toDateTimeString() : null;
         $Tracking->end_date = $objTracking->entregaData && strlen($objTracking->entregaData) > 2 ? Carbon::createFromFormat('d/m/Y H:i', $objTracking->entregaData)->toDateTimeString() : null;
