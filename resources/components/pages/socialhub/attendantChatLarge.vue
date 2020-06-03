@@ -914,7 +914,7 @@
             </div>
 
             <v-scroll :height="Height(100)" class="pl-0" color="#ccc" style="background-color:white" bar-width="8px">
-                <ul style="margin-left:-35px">
+                <ul style="margin-left:5px">
                     <li v-for="(message,index) in messagesWhereLike" class="chat_block pt-3 pb-3 founded-messages" :key="index">
                         <a href="javascript:void()" @click.prevent="/*findAroundMessageId = message.id,*/ scrollAroundMessageId(message)">
                             <div class="">
