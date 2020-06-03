@@ -545,12 +545,13 @@
                                     <span class="input-group-text pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover">{{timeRecordingAudio}}</span>
                                 </div>
                                 <div class="input-group-prepend" @click.prevent="stopNativeRecordVoice()">
-                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0 container-icons-action-message pointer-hover" title="Finalizar"></i>
+                                    <i class="input-group-text mdi mdi-check-circle-outline pr-4 fa-1_5x text-success border border-left-0  container-icons-action-message pointer-hover" title="Finalizar"></i>
                                 </div>
                         </div>
                         <div v-if="isRecordingAudio==false" class="input-group-prepend" @click.prevent="startNativeRecordVoice()">
-                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
+                            <i class="input-group-text mdi mdi-microphone pr-4 fa-1_5x text-muted border border-left-0 border-right-0  container-icons-action-message pointer-hover" title="Mensagem de audio" ></i>
                         </div> -->
+
                         <div class="input-group-prepend">
                             <i @click.prevent="modalShowRapidMessages=true" class="input-group-text mdi mdi-file-document-box-multiple-outline pr-4 fa-1_5x text-muted border border-left-0 border-right-0 container-icons-action-message pointer-hover" title="Mensagem rápida" ></i>
                         </div> 
@@ -913,7 +914,7 @@
             </div>
 
             <v-scroll :height="Height(100)" class="pl-0" color="#ccc" style="background-color:white" bar-width="8px">
-                <ul style="margin-left:-35px">
+                <ul style="margin-left:5px">
                     <li v-for="(message,index) in messagesWhereLike" class="chat_block pt-3 pb-3 founded-messages" :key="index">
                         <a href="javascript:void()" @click.prevent="/*findAroundMessageId = message.id,*/ scrollAroundMessageId(message)">
                             <div class="">
@@ -969,11 +970,11 @@
         <b-modal v-model="modalNewContactFromBag" :hide-footer="true" title="Informação">
             Você adicionará um novo contato automático na sua lista de contatos.
             <div class="col-lg-12 mt-5 text-center">
-                <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">
+                <button type="submit" class="btn btn-primary pl-4 pr-4  pt-1 pb-1" @click.prevent="getNewContactFromBag">
                     <i v-if="isAddingContactFromBag==true" class="fa fa-spinner fa-spin"></i>
                     Adicionar
                 </button>
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
+                <button type="reset" class="btn  btn-secondary pl-4 pr-4 pt-1 pb-1" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
             </div>
         </b-modal>
 
@@ -1015,7 +1016,7 @@
         </b-modal>
 
         <!-- Modal to show personalized messages-->
-        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">
+        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">.pointer-hover:hover
             <v-scroll :height="Height(330)"  color="#ccc" bar-width="8px" ref="contact_scroller"  @onbottom="onBottomContacts">
                 <ul>
                     <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block rapidMessage_item" :key="indexRM" >
@@ -1101,7 +1102,7 @@
         },
 
         data() {
-            return {                
+            return {      
                 userLogged:{},
 
                 isMaouseOverContact:false,
@@ -2301,7 +2302,6 @@
             wsMessageToAttendant: function(){
                 var channel = this.pusher.subscribe('sh.message-to-attendant.' + this.userLogged.id);
                 channel.bind('MessageToAttendantEvent', (data) => {    
-                    console.log(data);                
                     var message = JSON.parse(data);
                     var subjacentContact = null;       
     
@@ -2384,7 +2384,6 @@
             wsContactToBag: function(){
                 var channel = this.pusher.subscribe('sh.contact-to-bag.' + this.userLogged.company_id);
                 channel.bind("NewContactMessageEvent", (data) => {
-                    console.log(data);
                     data = JSON.parse(data);
                     if(this.amountContactsInBag<data && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
@@ -2395,7 +2394,9 @@
             wsTransferredContact: function(){
                 var channel = this.pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
                 channel.bind('NewTransferredContactEvent', (data) => {
-                    var newContact = JSON.parse(e.message);                   
+                    var arr = JSON.parse(data)
+                    var oldAttendant = JSON.parse(arr['oldAttendant']);    
+                    var newContact = JSON.parse(arr['contact']);
 
                     this.contacts.unshift(newContact);
                     var a = 0;
@@ -2405,7 +2406,7 @@
                     if(this.selectedContactIndex >=0){
                         this.selectedContactIndex ++;
                     }
-                    miniToastr.success("Sucesso", "Contato transferido com sucesso");   
+                    miniToastr.success("Sucesso", "O atendente " + oldAttendant.name + " transfiriu o contato " + newContact.first_name + " para você com sucesso");   
                 });
             },
 
@@ -2438,8 +2439,11 @@
             },
 
             wsMessageToAttendant: function(){
-                window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
-                .listen('MessageToAttendant', (e) => {  
+                // window.Echo.channel('sh.message-to-attendant.' + this.userLogged.id)
+                // .listen('MessageToAttendant', (e) => {  
+                window.Echo.subscribe('sh.message-to-attendant.' + this.userLogged.id)
+                .bind('MessageToAttendant', (e) => {  
+                    console.log(e);
                     var message = JSON.parse(e.message);
                     var subjacentContact = null;       
     
@@ -2520,8 +2524,11 @@
             },
 
             wsContactToBag: function(){
-                window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
-                .listen('NewContactMessage', (e) => {
+                // window.Echo.channel('sh.contact-to-bag.' + this.userLogged.company_id)
+                // .listen('NewContactMessage', (e) => {
+                window.Echo.subscribe('sh.contact-to-bag.' + this.userLogged.company_id)
+                .bind('NewContactMessage', (e) => {
+                    console.log('Sacola:' + e);
                     if(this.amountContactsInBag<e.message && !this.userLogged.mute_notifications)
                         this.$refs.newContactInBag.play();
                     this.amountContactsInBag = e.message;
@@ -2529,8 +2536,10 @@
             },
 
             wsTransferredContact: function(){
-                window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
-                .listen('NewTransferredContactEvent', (e) => {
+                // window.Echo.channel('sh.transferred-contact.' + this.userLogged.id)
+                // .listen('NewTransferredContact', (e) => {
+                window.Echo.subscribe('sh.transferred-contact.' + this.userLogged.id)
+                .bind('NewTransferredContact', (e) => {
                     var newContact = JSON.parse(e.message);
                     //------------prepare message datas to be displayed------------------------
                     // var message = newContact.message;

@@ -90,7 +90,7 @@
                         </div>
                         <div class="col-4">
                             <b-card header="Palavras chaves" header-tag="h4" class="bg-default-card no-shadows" style="padding:0px !important; margin:0px !important">
-                                <div style="height:300px; overflow-x:hidden; overflow-y:auto"  class="pl-4 pl-0">                                    
+                                <div style="height:300px; overflow-x:hidden; overflow-y:auto"  class="pl-4 pl-0">
                                     <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorNome')">@compradorNome</div>
                                     <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorApelido')">@compradorApelido</div>
                                     <div class="row reserved-word" @click.prevent="insertReservedWord('@compradorEmail')">@compradorEmail</div>
@@ -119,11 +119,17 @@
                                     <div class="row reserved-word" @click.prevent="insertReservedWord('@origem')">@origem</div>
                                     <div class="row reserved-word" @click.prevent="insertReservedWord('@conta')">@conta</div>
                                     <div class="row reserved-word" @click.prevent="insertReservedWord('@sku')">@sku</div>
-                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_tipo')">@tracking_tipo</div>
-                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_local')">@tracking_local</div>
-                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_dataHora')">@tracking_dataHora</div>
-                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_descricao')">@tracking_descricao</div>
-                                    <div class="row reserved-word" @click.prevent="insertReservedWord('@tracking_detalhe')">@tracking_detalhe</div>
+
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_tipo')">@tracking_tipo</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_status')">@tracking_status</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_dataHora')">@tracking_dataHora</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_descricao')">@tracking_descricao</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_recebedor')">@tracking_recebedor</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_detalhe')">@tracking_detalhe</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_local')">@tracking_local</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_codigo')">@tracking_codigo</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_cidade')">@tracking_cidade</div>
+                                    <div class="row reserved-word" @click.prevent="insertReservedWord('	@tracking_uf')">@tracking_uf</div>
                                 </div>
                             </b-card>
                         </div>
@@ -258,12 +264,23 @@
                 this.$router.push({name: "login"});
             }
             
-            this.defaultMessage = "Olá, @compradorNome \n\n"+
-            "Seu produto @pedidoObservacoes ja saiu para entrega.\n"+
-            "O endereço de entrega informado é rua @enderecoRua, número @enderecoNumero.\n\n"+
-            "Em caso de dúvidas, problemas ou sugestões nos contate diretamente pelo nosso whatsapp ou pela Central de Atendimento, para um suporte ágil e eficaz."+
-            "Horário de atendimento: De Segunda a Sexta das 07:00 as 15:30 e Sábados das 08:00 as 13:00.\n\n"+
-            "Atte. Equipe Coffee Business.";
+            this.defaultMessage = "Ola @compradorNome \n\n"+
+
+            "Seu pedido atualizou o status no Correios. Segue abaixo: \n\n"+
+
+            "Data e hora: @tracking_dataHora\n"+
+            "Local: @tracking_local\n"+
+            "Cidade: @tracking_cidade, @tracking_uf\n"+
+            "Descrição: @tracking_descricao \n\n"+
+
+            "Qualquer dúvida é só responder esta mensagem.";
+
+            // this.defaultMessage = "Olá, @compradorNome \n\n"+
+            // "Seu produto @pedidoObservacoes ja saiu para entrega.\n"+
+            // "O endereço de entrega informado é rua @enderecoRua, número @enderecoNumero.\n\n"+
+            // "Em caso de dúvidas, problemas ou sugestões nos contate diretamente pelo nosso whatsapp ou pela Central de Atendimento, para um suporte ágil e eficaz."+
+            // "Horário de atendimento: De Segunda a Sexta das 07:00 as 15:30 e Sábados das 08:00 as 13:00.\n\n"+
+            // "Atte. Equipe Coffee Business.";
             this.model.tracking_message = this.defaultMessage;
         },
 

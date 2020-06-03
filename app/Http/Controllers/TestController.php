@@ -677,7 +677,6 @@ class TestController extends AppBaseController
 CNPJ : 26.897.614/0001-01
 AN8 (ERP) : 43963279
 Razão Social : COMERCIAL HORUS EIRELI
-
         $cnpjEmpresa = '26897614000101';
         $numcontrato = '9912467470';
         $codigoadm = '19185251';
@@ -686,49 +685,25 @@ Razão Social : COMERCIAL HORUS EIRELI
 Omologation:
     User: 2689761400
     Root: H1OR;3@Y@M
-
-
 https://apps.correios.com.br/cas/login
 Usuario: horusgi18
 senha: manu1202
-
-
 Contrato Comercial Loja Horus:
-
 Contrato: 9912467470
-
 Cartão de postagem: 0074969366
-
 Acesso sigep web: Usuario: 26897614
-
 Senha: 46zili
-
- 
-
+ 
 Contrato Megaju Comercio de eletronicos
-
- 
-
+ 
 Contrato: 9912475537
-
 Cartão de postagem: 0075186390
-
 Acesso sigep web: Usuario: 34900061000127
-
 senha: 1w5r38
-
-
-
 Sigep:
-
 acesso - 19185251
-
 senha: k0L82
-
-
 Sigep Master
-
-
  */
 
  /**
@@ -739,6 +714,4 @@ Sigep Master
 
 Login - 9912464887
 Senha - 5o7cmr
-
   */
-

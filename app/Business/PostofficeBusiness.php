@@ -130,7 +130,13 @@ class PostofficeBusiness extends Business
             $header = array();
             $data = array();
             if (($handle = fopen($filename, 'r')) !== false) {
-                $header = fgetcsv($handle, 0, $delimiter);
+                $headerVirgula = fgetcsv($handle, 0, ',');
+                $handle = fopen($filename, 'r');
+                $header = $headerPontoVirgula = fgetcsv($handle, 0, ';');
+                if (count($headerVirgula) > count($headerPontoVirgula)) {
+                    $header = $headerVirgula;
+                    $delimiter = ',';
+                }
                 // while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE)
                 while (($row = fgets($handle)) !== false) {
                     $row = html_entity_decode($row);
