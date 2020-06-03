@@ -149,9 +149,9 @@
             </div>                    
         </form>
         <form v-show="action=='transfer'">
-            <h6> Tranferir contato para: <b>{{(selectedAttendantToTransfer)? selectedAttendantToTransfer.user.name : ""}}</b></h6> 
+            <h6> Tranferir contato para: <b>{{(selectedAttendantToTransfer)? selectedAttendantToTransfer.user.name : ""}}</b></h6>
             <v-scroll :height="100"  color="#ccc" class="margin-left:0px" style="background-color:white" bar-width="8px">
-                <ul v-for="(attendant,index) in attendants" :key="index" class="list-group list-group-horizontal" @click.prevent="selectedAttendantToTransfer = attendant">
+                <ul v-for="(attendant,index) in attendants" :key="index" class="list-group list-group-horizontal pointer-hover" @click.prevent="selectedAttendantToTransfer = attendant">
                     <li v-if="attendant.user_id != userLogged.id" class="list-group-item border-0">
                         <img :src="attendant.user.image_path" width="50px" height="50px" class="my-rounded-circle mt-1 " alt="Foto">
                     </li>
@@ -696,5 +696,8 @@
         box-shadow: none !important;
         border: 1px solid silver;
     }
+    .pointer-hover:hover{
+        cursor: pointer;
+    } 
 
 </style>

@@ -970,11 +970,11 @@
         <b-modal v-model="modalNewContactFromBag" :hide-footer="true" title="Informação">
             Você adicionará um novo contato automático na sua lista de contatos.
             <div class="col-lg-12 mt-5 text-center">
-                <button type="submit" class="btn btn-primary btn_width" @click.prevent="getNewContactFromBag">
+                <button type="submit" class="btn btn-primary pl-4 pr-4  pt-1 pb-1" @click.prevent="getNewContactFromBag">
                     <i v-if="isAddingContactFromBag==true" class="fa fa-spinner fa-spin"></i>
                     Adicionar
                 </button>
-                <button type="reset" class="btn  btn-secondary btn_width" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
+                <button type="reset" class="btn  btn-secondary pl-4 pr-4 pt-1 pb-1" @click.prevent="modalNewContactFromBag=!modalNewContactFromBag">Cancelar</button>
             </div>
         </b-modal>
 
@@ -1016,7 +1016,7 @@
         </b-modal>
 
         <!-- Modal to show personalized messages-->
-        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">
+        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">.pointer-hover:hover
             <v-scroll :height="Height(330)"  color="#ccc" bar-width="8px" ref="contact_scroller"  @onbottom="onBottomContacts">
                 <ul>
                     <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block rapidMessage_item" :key="indexRM" >
@@ -1102,7 +1102,7 @@
         },
 
         data() {
-            return {                
+            return {      
                 userLogged:{},
 
                 isMaouseOverContact:false,
@@ -2394,7 +2394,9 @@
             wsTransferredContact: function(){
                 var channel = this.pusher.subscribe('sh.transferred-contact.' + this.userLogged.id);
                 channel.bind('NewTransferredContactEvent', (data) => {
-                    var newContact = JSON.parse(data);                   
+                    var arr = JSON.parse(data)
+                    var oldAttendant = JSON.parse(arr['oldAttendant']);    
+                    var newContact = JSON.parse(arr['contact']);
 
                     this.contacts.unshift(newContact);
                     var a = 0;
@@ -2404,7 +2406,7 @@
                     if(this.selectedContactIndex >=0){
                         this.selectedContactIndex ++;
                     }
-                    miniToastr.success("Sucesso", "Contato transferido com sucesso");   
+                    miniToastr.success("Sucesso", "O atendente " + oldAttendant.name + " transfiriu o contato " + newContact.first_name + " para você com sucesso");   
                 });
             },
 

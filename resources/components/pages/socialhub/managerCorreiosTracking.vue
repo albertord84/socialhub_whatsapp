@@ -586,6 +586,7 @@
                     this.trackingStatusOptions = Array();
                     response.data.some((item,i)=>{
                         if(item.statusable_type == 'App\\Models\\Tracking') {
+                            console.log()
                             var name = '';
                             if(item.name == 'POSTED') name = 'POSTADO';
                             if(item.name == 'MOVING') name = 'EM MOVIMENTO';
@@ -593,6 +594,10 @@
                             if(item.name == 'RECEIVED') name = 'RECEBIDO';
                             if(item.name == 'ARRIVED') name = 'ENTREGUE';
                             if(item.name == 'PROBLEM') name = 'COM PROBLEMAS';
+
+                            if(item.name == 'PI ABERTA') name = 'PI ABERTA';
+                            if(item.name == 'PI INDENIZADA') name = 'PI INDENIZADA';
+                            if(item.name == 'PI NÃO INDENIZADA') name = 'PI NÃO INDENIZADA';
 
                             this.trackingStatusOptions.push(  {
                                 'name': name,
