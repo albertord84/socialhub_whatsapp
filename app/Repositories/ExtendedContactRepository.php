@@ -64,7 +64,8 @@ class ExtendedContactRepository extends ContactRepository
                     $Contacts[$key]['latest_attendant'] = $Contact->latestAttendant->attendant()->first()->user()->first();
 
                     // Last Chat Message
-                    $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
+                    $lastMessage = $chatModel->where('contact_id', $Contact->id)->orderBy('id', 'desc')->get()->first();
+                    // $lastMessage = $chatModel->where('contact_id', $Contact->id)->latest('created_at')->get()->first();
                     $Contacts[$key]['last_message'] = $lastMessage;
 
                     // Unreaded Messages Count
