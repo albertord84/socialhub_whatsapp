@@ -84,6 +84,13 @@ const layout = [
         meta: {
             title: "Estatísticas",
         }
+    },
+    {
+        path: '/manager/dnd',    
+        component: resolve => require(['pages/socialhub/dnd'], resolve),
+        meta: {
+            title: "Estatísticas",
+        }
     }
 ]
     

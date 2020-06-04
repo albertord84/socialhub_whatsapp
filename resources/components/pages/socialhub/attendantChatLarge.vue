@@ -1016,7 +1016,7 @@
         </b-modal>
 
         <!-- Modal to show personalized messages-->
-        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">.pointer-hover:hover
+        <b-modal v-model="modalShowRapidMessages" :hide-header="false" title="Mensagens rápidas" :hide-footer="true" centered class="" size="lg" content-class="text-center border-0 bg-transparexxxnt">
             <v-scroll :height="Height(330)"  color="#ccc" bar-width="8px" ref="contact_scroller"  @onbottom="onBottomContacts">
                 <ul>
                     <li v-for="(rapidMessage,indexRM) in RapidMessages" class="chat_block rapidMessage_item" :key="indexRM" >
