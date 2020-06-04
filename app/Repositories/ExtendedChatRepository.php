@@ -92,6 +92,8 @@ class ExtendedChatRepository extends ChatRepository
                     $AttendantsContact->contact_id = $ChastMessages->contact_id;
                     $AttendantsContact->attendant_id = $attendant_id;
                     $AttendantsContact->save();
+
+                    $Contact->latestAttendant = $AttendantsContact;
                 }
 
                 $Company = Company::find($User->company_id);
