@@ -2676,6 +2676,7 @@
             this.wsMessageToAttendant();
             this.wsContactToBag();
             this.wsTransferredContact();
+
         },
 
         created() {
